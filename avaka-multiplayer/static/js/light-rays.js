@@ -1,4 +1,4 @@
-// c:\Users\hanso\Desktop\文發系\大四上\畢業專題\遊戲\avaka-multiplayer\static\light-rays.js
+// light-rays.js — WebGL Light Ray Shader Effect
 
 const DEFAULT_COLOR = '#ffffff';
 

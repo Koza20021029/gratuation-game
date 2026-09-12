@@ -1,9 +1,16 @@
+import os
+import sys
+
+# macOS kqueue compatibility for eventlet
+if sys.platform == 'darwin':
+    os.environ.setdefault('EVENTLET_HUB', 'selects')
+
 import eventlet
 eventlet.monkey_patch()
 
+
 from flask import Flask, send_from_directory, request, render_template
 from flask_socketio import SocketIO, emit, join_room, leave_room
-import os
 import random
 import string
 import threading
@@ -609,5 +616,16 @@ def handle_toggle_ready():
         socketio.emit('state_update', state, to=room_code)
 
 if __name__ == '__main__':
-    print("Starting Server with Eventlet...")
-    socketio.run(app, host='0.0.0.0', port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    import socket
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        s.bind(('0.0.0.0', port))
+        s.close()
+    except OSError:
+        if port == 5000:
+            port = 5001
+            print(f"⚠️ Port 5000 已被系統服務 (如 macOS AirPlay) 佔用，自動切換至連接埠 {port}。")
+    print(f"Starting Server with Eventlet on http://localhost:{port} ...")
+    socketio.run(app, host='0.0.0.0', port=port)
+

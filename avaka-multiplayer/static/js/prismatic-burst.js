@@ -1,4 +1,4 @@
-// c:\Users\hanso\Desktop\文發系\大四上\畢業專題\遊戲\avaka-multiplayer\static\prismatic-burst.js
+// prismatic-burst.js — WebGL Prismatic Burst Shader Effect
 
 const hexToRgb01 = hex => {
   let h = hex.trim();
