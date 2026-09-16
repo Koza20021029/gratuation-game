@@ -1767,10 +1767,18 @@ socket.on('chat_broadcast', (data) => {
     msgEl.style.padding = '0.5rem';
     msgEl.style.borderRadius = '6px';
     msgEl.style.fontSize = '0.9rem';
-    msgEl.innerHTML = `<strong style="color:var(--secondary)">${data.name}:</strong> <span style="color:var(--text-main)">${data.msg}</span>`;
+    const nameSpan = document.createElement('strong');
+    nameSpan.style.color = 'var(--secondary)';
+    nameSpan.textContent = data.name + ':';
+    const textSpan = document.createElement('span');
+    textSpan.style.color = 'var(--text-main)';
+    textSpan.textContent = ' ' + data.msg;
+    msgEl.appendChild(nameSpan);
+    msgEl.appendChild(textSpan);
     chatMessagesEl.appendChild(msgEl);
     chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
 });
+
 
 function showToast(msg) {
     const container = document.getElementById('toast-container');

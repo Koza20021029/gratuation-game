@@ -14,6 +14,7 @@ from flask_socketio import SocketIO, emit, join_room, leave_room
 import random
 import string
 import threading
+import time
 
 app = Flask(__name__, static_folder='static')
 app.config['TEMPLATES_AUTO_RELOAD'] = True
@@ -33,6 +34,11 @@ state_lock = threading.Lock()
 # Game State: Multiple Rooms
 rooms = {} # room_code -> game_state
 player_rooms = {} # sid -> room_code
+
+# Graceful disconnect: store player data for reconnection during active games
+# Key: (room_code, old_sid) -> {'player_data': {...}, 'disconnect_time': float}
+DISCONNECT_GRACE_SECONDS = 120
+disconnected_players = {}
 
 def create_initial_state(room_code):
     return {
@@ -148,13 +154,28 @@ def handle_disconnect():
                 state = rooms[room_code]
                 if sid in state['players']:
                     p_name = state['players'][sid]['name']
-                    del state['players'][sid]
-                    add_log(room_code, f"{p_name} 斷線了")
-                    if len(state['players']) == 0:
-                        del rooms[room_code]
+                    player_data = state['players'][sid]
+
+                    if state['started']:
+                        # Game is active: preserve player data for possible rejoin
+                        disconnected_players[(room_code, sid)] = {
+                            'player_data': player_data,
+                            'disconnect_time': time.time()
+                        }
+                        del state['players'][sid]
+                        add_log(room_code, f"{p_name} 斷線了（{DISCONNECT_GRACE_SECONDS} 秒內可重連）")
+                        if len(state['players']) == 0:
+                            del rooms[room_code]
+                        else:
+                            socketio.emit('state_update', dict(state), to=room_code)
                     else:
-                        state_copy = dict(state)
-                        socketio.emit('state_update', state_copy, to=room_code)
+                        # Lobby phase: remove immediately
+                        del state['players'][sid]
+                        add_log(room_code, f"{p_name} 斷線了")
+                        if len(state['players']) == 0:
+                            del rooms[room_code]
+                        else:
+                            socketio.emit('state_update', dict(state), to=room_code)
             del player_rooms[sid]
 
 @socketio.on('create_room')
@@ -174,19 +195,48 @@ def handle_rejoin(data):
     old_id = data.get('old_id')
     room_code = data.get('room_code')
     new_id = request.sid
+    print(f"[rejoin] old_id={old_id}, room_code={room_code}, new_id={new_id}")
     with state_lock:
-        if room_code in rooms:
-            state = rooms[room_code]
-            if old_id in state['players']:
-                # Migrate player data to new socket ID
-                player_data = state['players'].pop(old_id)
+        if room_code not in rooms:
+            print(f"[rejoin] room {room_code} not found")
+            return
+        state = rooms[room_code]
+
+        # Case 1: Player still in state (e.g., fast reconnect before disconnect processed)
+        if old_id in state['players']:
+            player_data = state['players'].pop(old_id)
+            player_data['id'] = new_id
+            state['players'][new_id] = player_data
+            player_rooms[new_id] = room_code
+            join_room(room_code)
+            add_log(room_code, f"{player_data['name']} 重新連線了")
+            emit('state_update', state, to=room_code)
+            return
+
+        # Case 2: Player was disconnected but within grace period
+        grace_key = (room_code, old_id)
+        print(f"[rejoin] grace_key={grace_key}, exists={grace_key in disconnected_players}")
+        print(f"[rejoin] all grace keys: {list(disconnected_players.keys())}")
+        if grace_key in disconnected_players:
+            entry = disconnected_players[grace_key]
+            elapsed = time.time() - entry['disconnect_time']
+            print(f"[rejoin] elapsed={elapsed:.1f}s, grace={DISCONNECT_GRACE_SECONDS}s")
+            if elapsed <= DISCONNECT_GRACE_SECONDS:
+                # Restore player data
+                player_data = entry['player_data']
                 player_data['id'] = new_id
                 state['players'][new_id] = player_data
                 player_rooms[new_id] = room_code
-                
-                # Rejoin socket room
+                del disconnected_players[grace_key]
                 join_room(room_code)
-                emit('state_update', state, to=room_code)
+                add_log(room_code, f"🔄 {player_data['name']} 成功重連！進度已恢復。")
+                socketio.emit('state_update', state, to=room_code)
+            else:
+                # Grace period expired
+                del disconnected_players[grace_key]
+                emit('error', {'msg': '重連逾時，請重新加入遊戲'})
+        else:
+            print(f"[rejoin] grace_key not found, cannot rejoin")
 
 @socketio.on('join_game')
 def handle_join(data):
@@ -304,6 +354,7 @@ def handle_action(data):
         action = data.get('type')
         target = data.get('target')
         month = state['month']
+        action_done = False
 
         def consume_ap(cost):
             if player['ap'] >= cost:
@@ -323,6 +374,7 @@ def handle_action(data):
             if consume_ap(cost):
                 player['location'] = target
                 add_log(room_code, f"{player['name']} 移動到了 {target}")
+                action_done = True
 
         elif action == 'craft':
             step = data.get('step')
@@ -351,6 +403,7 @@ def handle_action(data):
                             add_log(room_code, f"{player['name']} 完成了 ①砍伐剝皮 ipana'ape (獲得 {amount} 份材料)")
                         else:
                             add_log(room_code, f"{player['name']} 執行了砍伐剝皮，獲得了 {amount} 份材料")
+                        action_done = True
 
                 elif step == 'rub' and player['progress'] == 1:
                     if player['materials'] < 1:
@@ -361,6 +414,7 @@ def handle_action(data):
                         player['progress'] = 2
                         player['last_step_month'] = month
                         add_log(room_code, f"{player['name']} 完成了 ②懸掛摩擦軟化 (消耗 1 份材料)")
+                        action_done = True
 
                 elif step == 'strip' and player['progress'] == 2:
                     if player['materials'] < 1:
@@ -371,6 +425,7 @@ def handle_action(data):
                         player['progress'] = 3
                         player['last_step_month'] = month
                         add_log(room_code, f"{player['name']} 完成了 ③劃痕撕絲 chingdasan (消耗 1 份材料)")
+                        action_done = True
 
             # ---- Steps 4-6: Beach Workshop steps ----
             elif step in ('dry', 'twine', 'caulk'):
@@ -390,6 +445,7 @@ def handle_action(data):
                         player['progress'] = 4
                         player['last_step_month'] = month
                         add_log(room_code, f"{player['name']} 完成了 ④脫水曝曬乾燥 (消耗 1 份材料)")
+                        action_done = True
 
                 elif step == 'twine' and player['progress'] == 4:
                     if player['materials'] < 1:
@@ -404,6 +460,7 @@ def handle_action(data):
                         player['progress'] = 5
                         player['last_step_month'] = month
                         add_log(room_code, f"{player['name']} 完成了 ⑤理線捻繩 kolili (消耗 1 份材料)")
+                        action_done = True
 
                 elif step == 'caulk' and player['progress'] == 5:
                     if month == 10:
@@ -430,6 +487,7 @@ def handle_action(data):
                         player['score'] += score
                         player['score_breakdown'].append(f"傳統 Avaka (+{score})")
                         add_log(room_code, f"{player['name']} 完美傳承了造船技術！獲得 {score} 分")
+                        action_done = True
 
         elif action == 'buy':
             if player['location'] != '商店':
@@ -463,6 +521,7 @@ def handle_action(data):
                 player['score'] += score
                 player['score_breakdown'].append(f"工業材料 ({score})")
                 add_log(room_code, f"{player['name']} 使用現代材料完工，文化流失了...")
+                action_done = True
 
         elif action == 'ask':
             if player['role'] not in ['youth', 'middle']: return
@@ -483,16 +542,21 @@ def handle_action(data):
                         p['score'] += 1
                         p['score_breakdown'].append("傳承指導 (+1)")
                         add_log(room_code, f"{p['name']} 因傳承指導獲得 1 分")
+                action_done = True
 
         elif action == 'teach':
             if player['role'] != 'elder': return
             target_id = data.get('target_id')
             target_p = state['players'].get(target_id)
-            if target_p and consume_ap(2):
+            if not target_p:
+                emit('error', {'msg': '找不到指導對象'})
+                return
+            if consume_ap(2):
                 target_p['kp'] += 1
                 player['score'] += 1
                 player['score_breakdown'].append("遠程指導 (+1)")
                 add_log(room_code, f"{player['name']} 遠程指導了 {target_p['name']}，獲得 1 分傳承分數")
+                action_done = True
 
         elif action == 'give':
             target_id = data.get('target_id')
@@ -508,6 +572,7 @@ def handle_action(data):
                 player['materials'] -= 1
                 target_p['materials'] += 1
                 add_log(room_code, f"🤝 {player['name']} 消耗了 1 AP，將 1 份材料送給了 {target_p['name']}！")
+                action_done = True
 
         elif action == 'translate':
             if player['kp'] < 2:
@@ -533,9 +598,12 @@ def handle_action(data):
                     add_log(room_code, f"🔬 {player['name']} 成功對傳統工藝進行「科學轉譯」！解鎖工藝數據，獲得 +4 分與 2 份材料！")
                 else:
                     add_log(room_code, f"🔬 {player['name']} 嘗試對工藝進行「科學轉譯」，但實驗數據不足未果...")
+                action_done = True
 
-        record_player_kp(player, month)
-        socketio.emit('state_update', state, to=room_code)
+        if action_done:
+            record_player_kp(player, month)
+            socketio.emit('state_update', state, to=room_code)
+
 
 
 @socketio.on('toggle_ready')
