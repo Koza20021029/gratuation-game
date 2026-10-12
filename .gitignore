@@ -36,3 +36,7 @@ Desktop.ini
 # Distribution
 *.tar.gz
 *.whl
+
+# Original camera footage (over GitHub's 100 MB limit); the game uses the compressed copies in static/assets
+docs/*.MOV
+docs/*.mov

@@ -202,13 +202,13 @@ let taglineInstance = null;
 const AVATAR_ROLE_LABELS = {
     zh: {
         elder: '資深工匠 — 為你的角色打造專屬外型',
-        youth: '青年學徒(部落青年) — 為你的角色打造專屬外型',
-        middle: '協商者(中年工匠) — 為你的角色打造專屬外型'
+        youth: '文化復振青年 — 為你的角色打造專屬外型',
+        middle: '中生代 — 為你的角色打造專屬外型'
     },
     en: {
         elder: 'Elder Artisan — Customize your own character appearance',
         youth: 'Young Apprentice (Youth) — Customize your own character appearance',
-        middle: 'Negotiator (Middle) — Customize your own character appearance'
+        middle: 'Middle Generation — Customize your own character appearance'
     }
 };
 
@@ -254,16 +254,16 @@ const translations = {
                 desc: '填縫專家<br>遠程指導'
             },
             youth: {
-                title: '青年學徒<br><span style="font-size:0.8rem; font-weight:normal; opacity:0.8;">(部落青年)</span>',
+                title: '文化復振青年<br><span style="font-size:0.8rem; font-weight:normal; opacity:0.8;">(青年)</span>',
                 badgeAp: 'AP 6 (+4/月)',
                 badgeKp: 'KP 0',
                 desc: '快速移動<br>學徒請益'
             },
             middle: {
-                title: '協商者<br><span style="font-size:0.8rem; font-weight:normal; opacity:0.8;">(中年工匠)</span>',
+                title: '中生代<br><span style="font-size:0.8rem; font-weight:normal; opacity:0.8;">(中生代工匠)</span>',
                 badgeAp: 'AP 5 (+3/月)',
                 badgeKp: 'KP 5',
-                desc: '適應現代<br>無工業懲罰'
+                desc: '學得快、傳得快<br>擅長轉化'
             }
         },
         placeholderRoom: '輸入 4 碼序號',
@@ -286,9 +286,9 @@ const translations = {
                 hairColor: '🪮 髮色',
                 eye: '👁 瞳孔顏色',
                 face: '👤 臉型',
-                accessory: '🛡 達悟族禮儀配件',
+                accessory: '🛡 雅美／達悟族禮儀配件',
                 accessorySub: '僅祭典（飛魚祭、大船下水）時配戴',
-                cloth: '👕 達悟族服飾',
+                cloth: '👕 雅美／達悟族服飾',
                 clothSub: '傳統以白、黑、藍色為主，忌用鮮豔色彩'
             },
             skinTitles: {
@@ -304,7 +304,7 @@ const translations = {
                 bald: '光頭'
             },
             hairColorTitles: {
-                '#0d0d0d': '烏黑（達悟族傳統）',
+                '#0d0d0d': '烏黑（雅美／達悟族傳統）',
                 '#2a1a0a': '深棕黑',
                 '#5a3a1a': '棕色',
                 '#c8c8c8': '銀白（耆老）'
@@ -327,7 +327,7 @@ const translations = {
                 chest_ornament: '胸飾'
             },
             accessoryTitles: {
-                silver_helmet: '銀盔：達悟族最神聖禮器，銀片打造成圓錐狀',
+                silver_helmet: '銀盔：雅美／達悟族最神聖禮器，銀片打造成圓錐狀',
                 rattan_helmet: '藤盔：傳統編織藤帽，由省藤條緊密圈編而成',
                 chest_ornament: '半月形胸飾：象徵社會地位與成就'
             },
@@ -357,9 +357,17 @@ const translations = {
             statusLabels: ['剩餘 AP', 'KP 點數', '持有材料', '造船進度', '總得分'],
             readyBtnReady: '取消準備 (等候其他玩家...)',
             readyBtnNotReady: '準備進入下個月',
-            askBtn: '🙏 向耆老請益 <span style="font-size:0.8rem;opacity:0.7;font-weight:normal;">(3 AP → 獲 3 KP)</span>',
+            askBtn: '🙏 向耆老請益 <span style="font-size:0.8rem;opacity:0.7;font-weight:normal;">(3 AP → 獲 3 KP · +1 分)</span>',
+            askElderTitle: '🙏 向耆老請益',
+            askMiddleTitle: '🤝 向中生代請益',
+            askGiftNote: '🎁 帶禮',
+            scoreUnit: '分',
+            helpBtn: '💪 幫忙長者 <span style="font-size:0.8rem;opacity:0.7;font-weight:normal;">(2 AP → 耆老回復 2 AP · +1 分)</span>',
+            giveElderBonus: ' · +1 分',
+            scoreLogLabel: '得分紀錄',
+            noScoreYet: '尚未得分',
             teachLabel: '選擇學徒',
-            teachBtn: '💡 遠程指導 <span style="font-size:0.8rem;opacity:0.7;font-weight:normal;">(2 AP → 他人獲 1 KP)</span>',
+            teachBtn: '💡 遠程指導 <span style="font-size:0.8rem;opacity:0.7;font-weight:normal;">(2 AP → 他人獲 1 KP · +1 分)</span>',
             locations: {
                 '山林': {
                     name: '🌲 山林',
@@ -386,72 +394,74 @@ const translations = {
                 '商店': {
                     name: '🏬 現代化商店',
                     badge: '工業區',
-                    desc: '購買快速但會造成文化斷裂的工業材料',
+                    desc: '這裡有現成的工業材料，也有可以加工天然纖維的機器',
                     moveBtn: '移動至此 (1 AP)',
-                    buyBtn: '購買工業樹脂完工 (3 AP | 需 2 材料 + 山林前三道工序 + 跨月乾燥)'
+                    buyBtn: '🧴 工業樹脂完工 (3 AP | 需 2 材料 + 山林前三道工序 + 跨月 → +5 分)',
+                    machineBtn: '⚙️ 機器加工 Avaka 纖維完工 (3 AP | 需 5 KP + 2 材料 + 山林前三道工序 + 跨月 → +12 分)'
                 }
             }
         },
         rulesHtml: `
             <h2>📜 遊戲規則介紹與流程</h2>
             <div class="rules-scroll-area custom-scrollbar">
-                <p><strong>《Avaka：島嶼的維度》</strong> 是一款關於蘭嶼傳統造船與文化選擇的多人合作與競合遊戲。您將扮演達悟族的工匠，必須在 12 個月（回合）內完成一艘拼板舟。未在期限內完工將導致文化斷裂（失敗）。</p>
-                
-                <h3>🎯 核心點數、體力與團隊傳承機制</h3>
+                <p><strong>《Avaka：島嶼的維度》</strong> 是一款關於蘭嶼傳統造船與文化選擇的多人合作與競合遊戲。您將扮演雅美／達悟族的工匠，必須在 12 個月（回合）內完成一艘拼板舟。完工的方式有三種，沒有標準答案，但每一種都有它的結果；未在期限內完工則視為失敗。</p>
+
+                <h3>🎯 體力、知識與得分</h3>
                 <ul>
-                    <li><strong>⚡ 行動點數 (AP) 與月度恢復：</strong> 執行採集(3 AP)、山林工序①②③(3 AP)、灘頭工序④⑤(3 AP)、填縫完工⑥(0-3 AP)、請益(3 AP)、指導(2 AP)、移動(1 AP, 青年/1月 0 AP)或贈送材料(1 AP)皆需消耗 AP。每個月初進行體力恢復（青年 +4 AP、中生代/耆老 +3 AP）。</li>
-                    <li><strong>🤝 團隊合作與傳承得分：</strong> 青年向長輩「請益 (3 AP)」，青年獲得 +3 KP 且<b>雙方各得 +1 分傳承分數</b>；耆老「遠程指導 (2 AP)」為學徒 +1 KP 且<b>獲得 +1 分</b>；「贈與材料 (1 AP)」可跨角色補充物資。</li>
-                    <li><strong>🔬 科學轉譯 (判定與得分)：</strong> 消耗 2 AP 與 2 KP。依據現有 KP 判定成功率（成功率 = 50% + KP×5%，中生代額外 +20%）；<b>第 8 個月 (Pitanatana 土器月) 100% 必定成功！</b> 成功將獲得 <b>+4 分文化韌性得分</b> 與 <b>2 份材料</b>獎勵！</li>
-                    <li><strong>⏳ 跨月等待期：</strong> 每完成山林或灘頭的一項工序後，必須進入<b>下一個月份</b>才能執行下一工序（至少需 6+ 個月才能完工）。</li>
-                    <li><strong>🌿 材料需求與團隊分工：</strong> 造船六道工序各需消耗 <b>1 份材料</b>（全船共需 <b>6 份材料</b>）。青年移動力快，應積極採集並「贈與材料」給長輩；耆老則需透過指導協助傳承。</li>
-                    <li><strong>💡 技術點數 (KP)：</strong> 代表對傳統工藝的知識。累積足夠 KP 才能執行進階工序（理線捻繩需 3 KP，填縫完工需 8 KP）。</li>
-                    <li><strong>📅 曆法禁忌：</strong> 依循蘭嶼 12 個月曆法（如 2 月飛魚祭封山禁採集、10 月禁忌之月禁完工）。</li>
+                    <li><strong>⚡ 行動點數 (AP) 與每月恢復：</strong> AP 代表體力與時間。六道工序各 3 AP（耆老執行⑥填縫 0 AP）、移動 1 AP（青年免費）、贈送材料 1 AP、幫忙長者 2 AP、科學轉譯 2 AP、遠程指導 2 AP，請益依對象 1 至 3 AP。每個月初只恢復一部分體力（青年 +4、中生代與耆老 +3，不超過上限）。</li>
+                    <li><strong>💡 技術點數 (KP)：</strong> 代表對傳統工藝的理解，要向人請益才會增加。⑤理線捻繩需 3 KP，⑥填縫完工需 8 KP，機器加工需 5 KP。</li>
+                    <li><strong>🙏 請益（向誰學，學到的不一樣）：</strong> 向<b>耆老</b>請益：青年 3 AP、中生代 2 AP，都獲得 3 KP，請益者與耆老<b>各 +1 分</b>。青年向<b>中生代</b>請益：1 AP 獲得 2 KP，<b>雙方各 +1 分</b>；中生代傳得快，但青年的 KP 必須低於該中生代才能問，更深的知識還是要找耆老。耆老也可以「遠程指導 (2 AP)」，對象 +1 KP，耆老 <b>+1 分</b>。</li>
+                    <li><strong>🎁 回饋與幫忙（傳統教養）：</strong> 把材料「贈送」給耆老，贈送者 <b>+1 分</b>（每月計 1 次），而且當月向耆老請益可<b>多得 1 KP</b>（帶禮請益）。與耆老在同一地點時可以「幫忙長者 (2 AP)」：耆老回復 2 AP，自己 <b>+1 分</b>（每月 1 次）。6 月好月節這兩種得分加倍。</li>
+                    <li><strong>🔬 科學轉譯：</strong> 消耗 2 AP 與 2 KP，成功率 = 50% + 扣除後的 KP×5%（中生代再 +20%）；<b>第 8 個月 (Pitanatana 土器月) 必定成功</b>。成功獲得 <b>+4 分</b>與 <b>2 份材料</b>。</li>
+                    <li><strong>⏳ 跨月等待：</strong> 除了「①砍伐剝皮」可以在同一個月重複執行外，每完成一道工序都要等到<b>下一個月</b>才能做下一道（12 月的⑤與⑥例外，可以接連完成）。最快也要到 7 月才能完工。</li>
+                    <li><strong>🌿 材料：</strong> 在山林執行「①砍伐剝皮」產出材料（每次 1 份，1 月與 7 月 2 份），工序②至⑥各消耗 1 份。</li>
+                    <li><strong>📅 曆法禁忌：</strong> 依循蘭嶼 12 個月的夜曆，例如 2 月封山不能進山林、4 月底要留 1 AP 準備梅雨、9 月不能在商店完工、10 月任何方式都不能完工。每個月的效果會顯示在畫面上方。</li>
                 </ul>
 
                 <h3>👤 角色能力介紹</h3>
                 <ul>
-                    <li><strong>👑 資深工匠 (耆老)：</strong> Max AP 4 (每月恢復 +3)，開局 10 KP。傳統技藝純熟，執行最終「填縫」不耗 AP；能遠程消耗 2 AP 指導青年或協商者獲得 KP。</li>
-                    <li><strong>🏃 青年學徒 (部落青年)：</strong> Max AP 6 (每月恢復 +4)，開局 0 KP。步伐輕快，移動不耗 AP；向耆老「請益 (3 AP)」能獲得 3 KP。</li>
-                    <li><strong>⚖️ 協商者 (中年工匠)：</strong> Max AP 5 (每月恢復 +3)，開局 5 KP。擔任傳統與現代橋樑，若購買工業材料完工可獲得加分且免除扣分；溝通無礙，向耆老「請益 (1 AP)」可獲得 1 KP，也能接受遠程指導。</li>
+                    <li><strong>👑 資深工匠 (耆老)：</strong> AP 上限 4（每月 +3），開局 10 KP。技藝最純熟，執行「⑥填縫」不耗 AP，可遠程指導後輩。體力有限，很需要後輩送材料與幫忙。</li>
+                    <li><strong>🏃 文化復振青年 (青年)：</strong> AP 上限 6（每月 +4），開局 0 KP。移動不耗 AP；可以向耆老請益（學得深），也可以向中生代請益（學得快）。</li>
+                    <li><strong>🌉 中生代 (中生代工匠)：</strong> AP 上限 5（每月 +3），開局 5 KP。小時候有過傳統生活的經驗，向耆老請益只要 2 AP 就能獲得 3 KP；能把知識有效率地傳給青年；熟悉兩種文化，科學轉譯成功率 +20%，走「機器加工天然纖維」路線額外 +3 分。</li>
                 </ul>
 
-                <h3>🗺️ 造船六階段流程圖</h3>
+                <h3>🗺️ 造船流程圖：三種完工方式</h3>
                 <div class="css-flowchart">
-                    <div class="fc-node fc-start">開始造船 (需要 6 份材料 + 跨月等待)</div>
-                    <div class="fc-branches">
+                    <div class="fc-node fc-start">🌲 山林階段（三條路都要先完成）</div>
+                    <div class="fc-node">① 砍伐剝皮 ipana'ape (3 AP | 產出 1 材料，可重複)</div>
+                    <div class="fc-arrow">↓ 跨月</div>
+                    <div class="fc-node">② 懸掛摩擦軟化 (3 AP | 耗 1 材料)</div>
+                    <div class="fc-arrow">↓ 跨月</div>
+                    <div class="fc-node">③ 劃痕撕絲 chingdasan (3 AP | 耗 1 材料)</div>
+                    <div class="fc-arrow" style="margin: 12px 0;">↓ 跨月，接下來選一條路</div>
+                    <div class="fc-branches" style="flex-direction: column;">
                         <div class="fc-branch traditional">
-                            <div class="fc-label">🌟 傳統路線 (高分 / 完美傳承)</div>
-                            <div style="font-size:0.75rem;color:#94a3b8;padding:0.3rem;text-align:center">📍 山林階段 (前三步)</div>
-                            <div class="fc-node">① 砍伐剝皮 ipana'ape (3 AP | 1 材料)</div>
+                            <div class="fc-label">🌟 傳統 Avaka<br><small>🛖 灘頭工作室</small></div>
+                            <div class="fc-node">④ 脫水曝曬乾燥 (3 AP | 耗 1 材料)</div>
                             <div class="fc-arrow">↓ 跨月</div>
-                            <div class="fc-node">② 懸掛摩擦軟化 (3 AP | 1 材料)</div>
+                            <div class="fc-node">⑤ 理線捻繩 kolili (3 AP | 需 3 KP + 1 材料)</div>
                             <div class="fc-arrow">↓ 跨月</div>
-                            <div class="fc-node">③ 劃痕撕絲 chingdasan (3 AP | 1 材料)</div>
-                            <div class="fc-arrow">↓ 跨月 → 移動到灘頭工作室</div>
-                            <div style="font-size:0.75rem;color:#94a3b8;padding:0.3rem;text-align:center">📍 灘頭工作室階段 (後三步)</div>
-                            <div class="fc-node">④ 脫水曝曬乾燥 (3 AP | 1 材料)</div>
-                            <div class="fc-arrow">↓ 跨月</div>
-                            <div class="fc-node">⑤ 理線捻繩 kolili (3 AP | 3 KP + 1 材料)</div>
-                            <div class="fc-arrow">↓ 跨月</div>
-                            <div class="fc-node">⑥ 填縫完工 Mamaruk (3 AP | 8 KP + 1 材料)</div>
+                            <div class="fc-node">⑥ 填縫完工 Mamaruk (3 AP | 需 8 KP + 1 材料)</div>
                             <div class="fc-arrow">↓</div>
-                            <div class="fc-node fc-win">傳承成功！</div>
+                            <div class="fc-node fc-win">+20 分<br>船可拆、可修</div>
                         </div>
-                        <div class="fc-branch modern">
-                            <div class="fc-label">⚠️ 現代化路線 (低分 / 文化斷裂)</div>
-                            <div class="fc-node">完成山林 ①②③ 三道工序</div>
-                            <div class="fc-arrow">↓ 跨月乾燥</div>
-                            <div class="fc-node">前往 🏬 商店</div>
+                        <div class="fc-branch" style="border-color: rgba(251, 191, 36, 0.5);">
+                            <div class="fc-label" style="color:#fbbf24;">⚙️ 機器加工天然纖維<br><small>🏬 商店</small></div>
+                            <div class="fc-node">用機器處理 Avaka 纖維 (3 AP | 需 5 KP + 2 材料)</div>
                             <div class="fc-arrow">↓</div>
-                            <div class="fc-node">購買樹脂完工 (3 AP | 2 材料)</div>
+                            <div class="fc-node" style="background: rgba(251, 191, 36, 0.12); border-color:#fbbf24; color:#fde68a; font-weight:bold;">+12 分（中生代 +15）<br>仍用 Avaka，船可拆修；少了手工曝曬與捻繩的經驗</div>
+                        </div>
+                        <div class="fc-branch" style="border-color: rgba(148, 163, 184, 0.5);">
+                            <div class="fc-label" style="color:#cbd5e1;">🧴 工業樹脂<br><small>🏬 商店</small></div>
+                            <div class="fc-node">用樹脂直接填縫 (3 AP | 需 2 材料)</div>
                             <div class="fc-arrow">↓</div>
-                            <div class="fc-node fc-lose">完工，但去技能化</div>
+                            <div class="fc-node" style="background: rgba(148, 163, 184, 0.12); border-color:#94a3b8; color:#e2e8f0; font-weight:bold;">+5 分<br>很快完工；接縫黏死，壞了無法拆修</div>
                         </div>
                     </div>
                 </div>
 
-                <h3>🏆 結算與傳承</h3>
-                <p>12 個月結束後，系統會結算所有人的「文化韌性總分」與「KP 演進曲線圖」。成功走完「傳統路線」將獲得最高評價；依賴「現代路線」將導致去技能化標記。青年與長輩請益指導，雙方都能獲得傳承加分，團隊合作才是關鍵！</p>
+                <h3>🏆 結算</h3>
+                <p>12 個月結束後，系統會結算「文化韌性總分」與 KP 演進曲線圖。完工分數如上圖，請益、指導、回饋長者、幫忙長者與科學轉譯都會另外加分，遊戲中可以隨時在畫面下方的「得分紀錄」看到自己的分數從哪裡來。最高等級的結局「傳承之靈」只有走傳統路線才能獲得。船完工之後這一年還沒結束：你仍然可以砍伐備料、贈送材料、指導或幫忙其他人，這些也都會加分。分數不是在評斷哪條路對或錯，而是讓你回頭想：我做了哪些事？為什麼這些事會加分？</p>
             </div>
             <button id="close-rules-btn" class="btn primary mt-4">我已經完全了解了</button>
         `,
@@ -483,7 +493,7 @@ const translations = {
                 '耆老在灘頭開始大船下水祈福...',
                 '中生代在現代商店購置了工業樹脂...',
                 '島民在山林採集蘭嶼花椒...',
-                '達悟族長輩正在向年輕人傳授造船歌謠...',
+                '雅美／達悟族長輩正在向年輕人傳授造船歌謠...',
                 '潮汐變更，目前正值退潮時段...',
                 '飛魚群在開元港外海躍出水面！',
                 '海風徐徐吹拂，山林氣溫適宜原料生長...'
@@ -514,10 +524,10 @@ const translations = {
                 desc: 'Fast Movement<br>Apprentice Learning'
             },
             middle: {
-                title: 'Negotiator<br><span style="font-size:0.8rem; font-weight:normal; opacity:0.8;">(Middle)</span>',
+                title: 'Middle Generation<br><span style="font-size:0.8rem; font-weight:normal; opacity:0.8;">(Bridge Artisan)</span>',
                 badgeAp: 'AP 5 (+3/mo)',
                 badgeKp: 'KP 5',
-                desc: 'Adapt to Modern<br>No Industrial Penalty'
+                desc: 'Learns & teaches fast<br>Skilled at adapting'
             }
         },
         placeholderRoom: 'ENTER 4-DIGIT CODE',
@@ -540,9 +550,9 @@ const translations = {
                 hairColor: '🪮 Hair Color',
                 eye: '👁 Eye Color',
                 face: '👤 Face Shape',
-                accessory: '🛡 Tao Ceremonial Accessories',
+                accessory: '🛡 Yami/Tao Ceremonial Accessories',
                 accessorySub: 'Worn only during festivals (Flying Fish Festival, Ship Launch)',
-                cloth: '👕 Tao Clothing',
+                cloth: '👕 Yami/Tao Clothing',
                 clothSub: 'Traditional colors are white, black, blue; bright colors avoided'
             },
             skinTitles: {
@@ -558,7 +568,7 @@ const translations = {
                 bald: 'Bald'
             },
             hairColorTitles: {
-                '#0d0d0d': 'Black (Traditional Tao)',
+                '#0d0d0d': 'Black (Traditional Yami/Tao)',
                 '#2a1a0a': 'Dark Brown',
                 '#5a3a1a': 'Brown',
                 '#c8c8c8': 'Silver (Elder)'
@@ -611,9 +621,17 @@ const translations = {
             statusLabels: ['Remaining AP', 'KP Points', 'Owned Materials', 'Ship Progress', 'Total Score'],
             readyBtnReady: 'Cancel Ready (Waiting...)',
             readyBtnNotReady: 'Ready for Next Month',
-            askBtn: '🙏 Ask Elder <span style="font-size:0.8rem;opacity:0.7;font-weight:normal;">(3 AP → get 3 KP)</span>',
+            askBtn: '🙏 Ask Elder <span style="font-size:0.8rem;opacity:0.7;font-weight:normal;">(3 AP → get 3 KP · +1 pt)</span>',
+            askElderTitle: '🙏 Ask Elder',
+            askMiddleTitle: '🤝 Ask Middle Generation',
+            askGiftNote: '🎁 gift',
+            scoreUnit: 'pt',
+            helpBtn: '💪 Help the Elder <span style="font-size:0.8rem;opacity:0.7;font-weight:normal;">(2 AP → Elder recovers 2 AP · +1 pt)</span>',
+            giveElderBonus: ' · +1 pt',
+            scoreLogLabel: 'Score log',
+            noScoreYet: 'No points yet',
             teachLabel: 'Select Apprentice',
-            teachBtn: '💡 Guide Apprentice <span style="font-size:0.8rem;opacity:0.7;font-weight:normal;">(2 AP → they get 1 KP)</span>',
+            teachBtn: '💡 Guide Apprentice <span style="font-size:0.8rem;opacity:0.7;font-weight:normal;">(2 AP → they get 1 KP · +1 pt)</span>',
             locations: {
                 '山林': {
                     name: '🌲 Mountain Forest',
@@ -640,70 +658,74 @@ const translations = {
                 '商店': {
                     name: '🏬 Modernized Store',
                     badge: 'Industrial',
-                    desc: 'Buy fast but culturally disruptive industrial resin',
+                    desc: 'Ready-made industrial materials, and machines that can process natural fibre',
                     moveBtn: 'Move here (1 AP)',
-                    buyBtn: 'Buy resin & finish (3 AP | 2 Mats + Forest Steps 1-3 + Cross-month)'
+                    buyBtn: '🧴 Finish with industrial resin (3 AP | 2 Mats + Forest Steps 1-3 + Cross-month → +5 pts)',
+                    machineBtn: '⚙️ Finish with machine-processed Avaka fibre (3 AP | 5 KP + 2 Mats + Forest Steps 1-3 + Cross-month → +12 pts)'
                 }
             }
         },
         rulesHtml: `
             <h2>📜 Game Rules & Process</h2>
             <div class="rules-scroll-area custom-scrollbar">
-                <p><strong>"Avaka: Dimension of the Island"</strong> is a multiplayer cooperative & competitive game about traditional Tao shipbuilding and cultural choices. You play as a Tao artisan who must complete a plank boat within 12 months (rounds). Failure to complete it on time results in cultural disruption.</p>
-                
-                <h3>🎯 Core AP, Stamina & Heritage Scoring</h3>
+                <p><strong>"Avaka: Dimension of the Island"</strong> is a multiplayer cooperative & competitive game about traditional boat building and cultural choices on Lanyu (Orchid Island). You play a Yami/Tao artisan who must complete a plank boat within 12 months (rounds). There are three ways to finish. None is the "right answer", but each has its own consequences; not finishing in time counts as failure.</p>
+
+                <h3>🎯 Stamina, Knowledge & Scoring</h3>
                 <ul>
-                    <li><strong>⚡ Action Points (AP) &amp; Monthly Recovery:</strong> Actions cost AP: Forest Steps ①②③ (3 AP), Beach Steps ④⑤ (3 AP), Caulk ⑥ (0-3 AP), Ask Elder (3 AP), Remote Guide (2 AP), Move (1 AP; Youth/Month 1: 0 AP), Give Material (1 AP). Each month recovers stamina (Youth +4 AP, Middle/Elder +3 AP).</li>
-                    <li><strong>🤝 Teamwork &amp; Heritage Scoring:</strong> Asking the Elder (3 AP) grants the Youth +3 KP and <b>+1 heritage point to both players</b>; Remote Guiding (2 AP) grants the apprentice +1 KP and <b>+1 heritage point to the Elder</b>; Gifting Materials (1 AP) transfers resources.</li>
-                    <li><strong>🔬 Scientific Translation:</strong> Costs 2 AP &amp; 2 KP. Success rate = 50% + KP×5% (Middle role +20%); <b>Month 8 (Pitanatana) is 100% guaranteed!</b> Success grants <b>+4 points</b> and <b>2 materials</b>!</li>
-                    <li><strong>⏳ Cross-Month Cooldown:</strong> After each step (forest or beach), at least <b>1 month must pass</b> before the next step (takes <b>6+ months minimum</b>).</li>
-                    <li><strong>🌿 Material Requirements:</strong> Each of the 6 craft steps consumes <b>1 material</b> (<b>6 materials total</b> for a full boat). Youth moves fast and should gather &amp; gift materials; Elders guide apprentices.</li>
-                    <li><strong>💡 Knowledge Points (KP):</strong> Required for advanced steps (3 KP for twining kolili, 8 KP for caulking Mamaruk).</li>
-                    <li><strong>📅 Calendar Taboos:</strong> Follows Lanyu's 12-month calendar (e.g. Month 2 bans forest access, Month 10 bans caulking).</li>
+                    <li><strong>⚡ Action Points (AP) &amp; Monthly Recovery:</strong> AP stands for stamina and time. Each of the six craft steps costs 3 AP (Elder caulks for 0 AP), Move 1 AP (free for Youth), Give Material 1 AP, Help the Elder 2 AP, Scientific Translation 2 AP, Remote Guiding 2 AP, Asking 1–3 AP depending on who you ask. Each month restores only part of your stamina (Youth +4, Middle Generation and Elder +3, never above the maximum).</li>
+                    <li><strong>💡 Knowledge Points (KP):</strong> Your understanding of the traditional craft; it only grows by learning from others. ⑤ Twining needs 3 KP, ⑥ Caulking needs 8 KP, machine processing needs 5 KP.</li>
+                    <li><strong>🙏 Asking (who you learn from matters):</strong> Ask the <b>Elder</b>: Youth pays 3 AP, Middle Generation pays 2 AP, both gain 3 KP, and the asker and the Elder each get <b>+1 point</b>. Youth can ask the <b>Middle Generation</b>: 1 AP for 2 KP, <b>+1 point each</b>; they pass knowledge on quickly, but the Youth's KP must be lower than theirs, so deeper knowledge still comes from the Elder. The Elder can also Remote Guide (2 AP): target +1 KP, Elder <b>+1 point</b>.</li>
+                    <li><strong>🎁 Giving back &amp; helping (traditional upbringing):</strong> Give a material to the Elder for <b>+1 point</b> (counted once a month); asking the Elder in that same month then yields <b>+1 extra KP</b> (asking with a gift). When you are in the same place as the Elder you can Help the Elder (2 AP): the Elder recovers 2 AP and you get <b>+1 point</b> (once a month). Both score double in Month 6, the Good Month Festival.</li>
+                    <li><strong>🔬 Scientific Translation:</strong> Costs 2 AP &amp; 2 KP. Success rate = 50% + remaining KP×5% (Middle Generation +20%); <b>guaranteed in Month 8 (Pitanatana)</b>. Success grants <b>+4 points</b> and <b>2 materials</b>.</li>
+                    <li><strong>⏳ Cross-Month Waiting:</strong> Except for ① Chop &amp; Peel, which can be repeated in the same month, every step must wait until the <b>next month</b> before the following step (steps ⑤ and ⑥ in Month 12 are the exception). The earliest possible finish is Month 7.</li>
+                    <li><strong>🌿 Materials:</strong> ① Chop &amp; Peel in the forest yields materials (1 each time, 2 in Months 1 and 7); steps ② to ⑥ each consume 1.</li>
+                    <li><strong>📅 Calendar Taboos:</strong> The game follows Lanyu's 12-month calendar, e.g. the forest is closed in Month 2, you should keep 1 AP at the end of Month 4 for the plum rain, the store cannot finish boats in Month 9, and nothing can be finished in Month 10. Each month's effect is shown at the top of the screen.</li>
                 </ul>
 
                 <h3>👤 Character Roles</h3>
                 <ul>
-                    <li><strong>👑 Master Artisan (Elder):</strong> Max AP 4 (+3/mo rec), starts with 10 KP. Caulk costs 0 AP; can guide apprentices or negotiators remotely (2 AP) to grant them KP.</li>
-                    <li><strong>🏃 Young Apprentice (Youth):</strong> Max AP 6 (+4/mo rec), starts with 0 KP. Light-footed, move costs 0 AP; learning from Elder (3 AP) grants 3 KP.</li>
-                    <li><strong>⚖️ Negotiator (Middle):</strong> Max AP 5 (+3/mo rec), starts with 5 KP. Bridges traditional & modern; using resin grants bonus without penalty; can casually ask Elder for guidance (1 AP) to gain 1 KP.</li>
+                    <li><strong>👑 Master Artisan (Elder):</strong> Max AP 4 (+3/month), starts with 10 KP. The most skilled: caulking costs 0 AP and can guide others remotely. Limited stamina, so gifts of material and help from the younger ones matter a lot.</li>
+                    <li><strong>🏃 Young Apprentice (Youth):</strong> Max AP 6 (+4/month), starts with 0 KP. Moves for free; can ask the Elder (deeper) or the Middle Generation (faster).</li>
+                    <li><strong>🌉 Middle Generation (Bridge Artisan):</strong> Max AP 5 (+3/month), starts with 5 KP. Grew up with the traditional way of life, so asking the Elder costs only 2 AP for 3 KP; passes knowledge on to the Youth efficiently; at home in two cultures: +20% on Scientific Translation and +3 points on the machine-processed natural fibre path.</li>
                 </ul>
 
-                <h3>🗺️ Shipbuilding Flowchart</h3>
+                <h3>🗺️ Boat-building Flowchart: three ways to finish</h3>
                 <div class="css-flowchart">
-                    <div class="fc-node fc-start">Start Building (Requires 4 Materials + Drying Cooldown)</div>
-                    
-                    <div class="fc-branches">
+                    <div class="fc-node fc-start">🌲 Forest stage (required for all three paths)</div>
+                    <div class="fc-node">① Chop &amp; Peel ipana'ape (3 AP | yields 1 material, repeatable)</div>
+                    <div class="fc-arrow">↓ next month</div>
+                    <div class="fc-node">② Hang &amp; Rub to soften (3 AP | 1 material)</div>
+                    <div class="fc-arrow">↓ next month</div>
+                    <div class="fc-node">③ Score &amp; Strip fibre chingdasan (3 AP | 1 material)</div>
+                    <div class="fc-arrow" style="margin: 12px 0;">↓ next month, then choose a path</div>
+                    <div class="fc-branches" style="flex-direction: column;">
                         <div class="fc-branch traditional">
-                            <div class="fc-label">🌟 Traditional Path (High Score / Perfect Heritage)</div>
-                            <div class="fc-node">Go to 🌲 Forest (Gather 3 AP)</div>
+                            <div class="fc-label">🌟 Traditional Avaka<br><small>🛖 Beach Workshop</small></div>
+                            <div class="fc-node">④ Dry in the sun (3 AP | 1 material)</div>
+                            <div class="fc-arrow">↓ next month</div>
+                            <div class="fc-node">⑤ Twine rope kolili (3 AP | 3 KP + 1 material)</div>
+                            <div class="fc-arrow">↓ next month</div>
+                            <div class="fc-node">⑥ Caulk &amp; finish Mamaruk (3 AP | 8 KP + 1 material)</div>
                             <div class="fc-arrow">↓</div>
-                            <div class="fc-node">Go to 🛖 Workshop (① Peel Hemp 3 AP | 1 Mat)</div>
-                            <div class="fc-arrow">↓ Cure 1 Month</div>
-                            <div class="fc-node">② Scrape Fiber (3 AP | 1 Mat)</div>
-                            <div class="fc-arrow">↓ Cure 1 Month</div>
-                            <div class="fc-node">③ Twine Rope (3 AP | 3 KP + 1 Mat)</div>
-                            <div class="fc-arrow">↓ Cure 1 Month</div>
-                            <div class="fc-node">④ Caulk & Finish (3 AP | 8 KP + 1 Mat)</div>
-                            <div class="fc-arrow">↓</div>
-                            <div class="fc-node fc-win">Heritage Succeeded!</div>
+                            <div class="fc-node fc-win">+20 points<br>Boat can be taken apart and repaired</div>
                         </div>
-                        
-                        <div class="fc-branch modern">
-                            <div class="fc-label">⚠️ Modern Path (Low Score / Deskilling)</div>
-                            <div class="fc-node">Complete ① Peel Hemp</div>
-                            <div class="fc-arrow">↓ Cure 1 Month</div>
-                            <div class="fc-node">Go to 🏬 Store</div>
+                        <div class="fc-branch" style="border-color: rgba(251, 191, 36, 0.5);">
+                            <div class="fc-label" style="color:#fbbf24;">⚙️ Machine-processed natural fibre<br><small>🏬 Store</small></div>
+                            <div class="fc-node">Process the Avaka fibre by machine (3 AP | 5 KP + 2 materials)</div>
                             <div class="fc-arrow">↓</div>
-                            <div class="fc-node">Buy Resin & Finish (3 AP | 2 Mats)</div>
+                            <div class="fc-node" style="background: rgba(251, 191, 36, 0.12); border-color:#fbbf24; color:#fde68a; font-weight:bold;">+12 points (Middle Generation +15)<br>Still Avaka, still repairable; the hands-on drying and twining are skipped</div>
+                        </div>
+                        <div class="fc-branch" style="border-color: rgba(148, 163, 184, 0.5);">
+                            <div class="fc-label" style="color:#cbd5e1;">🧴 Industrial resin<br><small>🏬 Store</small></div>
+                            <div class="fc-node">Seal the seams with resin (3 AP | 2 materials)</div>
                             <div class="fc-arrow">↓</div>
-                            <div class="fc-node fc-lose">Finished with Deskilling</div>
+                            <div class="fc-node" style="background: rgba(148, 163, 184, 0.12); border-color:#94a3b8; color:#e2e8f0; font-weight:bold;">+5 points<br>Done quickly; seams are glued shut and cannot be repaired</div>
                         </div>
                     </div>
                 </div>
 
-                <h3>🏆 Scoring & Heritage</h3>
-                <p>After 12 months, the system calculates everyone's total score & KP curve chart. Completing the traditional path yields top ratings; relying on the modern path marks deskilling. Learning and guiding earn bonus scores—teamwork is key!</p>
+                <h3>🏆 Settlement</h3>
+                <p>After 12 months the system totals everyone's Cultural Resilience score and draws the KP curve chart. Finishing scores are shown in the chart above. Asking, guiding, giving back to the Elder, helping the Elder and Scientific Translation all add points; during the game the "Score log" at the bottom of the screen shows where your points come from. The top ending is reserved for the traditional path. Finishing your boat does not end your year: you can still gather materials, give them away, guide or help the others, and all of that scores too. The score does not judge which path is right or wrong; it invites you to look back: what did I do, and why did those things earn points?</p>
             </div>
             <button id="close-rules-btn" class="btn primary mt-4">I understand completely</button>
         `,
@@ -735,7 +757,7 @@ const translations = {
                 'An elder initiated the boat launching ritual...',
                 'A negotiator bought resin at the store...',
                 'Islanders are gathering Lanyu prickly ash...',
-                'Tao elders are teaching canoe songs to youths...',
+                'Yami/Tao elders are teaching canoe songs to youths...',
                 'Tide shifted: low tide cycle active...',
                 'School of flying fish spotted near harbor!',
                 'Sea breeze blowing; temperature is ideal for crops...'
@@ -765,8 +787,8 @@ function translateLog(logText) {
     // Replace names of roles
     translated = translated
         .replace(/資深工匠 \(耆老\)/g, 'Elder Artisan')
-        .replace(/文化青年/g, 'Young Apprentice')
-        .replace(/中生代/g, 'Negotiator');
+        .replace(/文化復振青年/g, 'Young Apprentice')
+        .replace(/中生代/g, 'Middle Generation');
         
     // Replace typical action sentences
     const patterns = [
@@ -783,7 +805,18 @@ function translateLog(logText) {
         { regex: /(.+) 完美傳承了造船技術！獲得 (\d+) 分/, replace: '$1 perfectly inherited shipbuilding skills! Gained $2 points' },
         { regex: /(.+) 使用現代材料完工，文化流失了\.\.\./, replace: '$1 finished using modernized materials, cultural heritage was lost...' },
         { regex: /(.+) 向部落長輩請益，獲得 3 KP/, replace: '$1 learned from the Elder, gained 3 KP' },
+        { regex: /(.+) 向耆老請益，獲得 (\d+) KP 與 1 分（帶禮請益，多得 1 KP）/, replace: '$1 learned from the Elder: +$2 KP, +1 point (brought a gift: +1 extra KP)' },
+        { regex: /(.+) 向耆老請益，獲得 (\d+) KP 與 1 分/, replace: '$1 learned from the Elder: +$2 KP, +1 point' },
+        { regex: /(.+) 向Middle Generation (.+) 請益，獲得 (\d+) KP，雙方各得 1 分/, replace: '$1 learned from Middle Generation $2: +$3 KP, +1 point each' },
+        { regex: /(.+) 用機器加工 Avaka 纖維完工，獲得 (\d+) 分。.+/, replace: '$1 finished with machine-processed Avaka fibre (+$2). The boat can still be taken apart and repaired, but the hands-on drying and twining were skipped.' },
+        { regex: /(.+) 用工業樹脂完工，獲得 (\d+) 分。.+/, replace: '$1 finished with industrial resin (+$2). The boat was done quickly, but the seams are glued shut and cannot be repaired.' },
+        { regex: /🎁 (.+) 帶禮物回饋耆老，獲得 (\d+) 分；本月向耆老請益可多得 1 KP/, replace: '🎁 $1 brought a gift for the Elder: +$2 point(s); asking the Elder this month gives +1 extra KP' },
+        { regex: /💪 (.+) 幫 (.+) 分擔粗重的工作，.+（現有 (\d+)\/(\d+) AP），.+ 獲得 (\d+) 分/, replace: '💪 $1 helped $2 with the heavy work: $2 recovers stamina ($3/$4 AP), $1 gains $5 point(s)' },
+        { regex: /梅雨腐蝕：(.+) 用上個月留下的 1 AP 保護材料免於腐爛。/, replace: 'Plum Rain: $1 used 1 AP left over from last month to keep the materials from rotting.' },
+        { regex: /梅雨腐蝕：(.+) 上個月把體力用光了，來不及防潮，材料腐爛歸零！/, replace: 'Plum Rain: $1 had no AP left from last month, so the materials rotted to zero!' },
+        { regex: /⚠️ 預告：下個月是梅雨季。.+/, replace: '⚠️ Heads-up: plum rain comes next month. If you hold materials, keep 1 AP unspent at the end of this month or they will rot to zero.' },
         { regex: /(.+) 因傳承指導獲得 1 分/, replace: '$1 gained 1 point for heritage guidance' },
+        { regex: /(.+) 遠程指導了 (.+)，獲得 1 分傳承分數/, replace: '$1 remotely guided $2 and gained 1 heritage point' },
         { regex: /(.+) 遠程指導了 (.+)/, replace: '$1 remotely guided $2' },
         { regex: /🤝 (.+) 消耗了 1 AP，將 1 份材料送給了 (.+)！/, replace: '🤝 $1 spent 1 AP to give 1 material to $2!' },
         { regex: /⏳ (.+) 已準備好/, replace: '⏳ $1 is ready' },
@@ -812,8 +845,24 @@ function translateScoreBreakdown(breakdown) {
         return item
             .replace(/傳統 Avaka/g, 'Traditional Avaka')
             .replace(/工業材料/g, 'Industrial Materials')
-            .replace(/傳承指導/g, 'Heritage Guidance');
+            .replace(/傳承指導/g, 'Heritage Guidance')
+            .replace(/請益耆老/g, 'Asked the Elder')
+            .replace(/請益中生代/g, 'Asked the Middle Generation')
+            .replace(/回饋長者/g, 'Gift to the Elder')
+            .replace(/幫忙長者/g, 'Helped the Elder')
+            .replace(/機器加工天然纖維/g, 'Machine-processed natural fibre')
+            .replace(/工業樹脂/g, 'Industrial resin')
+            .replace(/科學轉譯/g, 'Scientific Translation')
+            .replace(/遠程指導/g, 'Remote Guidance');
     });
+}
+
+function summarizeScoreBreakdown(breakdown) {
+    const items = translateScoreBreakdown(breakdown || []);
+    if (!items.length) return translations[currentLang].game.noScoreYet;
+    const counts = new Map();
+    items.forEach(item => counts.set(item, (counts.get(item) || 0) + 1));
+    return [...counts.entries()].map(([label, n]) => n > 1 ? `${label} ×${n}` : label).join(currentLang === 'en' ? ', ' : '、');
 }
 
 function applyLanguage() {
@@ -1078,8 +1127,10 @@ function applyLanguage() {
                 if (caulkBtn && locData.steps.caulk) caulkBtn.textContent = locData.steps.caulk;
             }
         } else if (locKey === '商店') {
-            const buyBtn = card.querySelector('.buy-btn');
+            const buyBtn = card.querySelector('.buy-btn[data-item="resin"]');
             if (buyBtn) buyBtn.textContent = locData.buyBtn;
+            const machineBtn = card.querySelector('.buy-btn[data-item="machine"]');
+            if (machineBtn) machineBtn.textContent = locData.machineBtn;
         }
     }
     
@@ -1092,6 +1143,9 @@ function applyLanguage() {
     
     const teachBtnEl = document.getElementById('teach-btn');
     if (teachBtnEl) teachBtnEl.innerHTML = t.game.teachBtn;
+
+    const helpBtnEl = document.getElementById('help-btn');
+    if (helpBtnEl) helpBtnEl.innerHTML = t.game.helpBtn;
 
     // 7. Translate Rules Modal
     const rulesModalContent = document.querySelector('#rules-modal .modal-content');
@@ -1174,6 +1228,8 @@ const askBtn = document.getElementById('ask-btn');
 const teachContainer = document.getElementById('teach-container');
 const teachTargetSelect = document.getElementById('teach-target');
 const teachBtn = document.getElementById('teach-btn');
+const askMiddleBtn = document.getElementById('ask-middle-btn');
+const helpBtn = document.getElementById('help-btn');
 
 // Chat UI
 const chatInput = document.getElementById('chat-input');
@@ -1204,15 +1260,15 @@ const scriptEvents = {
         title_zh: "【封山危機】遺忘儲備的代價",
         title_en: "【Mountain Closure】Price of Forgetting to Stockpile",
         dialogues_zh: [
-            { role: "青年學徒(部落青年)", text: "糟了！我的 Avaka 原料用完了，但現在上山會觸犯禁忌……" },
-            { role: "協商者(中年工匠)", text: "這就是為什麼老人家說 Kashyman 月要拼命存貨。現在你只能跟我去商店買尼龍繩，或者枯等一個月，看著進度落後。" }
+            { role: "文化復振青年", text: "糟了！我的 Avaka 原料用完了，但現在上山會觸犯禁忌……" },
+            { role: "中生代", text: "這就是為什麼老人家說 Kashyman 月要拼命存貨。山上現在不能去，但你可以來問我，或是帶著禮物去請教老人家。等待的時候，正好把該懂的學起來。" }
         ],
         dialogues_en: [
             { role: "Young Apprentice (Youth)", text: "Oh no! I'm out of Avaka, but entering the mountains now is forbidden..." },
-            { role: "Negotiator (Middle)", text: "This is why the elders said to stock up in Kashyman. Now you can only buy nylon rope at the store, or wait a month and fall behind." }
+            { role: "Middle Generation", text: "This is why the elders said to stock up in Kashyman. The forest is closed now, but you can come and ask me, or bring a gift and ask the Elder. Waiting is a good time to learn what you need to know." }
         ],
-        desc_zh: "【飛魚禁令】部落灘頭已舉行招魚祭，整個月門戶關閉。為了尊重魚靈，所有男人禁止進入山林，無法執行「採集」！\n💡 提示：你可以請同區域的隊友使用「贈與」功能支援你材料。",
-        desc_en: "【Flying Fish Ban】The beach ritual is active. All men are banned from entering the mountains. Cannot perform 'Gathering'!\n💡 Tip: Ask teammates in the same area to use 'Give Mat' to support you."
+        desc_zh: "【飛魚禁令】部落灘頭已舉行招魚祭，整個月門戶關閉。為了尊重魚靈，所有男人禁止進入山林，無法執行「①砍伐剝皮」！\n💡 提示：你可以請同區域的隊友使用「贈與」功能支援你材料。",
+        desc_en: "【Flying Fish Ban】The beach ritual is active. All men are banned from entering the mountains. Cannot perform '① Chop & Peel'!\n💡 Tip: Ask teammates in the same area to use 'Give Mat' to support you."
     },
     5: {
         title_zh: "【梅雨腐蝕】時間與天氣的賽跑",
@@ -1225,22 +1281,22 @@ const scriptEvents = {
             { role: "System", text: "Clouds gather. A sudden downpour puts your drying Avaka fiber at risk of rotting." },
             { role: "Elder", text: "Child, building a boat is not just about the hemp on the ground, but the clouds in the sky. Hurry, pack it up!" }
         ],
-        desc_zh: "【梅雨季節】為了保護放在灘頭的材料，擁有材料且「未完成工序④乾燥」的玩家將被自動扣除 1 AP 作為維護費。若已完成乾燥則不受梅雨影響！若未完成且 AP 不足，材料將受潮損壞歸零！",
-        desc_en: "【Plum Rain Season】To protect materials, players with stockpiled fibers who haven't finished step 4 (Drying) will lose 1 AP for maintenance. If dried, it's safe! If AP is insufficient, wet materials will rot to zero!"
+        desc_zh: "【梅雨季節】進入本月時，擁有材料且「未完成工序④乾燥」的玩家，會用上個月留下的 1 AP 來遮蓋防潮。上個月把 AP 全部用光的人來不及保護，材料受潮損壞歸零！",
+        desc_en: "【Plum Rain Season】On entering this month, players holding materials who haven't finished step 4 (Drying) use 1 AP left over from last month to cover them. Anyone who spent all their AP last month is too late: the wet materials rot to zero!"
     },
     10: {
         title_zh: "【禁忌之月】心理韌性的考驗",
         title_en: "【Forbidden Month】A Test of Resilience",
         dialogues_zh: [
-            { role: "協商者(中年工匠)", text: "這就是『儀式時間』的邏輯。你得學會等待。如果你現在強行完工，這艘船在部落眼中將失去靈魂。" },
-            { role: "青年學徒(部落青年)", text: "但我只剩兩個月就要結算了！如果不現在做，我怕來不及完成……" }
+            { role: "中生代", text: "這就是『儀式時間』的邏輯。你得學會等待。如果你現在強行完工，這艘船在部落眼中將失去靈魂。" },
+            { role: "文化復振青年", text: "但我只剩兩個月就要結算了！如果不現在做，我怕來不及完成……" }
         ],
         dialogues_en: [
-            { role: "Negotiator (Middle)", text: "This is the logic of 'Ceremonial Time'. You must learn to wait. Finishing the ship now will make it soulless to the tribe." },
+            { role: "Middle Generation", text: "This is the logic of 'Ceremonial Time'. You must learn to wait. Finishing the ship now will make it soulless to the tribe." },
             { role: "Young Apprentice (Youth)", text: "But I only have two months left! If I don't do it now, I'm afraid I won't finish in time..." }
         ],
-        desc_zh: "【大凶之月】這是專門製作貝灰的月份，不允許造屋或落成禮。本月絕對無法執行「填縫（完工）」。\n💡 提示：趁這段時間多向長輩「請益」累積 KP 吧！",
-        desc_en: "【Taboo Month】This month is dedicated to shell lime burning. Building and launches are banned. Cannot execute 'Caulking (Finish Ship)'!\n💡 Tip: Use this time to 'Learn' from the Elder and build KP!"
+        desc_zh: "【大凶之月】這是專門製作貝灰的月份，不允許造屋或落成禮。本月任何方式都不能完工：填縫、機器加工、工業樹脂皆禁止。\n💡 提示：趁這段時間多向長輩「請益」累積 KP 吧！",
+        desc_en: "【Taboo Month】This month is dedicated to shell lime burning. Building and launches are banned. No boat can be finished this month, by any path (caulking, machine processing or resin)!\n💡 Tip: Use this time to 'Learn' from the Elder and build KP!"
     },
     12: {
         title_zh: "【最終衝刺】祖先的祝福",
@@ -1253,24 +1309,24 @@ const scriptEvents = {
             { role: "System", text: "This is the month of handicraft. Though time is short, your hands move smoother than ever." },
             { role: "Elder", text: "Look, as long as you follow the calendar, the land will reward you. Hurry, let's launch this boat before next year's festival!" }
         ],
-        desc_zh: "【技術精進】本月執行「捻線」工序將不再消耗 any AP！請把握最後的機會完成拼板舟。",
-        desc_en: "【Craft mastery】Twining rope costs 0 AP this month! Seize this final opportunity to complete your boat."
+        desc_zh: "【最終衝刺】本月執行「⑤理線捻繩」不消耗任何 AP，而且⑤與⑥不必跨月等待，可以接連完成！請把握最後的機會完成拼板舟。",
+        desc_en: "【Final Sprint】⑤ Twining costs 0 AP this month, and steps ⑤ and ⑥ need no cross-month wait, so you can do them back to back! Seize this final opportunity to complete your boat."
     }
 };
 
 const GAME_RULES = [
-    {name: "Kashyman", desc_zh: "準備月：移動不消耗 AP。", desc_en: "Prep Month: Movement costs 0 AP."},
-    {name: "Kapowan", desc_zh: "飛魚禁令：禁止進入山林（會被強制退回灘頭），無法執行採集動作。", desc_en: "Flying Fish Ban: Forest closed. Cannot move to or gather in forest."},
-    {name: "Pikaokaod", desc_zh: "捕撈飛魚盛期：在灘頭工作室執行「剝麻」與「搓繩」動作，AP 消耗減少 1 點。", desc_en: "Peak Fishing: Crafting at beach costs -1 AP."},
-    {name: "Papataw", desc_zh: "男人勤於出海：青年向長老「請益」的消耗增至 4 AP（原為 3），協商者增至 2 AP（原為 1）。", desc_en: "Men at Sea: Learning from Elder costs +1 AP (Youth: 4, Middle: 2)."},
-    {name: "Pipilapila", desc_zh: "梅雨季節：回合開始時，若持有材料需自動扣除 1 AP 防潮；若 AP 不足，材料將腐爛歸零。", desc_en: "Plum Rain Season: Start of month deducts 1 AP if holding materials; if 0 AP, materials rot to 0."},
-    {name: "Apiya vehan", desc_zh: "好月節：執行最終「填縫」動作（完成造船）時，總分額外加 2 分。", desc_en: "Good Month Festival: Caulking (finishing ship) grants +2 bonus score."},
-    {name: "Pehhakow", desc_zh: "解禁重啟：山林解禁，執行「採集」動作（消耗 3 AP）可獲得 2 份材料（原為 1 份）。", desc_en: "Forest Reopened: Gathering yields 2 materials instead of 1."},
-    {name: "Pitanatana", desc_zh: "土器月：購買工業材料後執行「科技轉譯」時必定成功，無須進行機率檢定。", desc_en: "Clay Vessel Month: Tech translation (industrial materials) always succeeds."},
-    {name: "Kalimman", desc_zh: "飛魚終食祭：商店內所有物品購買價格翻倍（材料由 3 KP 變為 6 KP）。", desc_en: "Final Fish Feast: Store prices are doubled (Material costs 6 KP instead of 3)."},
-    {name: "Kaneman", desc_zh: "禁忌之月：嚴禁執行「填縫」動作（無法在該月份完成造船）。", desc_en: "Forbidden Month: Caulking (finishing ship) is strictly banned."},
-    {name: "Kapitowan", desc_zh: "祭神月：回合開始時，若青年/協商者與長老處於同一個地點，可自動獲得 2 點 KP。", desc_en: "Sacred Month: Apprentice in same area as Elder automatically gets +2 KP."},
-    {name: "Kaowan", desc_zh: "手工藝月：在灘頭工作室執行「搓繩」動作消耗 0 AP（原為 1 AP）。", desc_en: "Handicraft Month: Twining fiber costs 0 AP instead of 1."}
+    {name: "Kashyman", desc_zh: "準備月：為接下來的封山存貨，執行「①砍伐剝皮」可獲得 2 份材料（原為 1 份）。", desc_en: "Prep Month: Stock up before the forest closes. ① Chop & Peel yields 2 materials instead of 1."},
+    {name: "Kapowan", desc_zh: "飛魚禁令：禁止進入山林（會被強制退回灘頭），無法執行「①砍伐剝皮」。", desc_en: "Flying Fish Ban: Forest closed. Cannot enter it or perform ① Chop & Peel."},
+    {name: "Pikaokaod", desc_zh: "捕撈飛魚盛期（集體勞動）：部落分工合作，執行任何一道工序，AP 消耗減少 1 點。", desc_en: "Peak Fishing (collective labour): the village shares the work, so every craft step costs 1 AP less."},
+    {name: "Papataw", desc_zh: "男人勤於出海：所有「請益」多消耗 1 AP（青年向耆老 4 AP、中生代向耆老 3 AP、青年向中生代 2 AP）。下個月是梅雨季：持有材料的人，本月結束前請留下 1 AP 防潮。", desc_en: "Men at Sea: Every Ask costs +1 AP (Youth→Elder 4, Middle Generation→Elder 3, Youth→Middle Generation 2). Plum rain comes next month: if you hold materials, keep 1 AP unspent at the end of this month."},
+    {name: "Pipilapila", desc_zh: "梅雨季節：進入本月時，持有材料且「未完成工序④乾燥」的人，要用上個月留下的 1 AP 防潮；上個月把 AP 用光的人，材料腐爛歸零。", desc_en: "Plum Rain Season: On entering this month, players holding materials who have not finished step ④ Drying spend 1 AP left over from last month to keep them dry; if you used up all your AP last month, your materials rot to zero."},
+    {name: "Apiya vehan", desc_zh: "好月節（送禮分享的吉月）：贈送材料給耆老、幫忙長者的得分加倍（各 +2 分）。", desc_en: "Good Month Festival (a month for giving and sharing): gifts to the Elder and helping the Elder score double (+2 each)."},
+    {name: "Pehhakow", desc_zh: "解禁重啟：山林解禁，執行「①砍伐剝皮」（消耗 3 AP）可獲得 2 份材料（原為 1 份）。", desc_en: "Forest Reopened: ① Chop & Peel yields 2 materials instead of 1."},
+    {name: "Pitanatana", desc_zh: "土器月（物質掌握）：採陶土、燒陶器，是掌握材料性質的月份，執行「科學轉譯」必定成功。", desc_en: "Clay Vessel Month (mastering materials): the month of digging clay and firing pots. Scientific Translation always succeeds."},
+    {name: "Kalimman", desc_zh: "飛魚終食祭：全部落參與祭儀，本月無法在商店完工。", desc_en: "Final Fish Feast: the whole village takes part in the ritual; you cannot finish at the store this month."},
+    {name: "Kaneman", desc_zh: "禁忌之月：不允許落成，本月任何方式都不能完工（填縫、機器加工、工業樹脂皆禁止）。", desc_en: "Forbidden Month: no boat may be completed this month, by any path (caulking, machine processing and resin are all banned)."},
+    {name: "Kapitowan", desc_zh: "祭神月：回合開始時，若青年／中生代與耆老處於同一個地點，可自動獲得 2 點 KP。", desc_en: "Sacred Month: Youth and Middle Generation in the same place as the Elder automatically gain +2 KP."},
+    {name: "Kaowan", desc_zh: "手工藝月（最終衝刺）：「⑤理線捻繩」消耗 0 AP，而且⑤與⑥不必跨月等待，可以在本月接連完成。", desc_en: "Handicraft Month (final sprint): ⑤ Twining costs 0 AP, and steps ⑤ and ⑥ need no cross-month wait, so they can be done back to back this month."}
 ];
 
 function showMonthEventModal(month) {
@@ -1811,8 +1867,8 @@ const monthLoreData = [
     { 
         title_zh: "【禁忌與正式招魚】", 
         title_en: "【Taboo & Formal Fish Summoning】",
-        desc_zh: "● 祭儀：舉行正式的招飛魚祭 (Manlag)。紅頭部落於初二開始。東清部落會焚燒蘆葦莖製作火把。<br><br>● 文化：進入禁慾期（Paneneb），男船員在共宿屋（Panragan）集體生活以防寒並防止私會婦女。<br><br>● 勞動：上山砍伐曬魚架材料；開始夜間火把捕魚。",
-        desc_en: "● Rituals: Formal Flying Fish Summon (Manlag). Burning reed stalks for torches.<br><br>● Culture: Taboo period (Paneneb); crew sleep in communal huts to stay warm & disciplined.<br><br>● Labor: Gather wood for fish racks; start night torch fishing."
+        desc_zh: "● 祭儀：舉行正式的招飛魚祭 (Manlag)。紅頭部落於初二開始。東清部落會焚燒蘆葦莖製作火把。<br><br>● 文化：進入禁慾期（Paneneb），男船員在共宿屋（Panragan）集體生活以防寒並防止私會婦女。<br><br>● 勞動：開始夜間火把捕魚；山林封閉，不上山工作。",
+        desc_en: "● Rituals: Formal Flying Fish Summon (Manlag). Burning reed stalks for torches.<br><br>● Culture: Taboo period (Paneneb); crew sleep in communal huts to stay warm & disciplined.<br><br>● Labor: Night torch fishing begins; the forest is closed and no work is done in the mountains."
     },
     { 
         title_zh: "【全力捕撈與放寬】", 
@@ -1985,10 +2041,13 @@ document.querySelectorAll('.craft-btn').forEach(btn => {
     });
 });
 
-document.querySelector('.buy-btn').addEventListener('click', (e) => {
-    playActionSound();
-    showFloatingIcon(e, '💰');
-    sendAction({ type: 'buy' });
+document.querySelectorAll('.buy-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        playActionSound();
+        const item = e.currentTarget.dataset.item || 'resin';
+        showFloatingIcon(e, item === 'machine' ? '⚙️' : '🧴');
+        sendAction({ type: 'buy', item });
+    });
 });
 
 nextMonthBtn.addEventListener('click', (e) => {
@@ -2001,8 +2060,24 @@ nextMonthBtn.addEventListener('click', (e) => {
 askBtn.addEventListener('click', (e) => {
     playActionSound();
     showFloatingIcon(e, '🙏');
-    sendAction({ type: 'ask' });
+    sendAction({ type: 'ask', target: 'elder' });
 });
+
+if (askMiddleBtn) {
+    askMiddleBtn.addEventListener('click', (e) => {
+        playActionSound();
+        showFloatingIcon(e, '🤝');
+        sendAction({ type: 'ask', target: 'middle' });
+    });
+}
+
+if (helpBtn) {
+    helpBtn.addEventListener('click', (e) => {
+        playActionSound();
+        showFloatingIcon(e, '💪');
+        sendAction({ type: 'help' });
+    });
+}
 
 teachBtn.addEventListener('click', (e) => {
     playActionSound();
@@ -2175,7 +2250,7 @@ function renderGame(state) {
         
         let giveBtnHtml = '';
         if (!isMe && myP && myP.location === p.location && myP.materials > 0) {
-            giveBtnHtml = `<button class="give-btn" data-id="${id}" style="font-size:0.75rem; padding: 0.3rem 0.8rem; border-radius:6px; background:rgba(212,175,55,0.15); color:var(--secondary); border:1px solid rgba(212,175,55,0.4); cursor:pointer; font-weight:bold; transition:all 0.3s; box-shadow: 0 0 10px rgba(212,175,55,0.1);">${translations[currentLang].game.giveBtn}</button>`;
+            giveBtnHtml = `<button class="give-btn" data-id="${id}" style="font-size:0.75rem; padding: 0.3rem 0.8rem; border-radius:6px; background:rgba(212,175,55,0.15); color:var(--secondary); border:1px solid rgba(212,175,55,0.4); cursor:pointer; font-weight:bold; transition:all 0.3s; box-shadow: 0 0 10px rgba(212,175,55,0.1);">${translations[currentLang].game.giveBtn}${(p.role === 'elder' && myP.role !== 'elder' && (myP.gift_month || 0) !== state.month) ? (state.month === 6 ? translations[currentLang].game.giveElderBonus.replace('+1', '+2') : translations[currentLang].game.giveElderBonus) : ''}</button>`;
         }
         
         const roleColor = p.role === 'elder' ? '#d97706' : (p.role === 'youth' ? '#10b981' : '#0ea5e9');
@@ -2291,7 +2366,7 @@ function renderGame(state) {
 
         // Teach targets
         if (p.role === 'youth' || p.role === 'middle') {
-            const roleSuffix = p.role === 'middle' ? ' (協商者)' : ' (青年)';
+            const roleSuffix = isEn ? (p.role === 'middle' ? ' (Middle Generation)' : ' (Youth)') : (p.role === 'middle' ? ' (中生代)' : ' (青年)');
             youthOptions += `<option value="${id}">${p.name}${roleSuffix}</option>`;
         }
 
@@ -2303,17 +2378,50 @@ function renderGame(state) {
                 <div class="status-item"><span class="status-label">${translations[currentLang].game.statusLabels[2]}</span><span class="status-val">${p.materials}</span></div>
                 <div class="status-item"><span class="status-label">${translations[currentLang].game.statusLabels[3]}</span><span class="status-val">${steps[p.progress]}</span></div>
                 <div class="status-item"><span class="status-label">${translations[currentLang].game.statusLabels[4]}</span><span class="status-val">${p.score}</span></div>
+                <div class="status-item" style="max-width: 360px;"><span class="status-label">${translations[currentLang].game.scoreLogLabel}</span><span class="status-val" style="font-size:0.8rem; font-weight:normal; line-height:1.45;">${summarizeScoreBreakdown(p.score_breakdown)}</span></div>
             `;
-            
+
+            const gt = translations[currentLang].game;
+            const hintSpan = (text) => `<span style="font-size:0.8rem;opacity:0.7;font-weight:normal;">(${text})</span>`;
+            const others = Object.values(state.players).filter(o => o.id !== p.id);
+
             if (p.role === 'youth' || p.role === 'middle') {
                 askBtn.style.display = 'block';
-                const baseCost = p.role === 'youth' ? 3 : 1;
+                const baseCost = p.role === 'youth' ? 3 : 2;
                 const cost = state.month === 4 ? baseCost + 1 : baseCost;
-                const gain = p.role === 'youth' ? 3 : 1;
-                const title = currentLang === 'en' ? '💬 Ask Elder' : '💬 向耆老請益';
-                askBtn.innerHTML = `${title} <span style="font-size:0.8rem;opacity:0.7;font-weight:normal;">(${cost} AP ➔ ${gain} KP)</span>`;
+                const broughtGift = (p.gift_month || 0) === state.month;
+                const gain = broughtGift ? 4 : 3;
+                askBtn.innerHTML = `${gt.askElderTitle} ${hintSpan(`${cost} AP ➔ ${gain} KP${broughtGift ? ' ' + gt.askGiftNote : ''} · +1 ${gt.scoreUnit}`)}`;
             } else {
                 askBtn.style.display = 'none';
+            }
+
+            // Youth can also learn from the middle generation while their KP is lower
+            if (askMiddleBtn) {
+                const mentors = others.filter(o => o.role === 'middle');
+                if (p.role === 'youth' && mentors.length > 0) {
+                    const cost = state.month === 4 ? 2 : 1;
+                    const canLearn = mentors.some(o => o.kp > p.kp);
+                    askMiddleBtn.style.display = 'block';
+                    askMiddleBtn.style.opacity = canLearn ? '1' : '0.45';
+                    askMiddleBtn.innerHTML = `${gt.askMiddleTitle} ${hintSpan(`${cost} AP ➔ 2 KP · +1 ${gt.scoreUnit}`)}`;
+                } else {
+                    askMiddleBtn.style.display = 'none';
+                }
+            }
+
+            // Helping an elder who shares your location
+            if (helpBtn) {
+                const hasElder = others.some(o => o.role === 'elder');
+                if (p.role !== 'elder' && hasElder) {
+                    const canHelp = (p.help_month || 0) !== state.month
+                        && others.some(o => o.role === 'elder' && o.location === p.location && !o.finished && o.ap < o.max_ap);
+                    helpBtn.style.display = 'block';
+                    helpBtn.style.opacity = canHelp ? '1' : '0.45';
+                    helpBtn.innerHTML = state.month === 6 ? gt.helpBtn.replace('+1 ', '+2 ') : gt.helpBtn;
+                } else {
+                    helpBtn.style.display = 'none';
+                }
             }
             
             if (p.role === 'elder') {
@@ -2351,8 +2459,8 @@ function renderGame(state) {
     // Update map location badges with premium icon cards
     const ROLE_META = {
         elder:  { label: isEn ? 'Elder Artisan' : '耆老', color: '#d4af37', rgb: '212, 175, 55', icon: '🧓' },
-        middle: { label: isEn ? 'Negotiator' : '協商者', color: '#a78bfa', rgb: '167, 139, 250', icon: '👷' },
-        youth:  { label: isEn ? 'Young Apprentice' : '青年學徒', color: '#4ade80', rgb: '74, 222, 128', icon: '🧑' },
+        middle: { label: isEn ? 'Middle Generation' : '中生代', color: '#a78bfa', rgb: '167, 139, 250', icon: '👷' },
+        youth:  { label: isEn ? 'Young Apprentice' : '文化復振青年', color: '#4ade80', rgb: '74, 222, 128', icon: '🧑' },
     };
     for (const [loc, players] of Object.entries(locMap)) {
         const container = document.querySelector(`.location-card[data-loc="${loc}"] .players-here`);
@@ -2527,6 +2635,12 @@ function drawKPChart(canvas, players) {
             ctx.fillStyle = '#ef4444';
             ctx.textAlign = 'center';
             ctx.fillText(isEn ? '⚠️ Deskilled (Resin)' : '⚠️ 去技能化 (樹脂)', lastPt.x, Math.max(padT + 12, lastPt.y - 14));
+        } else if (p.path_choice === 'hybrid') {
+            const lastPt = points[points.length - 1];
+            ctx.font = 'bold 11px sans-serif';
+            ctx.fillStyle = '#fbbf24';
+            ctx.textAlign = 'center';
+            ctx.fillText(isEn ? '⚙️ Machine-processed' : '⚙️ 機器加工', lastPt.x, Math.max(padT + 12, lastPt.y - 14));
         }
     });
 }
@@ -2572,8 +2686,8 @@ function renderGameOver(state) {
                                     ${i===0?'👑 ':''}${p.avatar ? p.avatar.icon : ''} ${p.name} 
                                     <span style="font-size:0.9rem; color:var(--text-muted); font-weight:normal;">- ${getRoleName(p.role)}</span>
                                 </h3>
-                                <span style="font-size:0.82rem; padding:0.2rem 0.6rem; border-radius:12px; border:1px solid ${p.industrial ? '#ef4444' : '#4ade80'}; background:${p.industrial ? 'rgba(239,68,68,0.15)' : 'rgba(74,222,128,0.15)'}; color:${p.industrial ? '#fca5a5' : '#86efac'};">
-                                    ${p.industrial ? (isEn ? '⚠️ Industrial Path (Irreparable / Deskilled)' : '⚠️ 現代樹脂路線 (不可修復 / 去技能化)') : (isEn ? '🌿 Traditional Avaka Path' : '🌿 傳統 Avaka 傳承路線')}
+                                <span style="font-size:0.82rem; padding:0.2rem 0.6rem; border-radius:12px; border:1px solid ${getPathBadge(p).border}; background:${getPathBadge(p).bg}; color:${getPathBadge(p).color};">
+                                    ${getPathBadge(p).label}
                                 </span>
                             </div>
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.8rem;">
@@ -2639,7 +2753,7 @@ function renderGameOver(state) {
                                 ${isEn ? 'Core Discussion' : '核心提問'}
                             </span>
                             <h3 style="font-size: 1.1rem; color: #fca5a5; margin: 0; font-weight: 700; line-height: 1.5;">
-                                ${isEn ? '“The resin path is faster, but what does it lead to? How does ‘deskilling’ happen in the game?”' : '「樹脂路徑雖然快，但導致了什麼？在遊戲裡，『去技能化』是怎麼發生的？」'}
+                                ${isEn ? '“There were three ways to finish the boat. What did each one keep, and what did each one give up? How does ‘deskilling’ happen in the game?”' : '「這次有三種完工的方式。每一種各留下了什麼、又放掉了什麼？在遊戲裡，『去技能化』是怎麼發生的？」'}
                             </h3>
                         </div>
                         <div style="background: rgba(0, 0, 0, 0.25); border-left: 4px solid #ef4444; padding: 0.9rem; border-radius: 6px; color: #e2e8f0; font-size: 0.92rem; line-height: 1.6;">
@@ -2658,6 +2772,18 @@ function renderGameOver(state) {
                                     ${isEn 
                                         ? 'Buying industrial resin skips essential traditional steps (gathering, peeling, scraping, twining fiber), halting Knowledge Point (KP) growth. Without practice and intergenerational learning, living craft knowledge silently breaks.'
                                         : '選擇買樹脂等同跳過了「剝麻、刮絲、捻線」等重要工序，技術點數 (KP) 停止累積。少了實作體驗與長輩請益傳承，傳統身體記憶與工藝技術知識便悄然消失與斷裂。'}
+                                </li>
+                                <li>
+                                    <strong>${isEn ? 'The path in between: ' : '中間的那條路：'}</strong>
+                                    ${isEn
+                                        ? 'Machine-processing the natural fibre still uses Avaka and keeps the boat repairable, but skips the hands-on drying and twining. Ask: is this “losing culture” or “culture changing”? Change is normal; the point is to know what the core value is, why you chose this, and what you accept in return.'
+                                        : '用機器加工天然纖維，仍然使用 Avaka、船也還能拆修，但少了手工曝曬與捻繩的經驗。請學生想一想：這是「文化流失」還是「文化在變」？文化變遷是正常的，重點是知道核心價值是什麼、自己為什麼這樣選、選了之後要承擔什麼。'}
+                                </li>
+                                <li>
+                                    <strong>${isEn ? 'Why did you score what you scored: ' : '你的分數是怎麼來的：'}</strong>
+                                    ${isEn
+                                        ? 'Look at each player’s “Score Sources”. Asking, bringing a gift to the Elder and helping the Elder all earned points. Why would a community reward these acts?'
+                                        : '請看每個人的「得分來源」。請益、帶禮物回饋耆老、幫忙長者都會加分。為什麼部落會看重這些事？'}
                                 </li>
                             </ul>
                         </div>
@@ -2681,6 +2807,25 @@ function renderGameOver(state) {
                                 ${isEn 
                                     ? 'Encourage participants to connect with traditional handicrafts, local ecological knowledge, architecture, or modern conveniences (food delivery, disposable tableware, digital navigation) — reflecting on convenience vs. loss of self-reliance skills.'
                                     : '引導學員嘗試聯想：傳統手工藝、在地生態知識、傳統建築工法，或是現代便利科技（如外送、免洗餐具、電子導航）所帶來的便利，以及背後隱含的傳統技能與自給能力慢慢消失的代價。'}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Who can I talk to -->
+                    <div style="background: rgba(167, 139, 250, 0.08); border: 1px solid rgba(167, 139, 250, 0.3); border-radius: 12px; padding: 1.2rem; margin-top: 1.2rem;">
+                        <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom: 0.6rem;">
+                            <span style="background: #7c3aed; color: #fff; font-size: 0.75rem; font-weight: bold; padding: 0.2rem 0.6rem; border-radius: 20px; text-transform: uppercase;">
+                                ${isEn ? 'Who can I talk to' : '可以跟誰討論'}
+                            </span>
+                            <h3 style="font-size: 1.1rem; color: #c4b5fd; margin: 0; font-weight: 700; line-height: 1.5;">
+                                ${isEn ? '“In the game you could learn from the Elder and from the Middle Generation. If you wanted to think about your own culture, who around you could you go to, and what would each of them tell you?”' : '「遊戲裡你可以向耆老學，也可以向中生代學。如果你想思考自己的文化，身邊可以找誰？他們各自會告訴你什麼？」'}
+                            </h3>
+                        </div>
+                        <div style="background: rgba(0, 0, 0, 0.25); border-left: 4px solid #7c3aed; padding: 0.9rem; border-radius: 6px; color: #e2e8f0; font-size: 0.92rem; line-height: 1.6;">
+                            <p style="margin: 0;">
+                                ${isEn
+                                    ? 'Elders can say what has been lost and why it mattered. The middle generation has lived in two cultures, so they can also say what it could be turned into. Invite students to name real people they could ask.'
+                                    : '老人家能說出什麼東西不見了、它為什麼重要；中生代有兩種文化的生活經驗，還能進一步說出「可以轉化成什麼」。請學生說出身邊真的可以去請教的人。'}
                             </p>
                         </div>
                     </div>
@@ -2715,8 +2860,26 @@ function renderGameOver(state) {
 function getRoleName(role) {
     const isEn = currentLang === 'en';
     if(role === 'elder') return isEn ? 'Elder Artisan' : '資深工匠';
-    if(role === 'youth') return isEn ? 'Young Apprentice' : '青年學徒(部落青年)';
-    return isEn ? 'Negotiator' : '協商者(中年工匠)';
+    if(role === 'youth') return isEn ? 'Young Apprentice' : '文化復振青年';
+    return isEn ? 'Middle Generation' : '中生代';
+}
+
+function getPathBadge(p) {
+    const isEn = currentLang === 'en';
+    if (p.industrial || p.path_choice === 'industrial') {
+        return { border: '#94a3b8', bg: 'rgba(148,163,184,0.15)', color: '#e2e8f0',
+                 label: isEn ? '🧴 Industrial resin path (seams glued shut / cannot be repaired)' : '🧴 工業樹脂路線 (接縫黏死 / 無法拆修)' };
+    }
+    if (p.path_choice === 'hybrid') {
+        return { border: '#fbbf24', bg: 'rgba(251,191,36,0.15)', color: '#fde68a',
+                 label: isEn ? '⚙️ Machine-processed natural fibre path (still Avaka / repairable)' : '⚙️ 機器加工天然纖維路線 (仍用 Avaka / 可拆修)' };
+    }
+    if (p.finished) {
+        return { border: '#4ade80', bg: 'rgba(74,222,128,0.15)', color: '#86efac',
+                 label: isEn ? '🌿 Traditional Avaka Path' : '🌿 傳統 Avaka 傳承路線' };
+    }
+    return { border: '#64748b', bg: 'rgba(100,116,139,0.15)', color: '#cbd5e1',
+             label: isEn ? '⏳ Not finished' : '⏳ 未完工' };
 }
 
 // ── Avatar Preview Modal ───────────────────────────────────────────────────
