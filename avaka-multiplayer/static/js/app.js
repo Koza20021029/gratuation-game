@@ -249,19 +249,19 @@ const translations = {
         roles: {
             elder: {
                 title: '資深工匠<br><span style="font-size:0.8rem; font-weight:normal; opacity:0.8;">(耆老)</span>',
-                badgeAp: 'AP 4 (+3/月)',
+                badgeAp: 'AP 6 (+5/月)',
                 badgeKp: 'KP 10',
                 desc: '填縫專家<br>遠程指導'
             },
             youth: {
                 title: '文化復振青年<br><span style="font-size:0.8rem; font-weight:normal; opacity:0.8;">(青年)</span>',
-                badgeAp: 'AP 6 (+4/月)',
+                badgeAp: 'AP 8 (+6/月)',
                 badgeKp: 'KP 0',
                 desc: '快速移動<br>學徒請益'
             },
             middle: {
                 title: '中生代<br><span style="font-size:0.8rem; font-weight:normal; opacity:0.8;">(中生代工匠)</span>',
-                badgeAp: 'AP 5 (+3/月)',
+                badgeAp: 'AP 7 (+5/月)',
                 badgeKp: 'KP 5',
                 desc: '學得快、傳得快<br>擅長轉化'
             }
@@ -320,6 +320,8 @@ const translations = {
                 square: '寬顎臉',
                 slim: '清秀臉'
             },
+            expressionLabel: '🙂 表情',
+            expressionOptions: { smile: '微笑', calm: '平靜', determined: '堅毅' },
             accessoryOptions: {
                 none: '無',
                 silver_helmet: '銀盔',
@@ -348,7 +350,7 @@ const translations = {
             leaveConfirm: '確定要退出遊戲嗎？',
             steps: ['尚未開始', '①已砍伐剝皮', '②已摩擦軟化', '③已撕絲剝離', '④已曝曬乾燥', '⑤已理線捻繩', '✅ ⑥已填縫完工'],
             meTag: '你',
-            giveBtn: '🎁 贈材料 (-1 AP)',
+            giveBtn: '🎁 贈材料 (0 AP)',
             ap: 'AP:',
             kp: 'KP:',
             mat: '材:',
@@ -362,7 +364,7 @@ const translations = {
             askMiddleTitle: '🤝 向中生代請益',
             askGiftNote: '🎁 帶禮',
             scoreUnit: '分',
-            helpBtn: '💪 幫忙長者 <span style="font-size:0.8rem;opacity:0.7;font-weight:normal;">(2 AP → 耆老回復 2 AP · +1 分)</span>',
+            helpBtn: '💪 幫忙長者 <span style="font-size:0.8rem;opacity:0.7;font-weight:normal;">(1 AP → 耆老回復 2 AP · +1 分)</span>',
             giveElderBonus: ' · +1 分',
             scoreLogLabel: '得分紀錄',
             noScoreYet: '尚未得分',
@@ -408,21 +410,24 @@ const translations = {
 
                 <h3>🎯 體力、知識與得分</h3>
                 <ul>
-                    <li><strong>⚡ 行動點數 (AP) 與每月恢復：</strong> AP 代表體力與時間。六道工序各 3 AP（耆老執行⑥填縫 0 AP）、移動 1 AP（青年免費）、贈送材料 1 AP、幫忙長者 2 AP、科學轉譯 2 AP、遠程指導 2 AP，請益依對象 1 至 3 AP。每個月初只恢復一部分體力（青年 +4、中生代與耆老 +3，不超過上限）。</li>
+                    <li><strong>⚡ 行動點數 (AP) 與每月恢復：</strong> AP 代表體力與時間。六道工序各 3 AP（耆老執行⑥填縫 0 AP）、移動 1 AP（青年免費）、贈送材料 0 AP、幫忙長者 1 AP、科學轉譯 2 AP、遠程指導 2 AP，請益依對象 1 至 3 AP。每個月初只恢復一部分體力（青年 +6、中生代與耆老 +5，不超過上限）。</li>
                     <li><strong>💡 技術點數 (KP)：</strong> 代表對傳統工藝的理解，要向人請益才會增加。⑤理線捻繩需 3 KP，⑥填縫完工需 8 KP，機器加工需 5 KP。</li>
-                    <li><strong>🙏 請益（向誰學，學到的不一樣）：</strong> 向<b>耆老</b>請益：青年 3 AP、中生代 2 AP，都獲得 3 KP，請益者與耆老<b>各 +1 分</b>。青年向<b>中生代</b>請益：1 AP 獲得 2 KP，<b>雙方各 +1 分</b>；中生代傳得快，但青年的 KP 必須低於該中生代才能問，更深的知識還是要找耆老。耆老也可以「遠程指導 (2 AP)」，對象 +1 KP，耆老 <b>+1 分</b>。</li>
-                    <li><strong>🎁 回饋與幫忙（傳統教養）：</strong> 把材料「贈送」給耆老，贈送者 <b>+1 分</b>（每月計 1 次），而且當月向耆老請益可<b>多得 1 KP</b>（帶禮請益）。與耆老在同一地點時可以「幫忙長者 (2 AP)」：耆老回復 2 AP，自己 <b>+1 分</b>（每月 1 次）。6 月好月節這兩種得分加倍。</li>
+                    <li><strong>🙏 請益（向誰學，學到的不一樣）：</strong> 向<b>耆老</b>請益：青年 3 AP、中生代 2 AP，都獲得 3 KP，請益者與耆老<b>各 +1 分</b>。青年向<b>中生代</b>請益：1 AP 獲得 2 KP，<b>雙方各 +1 分</b>；中生代傳得快，但青年的 KP 必須低於該中生代才能問，更深的知識還是要找耆老。耆老也可以「遠程指導 (2 AP)」，對象 +1 KP，耆老 <b>+1 分</b>。請益與指導的加分，每人每月最多計 2 次；超過之後照樣得到 KP，只是不再加分。</li>
+                    <li><strong>🎁 回饋與幫忙（傳統教養）：</strong> 把材料「贈送」給耆老，贈送者 <b>+1 分</b>（每月計 1 次），而且當月向耆老請益可<b>多得 1 KP</b>（帶禮請益）。與耆老在同一地點時可以「幫忙長者 (1 AP)」：耆老回復 2 AP，自己 <b>+1 分</b>（每月 1 次）。6 月好月節這兩種得分加倍。</li>
                     <li><strong>🔬 科學轉譯：</strong> 消耗 2 AP 與 2 KP，成功率 = 50% + 扣除後的 KP×5%（中生代再 +20%）；<b>第 8 個月 (Pitanatana 土器月) 必定成功</b>。成功獲得 <b>+4 分</b>與 <b>2 份材料</b>。</li>
                     <li><strong>⏳ 跨月等待：</strong> 除了「①砍伐剝皮」可以在同一個月重複執行外，每完成一道工序都要等到<b>下一個月</b>才能做下一道（12 月的⑤與⑥例外，可以接連完成）。最快也要到 7 月才能完工。</li>
                     <li><strong>🌿 材料：</strong> 在山林執行「①砍伐剝皮」產出材料（每次 1 份，1 月與 7 月 2 份），工序②至⑥各消耗 1 份。</li>
+                    <li><strong>🌳 森林狀態：</strong> 全房間共用，0 到 5，開局 3。這個月有人上山「①砍伐剝皮」、照顧林地，森林就 +1；整個月沒有人上山就 −1（2 月封山不計）。森林降到 1 以下時，砍伐多耗 1 AP；結算時森林在 4 以上，所有人 +2 分。因為需要材料，所以會去照顧山林；大家都不上山，森林就會老化。</li>
+                    <li><strong>🎯 每月小組任務與徽章：</strong> 每個月系統會抽一個全組一起完成的任務（例如「本月有人送材料給耆老」），達成後所有人 <b>+1 分</b>，任務顯示在畫面上方。第一次做到某些事會得到徽章，年終會頒發稱號；徽章與稱號不加分。</li>
+                    <li><strong>🎲 更多可以做的事：</strong> <b>請益小問答</b>：請益後會出一題三選一，答對多得 1 KP，答錯沒有損失（答案都在知識庫裡）。<b>事件卡</b>：3、6、8、11 月每個人會收到一張二選一的事件卡。<b>補種 Avaka</b>（山林，1 AP，每月 1 次）：算作有人照顧林地，下個月起第一次砍伐多得 1 份材料。<b>搭把手</b>（同地點，1 AP）：隊友本月下一道工序少 2 AP，自己 +1 分（每月計 1 次）。<b>工序小遊戲</b>：做完工序後抓準時機按下，成功退回 1 AP，可以跳過。</li>
                     <li><strong>📅 曆法禁忌：</strong> 依循蘭嶼 12 個月的夜曆，例如 2 月封山不能進山林、4 月底要留 1 AP 準備梅雨、9 月不能在商店完工、10 月任何方式都不能完工。每個月的效果會顯示在畫面上方。</li>
                 </ul>
 
                 <h3>👤 角色能力介紹</h3>
                 <ul>
-                    <li><strong>👑 資深工匠 (耆老)：</strong> AP 上限 4（每月 +3），開局 10 KP。技藝最純熟，執行「⑥填縫」不耗 AP，可遠程指導後輩。體力有限，很需要後輩送材料與幫忙。</li>
-                    <li><strong>🏃 文化復振青年 (青年)：</strong> AP 上限 6（每月 +4），開局 0 KP。移動不耗 AP；可以向耆老請益（學得深），也可以向中生代請益（學得快）。</li>
-                    <li><strong>🌉 中生代 (中生代工匠)：</strong> AP 上限 5（每月 +3），開局 5 KP。小時候有過傳統生活的經驗，向耆老請益只要 2 AP 就能獲得 3 KP；能把知識有效率地傳給青年；熟悉兩種文化，科學轉譯成功率 +20%，走「機器加工天然纖維」路線額外 +3 分。</li>
+                    <li><strong>👑 資深工匠 (耆老)：</strong> AP 上限 6（每月 +5），開局 10 KP。技藝最純熟，執行「⑥填縫」不耗 AP，可遠程指導後輩。體力有限，很需要後輩送材料與幫忙。</li>
+                    <li><strong>🏃 文化復振青年 (青年)：</strong> AP 上限 8（每月 +6），開局 0 KP。移動不耗 AP；可以向耆老請益（學得深），也可以向中生代請益（學得快）。</li>
+                    <li><strong>🌉 中生代 (中生代工匠)：</strong> AP 上限 7（每月 +5），開局 5 KP。小時候有過傳統生活的經驗，向耆老請益只要 2 AP 就能獲得 3 KP；能把知識有效率地傳給青年；熟悉兩種文化，科學轉譯成功率 +20%，走「機器加工天然纖維」路線額外 +3 分。</li>
                 </ul>
 
                 <h3>🗺️ 造船流程圖：三種完工方式</h3>
@@ -513,19 +518,19 @@ const translations = {
         roles: {
             elder: {
                 title: 'Elder Artisan<br><span style="font-size:0.8rem; font-weight:normal; opacity:0.8;">(Elder)</span>',
-                badgeAp: 'AP 4 (+3/mo)',
+                badgeAp: 'AP 6 (+5/mo)',
                 badgeKp: 'KP 10',
                 desc: 'Caulking Expert<br>Remote Guiding'
             },
             youth: {
                 title: 'Young Apprentice<br><span style="font-size:0.8rem; font-weight:normal; opacity:0.8;">(Youth)</span>',
-                badgeAp: 'AP 6 (+4/mo)',
+                badgeAp: 'AP 8 (+6/mo)',
                 badgeKp: 'KP 0',
                 desc: 'Fast Movement<br>Apprentice Learning'
             },
             middle: {
                 title: 'Middle Generation<br><span style="font-size:0.8rem; font-weight:normal; opacity:0.8;">(Bridge Artisan)</span>',
-                badgeAp: 'AP 5 (+3/mo)',
+                badgeAp: 'AP 7 (+5/mo)',
                 badgeKp: 'KP 5',
                 desc: 'Learns & teaches fast<br>Skilled at adapting'
             }
@@ -584,6 +589,8 @@ const translations = {
                 square: 'Square',
                 slim: 'Slim'
             },
+            expressionLabel: '🙂 Expression',
+            expressionOptions: { smile: 'Smile', calm: 'Calm', determined: 'Determined' },
             accessoryOptions: {
                 none: 'None',
                 silver_helmet: 'Silver Helmet',
@@ -612,7 +619,7 @@ const translations = {
             leaveConfirm: 'Are you sure you want to leave the game?',
             steps: ['Not Started', '① Chopped & Stripped', '② Rubbed & Softened', '③ Split & Stripped', '④ Dried', '⑤ Twined & Knotted', '✅ ⑥ Caulked & Finished'],
             meTag: 'You',
-            giveBtn: '🎁 Give Mat (-1 AP)',
+            giveBtn: '🎁 Give Mat (0 AP)',
             ap: 'AP:',
             kp: 'KP:',
             mat: 'Mat:',
@@ -626,7 +633,7 @@ const translations = {
             askMiddleTitle: '🤝 Ask Middle Generation',
             askGiftNote: '🎁 gift',
             scoreUnit: 'pt',
-            helpBtn: '💪 Help the Elder <span style="font-size:0.8rem;opacity:0.7;font-weight:normal;">(2 AP → Elder recovers 2 AP · +1 pt)</span>',
+            helpBtn: '💪 Help the Elder <span style="font-size:0.8rem;opacity:0.7;font-weight:normal;">(1 AP → Elder recovers 2 AP · +1 pt)</span>',
             giveElderBonus: ' · +1 pt',
             scoreLogLabel: 'Score log',
             noScoreYet: 'No points yet',
@@ -672,21 +679,24 @@ const translations = {
 
                 <h3>🎯 Stamina, Knowledge & Scoring</h3>
                 <ul>
-                    <li><strong>⚡ Action Points (AP) &amp; Monthly Recovery:</strong> AP stands for stamina and time. Each of the six craft steps costs 3 AP (Elder caulks for 0 AP), Move 1 AP (free for Youth), Give Material 1 AP, Help the Elder 2 AP, Scientific Translation 2 AP, Remote Guiding 2 AP, Asking 1–3 AP depending on who you ask. Each month restores only part of your stamina (Youth +4, Middle Generation and Elder +3, never above the maximum).</li>
+                    <li><strong>⚡ Action Points (AP) &amp; Monthly Recovery:</strong> AP stands for stamina and time. Each of the six craft steps costs 3 AP (Elder caulks for 0 AP), Move 1 AP (free for Youth), Give Material 0 AP, Help the Elder 1 AP, Scientific Translation 2 AP, Remote Guiding 2 AP, Asking 1–3 AP depending on who you ask. Each month restores only part of your stamina (Youth +6, Middle Generation and Elder +5, never above the maximum).</li>
                     <li><strong>💡 Knowledge Points (KP):</strong> Your understanding of the traditional craft; it only grows by learning from others. ⑤ Twining needs 3 KP, ⑥ Caulking needs 8 KP, machine processing needs 5 KP.</li>
-                    <li><strong>🙏 Asking (who you learn from matters):</strong> Ask the <b>Elder</b>: Youth pays 3 AP, Middle Generation pays 2 AP, both gain 3 KP, and the asker and the Elder each get <b>+1 point</b>. Youth can ask the <b>Middle Generation</b>: 1 AP for 2 KP, <b>+1 point each</b>; they pass knowledge on quickly, but the Youth's KP must be lower than theirs, so deeper knowledge still comes from the Elder. The Elder can also Remote Guide (2 AP): target +1 KP, Elder <b>+1 point</b>.</li>
-                    <li><strong>🎁 Giving back &amp; helping (traditional upbringing):</strong> Give a material to the Elder for <b>+1 point</b> (counted once a month); asking the Elder in that same month then yields <b>+1 extra KP</b> (asking with a gift). When you are in the same place as the Elder you can Help the Elder (2 AP): the Elder recovers 2 AP and you get <b>+1 point</b> (once a month). Both score double in Month 6, the Good Month Festival.</li>
+                    <li><strong>🙏 Asking (who you learn from matters):</strong> Ask the <b>Elder</b>: Youth pays 3 AP, Middle Generation pays 2 AP, both gain 3 KP, and the asker and the Elder each get <b>+1 point</b>. Youth can ask the <b>Middle Generation</b>: 1 AP for 2 KP, <b>+1 point each</b>; they pass knowledge on quickly, but the Youth's KP must be lower than theirs, so deeper knowledge still comes from the Elder. The Elder can also Remote Guide (2 AP): target +1 KP, Elder <b>+1 point</b>. Points for asking and guiding count at most twice per player per month; beyond that you still gain KP, just no more points.</li>
+                    <li><strong>🎁 Giving back &amp; helping (traditional upbringing):</strong> Give a material to the Elder for <b>+1 point</b> (counted once a month); asking the Elder in that same month then yields <b>+1 extra KP</b> (asking with a gift). When you are in the same place as the Elder you can Help the Elder (1 AP): the Elder recovers 2 AP and you get <b>+1 point</b> (once a month). Both score double in Month 6, the Good Month Festival.</li>
                     <li><strong>🔬 Scientific Translation:</strong> Costs 2 AP &amp; 2 KP. Success rate = 50% + remaining KP×5% (Middle Generation +20%); <b>guaranteed in Month 8 (Pitanatana)</b>. Success grants <b>+4 points</b> and <b>2 materials</b>.</li>
                     <li><strong>⏳ Cross-Month Waiting:</strong> Except for ① Chop &amp; Peel, which can be repeated in the same month, every step must wait until the <b>next month</b> before the following step (steps ⑤ and ⑥ in Month 12 are the exception). The earliest possible finish is Month 7.</li>
                     <li><strong>🌿 Materials:</strong> ① Chop &amp; Peel in the forest yields materials (1 each time, 2 in Months 1 and 7); steps ② to ⑥ each consume 1.</li>
+                    <li><strong>🌳 Forest health:</strong> Shared by the whole room, from 0 to 5, starting at 3. If anyone goes up to do ① Chop &amp; Peel and tend the plots this month, the forest gains 1; if nobody goes all month, it loses 1 (Month 2, when the forest is closed, does not count). At 1 or below, chopping costs 1 more AP; at 4 or above at the end, everyone gets +2 points. People tend the forest because they need its material; when nobody goes, it ages.</li>
+                    <li><strong>🎯 Monthly group mission &amp; badges:</strong> Each month the game draws one mission for the whole group (for example "someone gives a material to the Elder this month"). Completing it gives everyone <b>+1 point</b>; the mission is shown at the top of the screen. Doing certain things for the first time earns a badge, and titles are awarded at the end of the year; badges and titles carry no points.</li>
+                    <li><strong>🎲 More things to do:</strong> <b>Ask quiz</b>: after asking you get one three-choice question; a correct answer gives +1 KP and a wrong one costs nothing (the answers are in the Knowledge Base). <b>Event cards</b>: in Months 3, 6, 8 and 11 everyone gets a two-option card. <b>Replant Avaka</b> (Forest, 1 AP, once a month): counts as tending the plots, and your first chop from next month on yields 1 extra material. <b>Lend a hand</b> (same location, 1 AP): your teammate's next step this month costs 2 AP less and you get +1 point (once a month). <b>Step mini-game</b>: after a craft step, press at the right moment to get 1 AP back; you can skip it.</li>
                     <li><strong>📅 Calendar Taboos:</strong> The game follows Lanyu's 12-month calendar, e.g. the forest is closed in Month 2, you should keep 1 AP at the end of Month 4 for the plum rain, the store cannot finish boats in Month 9, and nothing can be finished in Month 10. Each month's effect is shown at the top of the screen.</li>
                 </ul>
 
                 <h3>👤 Character Roles</h3>
                 <ul>
-                    <li><strong>👑 Master Artisan (Elder):</strong> Max AP 4 (+3/month), starts with 10 KP. The most skilled: caulking costs 0 AP and can guide others remotely. Limited stamina, so gifts of material and help from the younger ones matter a lot.</li>
-                    <li><strong>🏃 Young Apprentice (Youth):</strong> Max AP 6 (+4/month), starts with 0 KP. Moves for free; can ask the Elder (deeper) or the Middle Generation (faster).</li>
-                    <li><strong>🌉 Middle Generation (Bridge Artisan):</strong> Max AP 5 (+3/month), starts with 5 KP. Grew up with the traditional way of life, so asking the Elder costs only 2 AP for 3 KP; passes knowledge on to the Youth efficiently; at home in two cultures: +20% on Scientific Translation and +3 points on the machine-processed natural fibre path.</li>
+                    <li><strong>👑 Master Artisan (Elder):</strong> Max AP 6 (+5/month), starts with 10 KP. The most skilled: caulking costs 0 AP and can guide others remotely. Limited stamina, so gifts of material and help from the younger ones matter a lot.</li>
+                    <li><strong>🏃 Young Apprentice (Youth):</strong> Max AP 8 (+6/month), starts with 0 KP. Moves for free; can ask the Elder (deeper) or the Middle Generation (faster).</li>
+                    <li><strong>🌉 Middle Generation (Bridge Artisan):</strong> Max AP 7 (+5/month), starts with 5 KP. Grew up with the traditional way of life, so asking the Elder costs only 2 AP for 3 KP; passes knowledge on to the Youth efficiently; at home in two cultures: +20% on Scientific Translation and +3 points on the machine-processed natural fibre path.</li>
                 </ul>
 
                 <h3>🗺️ Boat-building Flowchart: three ways to finish</h3>
@@ -814,6 +824,23 @@ function translateLog(logText) {
         { regex: /💪 (.+) 幫 (.+) 分擔粗重的工作，.+（現有 (\d+)\/(\d+) AP），.+ 獲得 (\d+) 分/, replace: '💪 $1 helped $2 with the heavy work: $2 recovers stamina ($3/$4 AP), $1 gains $5 point(s)' },
         { regex: /梅雨腐蝕：(.+) 用上個月留下的 1 AP 保護材料免於腐爛。/, replace: 'Plum Rain: $1 used 1 AP left over from last month to keep the materials from rotting.' },
         { regex: /梅雨腐蝕：(.+) 上個月把體力用光了，來不及防潮，材料腐爛歸零！/, replace: 'Plum Rain: $1 had no AP left from last month, so the materials rotted to zero!' },
+        { regex: /🌳 森林：(\d+) 月有人上山砍伐、照顧林地，森林狀態 (\d+) → (\d+)/, replace: '🌳 Forest: someone chopped and tended the plots in Month $1; forest health $2 → $3' },
+        { regex: /🍂 森林：(\d+) 月沒有人上山，林地無人照顧，森林狀態 (\d+) → (\d+)/, replace: '🍂 Forest: nobody went up in Month $1, so the plots went untended; forest health $2 → $3' },
+        { regex: /🌳 森林狀態 (\d+)\/(\d+)：這一年大家一直有人照顧林地，所有人獲得 2 分/, replace: '🌳 Forest health $1/$2: the plots were tended all year, so everyone gains 2 points' },
+        { regex: /📝 (.+) 答對了請益小問答，多得 1 KP/, replace: '📝 $1 answered the ask quiz correctly: +1 KP' },
+        { regex: /📜 (.+) 選擇「(.+?)」(?:：(.+))?/, replace: (m, who, opt, notes) => `📜 ${who} chose "${eventOptionEn(opt)}"${notes ? ': ' + eventNotesEn(notes) : ''}` },
+        { regex: /✨ (.+) 手感很好，工序做得順，省下 1 AP/, replace: '✨ $1 had a good hand for the step and saved 1 AP' },
+        { regex: /🌱 (.+) 在.+補種了 Avaka、照顧林地.*/, replace: '🌱 $1 replanted Avaka and tended the plots (the first chop from next month on yields 1 extra material)' },
+        { regex: /🌱 (.+) 之前補種的 Avaka 長成了，這次多收 1 份材料/, replace: '🌱 The Avaka $1 replanted has grown: 1 extra material this time' },
+        { regex: /🙌 (.+) 幫 (.+) 搭把手：.+ 本月下一道工序少 2 AP，.+ 獲得 1 分/, replace: '🙌 $1 lent $2 a hand: $2\'s next step this month costs 2 AP less; $1 gains 1 point' },
+        { regex: /🙌 (.+) 幫 (.+) 搭把手：.+ 本月下一道工序少 2 AP/, replace: '🙌 $1 lent $2 a hand: $2\'s next step this month costs 2 AP less' },
+        { regex: /🤝 (.+) 將 1 份材料送給了 (.+)！/, replace: '🤝 $1 gave 1 material to $2!' },
+        { regex: /(.+) 向Middle Generation (.+) 請益，獲得 (\d+) KP（本月請益的加分已達上限）/, replace: '$1 learned from Middle Generation $2: +$3 KP (asking points already at this month\'s limit)' },
+        { regex: /(.+) 向耆老請益，獲得 (\d+) KP.*（本月請益的加分已達上限）/, replace: '$1 learned from the Elder: +$2 KP (asking points already at this month\'s limit)' },
+        { regex: /(.+) 遠程指導了 (.+)（本月指導的加分已達上限）/, replace: '$1 remotely guided $2 (guiding points already at this month\'s limit)' },
+        { regex: /🏅 (.+) 獲得徽章「(.+)」/, replace: (m, who, badge) => `🏅 ${who} earned the badge "${badgeNameEn(badge)}"` },
+        { regex: /🎯 小組任務「(.+)」達成！所有人獲得 1 分/, replace: (m, name) => `🎯 Group mission "${missionNameEn(name)}" completed! Everyone gains 1 point` },
+        { regex: /🎯 本月小組任務「(.+)」：.+/, replace: (m, name) => `🎯 This month's group mission: "${missionNameEn(name)}" (+1 point for everyone when completed)` },
         { regex: /⚠️ 預告：下個月是梅雨季。.+/, replace: '⚠️ Heads-up: plum rain comes next month. If you hold materials, keep 1 AP unspent at the end of this month or they will rot to zero.' },
         { regex: /(.+) 因傳承指導獲得 1 分/, replace: '$1 gained 1 point for heritage guidance' },
         { regex: /(.+) 遠程指導了 (.+)，獲得 1 分傳承分數/, replace: '$1 remotely guided $2 and gained 1 heritage point' },
@@ -853,7 +880,12 @@ function translateScoreBreakdown(breakdown) {
             .replace(/機器加工天然纖維/g, 'Machine-processed natural fibre')
             .replace(/工業樹脂/g, 'Industrial resin')
             .replace(/科學轉譯/g, 'Scientific Translation')
-            .replace(/遠程指導/g, 'Remote Guidance');
+            .replace(/遠程指導/g, 'Remote Guidance')
+            .replace(/照顧山林/g, 'Tended the forest')
+            .replace(/小組任務/g, 'Group mission')
+            .replace(/一起出海/g, 'Went fishing together')
+            .replace(/分享收成/g, 'Shared the harvest')
+            .replace(/搭把手/g, 'Lent a hand');
     });
 }
 
@@ -1030,6 +1062,12 @@ function applyLanguage() {
                 const val = opt.dataset.val;
                 if (t.avatar.faceOptions[val]) opt.textContent = t.avatar.faceOptions[val];
             });
+        } else if (txt.includes('表情') || txt.includes('Expression')) {
+            label.textContent = t.avatar.expressionLabel;
+            group.querySelectorAll('.avatar-opt').forEach(opt => {
+                const val = opt.dataset.val;
+                if (t.avatar.expressionOptions[val]) opt.textContent = t.avatar.expressionOptions[val];
+            });
         } else if (txt.includes('配件') || txt.includes('防護') || txt.includes('禮儀') || txt.includes('Ceremonial') || txt.includes('Accessories')) {
             ensureRattanHelmetButton();
             label.textContent = t.avatar.labels.accessory;
@@ -1146,6 +1184,10 @@ function applyLanguage() {
 
     const helpBtnEl = document.getElementById('help-btn');
     if (helpBtnEl) helpBtnEl.innerHTML = t.game.helpBtn;
+
+    const kbBtnEl = document.getElementById('open-kb-btn');
+    // KB_TEXT is declared further down; on the very first call it is not initialised yet
+    try { if (kbBtnEl) kbBtnEl.textContent = (KB_TEXT[currentLang] || KB_TEXT.zh).openBtn; } catch (e) { /* first load: keep the default label */ }
 
     // 7. Translate Rules Modal
     const rulesModalContent = document.querySelector('#rules-modal .modal-content');
@@ -1669,6 +1711,7 @@ avatarConfirmBtn.addEventListener('click', () => {
         traits: [
             (currentLang === 'en' ? 'Hair: ' : '髮型:') + hairLabels[avatarState.hair],
             (currentLang === 'en' ? 'Face: ' : '臉型:') + faceLabels[avatarState.face],
+            (currentLang === 'en' ? 'Expression: ' : '表情:') + (translations[currentLang].avatar.expressionOptions[avatarState.expression] || ''),
             (currentLang === 'en' ? 'Clothing: ' : '服飾:') + clothLabels[avatarState.cloth],
             avatarState.accessory !== 'none' ? (currentLang === 'en' ? 'Acc: ' : '配件:') + accLabels[avatarState.accessory] : null
         ].filter(Boolean)
@@ -2046,7 +2089,7 @@ document.querySelectorAll('.buy-btn').forEach(btn => {
         playActionSound();
         const item = e.currentTarget.dataset.item || 'resin';
         showFloatingIcon(e, item === 'machine' ? '⚙️' : '🧴');
-        sendAction({ type: 'buy', item });
+        openShopConfirm(item);
     });
 });
 
@@ -2098,6 +2141,12 @@ if (translateBtn) {
 }
 
 playersListEl.addEventListener('click', (e) => {
+    if (e.target.classList.contains('assist-btn')) {
+        playActionSound();
+        showFloatingIcon(e, '🙌');
+        sendAction({ type: 'assist', target_id: e.target.dataset.id });
+        return;
+    }
     if (e.target.classList.contains('give-btn')) {
         playActionSound();
         showFloatingIcon(e, '🎁');
@@ -2234,6 +2283,9 @@ function renderGame(state) {
 
     monthNameEl.textContent = GAME_RULES[state.month - 1].name;
     monthDescEl.textContent = isEn ? GAME_RULES[state.month - 1].desc_en : GAME_RULES[state.month - 1].desc_zh;
+    renderForestStatus(state);
+    renderMission(state);
+    renderPrompts(state);
 
     // Players list & Map locations
     playersListEl.innerHTML = '';
@@ -2253,6 +2305,8 @@ function renderGame(state) {
             giveBtnHtml = `<button class="give-btn" data-id="${id}" style="font-size:0.75rem; padding: 0.3rem 0.8rem; border-radius:6px; background:rgba(212,175,55,0.15); color:var(--secondary); border:1px solid rgba(212,175,55,0.4); cursor:pointer; font-weight:bold; transition:all 0.3s; box-shadow: 0 0 10px rgba(212,175,55,0.1);">${translations[currentLang].game.giveBtn}${(p.role === 'elder' && myP.role !== 'elder' && (myP.gift_month || 0) !== state.month) ? (state.month === 6 ? translations[currentLang].game.giveElderBonus.replace('+1', '+2') : translations[currentLang].game.giveElderBonus) : ''}</button>`;
         }
         
+        giveBtnHtml += assistHtml(state, myP, p, id, isMe);
+
         const roleColor = p.role === 'elder' ? '#d97706' : (p.role === 'youth' ? '#10b981' : '#0ea5e9');
         const behindGlowColor = p.role === 'elder' ? 'rgba(217, 119, 6, 0.67)' : (p.role === 'youth' ? 'rgba(16, 185, 129, 0.67)' : 'rgba(14, 165, 233, 0.67)');
         const innerGradient = p.role === 'elder' 
@@ -2328,7 +2382,7 @@ function renderGame(state) {
                                 <div class="stat-box ap-box" style="padding: 0.35rem 0.2rem;">
                                     <span class="stat-icon" style="font-size: 0.95rem;">⚡</span>
                                     <span class="stat-label" style="font-size: 0.7rem;">${translations[currentLang].game.ap}</span>
-                                    <span class="stat-value" style="font-size: 0.85rem;">${p.ap}/${p.max_ap || (p.role === 'youth' ? 6 : p.role === 'middle' ? 5 : 4)}</span>
+                                    <span class="stat-value" style="font-size: 0.85rem;">${p.ap}/${p.max_ap || (p.role === 'youth' ? 8 : p.role === 'middle' ? 7 : 6)}</span>
                                 </div>
                                 <div class="stat-box kp-box" style="padding: 0.35rem 0.2rem;">
                                     <span class="stat-icon" style="font-size: 0.95rem;">💡</span>
@@ -2373,13 +2427,14 @@ function renderGame(state) {
         // My status
         if (isMe) {
             myStatusEl.innerHTML = `
-                <div class="status-item"><span class="status-label">${translations[currentLang].game.statusLabels[0]}</span><span class="status-val">${p.ap} / ${p.max_ap || (p.role === 'youth' ? 6 : p.role === 'middle' ? 5 : 4)}</span></div>
+                <div class="status-item"><span class="status-label">${translations[currentLang].game.statusLabels[0]}</span><span class="status-val">${p.ap} / ${p.max_ap || (p.role === 'youth' ? 8 : p.role === 'middle' ? 7 : 6)}</span></div>
                 <div class="status-item"><span class="status-label">${translations[currentLang].game.statusLabels[1]}</span><span class="status-val">${p.kp}</span></div>
                 <div class="status-item"><span class="status-label">${translations[currentLang].game.statusLabels[2]}</span><span class="status-val">${p.materials}</span></div>
                 <div class="status-item"><span class="status-label">${translations[currentLang].game.statusLabels[3]}</span><span class="status-val">${steps[p.progress]}</span></div>
                 <div class="status-item"><span class="status-label">${translations[currentLang].game.statusLabels[4]}</span><span class="status-val">${p.score}</span></div>
-                <div class="status-item" style="max-width: 360px;"><span class="status-label">${translations[currentLang].game.scoreLogLabel}</span><span class="status-val" style="font-size:0.8rem; font-weight:normal; line-height:1.45;">${summarizeScoreBreakdown(p.score_breakdown)}</span></div>
+                <div class="status-item" style="max-width: 360px;"><span class="status-label">${translations[currentLang].game.scoreLogLabel}</span><span class="status-val" style="font-size:0.8rem; font-weight:normal; line-height:1.45;">${summarizeScoreBreakdown(p.score_breakdown)}${badgeLineHtml(p)}</span></div>
             `;
+            announceNewBadges(state, p);
 
             const gt = translations[currentLang].game;
             const hintSpan = (text) => `<span style="font-size:0.8rem;opacity:0.7;font-weight:normal;">(${text})</span>`;
@@ -2702,9 +2757,12 @@ function renderGameOver(state) {
                             </div>
                             ` : ''}
                             <p style="color:var(--text-muted); font-size:0.8rem; margin:0;">${scoreSrc}${translateScoreBreakdown(p.score_breakdown).join(', ')}</p>
+                            ${playerHonoursHtml(p)}
                         </div>
                     `).join('')}
                 </div>
+
+                ${forestSummaryHtml(state)}
 
                 <!-- KP Development Curve Chart -->
                 <div style="background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 16px; padding: 1.5rem; text-align: left; margin: 2rem 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(12px);">
@@ -3384,4 +3442,575 @@ function clearLobbyWidgets() {
     lobbyWidgetsIntervals.forEach(clearInterval);
     lobbyWidgetsIntervals = [];
     window.updateWidgetLanguages = null;
+}
+
+
+// ───────────────────────── Shared forest ─────────────────────────
+const FOREST_MAX = 5;
+const FOREST_TEXT = {
+    zh: {
+        label: '森林狀態',
+        levels: { lush: '茂盛', ok: '普通', aged: '老化' },
+        tended: '這個月已經有人上山照顧林地',
+        untended: '這個月還沒有人上山；整個月沒人去，森林會 −1',
+        closed: '2 月封山，森林不增不減',
+        agedNote: '森林老化：砍伐多耗 1 AP',
+        summaryTitle: '這一年的山林',
+        summary: {
+            lush: '這一年一直有人上山。因為需要 Avaka，所以有人去砍伐、去照顧林地，森林維持著可以更新的狀態。所有人獲得 2 分。',
+            ok: '這一年上山的人時有時無。林地還撐得住，但已經看得出少了人照顧的地方。',
+            aged: '這一年幾乎沒有人上山。不需要材料，就沒有人去看山上的狀況；林地無人照顧，森林老化了，山和人的關係也遠了。'
+        }
+    },
+    en: {
+        label: 'Forest health',
+        levels: { lush: 'thriving', ok: 'fair', aged: 'aged' },
+        tended: 'Someone has already gone up to tend the plots this month',
+        untended: 'Nobody has gone up yet this month; if no one does, the forest loses 1',
+        closed: 'Forest closed in Month 2: no change',
+        agedNote: 'Aged forest: chopping costs 1 more AP',
+        summaryTitle: 'The forest this year',
+        summary: {
+            lush: 'People kept going up all year. Because they needed Avaka, someone chopped and tended the plots, and the forest stayed able to renew itself. Everyone gains 2 points.',
+            ok: 'People went up now and then this year. The plots are holding, but you can already see where no one has been looking after them.',
+            aged: 'Hardly anyone went up this year. With no need for the material, nobody checked on the mountain; the plots went untended and the forest aged, and people and the mountain drifted apart.'
+        }
+    }
+};
+
+function forestLevel(value) {
+    if (value >= 4) return 'lush';
+    if (value <= 1) return 'aged';
+    return 'ok';
+}
+
+function renderForestStatus(state) {
+    const el = document.getElementById('forest-status');
+    if (!el) return;
+    const ft = FOREST_TEXT[currentLang] || FOREST_TEXT.zh;
+    const value = typeof state.forest === 'number' ? state.forest : 3;
+    const level = forestLevel(value);
+    const trees = '🌳'.repeat(value) + '▫️'.repeat(FOREST_MAX - value);
+    let note = state.month === 2 ? ft.closed : (state.forest_tended ? ft.tended : ft.untended);
+    if (level === 'aged') note += '｜' + ft.agedNote;
+    const color = level === 'lush' ? '#86efac' : (level === 'aged' ? '#fca5a5' : '#fde68a');
+    el.innerHTML = `<strong style="color:${color};">${ft.label} ${trees} ${value}/${FOREST_MAX}（${ft.levels[level]}）</strong><br><span style="opacity:0.8;">${note}</span>`;
+}
+
+function forestSummaryHtml(state) {
+    const ft = FOREST_TEXT[currentLang] || FOREST_TEXT.zh;
+    const value = typeof state.forest === 'number' ? state.forest : 3;
+    const level = state.forest_level || forestLevel(value);
+    const trees = '🌳'.repeat(value) + '▫️'.repeat(FOREST_MAX - value);
+    return `<div style="background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.3); border-radius: 16px; padding: 1.3rem 1.5rem; text-align: left; margin: 2rem 0;">
+                    <h2 style="font-family: 'Noto Serif TC', serif; font-size: 1.3rem; color: #86efac; margin: 0 0 0.6rem 0; font-weight: 700;">🌲 ${ft.summaryTitle}　${trees} ${value}/${FOREST_MAX}（${ft.levels[level]}）</h2>
+                    <p style="margin: 0; color: #e2e8f0; line-height: 1.7;">${ft.summary[level]}</p>
+                </div>`;
+}
+
+// ───────────────────────── Shop: hear both generations before finishing ─────────────────────────
+const SHOP_VOICES = {
+    zh: {
+        cancel: '再想想', ok: '就這樣完工', elder: '耆老', middle: '中生代', result: '這條路的結果',
+        resin: {
+            title: '🧴 用工業樹脂完工？',
+            elder: '「以前是用 Avaka 壓實花椒的纖維來填縫，船板壞了可以拆下來換。膠乾了以後，就拆不開了。」',
+            middle: '「樹脂拿了就能用，不用等季節。很多人就是這樣改用的。只是船從可以一直修的東西，變成用壞就丟的東西。」',
+            result: '立刻完工，+5 分。船取得「不可修復」標記。'
+        },
+        machine: {
+            title: '⚙️ 用機器加工 Avaka 纖維完工？',
+            elder: '「材料還是山上的 Avaka，這點我放心。只是曝曬和捻繩的那段功夫，你的手沒有學到。」',
+            middle: '「材料還是我們自己的，只是換一種方式處理。省下來的時間，你要拿來做什麼？」',
+            result: '立刻完工，+12 分（中生代 +15 分）。船仍可拆修，但跳過了手工的④⑤兩道工序。'
+        }
+    },
+    en: {
+        cancel: 'Think again', ok: 'Finish this way', elder: 'Elder', middle: 'Middle Generation', result: 'What this path leads to',
+        resin: {
+            title: '🧴 Finish with industrial resin?',
+            elder: '"We used to pack the seams with prickly-ash fibre pressed in by Avaka, so a damaged plank could be taken out and replaced. Once glue sets, nothing comes apart."',
+            middle: '"Resin works the moment you open it, no waiting for the season. That is how many people switched. But the boat goes from something you keep repairing to something you throw away."',
+            result: 'Finished at once, +5 points. The boat gets the "Irreparable" tag.'
+        },
+        machine: {
+            title: '⚙️ Finish with machine-processed Avaka fibre?',
+            elder: '"The material is still Avaka from the mountain, and that I trust. But your hands never learned the drying and the twining."',
+            middle: '"It is still our own material, only handled another way. What will you do with the time you save?"',
+            result: 'Finished at once, +12 points (Middle Generation +15). The boat stays repairable, but hand steps ④ and ⑤ are skipped.'
+        }
+    }
+};
+let pendingShopItem = null;
+
+function openShopConfirm(item) {
+    const modal = document.getElementById('shop-confirm-modal');
+    if (!modal) { sendAction({ type: 'buy', item }); return; }
+    const v = SHOP_VOICES[currentLang] || SHOP_VOICES.zh;
+    const d = v[item] || v.resin;
+    pendingShopItem = item;
+    document.getElementById('shop-confirm-title').textContent = d.title;
+    document.getElementById('shop-confirm-content').innerHTML = `
+        <p style="margin:0 0 0.8rem;"><strong style="color:#fbbf24;">🧓 ${v.elder}：</strong>${d.elder}</p>
+        <p style="margin:0 0 0.8rem;"><strong style="color:#c4b5fd;">👷 ${v.middle}：</strong>${d.middle}</p>
+        <p style="margin:0; padding:0.7rem 0.9rem; border-left:4px solid var(--primary); background:rgba(212,175,55,0.1); border-radius:4px;"><strong>${v.result}：</strong>${d.result}</p>`;
+    document.getElementById('shop-confirm-cancel').textContent = v.cancel;
+    document.getElementById('shop-confirm-ok').textContent = v.ok;
+    modal.style.display = 'flex';
+}
+
+// ───────────────────────── Knowledge base ─────────────────────────
+const KB_TEXT = {
+    zh: {
+        title: '📚 知識庫', close: '關閉', openBtn: '📚 知識庫',
+        tabs: { avaka: 'Avaka 是什麼', steps: '六道工序', months: '十二個月', paths: '三條完工路徑', score: '得分與傳統教養' },
+        avaka: `
+            <p><strong>Avaka</strong>（也寫作 Abaka、Abaca）中文常稱馬尼拉麻或絲芭蕉，學名 <em>Musa textilis</em>，是芭蕉科的植物。雖然叫作「麻」，用的其實是葉鞘的纖維。</p>
+            <p><strong>長什麼樣子：</strong>外型像香蕉樹，但通常較小、較纖細，高約 2.5 到 8 公尺；葉片較窄、較尖，呈深綠色。果實小、充滿黑色種子，不能吃。假莖由一層層葉鞘疊成，纖維就從葉鞘取得。</p>
+            <p><strong>長在哪裡：</strong>原產於菲律賓，蘭嶼是它自然分布的北界之一。在蘭嶼，它種在家族照顧的林地裡。</p>
+            <p><strong>可以做什麼：</strong>它的纖維強韌、耐海水，過去用來做繫船繩、槳架繩和錨繩（kolili）、船帆、漁網與釣線，也用在拼板舟船板之間的填縫，還能做成背心等衣物。</p>
+            <p><strong>怎麼取纖維：</strong>在開花之前砍下假莖（開花後纖維品質會下降），剝下葉鞘，去掉肉質的部分，只留下纖維，曬乾後再處理。</p>`,
+        stepsIntro: '以下是遊戲中六道工序的做法說明。',
+        monthsIntro: '每個月的遊戲效果，以及這個月在蘭嶼夜曆裡的祭儀與勞動。',
+        effect: '遊戲效果',
+        paths: `
+            <p><strong>🌟 傳統 Avaka：</strong>六道工序全部手工完成（⑤需 KP 3、⑥需 KP 8）。+20 分。船可以拆、可以修。</p>
+            <p><strong>⚙️ 機器加工天然纖維：</strong>完成山林三道工序後，帶 2 份材料到商店，KP 達 5。+12 分（中生代 +15 分）。仍然使用 Avaka、船可拆修，但少了手工曝曬與捻繩的經驗。</p>
+            <p><strong>🧴 工業樹脂：</strong>完成山林三道工序後，帶 2 份材料到商店。+5 分。很快完工，但接縫黏死，壞了無法拆修。</p>
+            <p>三條路都要先完成山林的三道工序，最快也要到 7 月才能完工。9 月與 10 月不能在商店完工，10 月也不能填縫。沒有哪一條路是標準答案，重點是知道自己為什麼這樣選、選了之後要承擔什麼。</p>`,
+        score: `
+            <p><strong>向耆老請益（雙方各 +1 分）：</strong>知識要主動去問才會有；願意教的人同樣被肯定。</p>
+            <p><strong>向中生代請益（雙方各 +1 分）：</strong>中生代有兩種文化的生活經驗，傳得快，也知道怎麼把傳統轉化成新的做法。</p>
+            <p><strong>送材料給耆老（+1 分，6 月 +2 分）：</strong>請教老人家本來就要準備禮物；回饋願意教你的人。當月再向耆老請益，還能多學到 1 KP。</p>
+            <p><strong>幫忙長者（+1 分，6 月 +2 分）：</strong>幫助年紀大的人、接下重擔，是成為一個人應有的涵養。</p>
+            <p><strong>照顧山林（結算時森林 4 以上，全員 +2 分）：</strong>因為需要材料，所以會去照顧林地；大家都不上山，森林就會老化。</p>
+            <p><strong>科學轉譯（成功 +4 分）：</strong>用科學的觀點，印證祖先累積的經驗是有道理的。</p>
+            <p><strong>每月小組任務（達成全員 +1 分）：</strong>每個月有一件要全組一起完成的事。一個人做不到的，大家一起就做得到。</p>
+            <p>請益與指導的加分，每人每月最多計 2 次。</p>
+            <p><strong>搭把手（+1 分，每月計 1 次）：</strong>在同一個地點幫隊友做工序，他這個月的下一道工序少 2 AP。</p>
+            <p><strong>補種 Avaka：</strong>不加分，但算作有人照顧林地，下個月起第一次砍伐多得 1 份材料。</p>`
+    },
+    en: {
+        title: '📚 Knowledge Base', close: 'Close', openBtn: '📚 Knowledge',
+        tabs: { avaka: 'What is Avaka', steps: 'The six steps', months: 'The twelve months', paths: 'Three ways to finish', score: 'Scoring & upbringing' },
+        avaka: `
+            <p><strong>Avaka</strong> (also Abaka or Abaca), known as Manila hemp, is <em>Musa textilis</em>, a plant of the banana family. Despite the name "hemp", the fibre comes from its leaf sheaths.</p>
+            <p><strong>What it looks like:</strong> like a banana plant but usually smaller and more slender, about 2.5 to 8 m tall, with narrower, more pointed dark-green leaves. The fruit is small, full of black seeds and not edible. The pseudo-stem is made of overlapping leaf sheaths, and the fibre is taken from them.</p>
+            <p><strong>Where it grows:</strong> native to the Philippines; Lanyu is one of the northern limits of its natural range. On Lanyu it grows in plots looked after by families.</p>
+            <p><strong>What it is used for:</strong> the fibre is strong and resists seawater. It was used for mooring, oarlock and anchor ropes (kolili), sails, nets and fishing lines, for caulking between the planks of the plank boat, and for garments such as vests.</p>
+            <p><strong>How the fibre is taken:</strong> the pseudo-stem is cut before flowering (fibre quality drops afterwards), the sheaths are peeled off, the pulp is removed so that only the fibre remains, and it is dried before further work.</p>`,
+        stepsIntro: 'How each of the six craft steps in the game is done.',
+        monthsIntro: 'Each month\'s effect in the game, and its rituals and work in the Lanyu calendar.',
+        effect: 'Game effect',
+        paths: `
+            <p><strong>🌟 Traditional Avaka:</strong> all six steps by hand (⑤ needs KP 3, ⑥ needs KP 8). +20 points. The boat can be taken apart and repaired.</p>
+            <p><strong>⚙️ Machine-processed natural fibre:</strong> after the three forest steps, bring 2 materials to the Store with KP 5. +12 points (Middle Generation +15). Still Avaka and still repairable, but the hands-on drying and twining are skipped.</p>
+            <p><strong>🧴 Industrial resin:</strong> after the three forest steps, bring 2 materials to the Store. +5 points. Quick, but the seams are glued shut and cannot be repaired.</p>
+            <p>All three paths start with the three forest steps, so the earliest finish is Month 7. The Store cannot finish boats in Months 9 and 10, and caulking is banned in Month 10. None of the paths is the right answer; what matters is knowing why you chose it and what you accept in return.</p>`,
+        score: `
+            <p><strong>Asking the Elder (+1 point each):</strong> knowledge comes only to those who ask; those willing to teach are honoured too.</p>
+            <p><strong>Asking the Middle Generation (+1 point each):</strong> they have lived in two cultures, pass things on quickly, and know how to turn tradition into new practice.</p>
+            <p><strong>Giving a material to the Elder (+1, or +2 in Month 6):</strong> you bring a gift when you ask an elder; you give back to those who teach you. Asking the Elder that month also yields 1 more KP.</p>
+            <p><strong>Helping the Elder (+1, or +2 in Month 6):</strong> helping the old and taking on the heavy work is part of becoming a person.</p>
+            <p><strong>Tending the forest (+2 for everyone if it ends at 4 or above):</strong> people look after the plots because they need the material; when nobody goes up, the forest ages.</p>
+            <p><strong>Scientific Translation (+4 on success):</strong> science confirming that the ancestors' experience was well founded.</p>
+            <p><strong>Monthly group mission (+1 for everyone):</strong> each month there is one thing the whole group has to get done together.</p>
+            <p>Points for asking and guiding count at most twice per player per month.</p>
+            <p><strong>Lending a hand (+1, once a month):</strong> help a teammate at the same location; their next step this month costs 2 AP less.</p>
+            <p><strong>Replanting Avaka:</strong> no points, but it counts as tending the plots and your first chop from next month on yields 1 extra material.</p>`
+    }
+};
+let kbCurrentTab = 'avaka';
+
+function renderKnowledge(tab) {
+    const modal = document.getElementById('kb-modal');
+    if (!modal) return;
+    kbCurrentTab = tab || kbCurrentTab;
+    const isEn = currentLang === 'en';
+    const kt = KB_TEXT[currentLang] || KB_TEXT.zh;
+    document.getElementById('kb-title').textContent = kt.title;
+    document.getElementById('close-kb-btn').textContent = kt.close;
+    document.getElementById('kb-tabs').innerHTML = Object.entries(kt.tabs).map(([key, label]) =>
+        `<button class="btn ${key === kbCurrentTab ? 'primary' : 'secondary outline'} kb-tab-btn" data-tab="${key}" style="padding:0.3rem 0.8rem; font-size:0.85rem; height:auto;">${label}</button>`).join('');
+    let html = '';
+    if (kbCurrentTab === 'steps') {
+        html = `<p>${kt.stepsIntro}</p>` + ['chop', 'rub', 'strip', 'dry', 'twine', 'caulk'].map(step => {
+            const btn = document.querySelector(`.craft-btn[data-step="${step}"]`);
+            if (!btn) return '';
+            return `<p style="white-space:pre-line;"><strong>${btn.textContent.trim()}</strong>\n${btn.title || ''}</p>`;
+        }).join('');
+    } else if (kbCurrentTab === 'months') {
+        html = `<p>${kt.monthsIntro}</p>` + GAME_RULES.map((rule, i) => {
+            const lore = monthLoreData[i + 1];
+            const loreTitle = lore ? (isEn ? lore.title_en : lore.title_zh) : '';
+            const loreText = lore ? (isEn ? lore.desc_en : lore.desc_zh) : '';
+            return `<div style="margin-bottom:1rem; padding-bottom:0.8rem; border-bottom:1px solid rgba(255,255,255,0.1);">
+                <strong style="color:var(--secondary);">${i + 1}. ${rule.name} ${loreTitle}</strong>
+                <div style="background:rgba(212,175,55,0.1); border-left:4px solid var(--primary); padding:6px 10px; margin:6px 0; border-radius:4px;"><strong>${kt.effect}：</strong>${isEn ? rule.desc_en : rule.desc_zh}</div>
+                <div>${loreText}</div></div>`;
+        }).join('');
+    } else {
+        html = kt[kbCurrentTab] || '';
+    }
+    document.getElementById('kb-content').innerHTML = html;
+    document.getElementById('kb-content').scrollTop = 0;
+}
+
+document.addEventListener('click', (e) => {
+    const t = e.target;
+    if (t.id === 'open-kb-btn') {
+        renderKnowledge(kbCurrentTab);
+        document.getElementById('kb-modal').style.display = 'flex';
+    } else if (t.id === 'close-kb-btn') {
+        document.getElementById('kb-modal').style.display = 'none';
+    } else if (t.classList && t.classList.contains('kb-tab-btn')) {
+        renderKnowledge(t.dataset.tab);
+    } else if (t.id === 'shop-confirm-cancel') {
+        document.getElementById('shop-confirm-modal').style.display = 'none';
+        pendingShopItem = null;
+    } else if (t.id === 'shop-confirm-ok') {
+        document.getElementById('shop-confirm-modal').style.display = 'none';
+        if (pendingShopItem) sendAction({ type: 'buy', item: pendingShopItem });
+        pendingShopItem = null;
+    }
+});
+
+
+// ───────────────────────── Group missions, badges, titles ─────────────────────────
+const MISSION_TEXT = {
+    zh: { label: '本月小組任務', reward: '達成全員 +1 分', done: '已達成！全員 +1 分',
+          ask: n => `本月全組合計請益 ${n} 次`, gift: () => '本月有人送材料給耆老', help: () => '本月有人幫忙長者',
+          forest: () => '本月有人上山砍伐、照顧林地', teach: () => '本月耆老指導至少 1 次', steps: n => `本月全組合計完成 ${n} 道工序`,
+          names: { ask: '開口問', gift: '帶禮物來', help: '接下重擔', forest: '上山看看', teach: '把話傳下去', steps: '一起動手' } },
+    en: { label: "This month's group mission", reward: '+1 point for everyone', done: 'Completed! +1 point for everyone',
+          ask: n => `The group asks ${n} time(s) in total this month`, gift: () => 'Someone gives a material to the Elder this month', help: () => 'Someone helps the Elder this month',
+          forest: () => 'Someone goes up to chop and tend the plots this month', teach: () => 'The Elder guides at least once this month', steps: n => `The group completes ${n} craft step(s) in total this month`,
+          names: { ask: 'Speak up and ask', gift: 'Bring a gift', help: 'Take on the load', forest: 'Go up and look', teach: 'Pass the word on', steps: 'Hands together' } }
+};
+const BADGE_TEXT = {
+    zh: { label: '徽章', toast: '獲得徽章', names: { ask: '開口問', gift: '帶禮物來', help: '接下重擔', forest: '照顧山林', teach: '把話傳下去', translate: '看見道理', finish: '船下水了' } },
+    en: { label: 'Badges', toast: 'Badge earned', names: { ask: 'Spoke up and asked', gift: 'Brought a gift', help: 'Took on the load', forest: 'Tended the forest', teach: 'Passed the word on', translate: 'Saw the reason', finish: 'Boat launched' } }
+};
+const BADGE_ICONS = { ask: '🙋', gift: '🎁', help: '💪', forest: '🌳', teach: '🗣️', translate: '🔬', finish: '⛵' };
+const TITLE_TEXT = {
+    zh: { label: '稱號', names: { heritage: '最會傳承', giving: '最懂回饋', helper: '長者的幫手', forest: '山林守護者' } },
+    en: { label: 'Titles', names: { heritage: 'Best at passing it on', giving: 'Best at giving back', helper: "The Elder's helper", forest: 'Guardian of the forest' } }
+};
+
+function missionNameEn(zhName) {
+    const key = Object.keys(MISSION_TEXT.zh.names).find(k => MISSION_TEXT.zh.names[k] === zhName);
+    return key ? MISSION_TEXT.en.names[key] : zhName;
+}
+function badgeNameEn(zhName) {
+    // translateLog swaps place names first, so 「照顧山林」 arrives as 「照顧Mountain Forest」
+    zhName = zhName.replace(/Mountain Forest/g, '山林');
+    const key = Object.keys(BADGE_TEXT.zh.names).find(k => BADGE_TEXT.zh.names[k] === zhName);
+    return key ? BADGE_TEXT.en.names[key] : zhName;
+}
+
+function renderMission(state) {
+    const el = document.getElementById('mission-banner');
+    if (!el) return;
+    const m = state.mission;
+    if (!m) { el.style.display = 'none'; return; }
+    const mt = MISSION_TEXT[currentLang] || MISSION_TEXT.zh;
+    const desc = mt[m.id] ? mt[m.id](m.target) : m.desc;
+    const name = mt.names[m.id] || m.name;
+    el.style.display = 'block';
+    el.style.color = m.done ? '#86efac' : '#fde68a';
+    el.innerHTML = `🎯 <strong>${mt.label}「${name}」</strong>：${desc}　${m.done ? '✅ ' + mt.done : `(${m.progress}/${m.target}) · ${mt.reward}`}`;
+}
+
+function badgeLineHtml(p) {
+    const badges = p.badges || [];
+    if (!badges.length) return '';
+    const bt = BADGE_TEXT[currentLang] || BADGE_TEXT.zh;
+    return `<br><span title="${badges.map(b => bt.names[b] || b).join('、')}">🏅 ${badges.map(b => BADGE_ICONS[b] || '🏅').join(' ')}</span>`;
+}
+
+const announcedBadges = { key: null, seen: new Set() };
+function announceNewBadges(state, p) {
+    const key = state.room_code + ':' + p.name;
+    const badges = p.badges || [];
+    if (announcedBadges.key !== key) {
+        // first sight of this game (or a rejoin): do not replay old badges
+        announcedBadges.key = key;
+        announcedBadges.seen = new Set(badges.length > 1 ? badges : []);
+    }
+    const bt = BADGE_TEXT[currentLang] || BADGE_TEXT.zh;
+    badges.forEach(b => {
+        if (!announcedBadges.seen.has(b)) {
+            announcedBadges.seen.add(b);
+            showToast(`🏅 ${bt.toast}：${BADGE_ICONS[b] || ''} ${bt.names[b] || b}`);
+        }
+    });
+}
+
+function playerHonoursHtml(p) {
+    const bt = BADGE_TEXT[currentLang] || BADGE_TEXT.zh;
+    const tt = TITLE_TEXT[currentLang] || TITLE_TEXT.zh;
+    const titles = (p.titles || []).map(t => `<span style="display:inline-block; margin:0.2rem 0.3rem 0 0; padding:0.15rem 0.6rem; border-radius:12px; border:1px solid #fbbf24; background:rgba(251,191,36,0.15); color:#fde68a; font-size:0.8rem;">🏆 ${tt.names[t] || t}</span>`).join('');
+    const badges = (p.badges || []).map(b => `<span style="display:inline-block; margin:0.2rem 0.3rem 0 0; padding:0.15rem 0.6rem; border-radius:12px; border:1px solid rgba(148,163,184,0.5); background:rgba(148,163,184,0.12); color:#e2e8f0; font-size:0.8rem;">${BADGE_ICONS[b] || '🏅'} ${bt.names[b] || b}</span>`).join('');
+    if (!titles && !badges) return '';
+    return `<div style="margin-top:0.5rem;">${titles}${badges}</div>`;
+}
+
+
+// ───────────────────────── Batch 4: quiz, event cards, replanting, lending a hand, mini-game ─────────────────────────
+// Option order here must match QUIZ_ANSWERS in server.py (the server only knows the index of the right one).
+const QUIZ_TEXT = {
+    zh: {
+        title: '📝 請益小問答', hint: '答對多得 1 KP，答錯沒有損失。', right: '答對了！多得 1 KP。', wrong: '這次沒答對，正確答案是：', close: '知道了',
+        q1: { q: 'Avaka 的纖維是從植物的哪個部位取得的？', o: ['葉鞘', '果實', '根'] },
+        q2: { q: '為什麼要在開花之前砍下假莖？', o: ['開花後纖維品質會下降', '開花後砍不動', '開花後會有毒'] },
+        q3: { q: '下面哪一樣不是過去用 Avaka 纖維做的？', o: ['錨繩', '船板之間的填縫', '船槳'] },
+        q4: { q: 'Avaka 的纖維適合用在船上，主要是因為？', o: ['強韌、耐海水', '顏色好看', '很輕會浮'] },
+        q5: { q: '2 月招魚祭期間，為什麼不能上山？', o: ['這段時間禁止進入山林', '山上沒有 Avaka', '下雨路滑'] },
+        q6: { q: '5 月梅雨季，還沒曬乾的材料會怎樣？', o: ['容易腐爛，要先防潮', '長得更快', '自己變乾'] },
+        q7: { q: '用傳統 Avaka 填縫的船，壞了可以怎麼辦？', o: ['拆開來修', '只能整艘丟掉', '塗上樹脂就好'] },
+        q8: { q: '用工業樹脂完工的船，和傳統做法最大的不同是？', o: ['接縫黏死，壞了無法拆修', '船比較慢', '不能下水'] },
+        q9: { q: '蘭嶼在 Avaka 的自然分布上是什麼位置？', o: ['自然分布的北界之一', '最南邊', '全世界只有蘭嶼有'] },
+        q10: { q: 'Avaka 的外型像哪一種植物？', o: ['香蕉樹', '竹子', '椰子樹'] },
+        q11: { q: 'Avaka 的果實可以吃嗎？', o: ['不能，果實小而且充滿黑色種子', '可以，很甜', '煮熟才能吃'] },
+        q12: { q: '遊戲裡 10 月為什麼不能完工？', o: ['這個月不允許落成', '天氣太冷', '材料用完了'] },
+        q13: { q: '機器加工天然纖維的船，和工業樹脂的船相比？', o: ['仍然使用 Avaka，壞了可以拆修', '一樣無法拆修', '不需要任何材料'] },
+        q14: { q: '6 月好月節，遊戲裡哪些事的得分會加倍？', o: ['送材料給耆老、幫忙長者', '砍伐', '在商店完工'] },
+        q15: { q: '森林狀態為什麼會下降？', o: ['整個月沒有人上山照顧林地', '砍得太多', '下太多雨'] }
+    },
+    en: {
+        title: '📝 Ask quiz', hint: 'A correct answer gives +1 KP; a wrong one costs nothing.', right: 'Correct! +1 KP.', wrong: 'Not this time. The right answer is:', close: 'Got it',
+        q1: { q: 'Which part of the Avaka plant does the fibre come from?', o: ['The leaf sheaths', 'The fruit', 'The roots'] },
+        q2: { q: 'Why is the pseudo-stem cut before the plant flowers?', o: ['Fibre quality drops after flowering', 'It is too hard to cut afterwards', 'It becomes poisonous'] },
+        q3: { q: 'Which of these was NOT made from Avaka fibre?', o: ['Anchor rope', 'Caulking between the planks', 'Oars'] },
+        q4: { q: 'Avaka fibre suits boats mainly because it is…', o: ['Strong and resists seawater', 'Nice in colour', 'Light and floats'] },
+        q5: { q: 'Why can nobody go up the mountain during the fish-summoning month (Month 2)?', o: ['Entering the forest is forbidden then', 'There is no Avaka up there', 'The paths are slippery'] },
+        q6: { q: 'What happens to materials that are not yet dried in the plum-rain month (Month 5)?', o: ['They rot easily and must be protected', 'They grow faster', 'They dry by themselves'] },
+        q7: { q: 'A boat caulked with traditional Avaka gets damaged. What can be done?', o: ['Take it apart and repair it', 'Throw the whole boat away', 'Just coat it with resin'] },
+        q8: { q: 'What is the biggest difference of a boat finished with industrial resin?', o: ['Its seams are glued shut and cannot be repaired', 'It is slower', 'It cannot be launched'] },
+        q9: { q: 'Where does Lanyu sit in the natural range of Avaka?', o: ['One of its northern limits', 'Its southern end', 'The only place it grows'] },
+        q10: { q: 'Which plant does Avaka look like?', o: ['A banana plant', 'Bamboo', 'A coconut palm'] },
+        q11: { q: 'Can the fruit of Avaka be eaten?', o: ['No: it is small and full of black seeds', 'Yes, it is sweet', 'Only when cooked'] },
+        q12: { q: 'Why can no boat be finished in Month 10 in the game?', o: ['Launching is not allowed this month', 'It is too cold', 'The materials have run out'] },
+        q13: { q: 'How does a boat of machine-processed natural fibre compare with a resin one?', o: ['It is still Avaka and can be taken apart and repaired', 'It cannot be repaired either', 'It needs no material at all'] },
+        q14: { q: 'In the Good Month (Month 6), which actions score double in the game?', o: ['Giving a material to the Elder and helping the Elder', 'Chopping', 'Finishing at the Store'] },
+        q15: { q: 'Why does forest health go down?', o: ['Nobody went up to tend the plots for a whole month', 'Too much chopping', 'Too much rain'] }
+    }
+};
+
+const EVENT_TEXT = {
+    zh: {
+        title: '📜 本月事件',
+        m3:  { t: '族人找你一起出海捕飛魚', a: '一起出海', ad: '少 2 AP，+1 分', b: '留下來做工', bd: '沒有變化' },
+        m6:  { t: '好月節要分享收成', a: '分享收成', ad: '把 1 份材料分給全組材料最少的人，+1 分', b: '留著自己用', bd: '沒有變化' },
+        m8:  { t: '有人問你傳統做法有什麼道理', a: '花時間說明', ad: '少 1 AP，+1 KP', b: '下次再說', bd: '沒有變化' },
+        m11: { t: '晚上老人家在講以前的事', a: '留下來聽', ad: '少 1 AP，+1 KP', b: '早點休息', bd: '下個月多回復 1 AP' }
+    },
+    en: {
+        title: "📜 This month's event",
+        m3:  { t: 'Your relatives ask you to go out for flying fish', a: 'Go fishing together', ad: '−2 AP, +1 point', b: 'Stay and work', bd: 'No change' },
+        m6:  { t: 'It is the Good Month: time to share the harvest', a: 'Share the harvest', ad: 'Give 1 material to the teammate with the fewest, +1 point', b: 'Keep it for yourself', bd: 'No change' },
+        m8:  { t: 'Someone asks why the traditional way is done the way it is', a: 'Take time to explain', ad: '−1 AP, +1 KP', b: 'Maybe next time', bd: 'No change' },
+        m11: { t: 'In the evening the elders are telling stories of the old days', a: 'Stay and listen', ad: '−1 AP, +1 KP', b: 'Rest early', bd: '+1 AP recovery next month' }
+    }
+};
+
+const B4_TEXT = {
+    zh: {
+        plant: '🌱 補種 Avaka (1 AP | 每月 1 次 · 下次砍伐 +1 材料)', plantDone: '🌱 本月已補種',
+        assist: '🙌 搭把手 (1 AP)', assisted: '🙌 下一道工序 −2 AP',
+        mgTitle: '🎯 抓準時機', mgHint: '指針走到綠色區域時按下。成功退回 1 AP，失敗沒有損失。', mgGo: '就是現在！', mgSkip: '跳過',
+        mgWin: '抓得剛好！退回 1 AP。', mgLose: '差了一點，沒有損失。',
+        mgStep: { chop: '下刀的位置', rub: '摩擦的力道', strip: '撕絲的力道', dry: '收起來的時間', twine: '搓捻的鬆緊', caulk: '塞進縫裡的深淺' }
+    },
+    en: {
+        plant: '🌱 Replant Avaka (1 AP | once a month · next chop +1 material)', plantDone: '🌱 Replanted this month',
+        assist: '🙌 Lend a hand (1 AP)', assisted: '🙌 Next step −2 AP',
+        mgTitle: '🎯 Right moment', mgHint: 'Press when the pointer is in the green zone. Success returns 1 AP; a miss costs nothing.', mgGo: 'Now!', mgSkip: 'Skip',
+        mgWin: 'Spot on! 1 AP returned.', mgLose: 'Just missed. Nothing lost.',
+        mgStep: { chop: 'Where to cut', rub: 'How hard to rub', strip: 'How hard to pull', dry: 'When to take it in', twine: 'How tight to twist', caulk: 'How deep to press' }
+    }
+};
+
+function eventOptionEn(zhName) {
+    for (const id of ['m3', 'm6', 'm8', 'm11']) {
+        if (EVENT_TEXT.zh[id].a === zhName) return EVENT_TEXT.en[id].a;
+        if (EVENT_TEXT.zh[id].b === zhName) return EVENT_TEXT.en[id].b;
+    }
+    return zhName;
+}
+function eventNotesEn(notes) {
+    return notes
+        .replace(/消耗 (\d+) AP/, '−$1 AP')
+        .replace(/把 (\d+) 份材料分給 ([^，]+)/, 'gave $1 material to $2')
+        .replace(/獲得 (\d+) KP/, '+$1 KP')
+        .replace(/獲得 (\d+) 分/, '+$1 point')
+        .replace(/下個月多回復 (\d+) AP/, '+$1 AP recovery next month')
+        .replace(/，/g, ', ');
+}
+
+// Lend-a-hand button (and the tag on whoever has been helped) inside a player card
+function assistHtml(state, myP, p, id, isMe) {
+    const t = B4_TEXT[currentLang] || B4_TEXT.zh;
+    const helped = (p.assist_month || 0) === state.month;
+    let html = '';
+    if (helped) {
+        html += `<span style="font-size:0.72rem; padding:0.2rem 0.55rem; border-radius:6px; background:rgba(34,197,94,0.15); color:#86efac; border:1px solid rgba(34,197,94,0.4);">${t.assisted}</span>`;
+    } else if (!isMe && myP && myP.location === p.location && !p.finished) {
+        html += `<button class="assist-btn" data-id="${id}" style="font-size:0.75rem; padding:0.3rem 0.8rem; border-radius:6px; background:rgba(34,197,94,0.15); color:#86efac; border:1px solid rgba(34,197,94,0.4); cursor:pointer; font-weight:bold;">${t.assist}</button>`;
+    }
+    return html;
+}
+
+document.querySelectorAll('.plant-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        playActionSound();
+        showFloatingIcon(e, '🌱');
+        sendAction({ type: 'plant' });
+    });
+});
+
+function b4Modal(id, innerHtml) {
+    let modal = document.getElementById(id);
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = id;
+        // below the month-opening card (z-index 3000) so that one is read first
+        modal.style.cssText = 'position:fixed; inset:0; z-index:2500; display:flex; align-items:center; justify-content:center; background:rgba(2,6,23,0.72); backdrop-filter:blur(4px); padding:1rem;';
+        document.body.appendChild(modal);
+    }
+    modal.innerHTML = `<div style="width:min(520px, 100%); max-height:88vh; overflow-y:auto; padding:1.4rem 1.5rem; border-radius:16px; background:linear-gradient(160deg, rgba(15,23,42,0.98), rgba(10,15,30,0.98)); border:1px solid rgba(212,175,55,0.45); box-shadow:0 20px 60px rgba(0,0,0,0.6); color:#e2e8f0;">${innerHtml}</div>`;
+    return modal;
+}
+function b4Close(id) {
+    const modal = document.getElementById(id);
+    if (modal) modal.remove();
+}
+const B4_BTN = 'display:block; width:100%; text-align:left; margin-top:0.6rem; padding:0.75rem 1rem; border-radius:10px; border:1px solid rgba(212,175,55,0.4); background:rgba(212,175,55,0.08); color:#fef3c7; font-size:0.95rem; cursor:pointer;';
+
+const promptState = { quizSeq: 0, quizResultSeq: 0, eventKey: '', mgSeq: 0, mgTimer: null };
+
+function renderPrompts(state) {
+    const me = state.players[myId];
+    const t = B4_TEXT[currentLang] || B4_TEXT.zh;
+
+    // replant button
+    document.querySelectorAll('.plant-btn').forEach(btn => {
+        const done = me && (me.plant_month || 0) === state.month;
+        btn.textContent = done ? t.plantDone : t.plant;
+        btn.style.opacity = (done || state.month === 2) ? '0.45' : '1';
+    });
+    if (!me) return;
+
+    // quiz
+    if (me.quiz && me.quiz.seq !== promptState.quizSeq) {
+        promptState.quizSeq = me.quiz.seq;
+        showQuiz(me.quiz);
+    }
+    if (me.quiz_result && me.quiz_result.seq !== promptState.quizResultSeq) {
+        const fresh = me.quiz_result.seq === promptState.quizSeq;
+        promptState.quizResultSeq = me.quiz_result.seq;
+        if (fresh) showQuizResult(me.quiz_result);
+    }
+    if (!me.quiz && !(me.quiz_result && me.quiz_result.seq === promptState.quizSeq) ) b4Close('quiz-modal');
+
+    // event card
+    const eventKey = me.event ? `${state.room_code}:${me.event.id}` : '';
+    if (eventKey && eventKey !== promptState.eventKey) showEventCard(me.event.id);
+    if (!eventKey) b4Close('event-choice-modal');
+    promptState.eventKey = eventKey;
+
+    // mini-game
+    if (me.minigame && me.minigame.seq !== promptState.mgSeq) {
+        promptState.mgSeq = me.minigame.seq;
+        showMiniGame(me.minigame);
+    }
+}
+
+function showQuiz(quiz) {
+    const qt = QUIZ_TEXT[currentLang] || QUIZ_TEXT.zh;
+    const item = qt[quiz.id];
+    if (!item) return;
+    const buttons = quiz.order.map(i => `<button class="quiz-opt" data-choice="${i}" style="${B4_BTN}">${item.o[i]}</button>`).join('');
+    const modal = b4Modal('quiz-modal', `
+        <h3 style="margin:0 0 0.3rem; color:#fde68a;">${qt.title}</h3>
+        <p style="margin:0 0 0.9rem; font-size:0.8rem; color:#94a3b8;">${qt.hint}</p>
+        <p style="margin:0 0 0.4rem; font-size:1.05rem; line-height:1.6;">${item.q}</p>
+        ${buttons}`);
+    modal.querySelectorAll('.quiz-opt').forEach(btn => {
+        btn.addEventListener('click', () => {
+            modal.querySelectorAll('.quiz-opt').forEach(b => { b.disabled = true; b.style.opacity = '0.5'; });
+            socket.emit('action', { type: 'quiz_answer', choice: Number(btn.dataset.choice) });
+        });
+    });
+}
+
+function showQuizResult(result) {
+    const qt = QUIZ_TEXT[currentLang] || QUIZ_TEXT.zh;
+    const item = qt[result.id];
+    if (!item) return;
+    const body = result.correct
+        ? `<p style="margin:0.4rem 0 0; font-size:1.05rem; color:#86efac;">✅ ${qt.right}</p>`
+        : `<p style="margin:0.4rem 0 0; font-size:1rem; color:#fca5a5;">${qt.wrong}</p><p style="margin:0.3rem 0 0; font-size:1.05rem; color:#fde68a;">${item.o[result.answer]}</p>`;
+    const modal = b4Modal('quiz-modal', `
+        <h3 style="margin:0 0 0.6rem; color:#fde68a;">${qt.title}</h3>
+        <p style="margin:0; font-size:0.95rem; color:#cbd5e1; line-height:1.6;">${item.q}</p>
+        ${body}
+        <button id="quiz-close" style="${B4_BTN} text-align:center;">${qt.close}</button>`);
+    modal.querySelector('#quiz-close').addEventListener('click', () => b4Close('quiz-modal'));
+}
+
+function showEventCard(eventId) {
+    const et = EVENT_TEXT[currentLang] || EVENT_TEXT.zh;
+    const ev = et[eventId];
+    if (!ev) return;
+    const modal = b4Modal('event-choice-modal', `
+        <h3 style="margin:0 0 0.6rem; color:#fde68a;">${et.title}</h3>
+        <p style="margin:0 0 0.5rem; font-size:1.1rem; line-height:1.6;">${ev.t}</p>
+        <button class="event-opt" data-choice="a" style="${B4_BTN}"><strong>${ev.a}</strong><br><span style="font-size:0.82rem; color:#cbd5e1;">${ev.ad}</span></button>
+        <button class="event-opt" data-choice="b" style="${B4_BTN}"><strong>${ev.b}</strong><br><span style="font-size:0.82rem; color:#cbd5e1;">${ev.bd}</span></button>`);
+    modal.querySelectorAll('.event-opt').forEach(btn => {
+        // the card stays open if the server refuses (not enough AP / no material); it closes once the event is settled
+        btn.addEventListener('click', () => socket.emit('action', { type: 'event_choice', choice: btn.dataset.choice }));
+    });
+}
+
+// Timing game: the pointer sweeps back and forth; its position is computed from the clock, not from frames.
+const MG_PERIOD = 1300, MG_ZONE = [0.40, 0.62], MG_LIMIT = 6000;
+function showMiniGame(mg) {
+    const t = B4_TEXT[currentLang] || B4_TEXT.zh;
+    clearTimeout(promptState.mgTimer);
+    const start = performance.now();
+    const modal = b4Modal('minigame-modal', `
+        <h3 style="margin:0 0 0.3rem; color:#fde68a;">${t.mgTitle}：${t.mgStep[mg.step] || ''}</h3>
+        <p style="margin:0 0 1rem; font-size:0.82rem; color:#94a3b8;">${t.mgHint}</p>
+        <div style="position:relative; height:26px; border-radius:13px; background:rgba(148,163,184,0.2); overflow:hidden;">
+            <div style="position:absolute; top:0; bottom:0; left:${MG_ZONE[0] * 100}%; width:${(MG_ZONE[1] - MG_ZONE[0]) * 100}%; background:rgba(34,197,94,0.55);"></div>
+            <div id="mg-pointer" style="position:absolute; top:-2px; bottom:-2px; width:6px; margin-left:-3px; border-radius:3px; background:#fde68a; box-shadow:0 0 8px #fde68a; left:0; animation:mg-sweep ${MG_PERIOD}ms linear infinite alternate;"></div>
+        </div>
+        <style>@keyframes mg-sweep { from { left: 0%; } to { left: 100%; } }</style>
+        <p id="mg-msg" style="margin:0.8rem 0 0; min-height:1.4rem; font-size:1rem;"></p>
+        <div style="display:flex; gap:0.6rem;">
+            <button id="mg-go" style="${B4_BTN} text-align:center; flex:2; font-weight:bold;">${t.mgGo}</button>
+            <button id="mg-skip" style="${B4_BTN} text-align:center; flex:1; border-color:rgba(148,163,184,0.4); background:rgba(148,163,184,0.08); color:#cbd5e1;">${t.mgSkip}</button>
+        </div>`);
+    let settled = false;
+    const finish = (success, showMsg) => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(promptState.mgTimer);
+        socket.emit('action', { type: 'minigame_result', success });
+        if (!showMsg) { b4Close('minigame-modal'); return; }
+        const pointer = modal.querySelector('#mg-pointer');
+        if (pointer) pointer.style.animationPlayState = 'paused';
+        const msg = modal.querySelector('#mg-msg');
+        if (msg) { msg.textContent = success ? t.mgWin : t.mgLose; msg.style.color = success ? '#86efac' : '#fca5a5'; }
+        setTimeout(() => b4Close('minigame-modal'), 900);
+    };
+    modal.querySelector('#mg-go').addEventListener('click', () => {
+        const phase = ((performance.now() - start) % (MG_PERIOD * 2)) / MG_PERIOD;   // 0..2
+        const pos = phase <= 1 ? phase : 2 - phase;                                    // triangle wave 0..1
+        finish(pos >= MG_ZONE[0] && pos <= MG_ZONE[1], true);
+    });
+    modal.querySelector('#mg-skip').addEventListener('click', () => finish(false, false));
+    promptState.mgTimer = setTimeout(() => finish(false, false), MG_LIMIT);
 }

@@ -40,11 +40,176 @@ player_rooms = {} # sid -> room_code
 DISCONNECT_GRACE_SECONDS = 120
 disconnected_players = {}
 
+# The forest is shared by the whole room: needing the material is what keeps people tending it.
+FOREST_START = 3
+FOREST_MAX = 5
+
+def forest_level(value):
+    if value >= 4: return 'lush'
+    if value <= 1: return 'aged'
+    return 'ok'
+
+def settle_forest_month(state, room_code):
+    """Called when a month ends: tended plots recover, untended ones age. Month 2 (forest closed) is skipped."""
+    ended = state['month']
+    if ended != 2:
+        before = state.get('forest', FOREST_START)
+        if state.get('forest_tended'):
+            state['forest'] = min(FOREST_MAX, before + 1)
+            add_log(room_code, f"🌳 森林：{ended} 月有人上山砍伐、照顧林地，森林狀態 {before} → {state['forest']}")
+        else:
+            state['forest'] = max(0, before - 1)
+            add_log(room_code, f"🍂 森林：{ended} 月沒有人上山，林地無人照顧，森林狀態 {before} → {state['forest']}")
+    state['forest_tended'] = False
+
+# ── Monthly group missions, badges and end-of-year titles ──────────────────────
+ASK_SCORE_CAP = 2      # asks / guidance that score per player per month (KP is still gained beyond it)
+
+MISSIONS = {
+    'ask':    {'name': '開口問',     'desc': '本月全組合計請益 {target} 次'},
+    'gift':   {'name': '帶禮物來',   'desc': '本月有人送材料給耆老'},
+    'help':   {'name': '接下重擔',   'desc': '本月有人幫忙長者'},
+    'forest': {'name': '上山看看',   'desc': '本月有人上山砍伐、照顧林地'},
+    'teach':  {'name': '把話傳下去', 'desc': '本月耆老指導至少 1 次'},
+    'steps':  {'name': '一起動手',   'desc': '本月全組合計完成 {target} 道工序'},
+}
+
+BADGES = {
+    'ask': '開口問', 'gift': '帶禮物來', 'help': '接下重擔', 'forest': '照顧山林',
+    'teach': '把話傳下去', 'translate': '看見道理', 'finish': '船下水了',
+}
+
+TITLES = {
+    'heritage': {'name': '最會傳承',   'stats': ('ask', 'teach')},
+    'giving':   {'name': '最懂回饋',   'stats': ('gift',)},
+    'helper':   {'name': '長者的幫手', 'stats': ('help',)},
+    'forest':   {'name': '山林守護者', 'stats': ('chop', 'plant')},
+}
+
+def new_stats():
+    return {'ask': 0, 'teach': 0, 'gift': 0, 'help': 0, 'chop': 0, 'plant': 0, 'assist': 0,
+            'translate': 0, 'steps': 0}
+
+# ── Quiz after asking: answers stay on the server, the client only holds the wording ──
+# id -> index of the correct option (option order is the one in app.js QUIZ_TEXT)
+QUIZ_ANSWERS = {'q1': 0, 'q2': 0, 'q3': 2, 'q4': 0, 'q5': 0, 'q6': 0, 'q7': 0, 'q8': 0,
+                'q9': 0, 'q10': 0, 'q11': 0, 'q12': 0, 'q13': 0, 'q14': 0, 'q15': 0}
+
+def give_quiz(player):
+    """Hand the player one question they have not seen yet (the bank restarts once exhausted)."""
+    seen = player.setdefault('quiz_seen', [])
+    pool = [q for q in QUIZ_ANSWERS if q not in seen]
+    if not pool:
+        seen.clear()
+        pool = list(QUIZ_ANSWERS)
+    qid = random.choice(pool)
+    seen.append(qid)
+    order = [0, 1, 2]
+    random.shuffle(order)
+    player['quiz_seq'] = player.get('quiz_seq', 0) + 1
+    player['quiz'] = {'id': qid, 'order': order, 'seq': player['quiz_seq']}
+
+# ── Monthly event cards: every player picks one of two options ──
+# cost / gain keys: ap, kp, score, material (given to the teammate with the fewest), rest (extra AP next month)
+EVENTS = {
+    3:  {'id': 'm3',  'a': {'name': '一起出海',   'ap': 2, 'score': 1, 'label': '一起出海'},
+                      'b': {'name': '留下來做工'}},
+    6:  {'id': 'm6',  'a': {'name': '分享收成',   'material': 1, 'score': 1, 'label': '分享收成'},
+                      'b': {'name': '留著自己用'}},
+    8:  {'id': 'm8',  'a': {'name': '花時間說明', 'ap': 1, 'kp': 1},
+                      'b': {'name': '下次再說'}},
+    11: {'id': 'm11', 'a': {'name': '留下來聽',   'ap': 1, 'kp': 1},
+                      'b': {'name': '早點休息',   'rest': 1}},
+}
+
+def deal_events(state):
+    event = EVENTS.get(state['month'])
+    for p in state['players'].values():
+        p['event'] = {'id': event['id'], 'month': state['month']} if event else None
+
+def clear_month_prompts(state):
+    """Unanswered quizzes, events and mini-games do not carry over to the next month."""
+    for p in state['players'].values():
+        p['quiz'] = None
+        p['event'] = None
+        p['minigame'] = None
+
+def award_badge(player, badge_id, room_code):
+    badges = player.setdefault('badges', [])
+    if badge_id not in badges:
+        badges.append(badge_id)
+        add_log(room_code, f"🏅 {player['name']} 獲得徽章「{BADGES[badge_id]}」")
+
+def pick_mission(state):
+    """Pick this month's group mission among the ones the room can actually do."""
+    players = list(state['players'].values())
+    month = state['month']
+    has_elder = any(p['role'] == 'elder' for p in players)
+    has_younger = any(p['role'] != 'elder' for p in players)
+    askers = sum(1 for p in players if p['role'] in ('youth', 'middle') and not p['finished'])
+    building = sum(1 for p in players if not p['finished'])
+    options = {}
+    if askers: options['ask'] = askers
+    if has_elder and has_younger:
+        options['gift'] = 1
+        options['teach'] = 1
+        if any(p['role'] == 'elder' and not p['finished'] for p in players):
+            options['help'] = 1
+    if month != 2:
+        options['forest'] = 1
+        if building: options['steps'] = building
+    previous = (state.get('mission') or {}).get('id')
+    choices = [m for m in options if m != previous] or list(options)
+    if not choices:
+        state['mission'] = None
+        return
+    mid = random.choice(choices)
+    state['mission'] = {'id': mid, 'name': MISSIONS[mid]['name'],
+                        'desc': MISSIONS[mid]['desc'].format(target=options[mid]),
+                        'target': options[mid], 'progress': 0, 'done': False}
+
+def mission_progress(state, room_code, mission_id, amount=1):
+    mission = state.get('mission')
+    if not mission or mission['done'] or mission['id'] != mission_id: return
+    mission['progress'] = min(mission['target'], mission['progress'] + amount)
+    if mission['progress'] >= mission['target']:
+        mission['done'] = True
+        add_log(room_code, f"🎯 小組任務「{mission['name']}」達成！所有人獲得 1 分")
+        for p in state['players'].values():
+            p['score'] += 1
+            p['score_breakdown'].append("小組任務 (+1)")
+
+def award_titles(state):
+    titles = {}
+    players = list(state['players'].values())
+    for tid, info in TITLES.items():
+        totals = {p['id']: sum(p.get('stats', {}).get(k, 0) for k in info['stats']) for p in players}
+        best = max(totals.values(), default=0)
+        if best > 0:
+            for p in players:
+                if totals[p['id']] == best:
+                    p.setdefault('titles', []).append(tid)
+            titles[tid] = best
+    state['titles_awarded'] = titles
+
+def scoring_ask(player, month):
+    """True while this player's asks / guidance still score this month."""
+    if player.get('ask_score_month') != month:
+        player['ask_score_month'] = month
+        player['ask_score_count'] = 0
+    if player['ask_score_count'] >= ASK_SCORE_CAP:
+        return False
+    player['ask_score_count'] += 1
+    return True
+
 def create_initial_state(room_code):
     return {
         'room_code': room_code,
         'started': False,
         'month': 1,
+        'forest': FOREST_START,        # shared forest health, 0..FOREST_MAX
+        'forest_tended': False,        # did anyone chop (tend the plots) this month?
+        'mission': None,               # this month's group mission
         'players': {}, # socket_id -> player_data
         'logs': []
     }
@@ -79,9 +244,9 @@ ENDINGS = {
 }
 
 ROLES = {
-    'elder':  {'name': '資深工匠 (耆老)', 'max_ap': 4, 'ap_recovery': 3, 'kp': 10, 'score': 0},
-    'youth':  {'name': '文化復振青年',  'max_ap': 6, 'ap_recovery': 4, 'kp': 0,  'score': 0},
-    'middle': {'name': '中生代',        'max_ap': 5, 'ap_recovery': 3, 'kp': 5,  'score': 0}
+    'elder':  {'name': '資深工匠 (耆老)', 'max_ap': 6, 'ap_recovery': 5, 'kp': 10, 'score': 0},
+    'youth':  {'name': '文化復振青年',  'max_ap': 8, 'ap_recovery': 6, 'kp': 0,  'score': 0},
+    'middle': {'name': '中生代',        'max_ap': 7, 'ap_recovery': 5, 'kp': 5,  'score': 0}
 }
 
 
@@ -278,6 +443,17 @@ def _join_player_to_room(sid, name, role, room_code, avatar=None):
         'last_step_month': 0,
         'gift_month': 0,
         'help_month': 0,
+        'plant_month': 0,          # last month this player replanted
+        'plant_bonus_from': 0,     # first month in which the replanting pays back one extra material
+        'assist_month': 0,         # month in which a teammate lent this player a hand (next step is cheaper)
+        'assist_score_month': 0,   # last month in which lending a hand scored
+        'rest_bonus_month': 0,     # month whose AP recovery is 1 higher (event: rest early)
+        'quiz': None, 'quiz_result': None, 'quiz_seen': [], 'quiz_seq': 0,
+        'event': None,
+        'minigame': None, 'minigame_seq': 0,
+        'stats': new_stats(),
+        'badges': [],
+        'titles': [],
         'location': '灘頭工作室',
         'materials': 0,
         'progress': 0,
@@ -329,6 +505,8 @@ def handle_start():
         
         state['started'] = True
         state['month'] = 1
+        state['forest'] = FOREST_START
+        state['forest_tended'] = False
         for p in state['players'].values():
             role_info = ROLES[p['role']]
             p['ap'] = role_info['max_ap']
@@ -339,7 +517,21 @@ def handle_start():
             p['last_step_month'] = 0
             p['gift_month'] = 0
             p['help_month'] = 0
+            p['plant_month'] = 0
+            p['plant_bonus_from'] = 0
+            p['assist_month'] = 0
+            p['assist_score_month'] = 0
+            p['rest_bonus_month'] = 0
+            p['quiz'] = None; p['quiz_result'] = None; p['quiz_seen'] = []; p['quiz_seq'] = 0
+            p['event'] = None
+            p['minigame'] = None; p['minigame_seq'] = 0
+            p['stats'] = new_stats()
+            p['badges'] = []
+            p['titles'] = []
+        pick_mission(state)
         add_log(room_code, "遊戲開始！第 1 個月：Kashyman")
+        if state.get('mission'):
+            add_log(room_code, f"🎯 本月小組任務「{state['mission']['name']}」：{state['mission']['desc']}（達成全員 +1 分）")
         socketio.emit('state_update', state, to=room_code)
 
 def get_player(sid):
@@ -363,10 +555,11 @@ def handle_action(data):
         # A finished boat does not end the year: its builder can still move,
         # gather materials for others, give, guide and help.
         if player['finished']:
-            allowed = action in ('move', 'give', 'teach', 'help') or \
+            allowed = action in ('move', 'give', 'teach', 'help', 'plant', 'assist',
+                                 'quiz_answer', 'event_choice', 'minigame_result') or \
                 (action == 'craft' and data.get('step') == 'chop')
             if not allowed:
-                emit('error', {'msg': '你的船已經完工了！接下來可以砍伐備料、贈送材料、指導或幫忙其他人。'})
+                emit('error', {'msg': '你的船已經完工了！接下來可以砍伐備料、補種、贈送材料、指導或幫忙其他人。'})
                 return
 
         def consume_ap(cost):
@@ -393,6 +586,21 @@ def handle_action(data):
             step = data.get('step')
             cost = 3
             if month == 3: cost -= 1  # Month 3 discount applies to all steps
+            assisted = player.get('assist_month', 0) == month
+
+            def step_cost(base):
+                # A teammate's hand takes 2 AP off this step, but never below 1
+                return max(1, base - 2) if assisted and base >= 1 else base
+
+            def step_done(paid):
+                if assisted and paid >= 1:
+                    player['assist_month'] = 0
+                if paid >= 1:
+                    # A short timing game follows the step; doing it well refunds 1 AP
+                    player['minigame_seq'] = player.get('minigame_seq', 0) + 1
+                    player['minigame'] = {'step': step, 'seq': player['minigame_seq']}
+                else:
+                    player['minigame'] = None
 
             # ---- Steps 1-3: Forest steps ----
             if step in ('chop', 'rub', 'strip'):
@@ -407,37 +615,57 @@ def handle_action(data):
                     if month == 2:
                         emit('error', {'msg': '飛魚禁令：部落灘頭已舉行招魚祭，整個月門戶關閉。為了尊重魚靈，所有男人禁止在山林工作！'})
                         return
-                    if consume_ap(cost):
+                    # An aged forest has fewer mature plants nearby: chopping takes more effort
+                    chop_cost = step_cost(cost + 1 if state.get('forest', FOREST_START) <= 1 else cost)
+                    if consume_ap(chop_cost):
+                        step_done(chop_cost)
                         amount = 2 if month in (1, 7) else 1
+                        replanted = 0 < player.get('plant_bonus_from', 0) <= month
+                        if replanted:
+                            amount += 1
+                            player['plant_bonus_from'] = 0
                         player['materials'] += amount
+                        state['forest_tended'] = True
+                        player.setdefault('stats', new_stats())['chop'] += 1
+                        award_badge(player, 'forest', room_code)
+                        mission_progress(state, room_code, 'forest')
                         if player['progress'] == 0:
                             player['progress'] = 1
                             player['last_step_month'] = month
+                            mission_progress(state, room_code, 'steps')
                             add_log(room_code, f"{player['name']} 完成了 ①砍伐剝皮 ipana'ape (獲得 {amount} 份材料)")
                         else:
                             add_log(room_code, f"{player['name']} 執行了砍伐剝皮，獲得了 {amount} 份材料")
+                        if replanted:
+                            add_log(room_code, f"🌱 {player['name']} 之前補種的 Avaka 長成了，這次多收 1 份材料")
                         action_done = True
 
                 elif step == 'rub' and player['progress'] == 1:
                     if player['materials'] < 1:
                         emit('error', {'msg': '懸掛摩擦軟化需要 1 份材料'})
                         return
-                    if consume_ap(cost):
+                    paid = step_cost(cost)
+                    if consume_ap(paid):
+                        step_done(paid)
                         player['materials'] -= 1
                         player['progress'] = 2
                         player['last_step_month'] = month
                         add_log(room_code, f"{player['name']} 完成了 ②懸掛摩擦軟化 (消耗 1 份材料)")
+                        mission_progress(state, room_code, 'steps')
                         action_done = True
 
                 elif step == 'strip' and player['progress'] == 2:
                     if player['materials'] < 1:
                         emit('error', {'msg': '劃痕撕絲需要 1 份材料'})
                         return
-                    if consume_ap(cost):
+                    paid = step_cost(cost)
+                    if consume_ap(paid):
+                        step_done(paid)
                         player['materials'] -= 1
                         player['progress'] = 3
                         player['last_step_month'] = month
                         add_log(room_code, f"{player['name']} 完成了 ③劃痕撕絲 chingdasan (消耗 1 份材料)")
+                        mission_progress(state, room_code, 'steps')
                         action_done = True
 
             # ---- Steps 4-6: Beach Workshop steps ----
@@ -454,11 +682,14 @@ def handle_action(data):
                     if player['materials'] < 1:
                         emit('error', {'msg': '曝曬乾燥需要 1 份材料'})
                         return
-                    if consume_ap(cost):
+                    paid = step_cost(cost)
+                    if consume_ap(paid):
+                        step_done(paid)
                         player['materials'] -= 1
                         player['progress'] = 4
                         player['last_step_month'] = month
                         add_log(room_code, f"{player['name']} 完成了 ④脫水曝曬乾燥 (消耗 1 份材料)")
+                        mission_progress(state, room_code, 'steps')
                         action_done = True
 
                 elif step == 'twine' and player['progress'] == 4:
@@ -469,11 +700,14 @@ def handle_action(data):
                         emit('error', {'msg': '理線捻繩需要 3 KP（傳統搓捻技藝）'})
                         return
                     if month == 12: cost = 0
-                    if consume_ap(cost):
+                    paid = step_cost(cost)
+                    if consume_ap(paid):
+                        step_done(paid)
                         player['materials'] -= 1
                         player['progress'] = 5
                         player['last_step_month'] = month
                         add_log(room_code, f"{player['name']} 完成了 ⑤理線捻繩 kolili (消耗 1 份材料)")
+                        mission_progress(state, room_code, 'steps')
                         action_done = True
 
                 elif step == 'caulk' and player['progress'] == 5:
@@ -489,7 +723,9 @@ def handle_action(data):
 
                     if player['role'] == 'elder': cost = 0
 
-                    if consume_ap(cost):
+                    paid = step_cost(cost)
+                    if consume_ap(paid):
+                        step_done(paid)
                         player['materials'] -= 1
                         player['progress'] = 6
                         player['finished'] = True
@@ -500,6 +736,8 @@ def handle_action(data):
                         player['score'] += score
                         player['score_breakdown'].append(f"傳統 Avaka (+{score})")
                         add_log(room_code, f"{player['name']} 完美傳承了造船技術！獲得 {score} 分")
+                        award_badge(player, 'finish', room_code)
+                        mission_progress(state, room_code, 'steps')
                         action_done = True
 
         elif action == 'buy':
@@ -543,6 +781,7 @@ def handle_action(data):
                     player['score'] += score
                     player['score_breakdown'].append(f"機器加工天然纖維 (+{score})")
                     add_log(room_code, f"{player['name']} 用機器加工 Avaka 纖維完工，獲得 {score} 分。船仍可拆修，但少了手工曝曬與捻繩的經驗。")
+                    award_badge(player, 'finish', room_code)
                 else:
                     player['industrial'] = True
                     player['path_choice'] = 'industrial'
@@ -550,6 +789,7 @@ def handle_action(data):
                     player['score'] += score
                     player['score_breakdown'].append(f"工業樹脂 (+{score})")
                     add_log(room_code, f"{player['name']} 用工業樹脂完工，獲得 {score} 分。船很快造好了，但接縫黏死，壞了無法拆修。")
+                    award_badge(player, 'finish', room_code)
                 action_done = True
 
         elif action == 'ask':
@@ -572,11 +812,18 @@ def handle_action(data):
                 if consume_ap(cost):
                     kp_gain = 2
                     player['kp'] += kp_gain
-                    player['score'] += 1
-                    player['score_breakdown'].append("請益中生代 (+1)")
-                    mentor['score'] += 1
-                    mentor['score_breakdown'].append("傳承指導 (+1)")
-                    add_log(room_code, f"{player['name']} 向中生代 {mentor['name']} 請益，獲得 {kp_gain} KP，雙方各得 1 分")
+                    if scoring_ask(player, month):
+                        player['score'] += 1
+                        player['score_breakdown'].append("請益中生代 (+1)")
+                        mentor['score'] += 1
+                        mentor['score_breakdown'].append("傳承指導 (+1)")
+                        add_log(room_code, f"{player['name']} 向中生代 {mentor['name']} 請益，獲得 {kp_gain} KP，雙方各得 1 分")
+                    else:
+                        add_log(room_code, f"{player['name']} 向中生代 {mentor['name']} 請益，獲得 {kp_gain} KP（本月請益的加分已達上限）")
+                    player.setdefault('stats', new_stats())['ask'] += 1
+                    award_badge(player, 'ask', room_code)
+                    mission_progress(state, room_code, 'ask')
+                    give_quiz(player)
                     action_done = True
 
             else:
@@ -590,16 +837,23 @@ def handle_action(data):
                     if brought_gift:
                         kp_gain += 1
                     player['kp'] += kp_gain
-                    player['score'] += 1
-                    player['score_breakdown'].append("請益耆老 (+1)")
                     gift_note = "（帶禮請益，多得 1 KP）" if brought_gift else ""
-                    add_log(room_code, f"{player['name']} 向耆老請益，獲得 {kp_gain} KP 與 1 分{gift_note}")
-                    # give elder score
-                    for p in state['players'].values():
-                        if p['role'] == 'elder' and p['id'] != player['id']:
-                            p['score'] += 1
-                            p['score_breakdown'].append("傳承指導 (+1)")
-                            add_log(room_code, f"{p['name']} 因傳承指導獲得 1 分")
+                    if scoring_ask(player, month):
+                        player['score'] += 1
+                        player['score_breakdown'].append("請益耆老 (+1)")
+                        add_log(room_code, f"{player['name']} 向耆老請益，獲得 {kp_gain} KP 與 1 分{gift_note}")
+                        # give elder score
+                        for p in state['players'].values():
+                            if p['role'] == 'elder' and p['id'] != player['id']:
+                                p['score'] += 1
+                                p['score_breakdown'].append("傳承指導 (+1)")
+                                add_log(room_code, f"{p['name']} 因傳承指導獲得 1 分")
+                    else:
+                        add_log(room_code, f"{player['name']} 向耆老請益，獲得 {kp_gain} KP{gift_note}（本月請益的加分已達上限）")
+                    player.setdefault('stats', new_stats())['ask'] += 1
+                    award_badge(player, 'ask', room_code)
+                    mission_progress(state, room_code, 'ask')
+                    give_quiz(player)
                     action_done = True
 
         elif action == 'teach':
@@ -611,9 +865,15 @@ def handle_action(data):
                 return
             if consume_ap(2):
                 target_p['kp'] += 1
-                player['score'] += 1
-                player['score_breakdown'].append("遠程指導 (+1)")
-                add_log(room_code, f"{player['name']} 遠程指導了 {target_p['name']}，獲得 1 分傳承分數")
+                if scoring_ask(player, month):
+                    player['score'] += 1
+                    player['score_breakdown'].append("遠程指導 (+1)")
+                    add_log(room_code, f"{player['name']} 遠程指導了 {target_p['name']}，獲得 1 分傳承分數")
+                else:
+                    add_log(room_code, f"{player['name']} 遠程指導了 {target_p['name']}（本月指導的加分已達上限）")
+                player.setdefault('stats', new_stats())['teach'] += 1
+                award_badge(player, 'teach', room_code)
+                mission_progress(state, room_code, 'teach')
                 action_done = True
 
         elif action == 'give':
@@ -626,10 +886,14 @@ def handle_action(data):
             if player['materials'] < 1:
                 emit('error', {'msg': '你沒有足夠的材料可以贈與'})
                 return
-            if consume_ap(1):
+            if consume_ap(0):
                 player['materials'] -= 1
                 target_p['materials'] += 1
-                add_log(room_code, f"🤝 {player['name']} 消耗了 1 AP，將 1 份材料送給了 {target_p['name']}！")
+                add_log(room_code, f"🤝 {player['name']} 將 1 份材料送給了 {target_p['name']}！")
+                if target_p['role'] == 'elder' and player['role'] != 'elder':
+                    player.setdefault('stats', new_stats())['gift'] += 1
+                    award_badge(player, 'gift', room_code)
+                    mission_progress(state, room_code, 'gift')
                 if target_p['role'] == 'elder' and player['role'] != 'elder' and player.get('gift_month', 0) != month:
                     player['gift_month'] = month
                     gift_score = 2 if month == 6 else 1
@@ -652,13 +916,122 @@ def handle_action(data):
             if elder['ap'] >= elder['max_ap']:
                 emit('error', {'msg': f"{elder['name']} 現在體力充足，還不需要幫忙"})
                 return
-            if consume_ap(2):
+            if consume_ap(1):
                 elder['ap'] = min(elder['max_ap'], elder['ap'] + 2)
                 player['help_month'] = month
+                player.setdefault('stats', new_stats())['help'] += 1
+                award_badge(player, 'help', room_code)
+                mission_progress(state, room_code, 'help')
                 help_score = 2 if month == 6 else 1
                 player['score'] += help_score
                 player['score_breakdown'].append(f"幫忙長者 (+{help_score})")
                 add_log(room_code, f"💪 {player['name']} 幫 {elder['name']} 分擔粗重的工作，{elder['name']} 回復體力（現有 {elder['ap']}/{elder['max_ap']} AP），{player['name']} 獲得 {help_score} 分")
+                action_done = True
+
+        elif action == 'quiz_answer':
+            quiz = player.get('quiz')
+            if not quiz: return
+            choice = data.get('choice')
+            answer = QUIZ_ANSWERS[quiz['id']]
+            correct = choice == answer
+            player['quiz'] = None
+            player['quiz_result'] = {'id': quiz['id'], 'correct': correct, 'answer': answer, 'seq': quiz['seq']}
+            if correct:
+                player['kp'] += 1
+                add_log(room_code, f"📝 {player['name']} 答對了請益小問答，多得 1 KP")
+            action_done = True
+
+        elif action == 'event_choice':
+            pending = player.get('event')
+            event = EVENTS.get(month)
+            if not pending or not event or pending.get('id') != event['id']: return
+            choice = data.get('choice')
+            if choice not in ('a', 'b'): return
+            opt = event[choice]
+            if player['ap'] < opt.get('ap', 0):
+                emit('error', {'msg': 'AP 不足，無法選這個選項'})
+                return
+            receiver = None
+            if opt.get('material'):
+                if player['materials'] < opt['material']:
+                    emit('error', {'msg': '你沒有材料可以分享'})
+                    return
+                others = [p for p in state['players'].values() if p['id'] != player['id']]
+                if not others:
+                    emit('error', {'msg': '現在沒有其他人可以分享'})
+                    return
+                receiver = min(others, key=lambda p: p['materials'])
+            player['ap'] -= opt.get('ap', 0)
+            player['kp'] += opt.get('kp', 0)
+            notes = []
+            if opt.get('ap'): notes.append(f"消耗 {opt['ap']} AP")
+            if receiver:
+                player['materials'] -= opt['material']
+                receiver['materials'] += opt['material']
+                notes.append(f"把 {opt['material']} 份材料分給 {receiver['name']}")
+            if opt.get('kp'): notes.append(f"獲得 {opt['kp']} KP")
+            if opt.get('score'):
+                player['score'] += opt['score']
+                player['score_breakdown'].append(f"{opt['label']} (+{opt['score']})")
+                notes.append(f"獲得 {opt['score']} 分")
+            if opt.get('rest'):
+                player['rest_bonus_month'] = month + 1
+                notes.append(f"下個月多回復 {opt['rest']} AP")
+            player['event'] = None
+            add_log(room_code, f"📜 {player['name']} 選擇「{opt['name']}」" + ("：" + "，".join(notes) if notes else ""))
+            action_done = True
+
+        elif action == 'minigame_result':
+            pending = player.get('minigame')
+            if not pending: return
+            player['minigame'] = None
+            if data.get('success'):
+                player['ap'] = min(player['max_ap'], player['ap'] + 1)
+                add_log(room_code, f"✨ {player['name']} 手感很好，工序做得順，省下 1 AP")
+            action_done = True
+
+        elif action == 'plant':
+            if player['location'] != '山林':
+                emit('error', {'msg': '補種 Avaka 必須在山林'})
+                return
+            if month == 2:
+                emit('error', {'msg': '飛魚禁令：這個月禁止在山林工作！'})
+                return
+            if player.get('plant_month', 0) == month:
+                emit('error', {'msg': '這個月已經補種過了，下個月再來！'})
+                return
+            if consume_ap(1):
+                player['plant_month'] = month
+                player['plant_bonus_from'] = month + 1
+                state['forest_tended'] = True
+                player.setdefault('stats', new_stats())['plant'] += 1
+                award_badge(player, 'forest', room_code)
+                mission_progress(state, room_code, 'forest')
+                add_log(room_code, f"🌱 {player['name']} 在山林補種了 Avaka、照顧林地（下個月起第一次砍伐多得 1 份材料）")
+                action_done = True
+
+        elif action == 'assist':
+            target_p = state['players'].get(data.get('target_id'))
+            if not target_p or target_p['id'] == player['id']: return
+            if player['location'] != target_p['location']:
+                emit('error', {'msg': '必須在同一地點才能搭把手'})
+                return
+            if target_p['finished']:
+                emit('error', {'msg': f"{target_p['name']} 的船已經完工了"})
+                return
+            if target_p.get('assist_month', 0) == month:
+                emit('error', {'msg': f"這個月已經有人幫 {target_p['name']} 了，等他做完這道工序再說"})
+                return
+            if consume_ap(1):
+                target_p['assist_month'] = month
+                player.setdefault('stats', new_stats())['assist'] += 1
+                if player.get('assist_score_month', 0) != month:
+                    player['assist_score_month'] = month
+                    player['score'] += 1
+                    player['score_breakdown'].append("搭把手 (+1)")
+                    add_log(room_code, f"🙌 {player['name']} 幫 {target_p['name']} 搭把手：{target_p['name']} 本月下一道工序少 2 AP，{player['name']} 獲得 1 分")
+                else:
+                    add_log(room_code, f"🙌 {player['name']} 幫 {target_p['name']} 搭把手：{target_p['name']} 本月下一道工序少 2 AP")
                 action_done = True
 
         elif action == 'translate':
@@ -682,6 +1055,8 @@ def handle_action(data):
                     player['score'] += score
                     player['materials'] += 2
                     player['score_breakdown'].append(f"科學轉譯 (+{score})")
+                    player.setdefault('stats', new_stats())['translate'] += 1
+                    award_badge(player, 'translate', room_code)
                     add_log(room_code, f"🔬 {player['name']} 成功對傳統工藝進行「科學轉譯」！解鎖工藝數據，獲得 +4 分與 2 份材料！")
                 else:
                     add_log(room_code, f"🔬 {player['name']} 嘗試對工藝進行「科學轉譯」，但實驗數據不足未果...")
@@ -708,10 +1083,20 @@ def handle_toggle_ready():
             for p in state['players'].values():
                 p['ready'] = False
             
+            settle_forest_month(state, room_code)
+            clear_month_prompts(state)
             state['month'] += 1
             if state['month'] > 12:
                 state['started'] = False
                 add_log(room_code, "一年結束，遊戲結算！")
+                state['forest_level'] = forest_level(state['forest'])
+                state['mission'] = None
+                award_titles(state)
+                if state['forest'] >= 4:
+                    add_log(room_code, f"🌳 森林狀態 {state['forest']}/{FOREST_MAX}：這一年大家一直有人照顧林地，所有人獲得 2 分")
+                    for p in state['players'].values():
+                        p['score'] += 2
+                        p['score_breakdown'].append("照顧山林 (+2)")
                 for p in state['players'].values():
                     if not p['finished']:
                         p['ending'] = ENDINGS['tier5']
@@ -726,6 +1111,9 @@ def handle_toggle_ready():
             else:
                 month_info = MONTH_RULES[state['month']-1]
                 add_log(room_code, f"進入第 {state['month']} 個月：{month_info['name']}。")
+                pick_mission(state)
+                if state.get('mission'):
+                    add_log(room_code, f"🎯 本月小組任務「{state['mission']['name']}」：{state['mission']['desc']}（達成全員 +1 分）")
                 
                 # Plum rain is resolved with whatever stamina was left over from month 4,
                 # so setting 1 AP aside is a real decision.
@@ -744,6 +1132,8 @@ def handle_toggle_ready():
                 # Partial AP recovery per month (e.g. +4 AP for youth, +3 AP for elder/middle)
                 for p in state['players'].values():
                     rec = p.get('ap_recovery', 3)
+                    if p.get('rest_bonus_month', 0) == state['month']:
+                        rec += 1
                     p['ap'] = min(p['max_ap'], p['ap'] + rec)
                     add_log(room_code, f"⚡ {p['name']} 體力恢復，增加 {rec} AP (現有: {p['ap']}/{p['max_ap']} AP)")
                     
@@ -769,6 +1159,8 @@ def handle_toggle_ready():
                                     p['kp'] += 2
                                     add_log(room_code, f"祭神月傳承：{p['name']} 獲得 2 KP")
                 
+                deal_events(state)
+
                 # Record KP for new month
                 for p in state['players'].values():
                     record_player_kp(p, state['month'])

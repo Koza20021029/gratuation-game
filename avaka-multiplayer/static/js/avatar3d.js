@@ -10,7 +10,7 @@ let currentBodySwing = 0; // tracks body sway for head coupling
 
 const avatarState = {
     skin:'#A0622A', hair:'short', hairColor:'#0d0d0d',
-    eye:'#2a1a08', face:'round', accessory:'none', cloth:'loincloth'
+    eye:'#2a1a08', face:'round', expression:'smile', accessory:'none', cloth:'loincloth'
 };
 
 const C = (hex) => new THREE.Color(hex);
@@ -225,11 +225,20 @@ function buildCharacter() {
         hl.scale.set(1.0, 1.0, 0.05);
     });
 
-    // ── Eyebrows (Flush decal-like arches) ──
-    [-0.17,0.17].forEach(x => {
-        const brow = add(new THREE.BoxGeometry(0.12, 0.012, 0.005), mat('#1a0e04',0.9));
-        brow.position.set(x, browY, fd); 
-        brow.rotation.z = x>0 ? -0.08 : 0.08;
+    // ── Expression (drives brow, eyelid, mouth and cheek shapes) ──
+    const EXPRESSIONS = {
+        smile:      { brow: [0.002, 0.024, 0.006],  lid: 0.066, mouth: [0.085, 0.024, -0.008], lipW: 1.45, cheek: 0.34 },
+        calm:       { brow: [0.002, 0.010, 0.000],  lid: 0.070, mouth: [0.065, 0.004,  0.000], lipW: 1.20, cheek: 0.22 },
+        determined: { brow: [-0.020, 0.006, 0.012], lid: 0.056, mouth: [0.060, -0.009, 0.003], lipW: 1.10, cheek: 0.14 }
+    };
+    const ex = EXPRESSIONS[avatarState.expression] || EXPRESSIONS.smile;
+
+    // ── Eyebrows (curved, follow the hair colour) + upper eyelid line ──
+    [-1, 1].forEach(s => {
+        faceCurve([[s*0.105, browY + ex.brow[0]], [s*0.17, browY + ex.brow[1]], [s*0.24, browY + ex.brow[2]]],
+                  0.009, fd + 0.003, mat(hc, 0.9));
+        faceCurve([[s*0.17 - 0.088, eyeY + 0.030], [s*0.17, eyeY + ex.lid], [s*0.17 + 0.088, eyeY + 0.030]],
+                  0.006, fd + 0.005, mat('#1a0e04', 0.85));
     });
 
     // ── Nose (Soft continuous contour blending into face) ──
@@ -246,7 +255,27 @@ function buildCharacter() {
     // Lower lip
     const lipBot = add(new THREE.SphereGeometry(0.035, 16, 12), mat('#c07060',0.7));
     lipBot.position.set(0, mouthY-0.006, fd - 0.002); 
-    lipBot.scale.set(1.2, 0.45, 0.1);
+    lipBot.scale.set(ex.lipW, 0.45, 0.1);
+    // Mouth line: its corners carry the expression
+    faceCurve([[-ex.mouth[0], mouthY + ex.mouth[1]], [0, mouthY + ex.mouth[2]], [ex.mouth[0], mouthY + ex.mouth[1]]],
+              0.006, fd + 0.003, mat('#5a2a20', 0.8));
+
+    // ── Cheeks (soft blush lying on the head surface) ──
+    [-1, 1].forEach(s => {
+        const cx = s * fw * 0.52, cy = 1.955;
+        const nx = cx / (fw*fw), ny = (cy - 2.1) / (fh*fh);
+        const cz = fd * Math.sqrt(Math.max(0, 1 - (cx*cx)/(fw*fw) - ((cy-2.1)*(cy-2.1))/(fh*fh)));
+        const n = new THREE.Vector3(nx, ny, cz / (fd*fd)).normalize();
+        const blush = new THREE.MeshStandardMaterial({
+            color: C(sk).lerp(C('#d9655a'), 0.55), roughness: 0.85,
+            transparent: true, opacity: ex.cheek, depthWrite: false
+        });
+        const cheek = add(new THREE.SphereGeometry(0.075, 20, 14), blush);
+        cheek.castShadow = false; cheek.receiveShadow = false;
+        cheek.position.set(cx + n.x*0.002, cy + n.y*0.002, cz + n.z*0.002);
+        cheek.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), n);
+        cheek.scale.set(1.0, 0.72, 0.04);
+    });
 
     // ── Hair ──
     if (avatarState.accessory !== 'silver_helmet' && avatarState.accessory !== 'rattan_helmet') {
@@ -273,6 +302,16 @@ function add(geo, material) {
     m.castShadow = true; m.receiveShadow = true;
     if (currentGroup) currentGroup.add(m);
     else avatarGroup.add(m);
+    return m;
+}
+
+// Thin flattened tube through 2D face points (x, y), lying on the face plane at depth z
+function faceCurve(points, radius, z, material) {
+    const curve = new THREE.CatmullRomCurve3(points.map(p => new THREE.Vector3(p[0], p[1], 0)));
+    const m = add(new THREE.TubeGeometry(curve, 20, radius, 8, false), material);
+    m.position.z = z;
+    m.scale.z = 0.4;
+    m.castShadow = false;
     return m;
 }
 
@@ -393,6 +432,17 @@ function buildBody(sk) {
             s.position.set(0, y, 0);
             s.scale.set(1.0, 1.0, 0.55);
         });
+        // Fine weave lines where the stripes meet, and a hem at top and bottom
+        [1.44, 1.32, 1.20, 1.08, 0.96, 0.84].forEach(y => {
+            const seam = add(new THREE.CylinderGeometry(0.407, 0.407, 0.008, 32), mat('#1c2f47', 0.9));
+            seam.position.set(0, y, 0);
+            seam.scale.set(1.0, 1.0, 0.55);
+        });
+        [1.553, 0.727].forEach(y => {
+            const hem = add(new THREE.CylinderGeometry(0.409, 0.409, 0.014, 32), mat(stripeD, 0.88));
+            hem.position.set(0, y, 0);
+            hem.scale.set(1.0, 1.0, 0.55);
+        });
         // Vest edge trim
         [-0.15, 0.15].forEach(x => {
             const trim = add(new THREE.CylinderGeometry(0.015, 0.015, 0.90, 8), mat(stripeD, 0.85));
@@ -474,6 +524,13 @@ function buildBody(sk) {
     waistBandStripe.position.set(0, 0.675, 0);
     waistBandStripe.scale.set(1.0, 1.0, 0.55);
 
+    // Cloth edges of the waistband
+    [0.728, 0.622].forEach(y => {
+        const edge = add(new THREE.CylinderGeometry(0.387, 0.379, 0.008, 32), mat('#d6d1c2', 0.9));
+        edge.position.set(0, y, 0);
+        edge.scale.set(1.0, 1.0, 0.55);
+    });
+
     // Waistband side ties/knots (腰帶側邊結繩帶)
     [-0.37, 0.37].forEach(x => {
         const knot = add(new THREE.SphereGeometry(0.024, 12, 12), loincMat);
@@ -506,6 +563,10 @@ function buildBody(sk) {
         const apronSeg = add(new THREE.BoxGeometry(w, 0.051, 0.022), m);
         apronSeg.position.set(0, yPos, 0.208 - i * 0.002);
     });
+
+    // Apron hem line
+    const apronHem = add(new THREE.BoxGeometry(0.10, 0.010, 0.023), loinStripe);
+    apronHem.position.set(0, 0.635 - 7 * 0.050 - 0.021, 0.208 - 7 * 0.002);
 
     // 4. Back Strap & Flap (後包覆帶與後垂布)
     const backStrap = add(new THREE.CylinderGeometry(0.10, 0.09, 0.30, 16, 1, false, Math.PI * 0.6, Math.PI * 0.8), loincMat);
