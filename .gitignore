@@ -40,3 +40,9 @@ Desktop.ini
 # Original camera footage (over GitHub's 100 MB limit); the game uses the compressed copies in static/assets
 docs/*.MOV
 docs/*.mov
+
+# Reference photographs kept locally only (not ours to publish)
+/*.JPG
+/*.jpg
+/*.jpeg
+/*.png
