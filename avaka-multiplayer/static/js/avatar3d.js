@@ -28,9 +28,9 @@ const C = (hex) => new THREE.Color(hex);
 function initAvatar3D() {
     const canvas = document.getElementById('avatar-canvas');
     if (!canvas) return;
-    const W = canvas.offsetWidth || 320, H = canvas.offsetHeight || 420;
-    canvas.width = W * window.devicePixelRatio;
-    canvas.height = H * window.devicePixelRatio;
+    // The canvas may still be mid-layout when this runs; a near-zero size would leave it blank
+    const measured = canvas.offsetWidth >= 60 && canvas.offsetHeight >= 60;
+    const W = measured ? canvas.offsetWidth : 320, H = measured ? canvas.offsetHeight : 427;
 
     avatarScene = new THREE.Scene();
     avatarScene.background = new THREE.Color('#060d1a');
@@ -41,8 +41,8 @@ function initAvatar3D() {
     avatarCamera.lookAt(0, 0.5, 0);
 
     avatarRenderer = new THREE.WebGLRenderer({canvas, antialias:true});
-    avatarRenderer.setPixelRatio(window.devicePixelRatio);
-    avatarRenderer.setSize(W, H);
+    avatarRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    avatarRenderer.setSize(W, H, false);   // keep the CSS size responsive
     avatarRenderer.shadowMap.enabled = true;
     avatarRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
@@ -100,6 +100,19 @@ function initAvatar3D() {
     }
 
     setupControls(canvas);
+
+    // Follow the canvas once the layout settles, and whenever the window changes
+    const fit = () => {
+        if (!avatarRenderer || avatarRenderer.domElement !== canvas) return;
+        const w = canvas.offsetWidth, h = canvas.offsetHeight;
+        if (w < 60 || h < 60) return;
+        avatarRenderer.setSize(w, h, false);
+        if (avatarComposer) avatarComposer.setSize(w, h);
+        avatarCamera.aspect = w / h;
+        avatarCamera.updateProjectionMatrix();
+    };
+    [120, 400, 1000].forEach(ms => setTimeout(fit, ms));
+    if (!canvas._avatarFitBound) { window.addEventListener('resize', fit); canvas._avatarFitBound = true; }
 
     // Epic Ocean Particle Aura (Proposal 5)
     // 300 ocean-tone micro-glowing particles that spiral upward around the character
@@ -1107,5 +1120,14 @@ function captureAvatarSnapshot() {
     if(!avatarRenderer) return null;
     if(avatarComposer) avatarComposer.render();
     else avatarRenderer.render(avatarScene, avatarCamera);
-    return avatarRenderer.domElement.toDataURL('image/png');
+    // The picture travels with every state update to every player, so keep it small:
+    // a 240x320 JPEG is ~15 KB, where the full canvas as PNG was 300-600 KB.
+    const src = avatarRenderer.domElement;
+    const out = document.createElement('canvas');
+    out.width = 240; out.height = 320;
+    const g = out.getContext('2d');
+    const scale = Math.max(out.width / src.width, out.height / src.height);
+    const w = src.width * scale, h = src.height * scale;
+    g.drawImage(src, (out.width - w) / 2, (out.height - h) / 2, w, h);
+    return out.toDataURL('image/jpeg', 0.82);
 }

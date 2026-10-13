@@ -37,8 +37,25 @@ player_rooms = {} # sid -> room_code
 
 # Graceful disconnect: store player data for reconnection during active games
 # Key: (room_code, old_sid) -> {'player_data': {...}, 'disconnect_time': float}
-DISCONNECT_GRACE_SECONDS = 120
+DISCONNECT_GRACE_SECONDS = 900
 disconnected_players = {}
+
+# Each browser keeps a private token so that a refresh, a sleeping phone or a dropped connection
+# can be matched back to its player. Tokens stay here, never inside the broadcast room state.
+player_tokens = {}  # sid -> token
+
+def has_waiting_players(room_code):
+    """True while someone who dropped out of this room can still come back."""
+    now = time.time()
+    return any(rc == room_code and now - entry['disconnect_time'] <= DISCONNECT_GRACE_SECONDS
+               for (rc, _), entry in disconnected_players.items())
+
+def purge_stale_rooms():
+    now = time.time()
+    for key in [k for k, e in disconnected_players.items() if now - e['disconnect_time'] > DISCONNECT_GRACE_SECONDS]:
+        del disconnected_players[key]
+    for code in [c for c, st in rooms.items() if not st['players'] and not has_waiting_players(c)]:
+        del rooms[code]
 
 # The forest is shared by the whole room: needing the material is what keeps people tending it.
 FOREST_START = 3
@@ -325,16 +342,17 @@ def handle_disconnect():
                     p_name = state['players'][sid]['name']
                     player_data = state['players'][sid]
 
-                    if state['started']:
-                        # Game is active: preserve player data for possible rejoin
+                    if state['started'] or state['month'] > 12:
+                        # Game is active (or showing its results): preserve player data for possible rejoin
                         disconnected_players[(room_code, sid)] = {
                             'player_data': player_data,
+                            'token': player_tokens.get(sid),
                             'disconnect_time': time.time()
                         }
                         del state['players'][sid]
-                        add_log(room_code, f"{p_name} 斷線了（{DISCONNECT_GRACE_SECONDS} 秒內可重連）")
+                        add_log(room_code, f"{p_name} 斷線了（{DISCONNECT_GRACE_SECONDS // 60} 分鐘內可重連）")
                         if len(state['players']) == 0:
-                            del rooms[room_code]
+                            pass  # the room waits for its players to come back; purge_stale_rooms() clears it later
                         else:
                             socketio.emit('state_update', dict(state), to=room_code)
                     else:
@@ -346,6 +364,7 @@ def handle_disconnect():
                         else:
                             socketio.emit('state_update', dict(state), to=room_code)
             del player_rooms[sid]
+        player_tokens.pop(sid, None)
 
 @socketio.on('create_room')
 def handle_create_room(data):
@@ -355,57 +374,67 @@ def handle_create_room(data):
     if not name or not name.strip(): return
     
     with state_lock:
+        purge_stale_rooms()
         room_code = generate_room_code()
         rooms[room_code] = create_initial_state(room_code)
+        player_tokens[request.sid] = data.get('token')
         _join_player_to_room(request.sid, name.strip(), role, room_code, data.get('avatar'))
 
 @socketio.on('rejoin_game')
 def handle_rejoin(data):
+    """Bring a player back after a dropped connection, a page refresh or a sleeping device."""
     old_id = data.get('old_id')
-    room_code = data.get('room_code')
+    token = data.get('token')
+    room_code = (data.get('room_code') or '').upper()
     new_id = request.sid
-    print(f"[rejoin] old_id={old_id}, room_code={room_code}, new_id={new_id}")
     with state_lock:
-        if room_code not in rooms:
-            print(f"[rejoin] room {room_code} not found")
+        state = rooms.get(room_code)
+        if not state:
+            emit('rejoin_failed', {'msg': '房間已經不存在了'})
             return
-        state = rooms[room_code]
 
-        # Case 1: Player still in state (e.g., fast reconnect before disconnect processed)
-        if old_id in state['players']:
-            player_data = state['players'].pop(old_id)
+        def restore(player_data):
             player_data['id'] = new_id
             state['players'][new_id] = player_data
             player_rooms[new_id] = room_code
+            player_tokens[new_id] = token
             join_room(room_code)
-            add_log(room_code, f"{player_data['name']} 重新連線了")
-            emit('state_update', state, to=room_code)
+
+        # Case 1: the old connection has not been cleaned up yet (fast reconnect / second tab taking over)
+        live = None
+        if old_id and old_id != new_id and old_id in state['players']:
+            live = old_id
+        elif token:
+            live = next((sid for sid in state['players']
+                         if sid != new_id and player_tokens.get(sid) == token), None)
+        if new_id in state['players']:
+            socketio.emit('state_update', state, to=room_code)
+            return
+        if live:
+            restore(state['players'].pop(live))
+            player_rooms.pop(live, None)
+            player_tokens.pop(live, None)
+            add_log(room_code, f"{state['players'][new_id]['name']} 重新連線了")
+            socketio.emit('state_update', state, to=room_code)
             return
 
-        # Case 2: Player was disconnected but within grace period
-        grace_key = (room_code, old_id)
-        print(f"[rejoin] grace_key={grace_key}, exists={grace_key in disconnected_players}")
-        print(f"[rejoin] all grace keys: {list(disconnected_players.keys())}")
-        if grace_key in disconnected_players:
-            entry = disconnected_players[grace_key]
-            elapsed = time.time() - entry['disconnect_time']
-            print(f"[rejoin] elapsed={elapsed:.1f}s, grace={DISCONNECT_GRACE_SECONDS}s")
-            if elapsed <= DISCONNECT_GRACE_SECONDS:
-                # Restore player data
-                player_data = entry['player_data']
-                player_data['id'] = new_id
-                state['players'][new_id] = player_data
-                player_rooms[new_id] = room_code
-                del disconnected_players[grace_key]
-                join_room(room_code)
-                add_log(room_code, f"🔄 {player_data['name']} 成功重連！進度已恢復。")
+        # Case 2: the player dropped out and is still within the grace period
+        key = None
+        if old_id and (room_code, old_id) in disconnected_players:
+            key = (room_code, old_id)
+        elif token:
+            key = next((k for k, e in disconnected_players.items()
+                        if k[0] == room_code and e.get('token') == token), None)
+        if key:
+            entry = disconnected_players.pop(key)
+            if time.time() - entry['disconnect_time'] <= DISCONNECT_GRACE_SECONDS:
+                restore(entry['player_data'])
+                add_log(room_code, f"🔄 {entry['player_data']['name']} 成功重連！進度已恢復。")
                 socketio.emit('state_update', state, to=room_code)
-            else:
-                # Grace period expired
-                del disconnected_players[grace_key]
-                emit('error', {'msg': '重連逾時，請重新加入遊戲'})
-        else:
-            print(f"[rejoin] grace_key not found, cannot rejoin")
+                return
+            emit('rejoin_failed', {'msg': '離開太久，無法回到原本的遊戲'})
+            return
+        emit('rejoin_failed', {'msg': '找不到你在這個房間的紀錄'})
 
 @socketio.on('join_game')
 def handle_join(data):
@@ -424,6 +453,7 @@ def handle_join(data):
             
         if role not in ROLES: return
         if not name or not name.strip(): return
+        player_tokens[request.sid] = data.get('token')
         _join_player_to_room(request.sid, name.strip(), role, room_code, data.get('avatar'))
 
 def _join_player_to_room(sid, name, role, room_code, avatar=None):
@@ -487,12 +517,15 @@ def handle_leave():
                     p_name = state['players'][sid]['name']
                     del state['players'][sid]
                     add_log(room_code_to_leave, f"{p_name} 離開了房間")
-                    if len(state['players']) == 0:
+                    if len(state['players']) == 0 and has_waiting_players(room_code_to_leave):
+                        room_code_to_leave = None  # others may still reconnect
+                    elif len(state['players']) == 0:
                         del rooms[room_code_to_leave]
                         room_code_to_leave = None  # No need to broadcast
                     else:
                         state_to_broadcast = dict(state)
             del player_rooms[sid]
+        player_tokens.pop(sid, None)
     
     if room_code_to_leave:
         leave_room(room_code_to_leave)
@@ -1211,5 +1244,13 @@ if __name__ == '__main__':
             port = 5001
             print(f"⚠️ Port 5000 已被系統服務 (如 macOS AirPlay) 佔用，自動切換至連接埠 {port}。")
     print(f"Starting Server with Eventlet on http://localhost:{port} ...")
+    try:
+        probe = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        probe.connect(('10.255.255.255', 1))
+        lan_ip = probe.getsockname()[0]
+        probe.close()
+        print(f"其他裝置請連到（要在同一個網路）： http://{lan_ip}:{port}")
+    except OSError:
+        pass
     socketio.run(app, host='0.0.0.0', port=port)
 

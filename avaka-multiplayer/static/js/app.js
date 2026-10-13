@@ -1,6 +1,6 @@
 const socket = io({
     reconnection: true,
-    reconnectionAttempts: 15,
+    reconnectionAttempts: Infinity,
     reconnectionDelay: 1000,
     reconnectionDelayMax: 8000,
     timeout: 20000,
@@ -1732,6 +1732,7 @@ avatarConfirmBtn.addEventListener('click', () => {
     };
     
     pendingRoomAction.data.avatar = avatarData;
+    pendingRoomAction.data.token = sessionToken();
     
     if (pendingRoomAction.type === 'join') {
         socket.emit('join_game', pendingRoomAction.data);
@@ -1745,6 +1746,7 @@ avatarConfirmBtn.addEventListener('click', () => {
 
 leaveLobbyBtn.addEventListener('click', () => {
     socket.emit('leave_game');
+    clearSession(); mySession = null; lastGameState = null;
     waitingSection.style.display = 'none';
     joinSection.style.display = 'block';
 });
@@ -1778,6 +1780,7 @@ leaveGameBtn.addEventListener('click', () => {
         overlay.remove();
         // Send leave event and delay reload to ensure socket event is sent
         socket.emit('leave_game');
+        clearSession(); mySession = null;
         setTimeout(() => { location.reload(); }, 300);
     });
     
@@ -1792,18 +1795,70 @@ startGameBtn.addEventListener('click', () => {
 });
 
 // Socket Events
+// This browser's private token and the room it is in survive a refresh, a sleeping phone or a dropped
+// connection, so the server can hand the same player back.
+const SESSION_KEY = 'avaka_session';
+function loadSession() {
+    try { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch (e) { return null; }
+}
+function saveSession(s) {
+    try { localStorage.setItem(SESSION_KEY, JSON.stringify(s)); } catch (e) { /* private mode: reconnect still works without refresh */ }
+}
+function clearSession() {
+    try { localStorage.removeItem(SESSION_KEY); } catch (e) { /* ignore */ }
+}
+function newToken() {
+    const bytes = new Uint8Array(16);
+    (window.crypto || window.msCrypto).getRandomValues(bytes);
+    return Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+}
+let mySession = loadSession();   // { token, room_code }
+function sessionToken() {
+    if (!mySession || !mySession.token) mySession = { token: newToken(), room_code: null };
+    return mySession.token;
+}
+
+function showConnectionBanner(show) {
+    let el = document.getElementById('connection-banner');
+    if (!show) { if (el) el.remove(); return; }
+    if (!el) {
+        el = document.createElement('div');
+        el.id = 'connection-banner';
+        el.style.cssText = 'position:fixed; top:0; left:0; right:0; z-index:99990; padding:0.6rem 1rem; text-align:center; font-size:0.95rem; font-weight:600; color:#fff7ed; background:rgba(194,65,12,0.95); box-shadow:0 2px 12px rgba(0,0,0,0.4);';
+        document.body.appendChild(el);
+    }
+    el.textContent = currentLang === 'en' ? '⚠️ Connection lost. Reconnecting…' : '⚠️ 連線中斷，正在重新連線…';
+}
+
 let myOldId = null;
 socket.on('connect', () => {
-    if (myId) {
-        myOldId = myId;
-        myId = socket.id;
-        if (lastGameState) {
-            socket.emit('rejoin_game', { old_id: myOldId, room_code: lastGameState.room_code });
-        }
-    } else {
-        myId = socket.id;
+    showConnectionBanner(false);
+    myOldId = myId;
+    myId = socket.id;
+    if (mySession && mySession.room_code) {
+        socket.emit('rejoin_game', { old_id: myOldId, token: mySession.token, room_code: mySession.room_code });
     }
 });
+
+socket.on('disconnect', () => {
+    if (mySession && mySession.room_code) showConnectionBanner(true);
+});
+
+socket.on('rejoin_failed', (err) => {
+    const wasInRoom = lastGameState !== null;
+    clearSession();
+    mySession = null;
+    if (wasInRoom) {
+        showToast(err && err.msg ? err.msg : '無法回到原本的遊戲');
+        setTimeout(() => location.reload(), 1500);
+    }
+});
+
+// A phone coming back from sleep or another app: reconnect right away instead of waiting for the next retry
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && !socket.connected) socket.connect();
+});
+window.addEventListener('online', () => { if (!socket.connected) socket.connect(); });
 
 socket.on('error', (err) => {
     showToast(err.msg);
@@ -1818,6 +1873,10 @@ socket.on('error', (err) => {
 
 socket.on('state_update', (state) => {
     lastGameState = state;
+    if (state.players[myId] && (!mySession || mySession.room_code !== state.room_code)) {
+        mySession = { token: sessionToken(), room_code: state.room_code };
+        saveSession(mySession);
+    }
     if (!state.started && Object.keys(state.players).length > 0 && state.month > 12) {
         // Game Over
         renderGameOver(state);
