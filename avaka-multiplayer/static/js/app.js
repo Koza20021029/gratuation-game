@@ -320,6 +320,8 @@ const translations = {
                 square: '寬顎臉',
                 slim: '清秀臉'
             },
+            poseLabel: '🕺 動作',
+            poseOptions: { stand: '站立', wave: '揮手', hips: '叉腰', cross: '抱胸', fist: '舉拳' },
             expressionLabel: '🙂 表情',
             expressionOptions: { smile: '微笑', calm: '平靜', determined: '堅毅' },
             accessoryOptions: {
@@ -335,7 +337,7 @@ const translations = {
             },
             clothOptions: {
                 loincloth: '丁字褲',
-                vest_dark: '黑白背心',
+                vest_dark: '藍白背心',
                 rattan_armor: '藤甲',
                 ceremony: '祭典全裝'
             }
@@ -419,7 +421,7 @@ const translations = {
                     <li><strong>🌿 材料：</strong> 在山林執行「①砍伐剝皮」產出材料（每次 1 份，1 月與 7 月 2 份），工序②至⑥各消耗 1 份。</li>
                     <li><strong>🌳 森林狀態：</strong> 全房間共用，0 到 5，開局 3。這個月有人上山「①砍伐剝皮」、照顧林地，森林就 +1；整個月沒有人上山就 −1（2 月封山不計）。森林降到 1 以下時，砍伐多耗 1 AP；結算時森林在 4 以上，所有人 +2 分。因為需要材料，所以會去照顧山林；大家都不上山，森林就會老化。</li>
                     <li><strong>🎯 每月小組任務與徽章：</strong> 每個月系統會抽一個全組一起完成的任務（例如「本月有人送材料給耆老」），達成後所有人 <b>+1 分</b>，任務顯示在畫面上方。第一次做到某些事會得到徽章，年終會頒發稱號；徽章與稱號不加分。</li>
-                    <li><strong>🎲 更多可以做的事：</strong> <b>請益小問答</b>：請益後會出一題三選一，答對多得 1 KP，答錯沒有損失（答案都在知識庫裡）。<b>事件卡</b>：3、6、8、11 月每個人會收到一張二選一的事件卡。<b>補種 Avaka</b>（山林，1 AP，每月 1 次）：算作有人照顧林地，下個月起第一次砍伐多得 1 份材料。<b>搭把手</b>（同地點，1 AP）：隊友本月下一道工序少 2 AP，自己 +1 分（每月計 1 次）。<b>工序小遊戲</b>：做完工序後抓準時機按下，成功退回 1 AP，可以跳過。</li>
+                    <li><strong>🎲 更多可以做的事：</strong> <b>請益小問答</b>：請益後會出一題三選一，答對多得 1 KP，答錯沒有損失（答案都在知識庫裡）。<b>事件卡</b>：2、3、6、8、10、11 月每個人會收到一張二選一的事件卡。<b>講述</b>（耆老，2 AP，每月 1 次）：和耆老在同一個地點的青年與中生代各 +1 KP（2 月與 10 月 +2 KP），耆老 +1 分。<b>補種 Avaka</b>（山林，1 AP，每月 1 次）：算作有人照顧林地，下個月起第一次砍伐多得 1 份材料。<b>搭把手</b>（同地點，1 AP）：隊友本月下一道工序少 2 AP，自己 +1 分（每月計 1 次）。<b>工序小遊戲</b>：做完工序後抓準時機按下，成功退回 1 AP，可以跳過。</li>
                     <li><strong>📅 曆法禁忌：</strong> 依循蘭嶼 12 個月的夜曆，例如 2 月封山不能進山林、4 月底要留 1 AP 準備梅雨、9 月不能在商店完工、10 月任何方式都不能完工。每個月的效果會顯示在畫面上方。</li>
                 </ul>
 
@@ -589,6 +591,8 @@ const translations = {
                 square: 'Square',
                 slim: 'Slim'
             },
+            poseLabel: '🕺 Pose',
+            poseOptions: { stand: 'Standing', wave: 'Waving', hips: 'Hands on hips', cross: 'Arms crossed', fist: 'Fist up' },
             expressionLabel: '🙂 Expression',
             expressionOptions: { smile: 'Smile', calm: 'Calm', determined: 'Determined' },
             accessoryOptions: {
@@ -604,7 +608,7 @@ const translations = {
             },
             clothOptions: {
                 loincloth: 'Loincloth',
-                vest_dark: 'B&W Vest',
+                vest_dark: 'Blue & White Vest',
                 rattan_armor: 'Rattan Armor',
                 ceremony: 'Ceremonial Vestments'
             }
@@ -688,7 +692,7 @@ const translations = {
                     <li><strong>🌿 Materials:</strong> ① Chop &amp; Peel in the forest yields materials (1 each time, 2 in Months 1 and 7); steps ② to ⑥ each consume 1.</li>
                     <li><strong>🌳 Forest health:</strong> Shared by the whole room, from 0 to 5, starting at 3. If anyone goes up to do ① Chop &amp; Peel and tend the plots this month, the forest gains 1; if nobody goes all month, it loses 1 (Month 2, when the forest is closed, does not count). At 1 or below, chopping costs 1 more AP; at 4 or above at the end, everyone gets +2 points. People tend the forest because they need its material; when nobody goes, it ages.</li>
                     <li><strong>🎯 Monthly group mission &amp; badges:</strong> Each month the game draws one mission for the whole group (for example "someone gives a material to the Elder this month"). Completing it gives everyone <b>+1 point</b>; the mission is shown at the top of the screen. Doing certain things for the first time earns a badge, and titles are awarded at the end of the year; badges and titles carry no points.</li>
-                    <li><strong>🎲 More things to do:</strong> <b>Ask quiz</b>: after asking you get one three-choice question; a correct answer gives +1 KP and a wrong one costs nothing (the answers are in the Knowledge Base). <b>Event cards</b>: in Months 3, 6, 8 and 11 everyone gets a two-option card. <b>Replant Avaka</b> (Forest, 1 AP, once a month): counts as tending the plots, and your first chop from next month on yields 1 extra material. <b>Lend a hand</b> (same location, 1 AP): your teammate's next step this month costs 2 AP less and you get +1 point (once a month). <b>Step mini-game</b>: after a craft step, press at the right moment to get 1 AP back; you can skip it.</li>
+                    <li><strong>🎲 More things to do:</strong> <b>Ask quiz</b>: after asking you get one three-choice question; a correct answer gives +1 KP and a wrong one costs nothing (the answers are in the Knowledge Base). <b>Event cards</b>: in Months 2, 3, 6, 8, 10 and 11 everyone gets a two-option card. <b>Storytelling</b> (Elder, 2 AP, once a month): every Youth and Middle Generation player at the Elder's location gains +1 KP (+2 KP in Months 2 and 10) and the Elder gets +1 point. <b>Replant Avaka</b> (Forest, 1 AP, once a month): counts as tending the plots, and your first chop from next month on yields 1 extra material. <b>Lend a hand</b> (same location, 1 AP): your teammate's next step this month costs 2 AP less and you get +1 point (once a month). <b>Step mini-game</b>: after a craft step, press at the right moment to get 1 AP back; you can skip it.</li>
                     <li><strong>📅 Calendar Taboos:</strong> The game follows Lanyu's 12-month calendar, e.g. the forest is closed in Month 2, you should keep 1 AP at the end of Month 4 for the plum rain, the store cannot finish boats in Month 9, and nothing can be finished in Month 10. Each month's effect is shown at the top of the screen.</li>
                 </ul>
 
@@ -827,6 +831,7 @@ function translateLog(logText) {
         { regex: /🌳 森林：(\d+) 月有人上山砍伐、照顧林地，森林狀態 (\d+) → (\d+)/, replace: '🌳 Forest: someone chopped and tended the plots in Month $1; forest health $2 → $3' },
         { regex: /🍂 森林：(\d+) 月沒有人上山，林地無人照顧，森林狀態 (\d+) → (\d+)/, replace: '🍂 Forest: nobody went up in Month $1, so the plots went untended; forest health $2 → $3' },
         { regex: /🌳 森林狀態 (\d+)\/(\d+)：這一年大家一直有人照顧林地，所有人獲得 2 分/, replace: '🌳 Forest health $1/$2: the plots were tended all year, so everyone gains 2 points' },
+        { regex: /🗣️ (.+) 對身邊的人講述：(.+) 各獲得 (\d+) KP，.+ 獲得 1 分/, replace: (m, who, names, kp) => `🗣️ ${who} told stories to those nearby: ${names.replace(/、/g, ', ')} each gain ${kp} KP; ${who} gains 1 point` },
         { regex: /📝 (.+) 答對了請益小問答，多得 1 KP/, replace: '📝 $1 answered the ask quiz correctly: +1 KP' },
         { regex: /📜 (.+) 選擇「(.+?)」(?:：(.+))?/, replace: (m, who, opt, notes) => `📜 ${who} chose "${eventOptionEn(opt)}"${notes ? ': ' + eventNotesEn(notes) : ''}` },
         { regex: /✨ (.+) 手感很好，工序做得順，省下 1 AP/, replace: '✨ $1 had a good hand for the step and saved 1 AP' },
@@ -885,7 +890,10 @@ function translateScoreBreakdown(breakdown) {
             .replace(/小組任務/g, 'Group mission')
             .replace(/一起出海/g, 'Went fishing together')
             .replace(/分享收成/g, 'Shared the harvest')
-            .replace(/搭把手/g, 'Lent a hand');
+            .replace(/搭把手/g, 'Lent a hand')
+            .replace(/參加招魚祭/g, 'Joined the fish-summoning ceremony')
+            .replace(/幫忙燒貝灰/g, 'Helped burn shell lime')
+            .replace(/講述/g, 'Storytelling');
     });
 }
 
@@ -1061,6 +1069,12 @@ function applyLanguage() {
             group.querySelectorAll('.avatar-opt').forEach(opt => {
                 const val = opt.dataset.val;
                 if (t.avatar.faceOptions[val]) opt.textContent = t.avatar.faceOptions[val];
+            });
+        } else if (txt.includes('動作') || txt.includes('Pose')) {
+            label.textContent = t.avatar.poseLabel;
+            group.querySelectorAll('.avatar-opt').forEach(opt => {
+                const val = opt.dataset.val;
+                if (t.avatar.poseOptions[val]) opt.textContent = t.avatar.poseOptions[val];
             });
         } else if (txt.includes('表情') || txt.includes('Expression')) {
             label.textContent = t.avatar.expressionLabel;
@@ -1703,7 +1717,7 @@ avatarConfirmBtn.addEventListener('click', () => {
     const faceLabels  = currentLang === 'en' ? {round:'Round', square:'Square', slim:'Slim'} : {round:'圓潤臉', square:'寬顎臉', slim:'清秀臉'};
     const hairLabels  = currentLang === 'en' ? {short:'Short', long:'Long', bun:'Bun', bald:'Bald'} : {short:'短直髮', long:'長直髮', bun:'束髻', bald:'光頭'};
     const accLabels   = currentLang === 'en' ? {none:'', silver_helmet:'Silver Helmet', rattan_helmet:'Rattan Helmet', chest_ornament:'Chest Ornament'} : {none:'', silver_helmet:'銀盔', rattan_helmet:'藤盔', chest_ornament:'胸飾'};
-    const clothLabels = currentLang === 'en' ? {loincloth:'Loincloth', vest_dark:'B&W Vest', rattan_armor:'Rattan Armor', ceremony:'Ceremonial'} : {loincloth:'丁字褲', vest_dark:'黑白背心', rattan_armor:'藤甲', ceremony:'祭典全裝'};
+    const clothLabels = currentLang === 'en' ? {loincloth:'Loincloth', vest_dark:'Blue & White Vest', rattan_armor:'Rattan Armor', ceremony:'Ceremonial'} : {loincloth:'丁字褲', vest_dark:'藍白背心', rattan_armor:'藤甲', ceremony:'祭典全裝'};
     
     const avatarData = {
         image: snapshot,
@@ -3587,6 +3601,7 @@ const KB_TEXT = {
             <p><strong>科學轉譯（成功 +4 分）：</strong>用科學的觀點，印證祖先累積的經驗是有道理的。</p>
             <p><strong>每月小組任務（達成全員 +1 分）：</strong>每個月有一件要全組一起完成的事。一個人做不到的，大家一起就做得到。</p>
             <p>請益與指導的加分，每人每月最多計 2 次。</p>
+            <p><strong>講述（耆老 +1 分，每月 1 次）：</strong>老人家說話的時候，大家聚到他身邊聽；封山的 2 月與禁忌的 10 月，正是聽的時候。</p>
             <p><strong>搭把手（+1 分，每月計 1 次）：</strong>在同一個地點幫隊友做工序，他這個月的下一道工序少 2 AP。</p>
             <p><strong>補種 Avaka：</strong>不加分，但算作有人照顧林地，下個月起第一次砍伐多得 1 份材料。</p>`
     },
@@ -3616,6 +3631,7 @@ const KB_TEXT = {
             <p><strong>Scientific Translation (+4 on success):</strong> science confirming that the ancestors' experience was well founded.</p>
             <p><strong>Monthly group mission (+1 for everyone):</strong> each month there is one thing the whole group has to get done together.</p>
             <p>Points for asking and guiding count at most twice per player per month.</p>
+            <p><strong>Storytelling (Elder +1, once a month):</strong> when the elder speaks, everyone gathers round to listen; Months 2 and 10, when work is forbidden, are the time for it.</p>
             <p><strong>Lending a hand (+1, once a month):</strong> help a teammate at the same location; their next step this month costs 2 AP less.</p>
             <p><strong>Replanting Avaka:</strong> no points, but it counts as tending the plots and your first chop from next month on yields 1 extra material.</p>`
     }
@@ -3800,6 +3816,8 @@ const QUIZ_TEXT = {
 const EVENT_TEXT = {
     zh: {
         title: '📜 本月事件',
+        m2:  { t: '灘頭正在舉行招魚祭', a: '到灘頭參加', ad: '少 2 AP，+1 分', b: '整理工具', bd: '留在工作室整理工具，下個月多回復 1 AP' },
+        m10: { t: '這個月大家在燒製貝灰', a: '幫忙燒貝灰', ad: '少 2 AP，+1 分', b: '請教長輩', bd: '趁空檔請教長輩：少 1 AP，+1 KP' },
         m3:  { t: '族人找你一起出海捕飛魚', a: '一起出海', ad: '少 2 AP，+1 分', b: '留下來做工', bd: '沒有變化' },
         m6:  { t: '好月節要分享收成', a: '分享收成', ad: '把 1 份材料分給全組材料最少的人，+1 分', b: '留著自己用', bd: '沒有變化' },
         m8:  { t: '有人問你傳統做法有什麼道理', a: '花時間說明', ad: '少 1 AP，+1 KP', b: '下次再說', bd: '沒有變化' },
@@ -3807,6 +3825,8 @@ const EVENT_TEXT = {
     },
     en: {
         title: "📜 This month's event",
+        m2:  { t: 'The fish-summoning ceremony is being held on the shore', a: 'Join in at the shore', ad: '−2 AP, +1 point', b: 'Tidy the tools', bd: 'Stay in the workshop and tidy the tools: +1 AP recovery next month' },
+        m10: { t: 'This month everyone is burning shell lime', a: 'Help burn shell lime', ad: '−2 AP, +1 point', b: 'Ask an elder', bd: 'Use the quiet time to ask an elder: −1 AP, +1 KP' },
         m3:  { t: 'Your relatives ask you to go out for flying fish', a: 'Go fishing together', ad: '−2 AP, +1 point', b: 'Stay and work', bd: 'No change' },
         m6:  { t: 'It is the Good Month: time to share the harvest', a: 'Share the harvest', ad: 'Give 1 material to the teammate with the fewest, +1 point', b: 'Keep it for yourself', bd: 'No change' },
         m8:  { t: 'Someone asks why the traditional way is done the way it is', a: 'Take time to explain', ad: '−1 AP, +1 KP', b: 'Maybe next time', bd: 'No change' },
@@ -3818,6 +3838,7 @@ const B4_TEXT = {
     zh: {
         plant: '🌱 補種 Avaka (1 AP | 每月 1 次 · 下次砍伐 +1 材料)', plantDone: '🌱 本月已補種',
         assist: '🙌 搭把手 (1 AP)', assisted: '🙌 下一道工序 −2 AP',
+        tell: (kp) => `🗣️ 講述 <span style="font-size:0.8rem;opacity:0.7;font-weight:normal;">(2 AP → 身邊的人各 +${kp} KP · +1 分)</span>`, tellDone: '🗣️ 本月已講述',
         mgTitle: '🎯 抓準時機', mgHint: '指針走到綠色區域時按下。成功退回 1 AP，失敗沒有損失。', mgGo: '就是現在！', mgSkip: '跳過',
         mgWin: '抓得剛好！退回 1 AP。', mgLose: '差了一點，沒有損失。',
         mgStep: { chop: '下刀的位置', rub: '摩擦的力道', strip: '撕絲的力道', dry: '收起來的時間', twine: '搓捻的鬆緊', caulk: '塞進縫裡的深淺' }
@@ -3825,6 +3846,7 @@ const B4_TEXT = {
     en: {
         plant: '🌱 Replant Avaka (1 AP | once a month · next chop +1 material)', plantDone: '🌱 Replanted this month',
         assist: '🙌 Lend a hand (1 AP)', assisted: '🙌 Next step −2 AP',
+        tell: (kp) => `🗣️ Tell stories <span style="font-size:0.8rem;opacity:0.7;font-weight:normal;">(2 AP → +${kp} KP for everyone nearby · +1 pt)</span>`, tellDone: '🗣️ Told this month',
         mgTitle: '🎯 Right moment', mgHint: 'Press when the pointer is in the green zone. Success returns 1 AP; a miss costs nothing.', mgGo: 'Now!', mgSkip: 'Skip',
         mgWin: 'Spot on! 1 AP returned.', mgLose: 'Just missed. Nothing lost.',
         mgStep: { chop: 'Where to cut', rub: 'How hard to rub', strip: 'How hard to pull', dry: 'When to take it in', twine: 'How tight to twist', caulk: 'How deep to press' }
@@ -3832,7 +3854,7 @@ const B4_TEXT = {
 };
 
 function eventOptionEn(zhName) {
-    for (const id of ['m3', 'm6', 'm8', 'm11']) {
+    for (const id of ['m2', 'm3', 'm6', 'm8', 'm10', 'm11']) {
         if (EVENT_TEXT.zh[id].a === zhName) return EVENT_TEXT.en[id].a;
         if (EVENT_TEXT.zh[id].b === zhName) return EVENT_TEXT.en[id].b;
     }
@@ -3859,6 +3881,15 @@ function assistHtml(state, myP, p, id, isMe) {
         html += `<button class="assist-btn" data-id="${id}" style="font-size:0.75rem; padding:0.3rem 0.8rem; border-radius:6px; background:rgba(34,197,94,0.15); color:#86efac; border:1px solid rgba(34,197,94,0.4); cursor:pointer; font-weight:bold;">${t.assist}</button>`;
     }
     return html;
+}
+
+const tellBtnEl = document.getElementById('tell-btn');
+if (tellBtnEl) {
+    tellBtnEl.addEventListener('click', (e) => {
+        playActionSound();
+        showFloatingIcon(e, '🗣️');
+        sendAction({ type: 'tell' });
+    });
 }
 
 document.querySelectorAll('.plant-btn').forEach(btn => {
@@ -3900,6 +3931,20 @@ function renderPrompts(state) {
         btn.style.opacity = (done || state.month === 2) ? '0.45' : '1';
     });
     if (!me) return;
+
+    // the elder's storytelling
+    const tellBtn = document.getElementById('tell-btn');
+    if (tellBtn) {
+        if (me.role === 'elder') {
+            const done = (me.tell_month || 0) === state.month;
+            const heard = Object.values(state.players).some(o => o.id !== me.id && o.role !== 'elder' && o.location === me.location);
+            tellBtn.style.display = 'block';
+            tellBtn.style.opacity = (done || !heard) ? '0.45' : '1';
+            tellBtn.innerHTML = done ? t.tellDone : t.tell((state.month === 2 || state.month === 10) ? 2 : 1);
+        } else {
+            tellBtn.style.display = 'none';
+        }
+    }
 
     // quiz
     if (me.quiz && me.quiz.seq !== promptState.quizSeq) {

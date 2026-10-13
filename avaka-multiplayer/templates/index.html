@@ -226,7 +226,7 @@
                         <li><strong>🌿 材料：</strong> 在山林執行「①砍伐剝皮」產出材料（每次 1 份，1 月與 7 月 2 份），工序②至⑥各消耗 1 份。</li>
                         <li><strong>🌳 森林狀態：</strong> 全房間共用，0 到 5，開局 3。這個月有人上山「①砍伐剝皮」、照顧林地，森林就 +1；整個月沒有人上山就 −1（2 月封山不計）。森林降到 1 以下時，砍伐多耗 1 AP；結算時森林在 4 以上，所有人 +2 分。因為需要材料，所以會去照顧山林；大家都不上山，森林就會老化。</li>
                     <li><strong>🎯 每月小組任務與徽章：</strong> 每個月系統會抽一個全組一起完成的任務（例如「本月有人送材料給耆老」），達成後所有人 <b>+1 分</b>，任務顯示在畫面上方。第一次做到某些事會得到徽章，年終會頒發稱號；徽章與稱號不加分。</li>
-                    <li><strong>🎲 更多可以做的事：</strong> <b>請益小問答</b>：請益後會出一題三選一，答對多得 1 KP，答錯沒有損失（答案都在知識庫裡）。<b>事件卡</b>：3、6、8、11 月每個人會收到一張二選一的事件卡。<b>補種 Avaka</b>（山林，1 AP，每月 1 次）：算作有人照顧林地，下個月起第一次砍伐多得 1 份材料。<b>搭把手</b>（同地點，1 AP）：隊友本月下一道工序少 2 AP，自己 +1 分（每月計 1 次）。<b>工序小遊戲</b>：做完工序後抓準時機按下，成功退回 1 AP，可以跳過。</li>
+                    <li><strong>🎲 更多可以做的事：</strong> <b>請益小問答</b>：請益後會出一題三選一，答對多得 1 KP，答錯沒有損失（答案都在知識庫裡）。<b>事件卡</b>：2、3、6、8、10、11 月每個人會收到一張二選一的事件卡。<b>講述</b>（耆老，2 AP，每月 1 次）：和耆老在同一個地點的青年與中生代各 +1 KP（2 月與 10 月 +2 KP），耆老 +1 分。<b>補種 Avaka</b>（山林，1 AP，每月 1 次）：算作有人照顧林地，下個月起第一次砍伐多得 1 份材料。<b>搭把手</b>（同地點，1 AP）：隊友本月下一道工序少 2 AP，自己 +1 分（每月計 1 次）。<b>工序小遊戲</b>：做完工序後抓準時機按下，成功退回 1 AP，可以跳過。</li>
                         <li><strong>📅 曆法禁忌：</strong> 依循蘭嶼 12 個月的夜曆，例如 2 月封山不能進山林、4 月底要留 1 AP 準備梅雨、9 月不能在商店完工、10 月任何方式都不能完工。每個月的效果會顯示在畫面上方。</li>
                     </ul>
 
@@ -547,13 +547,24 @@
                         </div>
 
                         <div class="avatar-ctrl-group">
+                            <label class="avatar-ctrl-label">🕺 動作</label>
+                            <div class="avatar-btn-row" data-ctrl="pose" style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+                                <button class="avatar-opt selected" data-val="stand" style="flex:1; min-width:48px;">站立</button>
+                                <button class="avatar-opt" data-val="wave" style="flex:1; min-width:48px;">揮手</button>
+                                <button class="avatar-opt" data-val="hips" style="flex:1; min-width:48px;">叉腰</button>
+                                <button class="avatar-opt" data-val="cross" style="flex:1; min-width:48px;">抱胸</button>
+                                <button class="avatar-opt" data-val="fist" style="flex:1; min-width:48px;">舉拳</button>
+                            </div>
+                        </div>
+
+                        <div class="avatar-ctrl-group">
                             <label class="avatar-ctrl-label">👕 雅美／達悟族服飾</label>
                             <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:0.5rem; line-height:1.5;">傳統以白、黑、藍色為主，忌用鮮豔色彩</div>
                             <div class="avatar-btn-row" data-ctrl="cloth">
                                 <button class="avatar-opt selected" data-val="loincloth">丁字褲</button>
-                                <button class="avatar-opt" data-val="vest_dark">黑白背心</button>
+                                <button class="avatar-opt" data-val="vest_dark">藍白背心</button>
                                 <button class="avatar-opt" data-val="rattan_armor" title="藤甲：水牛皮底襯背心與直向省藤棒防護甲">藤甲</button>
-                                <button class="avatar-opt" data-val="ceremony">祭典全裝</button>
+                                <button class="avatar-opt" data-val="ceremony" title="祭典全裝：銀盔、藍白細紋短背心、銀製胸飾、丁字褲與銀環，整套一起穿上">祭典全裝</button>
                             </div>
                         </div>
 
@@ -732,6 +743,9 @@
                     </button>
                     <button id="help-btn" class="premium-action-btn" style="display:none;">
                         💪 幫忙長者 <span style="font-size:0.8rem;opacity:0.7;font-weight:normal;">(1 AP → 耆老回復 2 AP · +1 分)</span>
+                    </button>
+                    <button id="tell-btn" class="premium-action-btn" style="display:none;">
+                        🗣️ 講述 <span style="font-size:0.8rem;opacity:0.7;font-weight:normal;">(2 AP → 身邊的人各 +1 KP · +1 分)</span>
                     </button>
                     <div id="teach-container" class="teach-box-premium" style="display:none;">
                         <div style="display:flex; flex-direction:column; gap:0.2rem;">

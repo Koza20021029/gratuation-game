@@ -80,14 +80,14 @@ BADGES = {
 }
 
 TITLES = {
-    'heritage': {'name': '最會傳承',   'stats': ('ask', 'teach')},
+    'heritage': {'name': '最會傳承',   'stats': ('ask', 'teach', 'tell')},
     'giving':   {'name': '最懂回饋',   'stats': ('gift',)},
     'helper':   {'name': '長者的幫手', 'stats': ('help',)},
     'forest':   {'name': '山林守護者', 'stats': ('chop', 'plant')},
 }
 
 def new_stats():
-    return {'ask': 0, 'teach': 0, 'gift': 0, 'help': 0, 'chop': 0, 'plant': 0, 'assist': 0,
+    return {'ask': 0, 'teach': 0, 'gift': 0, 'help': 0, 'chop': 0, 'plant': 0, 'assist': 0, 'tell': 0,
             'translate': 0, 'steps': 0}
 
 # ── Quiz after asking: answers stay on the server, the client only holds the wording ──
@@ -112,12 +112,16 @@ def give_quiz(player):
 # ── Monthly event cards: every player picks one of two options ──
 # cost / gain keys: ap, kp, score, material (given to the teammate with the fewest), rest (extra AP next month)
 EVENTS = {
+    2:  {'id': 'm2',  'a': {'name': '到灘頭參加', 'ap': 2, 'score': 1, 'label': '參加招魚祭'},
+                      'b': {'name': '整理工具',   'rest': 1}},
     3:  {'id': 'm3',  'a': {'name': '一起出海',   'ap': 2, 'score': 1, 'label': '一起出海'},
                       'b': {'name': '留下來做工'}},
     6:  {'id': 'm6',  'a': {'name': '分享收成',   'material': 1, 'score': 1, 'label': '分享收成'},
                       'b': {'name': '留著自己用'}},
     8:  {'id': 'm8',  'a': {'name': '花時間說明', 'ap': 1, 'kp': 1},
                       'b': {'name': '下次再說'}},
+    10: {'id': 'm10', 'a': {'name': '幫忙燒貝灰', 'ap': 2, 'score': 1, 'label': '幫忙燒貝灰'},
+                      'b': {'name': '請教長輩',   'ap': 1, 'kp': 1}},
     11: {'id': 'm11', 'a': {'name': '留下來聽',   'ap': 1, 'kp': 1},
                       'b': {'name': '早點休息',   'rest': 1}},
 }
@@ -448,6 +452,7 @@ def _join_player_to_room(sid, name, role, room_code, avatar=None):
         'assist_month': 0,         # month in which a teammate lent this player a hand (next step is cheaper)
         'assist_score_month': 0,   # last month in which lending a hand scored
         'rest_bonus_month': 0,     # month whose AP recovery is 1 higher (event: rest early)
+        'tell_month': 0,           # last month in which this elder told stories
         'quiz': None, 'quiz_result': None, 'quiz_seen': [], 'quiz_seq': 0,
         'event': None,
         'minigame': None, 'minigame_seq': 0,
@@ -522,6 +527,7 @@ def handle_start():
             p['assist_month'] = 0
             p['assist_score_month'] = 0
             p['rest_bonus_month'] = 0
+            p['tell_month'] = 0
             p['quiz'] = None; p['quiz_result'] = None; p['quiz_seen'] = []; p['quiz_seq'] = 0
             p['event'] = None
             p['minigame'] = None; p['minigame_seq'] = 0
@@ -555,7 +561,7 @@ def handle_action(data):
         # A finished boat does not end the year: its builder can still move,
         # gather materials for others, give, guide and help.
         if player['finished']:
-            allowed = action in ('move', 'give', 'teach', 'help', 'plant', 'assist',
+            allowed = action in ('move', 'give', 'teach', 'tell', 'help', 'plant', 'assist',
                                  'quiz_answer', 'event_choice', 'minigame_result') or \
                 (action == 'craft' and data.get('step') == 'chop')
             if not allowed:
@@ -874,6 +880,32 @@ def handle_action(data):
                 player.setdefault('stats', new_stats())['teach'] += 1
                 award_badge(player, 'teach', room_code)
                 mission_progress(state, room_code, 'teach')
+                action_done = True
+
+        elif action == 'tell':
+            # The elder gathers whoever is nearby: one telling teaches everyone at the same place.
+            if player['role'] != 'elder': return
+            if player.get('tell_month', 0) == month:
+                emit('error', {'msg': '這個月已經講述過了，下個月再說！'})
+                return
+            listeners = [p for p in state['players'].values()
+                         if p['role'] in ('youth', 'middle') and p['location'] == player['location']]
+            if not listeners:
+                emit('error', {'msg': '身邊沒有人在聽。請青年或中生代先來到你所在的地點。'})
+                return
+            if consume_ap(2):
+                gain = 2 if month in (2, 10) else 1   # the months when work is forbidden are for listening
+                for p in listeners:
+                    p['kp'] += gain
+                    record_player_kp(p, month)
+                player['tell_month'] = month
+                player['score'] += 1
+                player['score_breakdown'].append("講述 (+1)")
+                player.setdefault('stats', new_stats())['tell'] += 1
+                award_badge(player, 'teach', room_code)
+                mission_progress(state, room_code, 'teach')
+                names = '、'.join(p['name'] for p in listeners)
+                add_log(room_code, f"🗣️ {player['name']} 對身邊的人講述：{names} 各獲得 {gain} KP，{player['name']} 獲得 1 分")
                 action_done = True
 
         elif action == 'give':

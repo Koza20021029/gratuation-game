@@ -5,12 +5,22 @@ let targetHeadRotY = 0, targetHeadRotX = 0;
 
 // Advanced Idle Rig Node References
 let idleRig = { torso: null, shoulders: [], armGroups: [], pecs: [], abs: [] };
+
+// Arm poses: extra rotation of each shoulder (sx forward/back, sz sideways-up) and elbow (ex, ez).
+// Index 0 is the arm at x < 0, index 1 the arm at x > 0; sideways angles are mirrored per side in animate().
+const POSES = {
+    stand: [{}, {}],
+    wave:  [{}, { sz: 2.35, ez: 0.55, wave: 0.38 }],
+    hips:  [{ sz: 0.62, ez: -1.55, sx: 0.12 }, { sz: 0.62, ez: -1.55, sx: 0.12 }],
+    cross: [{ sx: -0.70, sz: 0.04, ez: -2.18 }, { sx: -0.86, sz: 0.04, ez: -2.18 }],
+    fist:  [{}, { sz: 2.75, ez: 0.35, sx: -0.1 }]
+};
 let currentBodySwing = 0; // tracks body sway for head coupling
 
 
 const avatarState = {
     skin:'#A0622A', hair:'short', hairColor:'#0d0d0d',
-    eye:'#2a1a08', face:'round', expression:'smile', accessory:'none', cloth:'loincloth'
+    eye:'#2a1a08', face:'round', expression:'smile', pose:'stand', accessory:'none', cloth:'loincloth'
 };
 
 const C = (hex) => new THREE.Color(hex);
@@ -236,7 +246,7 @@ function buildCharacter() {
     // ── Eyebrows (curved, follow the hair colour) + upper eyelid line ──
     [-1, 1].forEach(s => {
         faceCurve([[s*0.105, browY + ex.brow[0]], [s*0.17, browY + ex.brow[1]], [s*0.24, browY + ex.brow[2]]],
-                  0.009, fd + 0.003, mat(hc, 0.9));
+                  0.009, fd + 0.003, mat(parseInt(hc.slice(1, 3), 16) > 150 ? '#8d8d8d' : hc, 0.9));
         faceCurve([[s*0.17 - 0.088, eyeY + 0.030], [s*0.17, eyeY + ex.lid], [s*0.17 + 0.088, eyeY + 0.030]],
                   0.006, fd + 0.005, mat('#1a0e04', 0.85));
     });
@@ -278,7 +288,8 @@ function buildCharacter() {
     });
 
     // ── Hair ──
-    if (avatarState.accessory !== 'silver_helmet' && avatarState.accessory !== 'rattan_helmet') {
+    const wearsHelmet = avatarState.cloth === 'ceremony' || avatarState.accessory === 'silver_helmet' || avatarState.accessory === 'rattan_helmet';
+    if (!wearsHelmet) {
         buildHair(hc, fw, fh, fd);
     }
 
@@ -315,6 +326,42 @@ function faceCurve(points, radius, z, material) {
     return m;
 }
 
+// Rattan wrapped in coils: a tiny striped texture repeated along tubes and hoops
+function rattanMat(color, coils) {
+    const c = document.createElement('canvas');
+    c.width = 32; c.height = 4;
+    const g = c.getContext('2d');
+    g.fillStyle = color; g.fillRect(0, 0, 32, 4);
+    g.fillStyle = 'rgba(0,0,0,0.55)'; g.fillRect(0, 0, 6, 4);
+    g.fillStyle = 'rgba(255,255,255,0.10)'; g.fillRect(15, 0, 6, 4);
+    const tex = new THREE.CanvasTexture(c);
+    tex.wrapS = THREE.RepeatWrapping;
+    tex.repeat.set(coils, 1);
+    return new THREE.MeshStandardMaterial({ map: tex, roughness: 0.82, metalness: 0.03 });
+}
+
+// Round tube through 3D points
+function tube(points, radius, material, segments) {
+    const curve = new THREE.CatmullRomCurve3(points.map(p => new THREE.Vector3(p[0], p[1], p[2])));
+    return add(new THREE.TubeGeometry(curve, segments || 20, radius, 8, false), material);
+}
+
+// Horizontal hoop around the torso. `arc` is its length; `centre` the direction of its middle
+// (Math.PI * 1.5 = the back, so a long arc leaves its gap at the front).
+function hoop(y, radius, thick, arc, centre, material, zScale) {
+    const h = add(new THREE.TorusGeometry(radius, thick, 10, 40, arc), material);
+    h.position.set(0, y, 0);
+    h.rotation.x = Math.PI / 2;
+    h.rotation.z = centre - arc / 2;
+    h.scale.set(1.0, 1.0, zScale || 0.59);
+    return h;
+}
+
+function lighten(hex, amt) {
+    return '#' + hex.replace('#','').match(/.{2}/g)
+        .map(v=>Math.min(255,parseInt(v,16)+amt).toString(16).padStart(2,'0')).join('');
+}
+
 function darken(hex) {
     return '#' + hex.replace('#','').match(/.{2}/g)
         .map(v=>Math.max(0,parseInt(v,16)-30).toString(16).padStart(2,'0')).join('');
@@ -322,60 +369,95 @@ function darken(hex) {
 
 function buildHair(hc, fw, fh, fd) {
     if (avatarState.hair === 'bald') return;
-    const hmat = mat(hc, 0.88);
+    const hmat = mat(hc, 0.72);
+    const strandMat = mat(lighten(hc, 26), 0.6);
     const hzScale = fd / 0.5;
-    const shiftBack = -0.02; // closer natural scalp fit
 
-    // Main protective top cap going completely around horizontally, stopping neatly above eyebrows vertically
-    const capGeo = new THREE.SphereGeometry(0.515, 32, 20, 0, Math.PI*2, 0, Math.PI*0.45);
-    const cap = add(capGeo, hmat);
-    cap.position.set(0, 2.1, shiftBack);
-    cap.scale.set(fw/0.5+0.02, fh/0.5+0.02, hzScale+0.01);
+    // Point on (and normal of) the head ellipsoid, pushed out by `lift`
+    const onHead = (phi, el, lift) => {
+        const d = new THREE.Vector3(Math.sin(phi) * Math.cos(el), Math.sin(el), Math.cos(phi) * Math.cos(el));
+        const k = 1 + lift;
+        const p = new THREE.Vector3(fw * k * d.x, 2.1 + fh * k * d.y, fd * k * d.z);
+        const n = new THREE.Vector3(d.x / fw, d.y / fh, d.z / fd).normalize();
+        return { p, n };
+    };
 
-    // Back scalp filler: fully enclosed complete sphere shifted backward and unflattened
-    // Guaranteed to avoid phi-cut vertical plane seams on profile views and zero rear hole clipping
+    // Crown: sits high so the forehead shows; the hairline is drawn by the tufts below
+    const cap = add(new THREE.SphereGeometry(0.515, 36, 20, 0, Math.PI*2, 0, Math.PI*0.34), hmat);
+    cap.position.set(0, 2.1, -0.01);
+    cap.scale.set(fw/0.5+0.03, fh/0.5+0.03, hzScale+0.03);
+
+    // Back and sides of the scalp
     const backFill = add(new THREE.SphereGeometry(0.51, 32, 20), hmat);
-    backFill.position.set(0, 2.06, -0.06); // shifted backwards
-    backFill.scale.set(fw/0.5+0.015, fh/0.5+0.015, hzScale+0.03);
+    backFill.position.set(0, 2.09, -0.19);
+    backFill.scale.set(fw/0.5+0.07, fh/0.5+0.05, hzScale-0.06);
 
-    // Natural curved soft swept bangs hugging the upper forehead smoothly
-    // thetaStart=PI*0.12, thetaLength=PI*0.22 ends at PI*0.34 (well above the eyes)
-    const bangGeo = new THREE.SphereGeometry(0.52, 24, 12, Math.PI*0.3, Math.PI*0.4, Math.PI*0.12, Math.PI*0.22);
-    const bangs = add(bangGeo, hmat);
-    bangs.position.set(0, 2.1, shiftBack); // centered perfectly on head origin
-    bangs.scale.set(fw/0.5+0.02, fh/0.5+0.02, hzScale+0.015);
-    bangs.rotation.z = 0.04; // slight elegant asymmetrical tilt
+    // Hairline: overlapping tufts from temple to temple, slightly uneven so it does not read as a helmet
+    const TUFTS = 15;
+    for (let i = 0; i < TUFTS; i++) {
+        const u = i / (TUFTS - 1) * 2 - 1;                 // -1 (one temple) .. 1 (the other)
+        const phi = u * 1.55;
+        const el = 0.62 - 0.30 * u * u + ((i % 2) ? 0.03 : -0.02);
+        const { p, n } = onHead(phi, el, 0.035);
+        const tuft = add(new THREE.SphereGeometry(0.105, 14, 10), hmat);
+        tuft.position.copy(p);
+        tuft.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), n);
+        tuft.scale.set(1.0, 1.15 + 0.25 * u * u, 0.30);
+    }
 
-    // Soft side frame locks hugging the upper temples
+    // Strands: fine lighter lines combed from the crown toward the hairline
+    const STRANDS = 13;
+    for (let i = 0; i < STRANDS; i++) {
+        const u = i / (STRANDS - 1) * 2 - 1;
+        const phi = u * 1.7 + 0.06;
+        const pts = [1.30, 1.05, 0.82, 0.60 - 0.32 * u * u].map((el, k) => {
+            const q = onHead(phi * (0.55 + 0.15 * k), el, 0.075).p;
+            return [q.x, q.y, q.z];
+        });
+        const s = tube(pts, 0.0065, strandMat, 14);
+        s.castShadow = false;
+    }
+
+    // Sideburns in front of the ears
     [-1,1].forEach(s => {
-        const side = add(new THREE.SphereGeometry(0.06, 16, 8), hmat);
-        side.position.set(s*(fw+0.02), 2.12, 0.02);
-        side.scale.set(0.2, 1.2, 0.4);
-        side.rotation.z = s * 0.12;
+        const side = add(new THREE.SphereGeometry(0.07, 16, 10), hmat);
+        side.position.set(s*(fw+0.005), 2.10, 0.06);
+        side.scale.set(0.28, 1.5, 0.75);
+        side.rotation.z = s * 0.08;
     });
 
     if (avatarState.hair === 'long') {
-        // Smooth sleek back mass
-        const back = add(new THREE.CylinderGeometry(0.28, 0.32, 1.1, 24, 1, false, Math.PI*0.7, Math.PI*0.6), hmat);
-        back.position.set(0, 1.55, -fd+0.03);
-        back.scale.set(1, 1, 0.4);
-        // Rounded soft base
-        const backBot = add(new THREE.SphereGeometry(0.32, 24, 12, 0, Math.PI*2, Math.PI*0.5, Math.PI*0.5), hmat);
-        backBot.position.set(0, 1.0, -fd+0.03); 
-        backBot.scale.set(1, 0.4, 0.35);
+        // Back mass falling to the shoulder blades, tapered at the tips
+        const back = add(new THREE.SphereGeometry(0.5, 28, 20), hmat);
+        back.position.set(0, 1.62, -fd*0.62);
+        back.scale.set((fw+0.06)/0.5, 1.38, 0.30);
+        // Two locks resting in front of the shoulders
+        [-1,1].forEach(s => {
+            tube([[s*(fw+0.03), 2.02, -0.02], [s*(fw+0.06), 1.78, 0.06], [s*(fw+0.02), 1.58, 0.15], [s*(fw-0.02), 1.42, 0.19]], 0.042, hmat, 18);
+        });
+        // Strand lines down the back
+        for (let i = -3; i <= 3; i++) {
+            const s = tube([[i*0.085, 2.05, -fd*0.92], [i*0.095, 1.60, -fd*0.92-0.02], [i*0.08, 1.12, -fd*0.80]], 0.006, strandMat, 12);
+            s.castShadow = false;
+        }
     }
 
     if (avatarState.hair === 'bun') {
-        // Elegant Gathered Bun
-        const gather = add(new THREE.CylinderGeometry(0.08, 0.14, 0.38, 24), hmat);
-        gather.position.set(0, 2.54, -0.05);
-        // Smooth tie ring
-        const tie = add(new THREE.TorusGeometry(0.09, 0.022, 16, 32), mat('#222222', 0.95));
-        tie.position.set(0, 2.66, -0.05); tie.rotation.x = Math.PI/2;
-        // Clean high bun ball
-        const bunCore = add(new THREE.SphereGeometry(0.18, 24, 24), hmat);
-        bunCore.position.set(0, 2.82, -0.05);
-        bunCore.scale.set(1.0, 0.95, 1.0);
+        // Hair pulled up into a knot on the crown
+        const gather = add(new THREE.CylinderGeometry(0.09, 0.15, 0.22, 24), hmat);
+        gather.position.set(0, 2.66, -0.06);
+        const tie = add(new THREE.TorusGeometry(0.095, 0.02, 12, 28), mat('#2a1d14', 0.9));
+        tie.position.set(0, 2.74, -0.06); tie.rotation.x = Math.PI/2;
+        const bunCore = add(new THREE.SphereGeometry(0.16, 24, 20), hmat);
+        bunCore.position.set(0, 2.86, -0.06);
+        bunCore.scale.set(1.05, 0.85, 1.05);
+        // Spiral strands around the knot
+        for (let k = 0; k < 3; k++) {
+            const ring = add(new THREE.TorusGeometry(0.115 - k*0.03, 0.007, 8, 28), strandMat);
+            ring.position.set(0, 2.86 + k*0.045, -0.06);
+            ring.rotation.x = Math.PI/2 + 0.12; ring.rotation.z = k * 0.9;
+            ring.scale.set(1.05, 1.05, 1);
+        }
     }
 }
 
@@ -389,7 +471,7 @@ function buildBody(sk) {
     idleRig = { torso: null, shoulders: [], armGroups: [], pecs: [], abs: [] };
     currentBodySwing = 0;
 
-    const torsoSkinMat = (cloth === 'loincloth' || cloth === 'rattan_armor') ? skinMat : mat(stripeW, 0.82);
+    const torsoSkinMat = (cloth === 'vest_dark') ? mat(stripeW, 0.82) : skinMat;
 
     // Torso (Elliptical Cylinder for organic shape)
     const torso = add(new THREE.CylinderGeometry(0.40, 0.38, 0.90, 32), torsoSkinMat);
@@ -399,7 +481,7 @@ function buildBody(sk) {
 
     // Premium Sculpted Muscular overlay seamlessly integrated with delicate decal-depth relief
     // Strictly visible only when bare-chested (wearing traditional loincloth)
-    if (cloth === 'loincloth') {
+    if (cloth === 'loincloth' || cloth === 'ceremony') {
         // Pectorals (Chest muscles - spaced cleanly apart to form a natural central sternum groove without overlapping seams)
         [-0.155, 0.155].forEach(x => {
             const pec = add(new THREE.SphereGeometry(0.13, 24, 16), skinMat);
@@ -424,7 +506,33 @@ function buildBody(sk) {
     }
 
     // Striped vest
-    if (cloth === 'vest_dark' || cloth === 'ceremony') {
+    // Ceremonial dress: a short sleeveless vest in fine blue-grey and white stripes, open at the front
+    if (cloth === 'ceremony') {
+        const gap = Math.PI * 0.105;                      // half-width of the front opening
+        const bands = 19, top = 1.585, bandH = 0.0255;
+        for (let i = 0; i < bands; i++) {
+            const col = i % 2 === 0 ? '#5f7896' : '#e9e6da';
+            const band = add(new THREE.CylinderGeometry(0.413, 0.413, bandH + 0.002, 40, 1, true, gap, Math.PI * 2 - gap * 2),
+                new THREE.MeshStandardMaterial({ color: C(col), roughness: 0.85, side: THREE.DoubleSide }));
+            band.position.set(0, top - bandH * (i + 0.5), 0);
+            band.scale.set(1.0, 1.0, 0.57);
+        }
+        const hemY = top - bandH * bands;
+        // Edges of the opening and the hem
+        [-1, 1].forEach(s => {
+            const ex = Math.sin(gap) * 0.413 * s, ez = Math.cos(gap) * 0.413 * 0.57;
+            tube([[ex, top, ez], [ex, (top + hemY) / 2, ez + 0.004], [ex, hemY, ez]], 0.011, mat('#3f5673', 0.85), 8);
+        });
+        hoop(hemY, 0.414, 0.010, Math.PI * 2 - gap * 2, Math.PI * 1.5, mat('#3f5673', 0.85), 0.57);
+        // Vest over the shoulders
+        [-1, 1].forEach(s => {
+            const strap = add(new THREE.SphereGeometry(0.135, 18, 12, 0, Math.PI * 2, 0, Math.PI * 0.5), mat('#5f7896', 0.85));
+            strap.position.set(s * 0.40, 1.55, 0);
+            strap.scale.set(1.0, 0.75, 1.05);
+        });
+    }
+
+    if (cloth === 'vest_dark') {
         const stripes = [1.50, 1.38, 1.26, 1.14, 1.02, 0.90, 0.78];
         stripes.forEach((y, i) => {
             const col = i % 2 === 0 ? stripeD : stripeW;
@@ -464,7 +572,8 @@ function buildBody(sk) {
         const armGroup = new THREE.Group();
         armGroup.position.set(s * 0.42, 1.55, 0);
         avatarGroup.add(armGroup);
-        idleRig.armGroups.push({ group: armGroup, side: s });
+        const armRef = { group: armGroup, side: s, elbow: null };
+        idleRig.armGroups.push(armRef);
 
         // Upper arm: positioned relative to shoulder centre (offset downward by half-length)
         const upperArm = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.08, 0.65, 24), skinMat);
@@ -484,6 +593,7 @@ function buildBody(sk) {
 
         // Forearm: hangs from elbow, slight natural outward angle stored via elbowGroup.rotation.z
         elbowGroup.rotation.z = s * 0.08; // natural resting carry angle
+        armRef.elbow = elbowGroup;
         const forearm = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.065, 0.52, 24), skinMat);
         forearm.position.set(0, -0.26, 0);
         forearm.castShadow = true; forearm.receiveShadow = true;
@@ -600,14 +710,16 @@ function buildBody(sk) {
 }
 
 function buildAccessory(fw, fh, fd) {
-    const acc = avatarState.accessory;
+    // Ceremonial dress comes as a set: silver helmet and silver chest pieces
+    const ceremony = avatarState.cloth === 'ceremony';
+    const acc = ceremony ? 'silver_helmet' : avatarState.accessory;
     if (acc === 'none' && avatarState.cloth !== 'rattan_armor') return;
 
     if (acc === 'rattan_helmet') {
         currentGroup = headGroup; // Attach helmet to scaled head group so it sways naturally with head rotation
         
-        const rattanDark    = mat('#2B231D', 0.88, 0.02); // Charcoal dark brown woven rattan
-        const rattanSpar    = mat('#382D25', 0.82, 0.04); // Thick main vertical rattan spar
+        const rattanDark    = rattanMat('#3a2c22', 46);       // Charcoal dark brown woven rattan, wrapped in coils
+        const rattanSpar    = mat('#4a382a', 0.80, 0.04); // Thick main vertical rattan spar
         const bindCordMat   = mat('#181310', 0.95, 0.00); // Blackish brown binding cord
         const innerMat      = mat('#120E0C', 0.98, 0.00); // Dark interior lining cap
 
@@ -675,113 +787,62 @@ function buildAccessory(fw, fh, fd) {
 
     if (acc === 'rattan_armor' || avatarState.cloth === 'rattan_armor') {
         currentGroup = null; // Ensure attached to body/avatarGroup
-        // 博物館展示級達悟族傳統籐甲 (Museum-Grade Tao Authentic Rattan Armor)
-        const leatherBacking = mat('#4A3828', 0.80, 0.02); // Authentic Buffalo Leather Backing (水牛皮底襯) — brighter
-        const rattanRod      = mat('#7A6040', 0.65, 0.05); // Aged Vertical Rattan Spar Rods (直向省藤棒條) — natural rattan tan
-        const rattanBundle   = mat('#6B5535', 0.70, 0.04); // Lower & Upper Horizontal Rattan Bundles (橫向省藤束圈)
-        const borderTrim     = mat('#3D2E20', 0.85, 0.02); // Dark Leather/Rattan Border Trim (厚皮包邊)
-        const tieCordMat     = mat('#503A28', 0.78, 0.02); // Chest Braided Tie Rope (胸前開襟繩結)
+        // Rattan armour after the museum pieces: wrapped rods fanning up to the shoulders, stacked hoops
+        // round the waist and hem, dark hide showing between them, open at the front and tied with cord.
+        const hide      = new THREE.MeshStandardMaterial({ color: C('#1b1613'), roughness: 0.92, side: THREE.DoubleSide });
+        const rodMat    = rattanMat('#5a4130', 16);
+        const hoopMat   = rattanMat('#4d382a', 70);
+        const rowMat    = rattanMat('#6a4a34', 30);
+        const cordMat   = mat('#6b5238', 0.9);
+        const R = 0.445, ZS = 0.59;
+        const GAP = Math.PI * 0.11;                                  // half-width of the front opening
+        const ARC = Math.PI * 2 - GAP * 2, BACK = Math.PI * 1.5;
+        const surfZ = (x, r) => (r || R) * ZS * Math.sqrt(Math.max(0.02, 1 - (x * x) / ((r || R) * (r || R))));
 
-        // 1. Solid Dark Buffalo Leather Backing Vest Shell (水牛皮防護底襯背心)
-        const innerShell = add(new THREE.CylinderGeometry(0.44, 0.42, 0.86, 32, 1, false, Math.PI * 0.22, Math.PI * 1.56), leatherBacking);
-        innerShell.position.set(0, 1.18, 0);
-        innerShell.scale.set(1.0, 1.0, 0.58);
+        // 1. Hide backing
+        const shell = add(new THREE.CylinderGeometry(R, R - 0.02, 0.90, 40, 1, true, GAP, ARC), hide);
+        shell.position.set(0, 1.17, 0);
+        shell.scale.set(1.0, 1.0, ZS);
 
-        // High stiff back collar (脖子後方高立領水牛皮防護)
-        const backCollar = add(new THREE.CylinderGeometry(0.36, 0.42, 0.20, 24, 1, false, Math.PI * 0.7, Math.PI * 0.6), leatherBacking);
-        backCollar.position.set(0, 1.62, -0.05);
-        backCollar.scale.set(1.0, 1.0, 0.65);
+        // 2. Hem: five stacked hoops; one hoop across the hide; two at the waist where the rods start
+        for (let i = 0; i < 5; i++) hoop(0.745 + i * 0.043, R + 0.012 - i * 0.001, 0.023, ARC, BACK, hoopMat, ZS);
+        hoop(1.03, R + 0.016, 0.021, ARC, BACK, hoopMat, ZS);
+        hoop(1.155, R + 0.014, 0.022, ARC, BACK, hoopMat, ZS);
+        hoop(1.198, R + 0.014, 0.022, ARC, BACK, hoopMat, ZS);
 
-        // 2. UPPER SECTION: Vertical Rattan Rod Bundles (博物館參考圖上半部：避震直向省藤棒背心/胸肩甲區)
-        // Left & Right Front Chest Panels (左右正面: 7 根立體粗省藤棒向上排開)
-        [-1, 1].forEach(side => {
-            for (let i = 0; i < 7; i++) {
-                const x = side * (0.05 + i * 0.052);
-                const yStart = 1.15;
-                const yEnd = 1.54 - Math.abs(i - 3) * 0.02; // Curved shoulder contour
-                const height = yEnd - yStart;
-                
-                const rod = add(new THREE.CylinderGeometry(0.018, 0.018, height, 10), rattanRod);
-                rod.position.set(x, (yStart + yEnd) / 2, 0.248 + (0.03 - Math.abs(x)*0.05));
-                rod.rotation.z = side * (0.04 + i * 0.015); // Fan slightly outward
+        // 3. Front: six wrapped rods a side, fanning from the waist out to the shoulder
+        [-1, 1].forEach(s => {
+            for (let i = 0; i < 6; i++) {
+                const x0 = s * (0.085 + i * 0.040), x1 = s * (0.105 + i * 0.058), x2 = s * (0.150 + i * 0.062);
+                tube([[x0, 1.19, surfZ(x0) + 0.022],
+                      [x1, 1.40, surfZ(x1) + 0.028],
+                      [x2, 1.615 - i * 0.012, Math.max(0.03, surfZ(x2) + 0.012)]], 0.021, rodMat, 16);
+            }
+            // rolled edge of the opening
+            const e0 = s * 0.150, e1 = s * 0.058;
+            tube([[e0, 0.74, surfZ(e0) + 0.03], [s * 0.135, 1.00, surfZ(0.135) + 0.03], [e1, 1.20, surfZ(e1) + 0.03], [s * 0.095, 1.60, surfZ(0.095) + 0.02]], 0.019, hoopMat, 24);
+            // over the shoulder to the back
+            for (let k = 0; k < 3; k++) {
+                const x = s * (0.24 + k * 0.058);
+                tube([[x, 1.585, 0.115], [x + s * 0.01, 1.675, 0.0], [x, 1.60, -0.13]], 0.02, rodMat, 12);
             }
         });
 
-        // Upper Back Panel: 10 Vertical Rattan Rods across upper back (背部上半部 10 根垂直省藤棒)
-        for (let i = 0; i < 10; i++) {
-            const x = -0.28 + i * 0.062;
-            const rod = add(new THREE.CylinderGeometry(0.018, 0.018, 0.40, 10), rattanRod);
-            rod.position.set(x, 1.35, -0.255);
-        }
+        // 4. Back: horizontal rows across the upper back
+        for (let i = 0; i < 10; i++) hoop(1.245 + i * 0.040, R + 0.012, 0.0195, Math.PI * 0.86, BACK, rowMat, ZS);
 
-        // 3. UPPER HORIZONTAL CROSS-BINDING BANDS (博物館照片：上半部直向省藤棒中間與上緣橫向固定籐條束)
-        [1.28, 1.45].forEach(y => {
-            const crossBundle = add(new THREE.TorusGeometry(0.440, 0.022, 10, 32, Math.PI * 1.52), rattanBundle);
-            crossBundle.position.set(0, y, 0);
-            crossBundle.rotation.x = Math.PI / 2;
-            crossBundle.rotation.z = Math.PI * 0.74;
-            crossBundle.scale.set(1.0, 1.0, 0.59);
-        });
-
-        // 4. LOWER SECTION: Dense Horizontal Rattan Bundle Rings (博物館參考圖下半部：5層粗厚橫向捆紮省藤束圈)
-        const LOWER_ROW_COUNT = 5;
-        for (let i = 0; i < LOWER_ROW_COUNT; i++) {
-            const y = 0.75 + i * 0.082;
-            const bundle = add(new THREE.TorusGeometry(0.438, 0.026, 12, 32, Math.PI * 1.52), rattanBundle);
-            bundle.position.set(0, y, 0);
-            bundle.rotation.x = Math.PI / 2;
-            bundle.rotation.z = Math.PI * 0.74; // Front opening slit
-            bundle.scale.set(1.0, 1.0, 0.59);
-        }
-
-        // 5. Heavy Rolled Border Trims (領口、袖口、開襟與下擺厚滾邊包邊條)
-        // Front Left & Right Opening Edges
-        [-0.22, 0.22].forEach(x => {
-            const edgeTrim = add(new THREE.CylinderGeometry(0.024, 0.024, 0.86, 10), borderTrim);
-            edgeTrim.position.set(x, 1.18, 0.258);
-            edgeTrim.rotation.z = x > 0 ? -0.05 : 0.05;
-        });
-
-        // Shoulder Line Border Trims (雙肩上方挺立厚包邊條)
-        [-1, 1].forEach(side => {
-            const shldrTrim = add(new THREE.CylinderGeometry(0.025, 0.025, 0.36, 10), borderTrim);
-            shldrTrim.position.set(side * 0.32, 1.56, 0.02);
-            shldrTrim.rotation.z = side * (Math.PI / 2 - 0.2);
-            shldrTrim.rotation.y = side * 0.2;
-        });
-
-        // Bottom Hem Heavy Rim
-        const bottomRim = add(new THREE.TorusGeometry(0.442, 0.028, 10, 32, Math.PI * 1.52), borderTrim);
-        bottomRim.position.set(0, 0.73, 0);
-        bottomRim.rotation.x = Math.PI / 2;
-        bottomRim.rotation.z = Math.PI * 0.74;
-        bottomRim.scale.set(1.0, 1.0, 0.59);
-
-        // 6. Front Chest Split Braided Tie Rope & Knot (胸前開襟對綁大繩結與雙垂繩頭)
-        const tieY = 1.15;
-        // Horizontal cord across chest slit
-        const tieCord = add(new THREE.CylinderGeometry(0.012, 0.012, 0.38, 8), tieCordMat);
-        tieCord.position.set(0, tieY, 0.265);
-        tieCord.rotation.z = Math.PI / 2;
-
-        // Big tied rope knot in center
-        const mainKnot = add(new THREE.SphereGeometry(0.034, 12, 12), tieCordMat);
-        mainKnot.position.set(0, tieY, 0.275);
-
-        // Long dangling braided rope ends (下垂雙繩頭)
-        [-0.04, 0.04].forEach((dx, idx) => {
-            const tail = add(new THREE.CylinderGeometry(0.009, 0.006, 0.18, 8), tieCordMat);
-            tail.position.set(dx, tieY - 0.08, 0.28);
-            tail.rotation.z = idx === 0 ? 0.22 : -0.22;
-            tail.rotation.x = -0.15;
-        });
+        // 5. Cord tying the opening, with its ends hanging
+        tube([[-0.07, 1.20, surfZ(0.07) + 0.05], [0, 1.185, 0.315], [0.07, 1.20, surfZ(0.07) + 0.05]], 0.010, cordMat, 10);
+        const knot = add(new THREE.SphereGeometry(0.026, 12, 10), cordMat);
+        knot.position.set(0, 1.185, 0.318);
+        [-1, 1].forEach(s => tube([[0, 1.18, 0.318], [s * 0.025, 1.08, 0.325], [s * 0.04, 0.96, 0.31]], 0.007, cordMat, 10));
     }
 
     if (acc==='silver_helmet') {
         currentGroup = headGroup; // Attach helmet to the scaled head group
         // 博物館級達悟族圓錐銀盔 (Authentic Tao Conical Silver Helmet)
-        const silverMatPrimary   = mat('#e2e8f0', 0.22, 0.90); // Main bright polished silver
-        const silverMatSecondary = mat('#cbd5e1', 0.30, 0.85); // Contrast silver ring for plate layers
+        const silverMatPrimary   = mat('#e6ebf1', 0.34, 0.45); // Main bright polished silver
+        const silverMatSecondary = mat('#c3cdd9', 0.40, 0.45); // Contrast silver ring for plate layers
         const eyeMat             = mat('#020617', 1.00, 0.00); // Dark interior & slit
 
         // Cone profile radii from apex (y=3.10) down to flared base rim (y=1.70)
@@ -827,33 +888,35 @@ function buildAccessory(fw, fh, fd) {
         innerCap.position.set(0, 1.73, 0);
         innerCap.rotation.x = Math.PI / 2;
 
-        // 4. Horizontal eye viewing slit (觀測視線長方形眼孔)
-        const slitWidth = 0.28;
-        const slitHeight = 0.055;
-        const slitDepth = 0.10;
-        const eyeY = 2.12;
-        const eyeZ = 0.60;
+        // 4. Two small eye openings
+        [-0.085, 0.085].forEach(x => {
+            const hole = add(new THREE.BoxGeometry(0.085, 0.05, 0.10), eyeMat);
+            hole.position.set(x, 2.12, 0.585);
+            const rim = add(new THREE.TorusGeometry(0.052, 0.006, 6, 4), silverMatPrimary);
+            rim.position.set(x, 2.12, 0.632); rim.rotation.z = Math.PI / 4; rim.scale.set(1.15, 0.72, 1);
+        });
 
-        // Recessed dark interior box for slit
-        const eyeSlitBox = add(new THREE.BoxGeometry(slitWidth, slitHeight, slitDepth), eyeMat);
-        eyeSlitBox.position.set(0, eyeY, eyeZ - 0.02);
-
-        // Silver frame around eye slit
-        const frameMat = silverMatPrimary;
-        const frameT = 0.010;
-        const fTop = add(new THREE.BoxGeometry(slitWidth + 0.02, frameT, 0.02), frameMat);
-        fTop.position.set(0, eyeY + slitHeight/2 + frameT/2, eyeZ);
-        const fBot = add(new THREE.BoxGeometry(slitWidth + 0.02, frameT, 0.02), frameMat);
-        fBot.position.set(0, eyeY - slitHeight/2 - frameT/2, eyeZ);
-        const fLeft = add(new THREE.BoxGeometry(frameT, slitHeight + 0.015, 0.02), frameMat);
-        fLeft.position.set(-slitWidth/2 - frameT/2, eyeY, eyeZ);
-        const fRight = add(new THREE.BoxGeometry(frameT, slitHeight + 0.015, 0.02), frameMat);
-        fRight.position.set(slitWidth/2 + frameT/2, eyeY, eyeZ);
+        // 5. Finial on the apex
+        tube([[0, 3.18, 0], [0.005, 3.30, 0], [0.03, 3.38, 0], [0.065, 3.40, 0]], 0.008, silverMatPrimary, 12);
 
         currentGroup = null; // Switch back to body
     }
 
-    if (acc==='chest_ornament') {
+    if (ceremony) {
+        // Silver chest pieces on a cord: round plates hung in pairs down the chest
+        const silver = mat('#e6ebf1', 0.34, 0.45);
+        const cord   = mat('#3a2a1c', 0.9);
+        [-1, 1].forEach(s => tube([[s * 0.13, 1.70, 0.07], [s * 0.115, 1.56, 0.215], [s * 0.05, 1.36, 0.262], [0, 1.24, 0.268]], 0.007, cord, 14));
+        [[-0.062, 1.44], [0.062, 1.44], [-0.05, 1.335], [0.05, 1.335], [0, 1.235]].forEach(([x, y], i) => {
+            const plate = add(new THREE.CylinderGeometry(i === 4 ? 0.058 : 0.047, i === 4 ? 0.058 : 0.047, 0.010, 24), silver);
+            plate.position.set(x, y, 0.272);
+            plate.rotation.x = Math.PI / 2;
+            const boss = add(new THREE.SphereGeometry(0.014, 10, 8), silver);
+            boss.position.set(x, y, 0.280);
+        });
+    }
+
+    if (acc==='chest_ornament' && !ceremony) {
         // 半月形胸飾 + 公豬獠牙 + 貝珠項鏈
         const woodMat  = mat('#5C2E0A', 0.88);
         const boneMat  = mat('#ece8d0', 0.65);
@@ -930,12 +993,21 @@ function animate() {
     const swingR = Math.sin(t * 0.65 + Math.PI) * 0.055;
     currentBodySwing = swingL - swingR; // net lateral sway signal for head coupling
 
-    idleRig.armGroups.forEach(({ group, side }) => {
-        const swing = side < 0 ? swingL : swingR;
+    const pose = POSES[avatarState.pose] || POSES.stand;
+    idleRig.armGroups.forEach(({ group, side, elbow }) => {
+        const p = pose[side < 0 ? 0 : 1];
+        const posed = p.sz || p.sx || p.ez || p.ex;
+        const swing = (side < 0 ? swingL : swingR) * (posed ? 0.25 : 1);
         // Rotate whole arm group at shoulder pivot -- all children cascade automatically
-        group.rotation.z = side * 0.11 + swing * 0.85;
+        group.rotation.z = side * (0.11 + (p.sz || 0)) + swing * 0.85;
+        group.rotation.x = p.sx || 0;
         // Shoulder height follows swing slightly
         group.position.y = 1.55 + swing * 0.025;
+        if (elbow) {
+            const wave = p.wave ? Math.sin(t * 5.5) * p.wave : 0;
+            elbow.rotation.z = side * (0.08 + (p.ez || 0) + wave);
+            elbow.rotation.x = p.ex || 0;
+        }
     });
 
     // Layer 4: Head mouse look-at + body-coupled sway (Head-Body Coupling)
