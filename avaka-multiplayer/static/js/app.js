@@ -839,6 +839,12 @@ function translateLog(logText) {
         { regex: /🌱 (.+) 之前補種的 Avaka 長成了，這次多收 1 份材料/, replace: '🌱 The Avaka $1 replanted has grown: 1 extra material this time' },
         { regex: /🙌 (.+) 幫 (.+) 搭把手：.+ 本月下一道工序少 2 AP，.+ 獲得 1 分/, replace: '🙌 $1 lent $2 a hand: $2\'s next step this month costs 2 AP less; $1 gains 1 point' },
         { regex: /🙌 (.+) 幫 (.+) 搭把手：.+ 本月下一道工序少 2 AP/, replace: '🙌 $1 lent $2 a hand: $2\'s next step this month costs 2 AP less' },
+        { regex: /💪 (.+) 繼續幫 (.+) 趕工，.+ 回復體力（現有 (\d+)\/(\d+) AP）/, replace: '💪 $1 keeps helping $2 with the work; $2 recovers stamina (now $3/$4 AP)' },
+        { regex: /🔬 (.+) 成功對傳統工藝進行「科學轉譯」，獲得 2 份材料，可以送給還在造船的人/, replace: '🔬 $1 succeeded at "Scientific Translation": 2 materials to pass on to those still building' },
+        { regex: /🥾 (.+) 巡了一趟山，看過每一區的 Avaka，獲得 1 分/, replace: '🥾 $1 walked the hill and checked every Avaka plot: +1 point' },
+        { regex: /🛶 (.+) 為部落的船出了一份力（(\d+)\/(\d+)）/, replace: '🛶 $1 put in a share of work on the community boat ($2/$3)' },
+        { regex: /🛶 部落的船完成了！年底所有人獲得 (\d+) 分/, replace: '🛶 The community boat is finished! Everyone gains $1 points at the end of the year' },
+        { regex: /🛶 部落的船 (\d+)\/(\d+)：.+，所有人獲得 (\d+) 分/, replace: '🛶 Community boat $1/$2: everyone gains $3 point(s)' },
         { regex: /🤝 (.+) 將 1 份材料送給了 (.+)！/, replace: '🤝 $1 gave 1 material to $2!' },
         { regex: /(.+) 向Middle Generation (.+) 請益，獲得 (\d+) KP（本月請益的加分已達上限）/, replace: '$1 learned from Middle Generation $2: +$3 KP (asking points already at this month\'s limit)' },
         { regex: /(.+) 向耆老請益，獲得 (\d+) KP.*（本月請益的加分已達上限）/, replace: '$1 learned from the Elder: +$2 KP (asking points already at this month\'s limit)' },
@@ -891,6 +897,8 @@ function translateScoreBreakdown(breakdown) {
             .replace(/一起出海/g, 'Went fishing together')
             .replace(/分享收成/g, 'Shared the harvest')
             .replace(/搭把手/g, 'Lent a hand')
+            .replace(/部落的船/g, 'Community boat')
+            .replace(/巡山/g, 'Walked the hill')
             .replace(/參加招魚祭/g, 'Joined the fish-summoning ceremony')
             .replace(/幫忙燒貝灰/g, 'Helped burn shell lime')
             .replace(/講述/g, 'Storytelling');

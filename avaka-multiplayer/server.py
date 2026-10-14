@@ -223,6 +223,12 @@ def scoring_ask(player, month):
     player['ask_score_count'] += 1
     return True
 
+# Once a boat is finished its builder still has months of stamina. It goes into a boat for the whole
+# community: 1 AP a time at the shore, and everyone is rewarded at year's end by how far it got.
+TRIBE_BOAT_PER_PLAYER = 3
+TRIBE_BOAT_FULL_SCORE = 3
+TRIBE_BOAT_HALF_SCORE = 1
+
 def create_initial_state(room_code):
     return {
         'room_code': room_code,
@@ -230,6 +236,8 @@ def create_initial_state(room_code):
         'month': 1,
         'forest': FOREST_START,        # shared forest health, 0..FOREST_MAX
         'forest_tended': False,        # did anyone chop (tend the plots) this month?
+        'tribe_boat': 0,               # the boat everyone builds together once their own is done
+        'tribe_boat_goal': TRIBE_BOAT_PER_PLAYER,
         'mission': None,               # this month's group mission
         'players': {}, # socket_id -> player_data
         'logs': []
@@ -545,6 +553,8 @@ def handle_start():
         state['month'] = 1
         state['forest'] = FOREST_START
         state['forest_tended'] = False
+        state['tribe_boat'] = 0
+        state['tribe_boat_goal'] = TRIBE_BOAT_PER_PLAYER * len(state['players'])
         for p in state['players'].values():
             role_info = ROLES[p['role']]
             p['ap'] = role_info['max_ap']
@@ -595,10 +605,10 @@ def handle_action(data):
         # gather materials for others, give, guide and help.
         if player['finished']:
             allowed = action in ('move', 'give', 'teach', 'tell', 'help', 'plant', 'assist',
-                                 'quiz_answer', 'event_choice', 'minigame_result') or \
+                                 'translate', 'patrol', 'tribe', 'quiz_answer', 'event_choice', 'minigame_result') or \
                 (action == 'craft' and data.get('step') == 'chop')
             if not allowed:
-                emit('error', {'msg': '你的船已經完工了！接下來可以砍伐備料、補種、贈送材料、指導或幫忙其他人。'})
+                emit('error', {'msg': '你的船已經完工了！接下來可以砍伐備料、補種、巡山、贈送材料、指導、幫忙其他人，或為部落的船出力。'})
                 return
 
         def consume_ap(cost):
@@ -969,7 +979,8 @@ def handle_action(data):
 
         elif action == 'help':
             if player['role'] == 'elder': return
-            if player.get('help_month', 0) == month:
+            again = player.get('help_month', 0) == month
+            if again and not player['finished']:
                 emit('error', {'msg': '這個月已經幫忙過長者了，下個月再來！'})
                 return
             elders = [p for p in state['players'].values()
@@ -987,10 +998,14 @@ def handle_action(data):
                 player.setdefault('stats', new_stats())['help'] += 1
                 award_badge(player, 'help', room_code)
                 mission_progress(state, room_code, 'help')
-                help_score = 2 if month == 6 else 1
-                player['score'] += help_score
-                player['score_breakdown'].append(f"幫忙長者 (+{help_score})")
-                add_log(room_code, f"💪 {player['name']} 幫 {elder['name']} 分擔粗重的工作，{elder['name']} 回復體力（現有 {elder['ap']}/{elder['max_ap']} AP），{player['name']} 獲得 {help_score} 分")
+                if again:
+                    # with their own boat done they can keep helping all month; the point was already given
+                    add_log(room_code, f"💪 {player['name']} 繼續幫 {elder['name']} 趕工，{elder['name']} 回復體力（現有 {elder['ap']}/{elder['max_ap']} AP）")
+                else:
+                    help_score = 2 if month == 6 else 1
+                    player['score'] += help_score
+                    player['score_breakdown'].append(f"幫忙長者 (+{help_score})")
+                    add_log(room_code, f"💪 {player['name']} 幫 {elder['name']} 分擔粗重的工作，{elder['name']} 回復體力（現有 {elder['ap']}/{elder['max_ap']} AP），{player['name']} 獲得 {help_score} 分")
                 action_done = True
 
         elif action == 'quiz_answer':
@@ -1075,6 +1090,45 @@ def handle_action(data):
                 add_log(room_code, f"🌱 {player['name']} 在山林補種了 Avaka、照顧林地（下個月起第一次砍伐多得 1 份材料）")
                 action_done = True
 
+        elif action == 'patrol':
+            if player['location'] != '山林':
+                emit('error', {'msg': '巡山必須在山林'})
+                return
+            if month == 2:
+                emit('error', {'msg': '飛魚禁令：這個月禁止在山林工作！'})
+                return
+            if player.get('patrol_month', 0) == month:
+                emit('error', {'msg': '這個月已經巡過山了，下個月再來！'})
+                return
+            if consume_ap(1):
+                player['patrol_month'] = month
+                state['forest_tended'] = True
+                player.setdefault('stats', new_stats())['plant'] += 1
+                award_badge(player, 'forest', room_code)
+                mission_progress(state, room_code, 'forest')
+                player['score'] += 1
+                player['score_breakdown'].append("巡山 (+1)")
+                add_log(room_code, f"🥾 {player['name']} 巡了一趟山，看過每一區的 Avaka，獲得 1 分")
+                action_done = True
+
+        elif action == 'tribe':
+            if not player['finished']:
+                emit('error', {'msg': '要等自己的船完工，才有餘力為部落的船出力'})
+                return
+            if player['location'] != '灘頭工作室':
+                emit('error', {'msg': '部落的船在灘頭工作室'})
+                return
+            goal = state.get('tribe_boat_goal', TRIBE_BOAT_PER_PLAYER)
+            if state.get('tribe_boat', 0) >= goal:
+                emit('error', {'msg': '部落的船已經完成了！'})
+                return
+            if consume_ap(1):
+                state['tribe_boat'] = state.get('tribe_boat', 0) + 1
+                add_log(room_code, f"🛶 {player['name']} 為部落的船出了一份力（{state['tribe_boat']}/{goal}）")
+                if state['tribe_boat'] >= goal:
+                    add_log(room_code, f"🛶 部落的船完成了！年底所有人獲得 {TRIBE_BOAT_FULL_SCORE} 分")
+                action_done = True
+
         elif action == 'assist':
             target_p = state['players'].get(data.get('target_id'))
             if not target_p or target_p['id'] == player['id']: return
@@ -1115,7 +1169,13 @@ def handle_action(data):
                     base_prob = min(1.0, max(0.2, base_prob))
                     success = (random.random() <= base_prob)
 
-                if success:
+                if success and player['finished']:
+                    # with the boat done, translating still yields material to pass on, but no more points
+                    player['materials'] += 2
+                    player.setdefault('stats', new_stats())['translate'] += 1
+                    award_badge(player, 'translate', room_code)
+                    add_log(room_code, f"🔬 {player['name']} 成功對傳統工藝進行「科學轉譯」，獲得 2 份材料，可以送給還在造船的人")
+                elif success:
                     score = 4
                     player['score'] += score
                     player['materials'] += 2
@@ -1162,6 +1222,13 @@ def handle_toggle_ready():
                     for p in state['players'].values():
                         p['score'] += 2
                         p['score_breakdown'].append("照顧山林 (+2)")
+                boat, goal = state.get('tribe_boat', 0), state.get('tribe_boat_goal', TRIBE_BOAT_PER_PLAYER)
+                boat_score = TRIBE_BOAT_FULL_SCORE if boat >= goal else TRIBE_BOAT_HALF_SCORE if boat * 2 >= goal else 0
+                if boat_score:
+                    add_log(room_code, f"🛶 部落的船 {boat}/{goal}：{'大家一起把它造完了' if boat >= goal else '造了一半以上'}，所有人獲得 {boat_score} 分")
+                    for p in state['players'].values():
+                        p['score'] += boat_score
+                        p['score_breakdown'].append(f"部落的船 (+{boat_score})")
                 for p in state['players'].values():
                     if not p['finished']:
                         p['ending'] = ENDINGS['tier5']

@@ -4,17 +4,20 @@
 /* While the new lobby is up it replaces these: the original lobby underneath, the page's own
    language and music buttons, and the custom cursor. */
 body.newui #lobby { visibility: hidden; }
-body.lobby2-on #lang-btn,
-body.lobby2-on #music-btn,
-body.lobby2-on #cursor-dot,
-body.lobby2-on #cursor-halo,
-body.lobby2-on #cursor-leaf,
-body.lobby2-on .cursor-ripple { display: none !important; }
+body.newui #game { visibility: hidden; }
+body.game2-on { overflow: hidden; }
+body.lobby2-on #lang-btn, body.game2-on #lang-btn,
+body.lobby2-on #music-btn, body.game2-on #music-btn,
+body.lobby2-on #cursor-dot, body.game2-on #cursor-dot,
+body.lobby2-on #cursor-halo, body.game2-on #cursor-halo,
+body.lobby2-on #cursor-leaf, body.game2-on #cursor-leaf,
+body.lobby2-on .cursor-ripple, body.game2-on .cursor-ripple { display: none !important; }
 
 /* With the custom cursor put away, anything that opens over the lobby (the rules, a toast) needs the
    ordinary pointer back; the page otherwise hides it everywhere. */
-body.lobby2-on, body.lobby2-on * { cursor: auto !important; }
+body.lobby2-on, body.lobby2-on *, body.game2-on, body.game2-on * { cursor: auto !important; }
 body.lobby2-on a, body.lobby2-on button, body.lobby2-on [role=button], body.lobby2-on summary, body.lobby2-on label[for] { cursor: pointer !important; }
+body.game2-on a, body.game2-on button, body.game2-on [role=button], body.game2-on summary, body.game2-on label[for] { cursor: pointer !important; }
 
 /* ── Avatar creator: the same plant-and-fibre world as the lobby ── */
 body.newui #avatar-screen.active {
@@ -84,3 +87,114 @@ body.newui #avatar-screen :focus-visible { outline: 2px solid #b6e268; outline-o
 /* the highlighted accessory group keeps its emphasis, in this palette */
 body.newui #avatar-screen .avatar-ctrl-group[style*="56,189,248"] { border-color: #7c5a30 !important; }
 body.newui #avatar-screen .avatar-ctrl-group[style*="56,189,248"] .avatar-ctrl-label { color: #d2a45c !important; }
+
+/* ═════════════ Pop-ups and the year-end screen, in the same world ═════════════
+   These are drawn by app.js with its own colour variables and a good deal of inline styling. The
+   variables are re-pointed here, and the rest is overridden where the old look was written inline. */
+body.newui {
+    --primary: #b6e268; --primary-hover: #cdf08a; --secondary: #d2a45c; --danger: #e59a78; --danger-hover: #f0ad8d;
+    --text-main: #efe6cf; --text-muted: #b9b196; --glass-bg: #13221a; --glass-border: #2e4737; --panel-bg: #13221a;
+    background: #0c1610;
+}
+/* the sea, the light rays, falling leaves and the burst behind the results belong to the old look */
+body.newui .bg-layer, body.newui #light-rays-canvas, body.newui .effects-container, body.newui #prismatic-burst-canvas { display: none !important; }
+
+body.newui .modal-overlay,
+body.newui #quiz-modal, body.newui #event-choice-modal, body.newui #minigame-modal {
+    background: rgba(5, 10, 7, 0.8) !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+    font-family: 'Noto Sans TC', 'PingFang TC', sans-serif;
+}
+body.newui .modal-content.glass, body.newui #app > .screen > .glass,
+body.newui #quiz-modal > div, body.newui #event-choice-modal > div, body.newui #minigame-modal > div,
+body.newui .event-card {
+    background: linear-gradient(180deg, #18281e, #0c1610 46%) !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+    border: 1px solid #2e4737 !important; border-radius: 10px !important; color: #efe6cf !important;
+    box-shadow: inset 0 1px 0 rgba(239, 230, 207, 0.09), 0 18px 30px -12px rgba(0, 0, 0, 0.55), 0 50px 90px -40px rgba(0, 0, 0, 0.8) !important;
+}
+body.newui .modal-content h2, body.newui #quiz-modal h3, body.newui #event-choice-modal h3, body.newui #minigame-modal h3 {
+    font-family: 'Noto Serif TC', 'Songti TC', serif; font-weight: 700; letter-spacing: 0.04em; color: #efe6cf !important; text-shadow: none !important; border-bottom-color: #2e4737;
+}
+body.newui .modal-content .btn, body.newui #app .btn {
+    border-radius: 6px !important; font-weight: 700; letter-spacing: 0.05em !important; text-transform: none !important; box-shadow: none !important; animation: none !important;
+    transition: background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+body.newui .modal-content .btn.primary, body.newui #app .btn.primary { background: #b6e268; color: #0c1610; border: 1px solid #b6e268; }
+body.newui .modal-content .btn.primary:hover, body.newui #app .btn.primary:hover { background: #cdf08a; transform: translateY(-1px); }
+body.newui .modal-content .btn.secondary, body.newui .modal-content .btn.outline { background: transparent; color: #efe6cf; border: 1px solid #4d6b58; }
+body.newui .modal-content .btn.secondary:hover, body.newui .modal-content .btn.outline:hover { background: rgba(239, 230, 207, 0.06); border-color: #efe6cf; transform: none; }
+body.newui .modal-overlay :focus-visible, body.newui #quiz-modal :focus-visible, body.newui #event-choice-modal :focus-visible, body.newui #minigame-modal :focus-visible, body.newui #app :focus-visible { outline: 2px solid #b6e268; outline-offset: 2px; }
+body.newui .rules-scroll-area, body.newui .custom-scrollbar { scrollbar-color: #5f9a45 transparent; }
+
+/* ── the card that opens each month: a plain sheet, no gilt frame ── */
+body.newui .event-card-container { perspective: none; }
+body.newui .event-card { animation: newui-rise 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important; padding: 0 !important; overflow: hidden; }
+@keyframes newui-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+body.newui .event-card > div[style*="top: -16px"],
+body.newui .event-card div[style*="width: 22px; height: 22px"],
+body.newui .event-card span[style*="letter-spacing: 2px"] { display: none !important; }
+body.newui .event-card > div[style*="border: 1px solid rgba(197,160,89"] { border: 0 !important; }
+body.newui .event-card div[style*="radial-gradient"] { background-image: none !important; padding: 1.6rem 1.8rem !important; }
+body.newui .event-card div[style*="border-bottom: 1px dashed"] { border-bottom: 1px solid #2e4737 !important; }
+body.newui .event-card h2 { font-family: 'Noto Serif TC', 'Songti TC', serif; font-size: 1.45rem !important; color: #efe6cf !important; text-shadow: none !important; letter-spacing: 0.04em !important; }
+body.newui .event-card div[style*="border-left: 3px solid"] { border: 1px solid #2e4737 !important; background: #13221a !important; border-radius: 6px !important; box-shadow: none !important; }
+body.newui .event-card div[style*="border-left: 3px solid"] strong { color: #d2a45c !important; text-transform: none !important; letter-spacing: 0.04em !important; font-size: 0.85rem !important; }
+body.newui .event-card div[style*="border-left: 3px solid"] span { color: #efe6cf !important; font-size: 1rem !important; }
+body.newui .event-card div[style*="border-left: 4px solid"] { border: 1px solid #7c5a30 !important; background: rgba(210, 164, 92, 0.08) !important; border-radius: 6px !important; box-shadow: none !important; }
+body.newui .event-card h4 { color: #d2a45c !important; text-transform: none !important; letter-spacing: 0.06em !important; }
+body.newui .event-card div[style*="border-left: 4px solid"] p { color: #efe6cf !important; }
+body.newui .event-card .btn { padding: 0.85rem !important; font-size: 1rem !important; }
+body.newui .modal-content .btn.primary, body.newui #app .btn.primary { color: #0c1610 !important; text-shadow: none !important; }
+
+/* ── quiz, event card, timing game ── */
+body.newui #quiz-modal p, body.newui #event-choice-modal p { color: #efe6cf !important; }
+body.newui #quiz-modal p[style*="#94a3b8"], body.newui #minigame-modal p[style*="#94a3b8"], body.newui #quiz-modal p[style*="#cbd5e1"] { color: #b9b196 !important; }
+body.newui #quiz-modal p[style*="#86efac"] { color: #b6e268 !important; }
+body.newui #quiz-modal p[style*="#fca5a5"] { color: #e59a78 !important; }
+body.newui #quiz-modal p[style*="#fde68a"] { color: #d2a45c !important; font-weight: 700; }
+body.newui #quiz-modal button, body.newui #event-choice-modal button, body.newui #minigame-modal button {
+    background: #1c3023 !important; border: 1px solid #2e4737 !important; border-radius: 6px !important; color: #efe6cf !important;
+    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+body.newui #quiz-modal button:hover, body.newui #event-choice-modal button:hover, body.newui #minigame-modal button:hover { border-color: #b6e268 !important; }
+body.newui #event-choice-modal button span { color: #b9b196 !important; }
+body.newui #minigame-modal #mg-go { background: #b6e268 !important; border-color: #b6e268 !important; color: #0c1610 !important; }
+body.newui #minigame-modal #mg-skip { background: transparent !important; color: #b9b196 !important; }
+body.newui #minigame-modal #mg-pointer { background: #efe6cf !important; box-shadow: none !important; }
+body.newui #minigame-modal #mg-msg[style*="rgb(134, 239, 172)"] { color: #b6e268 !important; }
+body.newui #minigame-modal #mg-msg[style*="rgb(252, 165, 165)"] { color: #e59a78 !important; }
+
+/* ── knowledge base, calendar note, the two voices before finishing at the store ── */
+body.newui #kb-content strong, body.newui #lore-content strong { color: #efe6cf; }
+body.newui #lore-content > div[style*="border-left"], body.newui #shop-confirm-content p[style*="border-left"] { border: 1px solid #7c5a30 !important; background: rgba(210, 164, 92, 0.08) !important; border-radius: 6px !important; }
+body.newui #shop-confirm-content strong { color: #d2a45c !important; }
+body.newui #lore-subtitle { color: #d2a45c !important; }
+body.newui .kb-tab-btn { border-radius: 6px !important; }
+
+/* ── a message from the game ── */
+body.newui #toast-container > div {
+    background: #1c3023 !important; color: #efe6cf !important; border: 1px solid #d2a45c; border-radius: 6px !important; font-weight: 500 !important;
+    box-shadow: 0 14px 28px -14px rgba(0, 0, 0, 0.8) !important; font-family: 'Noto Sans TC', 'PingFang TC', sans-serif;
+}
+
+/* ── leaving the game ── */
+body.newui div:has(> div > div > #leave-confirm-btn) { background: rgba(5, 10, 7, 0.8) !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; cursor: auto !important; }
+body.newui div:has(> div > #leave-confirm-btn) { background: linear-gradient(180deg, #18281e, #0c1610 46%) !important; border: 1px solid #2e4737 !important; border-radius: 10px !important; box-shadow: 0 18px 30px -12px rgba(0, 0, 0, 0.55) !important; }
+body.newui div:has(> div > #leave-confirm-btn) > div:first-child { display: none; }
+body.newui div:has(> div > #leave-confirm-btn) h3 { color: #efe6cf !important; font-family: 'Noto Serif TC', 'Songti TC', serif; }
+body.newui div:has(> div > #leave-confirm-btn) p { color: #b9b196 !important; }
+body.newui #leave-cancel-btn { border-radius: 6px !important; border: 1px solid #4d6b58 !important; background: transparent !important; color: #efe6cf !important; }
+body.newui #leave-confirm-btn { border-radius: 6px !important; border: 1px solid #e59a78 !important; background: transparent !important; color: #e59a78 !important; }
+
+/* ── the end of the year ── */
+body.newui #app > .screen { font-family: 'Noto Sans TC', 'PingFang TC', sans-serif; }
+body.newui #app > .screen > .glass { text-align: left !important; max-width: 920px !important; }
+body.newui #app > .screen > .glass > h1 { font-size: 1.9rem !important; letter-spacing: 0.08em !important; color: #efe6cf !important; text-shadow: none !important; margin-bottom: 1.4rem !important; }
+body.newui #app > .screen > .glass div[style*="border-left: 5px solid"],
+body.newui #app > .screen > .glass div[style*="border-left: 4px solid"] { border: 1px solid #2e4737 !important; background: #13221a !important; border-radius: 8px !important; color: #efe6cf !important; }
+body.newui #app > .screen > .glass div[style*="border-left: 5px solid var(--secondary)"] { border-color: #d2a45c !important; }
+body.newui #app > .screen > .glass div[style*="rgba(255,255,255,0.05)"] { background: rgba(239, 230, 207, 0.04) !important; }
+body.newui #app > .screen > .glass [style*="#7dd3fc"], body.newui #app > .screen > .glass [style*="#c4b5fd"], body.newui #app > .screen > .glass [style*="#fca5a5"] { color: #efe6cf !important; }
+body.newui #app > .screen > .glass [style*="color: #94a3b8"], body.newui #app > .screen > .glass [style*="color:#94a3b8"] { color: #b9b196 !important; }
+body.newui #app > .screen > .glass [style*="rgba(56,189,248,0.2)"] { border-bottom-color: #2e4737 !important; }
+body.newui #app > .screen > .glass canvas { background: #0c1610 !important; border-color: #2e4737 !important; border-radius: 8px !important; }
+body.newui #app > .screen > .glass span[style*="border-radius:12px"] { border-radius: 4px !important; }
