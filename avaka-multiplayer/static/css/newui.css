@@ -1,0 +1,86 @@
+/* New-look overrides for the parts of the page that sit outside the lobby's shadow root.
+   Everything here is scoped to body.newui, which js/lobby.js sets; with ?ui=old it is never set. */
+
+/* While the new lobby is up it replaces these: the original lobby underneath, the page's own
+   language and music buttons, and the custom cursor. */
+body.newui #lobby { visibility: hidden; }
+body.lobby2-on #lang-btn,
+body.lobby2-on #music-btn,
+body.lobby2-on #cursor-dot,
+body.lobby2-on #cursor-halo,
+body.lobby2-on #cursor-leaf,
+body.lobby2-on .cursor-ripple { display: none !important; }
+
+/* With the custom cursor put away, anything that opens over the lobby (the rules, a toast) needs the
+   ordinary pointer back; the page otherwise hides it everywhere. */
+body.lobby2-on, body.lobby2-on * { cursor: auto !important; }
+body.lobby2-on a, body.lobby2-on button, body.lobby2-on [role=button], body.lobby2-on summary, body.lobby2-on label[for] { cursor: pointer !important; }
+
+/* ── Avatar creator: the same plant-and-fibre world as the lobby ── */
+body.newui #avatar-screen.active {
+    position: fixed; inset: 0; z-index: 400; overflow-y: auto; padding: clamp(1rem, 3vw, 2.5rem);
+    background:
+        radial-gradient(120% 70% at 28% -10%, rgba(239, 230, 207, 0.085), transparent 60%),
+        repeating-linear-gradient(90deg, transparent 0 37px, rgba(210, 164, 92, 0.055) 37px 38px, transparent 38px 91px, rgba(239, 230, 207, 0.035) 91px 92px, transparent 92px 143px),
+        #0c1610;
+    font-family: 'Noto Sans TC', 'PingFang TC', sans-serif;
+}
+body.newui #avatar-screen .lobby-card {
+    position: relative; max-width: 960px !important; margin-top: 0 !important; padding: clamp(1.25rem, 2.6vw, 2.25rem) !important;
+    background: linear-gradient(180deg, rgba(24, 40, 30, 0.95), rgba(12, 22, 16, 0.95) 46%);
+    -webkit-backdrop-filter: none; backdrop-filter: none;
+    border: 1px solid #2e4737; border-radius: 10px; overflow: hidden; animation: none; transform: none;
+    box-shadow: inset 0 1px 0 rgba(239, 230, 207, 0.09), 0 2px 4px rgba(0, 0, 0, 0.35), 0 18px 30px -12px rgba(0, 0, 0, 0.5), 0 50px 90px -40px rgba(0, 0, 0, 0.75);
+}
+/* the woven selvedge along the top edge, as on the lobby panel */
+body.newui #avatar-screen .lobby-card::before {
+    content: ''; position: absolute; left: 0; right: 0; top: 0; height: 6px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='6'%3E%3Crect width='14' height='6' fill='%237c5a30'/%3E%3Cpath d='M-1 7 6 -1M6 7 13 -1M13 7 20 -1' stroke='%23d9c08f' stroke-width='1' opacity='.5'/%3E%3C/svg%3E") repeat-x;
+}
+body.newui #avatar-screen h2 {
+    font-family: 'Noto Serif TC', 'Songti TC', serif; font-weight: 700; font-size: 1.45rem !important; letter-spacing: 0.05em;
+    color: #efe6cf !important; text-align: left !important; text-shadow: none; margin: 0.3rem 0 0.2rem !important;
+}
+body.newui #avatar-role-name-label { text-align: left !important; color: #d2a45c !important; font-size: 0.92rem !important; }
+body.newui #avatar-screen p { color: #b9b196 !important; }
+body.newui #avatar-canvas {
+    background: #0c1610 !important; border: 1px solid #2e4737 !important; border-radius: 8px !important;
+    box-shadow: 0 14px 24px -12px rgba(0, 0, 0, 0.75) !important;
+}
+body.newui #avatar-controls { scrollbar-color: #5f9a45 #13221a; }
+body.newui #avatar-screen .avatar-ctrl-group {
+    background: linear-gradient(180deg, #1c3023, #13221a 55%) !important; border: 1px solid #2e4737 !important; border-radius: 6px;
+    padding: 0.8rem 0.95rem !important; box-shadow: inset 0 1px 0 rgba(239, 230, 207, 0.06);
+}
+body.newui #avatar-screen .avatar-ctrl-label {
+    font-family: 'Noto Serif TC', 'Songti TC', serif; font-size: 0.92rem !important; font-weight: 700 !important;
+    color: #efe6cf !important; text-transform: none; letter-spacing: 0.04em;
+}
+body.newui #avatar-screen .avatar-ctrl-group > div:not(.avatar-btn-row):not(.avatar-swatch-row) { color: #b9b196 !important; }
+body.newui #avatar-screen .avatar-opt {
+    background: #13221a; border: 1px solid #2e4737; border-radius: 4px; color: #b9b196;
+    font-weight: 500; font-size: 0.82rem; padding: 0.5rem 0.4rem; box-shadow: none;
+    transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+/* longer labels (English) wrap inside their button instead of spilling out of it */
+body.newui #avatar-screen .avatar-btn-row { display: flex; flex-wrap: wrap !important; gap: 0.4rem; }
+body.newui #avatar-screen .avatar-opt {
+    flex: 1 1 4.6rem !important; min-width: 0 !important; min-height: 2.5rem; display: flex; align-items: center; justify-content: center;
+    white-space: normal; overflow-wrap: break-word; line-height: 1.25; text-align: center;
+}
+body.newui #avatar-screen .avatar-opt:hover { background: #1c3023; border-color: #4d6b58; color: #efe6cf; }
+body.newui #avatar-screen .avatar-opt.selected { background: #1c3023; border-color: #b6e268; color: #b6e268; box-shadow: none; }
+body.newui #avatar-screen .swatch { box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); }
+body.newui #avatar-screen .swatch.selected { border-color: #b6e268; box-shadow: 0 0 0 2px #0c1610, 0 0 0 4px #b6e268; transform: scale(1.06); }
+body.newui #avatar-screen .btn {
+    border-radius: 4px; font-family: inherit; font-weight: 700; letter-spacing: 0.08em; padding: 0.85rem 1.4rem; text-shadow: none; animation: none;
+    transition: background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+body.newui #avatar-confirm-btn { background: #b6e268 !important; color: #0c1610 !important; border: 1px solid #b6e268 !important; box-shadow: 0 8px 18px -8px rgba(0, 0, 0, 0.7) !important; }
+body.newui #avatar-confirm-btn:hover { background: #cdf08a !important; transform: translateY(-1px); }
+body.newui #avatar-back-btn { background: transparent !important; color: #efe6cf !important; border: 1px solid #4d6b58 !important; box-shadow: none !important; }
+body.newui #avatar-back-btn:hover { border-color: #efe6cf !important; background: rgba(239, 230, 207, 0.06) !important; }
+body.newui #avatar-screen :focus-visible { outline: 2px solid #b6e268; outline-offset: 3px; }
+/* the highlighted accessory group keeps its emphasis, in this palette */
+body.newui #avatar-screen .avatar-ctrl-group[style*="56,189,248"] { border-color: #7c5a30 !important; }
+body.newui #avatar-screen .avatar-ctrl-group[style*="56,189,248"] .avatar-ctrl-label { color: #d2a45c !important; }
