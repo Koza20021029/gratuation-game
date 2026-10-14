@@ -190,7 +190,7 @@
   const host = document.createElement('div');
   host.id = 'game2'; host.hidden = true;
   const root = host.attachShadow({ mode: 'open' });
-  root.innerHTML = '<link rel="stylesheet" href="css/game-ui.css?v=20261014_7"><div class="g" id="g"></div>';     // fixed markup, no user input
+  root.innerHTML = '<link rel="stylesheet" href="css/game-ui.css?v=20261014_10"><div class="g" id="g"></div>';     // fixed markup, no user input
   document.body.appendChild(host);
   const $ = id => root.getElementById(id);
   const old = id => document.getElementById(id);
