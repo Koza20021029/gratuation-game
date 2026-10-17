@@ -1,0 +1,14 @@
+# Render 部署設定：讓《Avaka：島嶼的維度》放上網路，不同網路的玩家也能連線。
+# 房間都存在伺服器記憶體裡，所以只能跑一台；伺服器重啟或睡著時，進行中的房間會消失。
+services:
+  - type: web
+    name: avaka
+    runtime: python
+    plan: free
+    rootDir: avaka-multiplayer
+    buildCommand: pip install -r requirements.txt
+    startCommand: python server.py
+    healthCheckPath: /
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
