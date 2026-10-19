@@ -23,7 +23,7 @@
     strands = [];
     for (let x = -gap; x < W + gap; x += gap) {
       // taller toward the edges, so the middle stays a clearing for the words
-      const edge = Math.min(1, Math.abs(x - W / 2) / (W / 2));
+      const edge = Math.min(1, Math.abs(x - W / 2) / Math.max(1, W / 2));   // a tab opened in the background can start at zero width
       strands.push({ x: x + (Math.random() - 0.5) * gap, len: (0.28 + edge * 0.5 + Math.random() * 0.22), phase: Math.random() * 6.28,
         speed: 0.45 + Math.random() * 0.5, tone: (Math.random() * 5) | 0, w: 0.6 + Math.random() * 1, alpha: 0.18 + Math.random() * 0.32,
         push: 0, delay: Math.random() * 0.9 + edge * 0.4, z: Math.random() < 0.15 ? 1.6 : Math.random() < 0.5 ? 0.6 : 1 });
@@ -63,16 +63,17 @@
     }
     g.globalAlpha = 1;
     ptr.vx *= 0.9;
-    if (!still) requestAnimationFrame(frame);
+    if (!still) requestAnimationFrame(safeFrame);
   }
+  const safeFrame = now => { try { frame(now); } catch (e) { build(); requestAnimationFrame(safeFrame); } };
 
   build();
   addEventListener('resize', build);
   addEventListener('pointermove', e => { const v = e.clientX - ptr.x; ptr.vx = Math.abs(v) < 400 ? v : 0; ptr.x = e.clientX; ptr.y = e.clientY; ptr.on = true; });
   document.addEventListener('mouseleave', () => { ptr.on = false; });
   addEventListener('pointerup', e => { if (e.pointerType !== 'mouse') ptr.on = false; });
-  requestAnimationFrame(frame);
-  if (still) frame(performance.now());
+  requestAnimationFrame(safeFrame);
+  if (still) safeFrame(performance.now());
 
   // ── the name sways with the hand, like fibre in the wind; now and then a light runs through it ──
   const letters = [...document.querySelectorAll('.cover-title .sw')];
