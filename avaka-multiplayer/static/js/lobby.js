@@ -31,7 +31,7 @@ const LOBBY_HTML = `
       <p class="lede">一株植物，六道工序，一條能讓船出海的繩。這一年，你要親手把它做出來。</p>
       <p class="hint">
         <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M4 3v16M9 3c0 6 4 6 4 12v4M18 3v16"/></svg>
-        <span><span id="hint-text">用手撥撥看這些纖維；按住拖一圈，可以把它們捻成繩</span><button type="button" class="show-me" id="show-me">看示範</button></span>
+        <span><span id="hint-text">用手撥撥看這些纖維；按住拖一圈，可以把它們撚成繩</span><button type="button" class="show-me" id="show-me">看示範</button></span>
       </p>
     </div>
 
@@ -48,7 +48,7 @@ const LOBBY_HTML = `
         <li><button type="button" data-mode="rub" aria-pressed="false"><span class="n">2</span>摩擦軟化</button></li>
         <li><button type="button" data-mode="strip" aria-pressed="false"><span class="n">3</span>劃痕撕絲</button></li>
         <li><button type="button" data-mode="dry" aria-pressed="false"><span class="n">4</span>曝曬乾燥</button></li>
-        <li><button type="button" data-mode="twist" aria-pressed="false"><span class="n">5</span>理線捻繩</button></li>
+        <li><button type="button" data-mode="twist" aria-pressed="false"><span class="n">5</span>理線撚繩</button></li>
         <li><button type="button" data-mode="caulk" aria-pressed="false"><span class="n">6</span>填縫完工</button></li>
       </ol>
       <p class="step-says" id="step-says" aria-live="polite">把游標移到任何一道工序上，看纖維怎麼變。</p>
@@ -117,7 +117,7 @@ const LOBBY_HTML = `
    <div class="waiting" id="waiting" hidden>
     <h2>等大家到齊</h2>
     <div class="code-row"><span class="code" id="w-code">K7QM</span><button type="button" class="copy" id="b-copy">複製</button></div>
-    <p class="sub">把這四個字告訴同組的人。每個人是一股纖維，到齊了才捻得成繩。</p>
+    <p class="sub">把這四個字告訴同組的人。每個人是一股纖維，到齊了才撚得成繩。</p>
     <canvas id="rope" aria-hidden="true"></canvas>
     <ul class="members" id="members"></ul>
     <p class="together" id="together" aria-live="polite"></p>
@@ -350,7 +350,7 @@ const LOBBY_HTML = `
     rub: '摩擦軟化：把葉鞘掛在樹枝上，抓住兩端來回摩擦，讓它變軟。',
     strip: '劃痕撕絲：用小刀在葉鞘上劃開，把纖維一絲絲撕出來。',
     dry: '曝曬乾燥：掛在通風有太陽的地方曬乾，潮濕會讓它腐爛。',
-    twist: '理線捻繩：把曬乾的纖維理順，兩股互相搓捻成繩。',
+    twist: '理線撚繩：把曬乾的纖維理順，兩股互相搓撚成繩。',
     caulk: '填縫完工：把纖維塞進船板之間的縫，遇水膨脹，船就不漏。'
   };
   const ORDER = ['cut', 'rub', 'strip', 'dry', 'twist', 'caulk'];
@@ -635,20 +635,20 @@ const LOBBY_HTML = `
   const TEXT = {
     zh: {
       binomial: 'Musa textilis，馬尼拉麻', titleTc: '島嶼的維度', lede: '一株植物，六道工序，一條能讓船出海的繩。這一年，你要親手把它做出來。',
-      hint: '用手撥撥看這些纖維；按住拖一圈，可以把它們捻成繩', showMe: '看示範', idle: '把游標移到任何一道工序上，看纖維怎麼變。',
-      steps: ['砍伐剝皮', '摩擦軟化', '劃痕撕絲', '曝曬乾燥', '理線捻繩', '填縫完工'], finale: '一株植物，成了一條繩。這就是你接下來一年要走的路。',
+      hint: '用手撥撥看這些纖維；按住拖一圈，可以把它們撚成繩', showMe: '看示範', idle: '把游標移到任何一道工序上，看纖維怎麼變。',
+      steps: ['砍伐剝皮', '摩擦軟化', '劃痕撕絲', '曝曬乾燥', '理線撚繩', '填縫完工'], finale: '一株植物，成了一條繩。這就是你接下來一年要走的路。',
       h2: '你是誰，要去哪一間工作室', nameLabel: '你的名字', namePh: '例如：小明', roleLegend: '你的角色', ap: '體力', kp: '技術',
       name_elder: '資深工匠', aka_elder: '耆老', does_elder: '什麼都會，體力有限。把話傳下去的人。',
       name_youth: '文化復振青年', aka_youth: '青年', does_youth: '走得快、體力好，但一切要從開口問開始。',
       name_middle: '中生代', aka_middle: '中生代工匠', does_middle: '小時候看過老人家怎麼做，學得快，也傳得快。',
       roomPh: '房間代碼（4 碼）', join: '加入房間', create: '自己開一間新的', rules: '先看遊戲規則與流程',
-      waitH2: '等大家到齊', waitSub: '把這四個字告訴同組的人。每個人是一股纖維，到齊了才捻得成繩。', copy: '複製', copied: '已複製',
+      waitH2: '等大家到齊', waitSub: '把這四個字告訴同組的人。每個人是一股纖維，到齊了才撚得成繩。', copy: '複製', copied: '已複製',
       start: '開始這一年', back: '離開這個房間',
-      meMark: '（你）', alone: '你先到了。把房間代碼給同組的人。', together: '{n} 個人到了，纖維開始捻在一起。',
+      meMark: '（你）', alone: '你先到了。把房間代碼給同組的人。', together: '{n} 個人到了，纖維開始撚在一起。',
       needName: '請先輸入名字。', needRole: '請先選一個角色。', needCode: '房間代碼是 4 個字。',
       plant: '<b>Avaka</b>（馬尼拉麻，<i>Musa textilis</i>）是芭蕉科的植物，長得像香蕉樹，高約 2.5 到 8 公尺。它叫「麻」，用的其實是葉鞘的纖維，強韌又耐海水。原產菲律賓，蘭嶼是它自然分布的北界之一。',
       plantLabel: '這株馬尼拉麻是什麼', tMusic: '背景音樂', tSfx: '音效', tTheme: '白天／夜晚',
-      demo1: '滑過去，纖維會被撥開', demo2: '按住拖曳，把它們捻成繩', demo3: '點一道工序，看纖維怎麼做'
+      demo1: '滑過去，纖維會被撥開', demo2: '按住拖曳，把它們撚成繩', demo3: '點一道工序，看纖維怎麼做'
     },
     en: {
       binomial: 'Musa textilis, Manila hemp', titleTc: 'Dimensions of the Island', lede: 'One plant, six steps, one rope that lets a boat go to sea. This year you make it with your own hands.',

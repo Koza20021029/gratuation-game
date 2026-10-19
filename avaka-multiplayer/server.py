@@ -252,7 +252,7 @@ def generate_room_code():
 ENDINGS = {
     "tier1": {
         "title": "【傳承之靈】活著的拼板舟",
-        "text": "這艘船是活的。不僅僅一種比喻，而是真的活著。你花了整整一年，跟著走過祖先的同一條山路，身體記住了採集時該繞開哪棵樹、Avaka的纖維要朝哪個方向捻才不會斷。這些動作可能沒有被文字記錄，卻藏在族人身體的記憶之中，等待被喚醒。<br><br>後來，透過科學資料，證實了Avaka 纖維吸水之後會膨脹。你忽然明白，老人說「讓船呼吸」不只是一種想像，是造船的學問。當海水滲進縫隙，纖維膨脹後，船反而變得更緊實。可以拆，可以修，可以一塊一塊換掉，再一次出海。<br><br>那些你以為早已斷裂的記憶，其實只是靜靜地等著願意承接的人。<br><br>而這艘船會繼續航行，帶著耆老們說過的話，也帶著你找回的那些記憶。"
+        "text": "這艘船是活的。不僅僅一種比喻，而是真的活著。你花了整整一年，跟著走過祖先的同一條山路，身體記住了採集時該繞開哪棵樹、Avaka的纖維要朝哪個方向撚才不會斷。這些動作可能沒有被文字記錄，卻藏在族人身體的記憶之中，等待被喚醒。<br><br>後來，透過科學資料，證實了Avaka 纖維吸水之後會膨脹。你忽然明白，老人說「讓船呼吸」不只是一種想像，是造船的學問。當海水滲進縫隙，纖維膨脹後，船反而變得更緊實。可以拆，可以修，可以一塊一塊換掉，再一次出海。<br><br>那些你以為早已斷裂的記憶，其實只是靜靜地等著願意承接的人。<br><br>而這艘船會繼續航行，帶著耆老們說過的話，也帶著你找回的那些記憶。"
     },
     "tier2": {
         "title": "【協商之光】時代的橋樑",
@@ -291,7 +291,7 @@ MONTH_RULES = [
     {"month": 9, "name": "Kalimman", "desc": "飛魚終食祭：全部落參與祭儀，本月無法在商店完工。"},
     {"month": 10, "name": "Kaneman", "desc": "禁忌之月：不允許落成，本月任何方式都不能完工（填縫、機器加工、工業樹脂皆禁止）。"},
     {"month": 11, "name": "Kapitowan", "desc": "祭神月：回合開始時，若青年／中生代與耆老處於同一個地點，可自動獲得 2 點 KP。"},
-    {"month": 12, "name": "Kaowan", "desc": "手工藝月（最終衝刺）：「⑤理線捻繩」消耗 0 AP，而且⑤與⑥不必跨月等待，可以在本月接連完成。"}
+    {"month": 12, "name": "Kaowan", "desc": "手工藝月（最終衝刺）：「⑤理線撚繩」消耗 0 AP，而且⑤與⑥不必跨月等待，可以在本月接連完成。"}
 ]
 
 def add_log(room_code, msg):
@@ -720,7 +720,7 @@ def handle_action(data):
             # ---- Steps 4-6: Beach Workshop steps ----
             elif step in ('dry', 'twine', 'caulk'):
                 if player['location'] != '灘頭工作室':
-                    emit('error', {'msg': '曝曬乾燥、捻繩理線與填縫完工工序必須在灘頭工作室執行！'})
+                    emit('error', {'msg': '曝曬乾燥、撚繩理線與填縫完工工序必須在灘頭工作室執行！'})
                     return
                 sprint = month == 12 and step in ('twine', 'caulk')
                 if player.get('last_step_month', 0) >= month and not sprint:
@@ -743,10 +743,10 @@ def handle_action(data):
 
                 elif step == 'twine' and player['progress'] == 4:
                     if player['materials'] < 1:
-                        emit('error', {'msg': '理線捻繩需要 1 份材料'})
+                        emit('error', {'msg': '理線撚繩需要 1 份材料'})
                         return
                     if player['kp'] < 3:
-                        emit('error', {'msg': '理線捻繩需要 3 KP（傳統搓捻技藝）'})
+                        emit('error', {'msg': '理線撚繩需要 3 KP（傳統搓撚技藝）'})
                         return
                     if month == 12: cost = 0
                     paid = step_cost(cost)
@@ -755,7 +755,7 @@ def handle_action(data):
                         player['materials'] -= 1
                         player['progress'] = 5
                         player['last_step_month'] = month
-                        add_log(room_code, f"{player['name']} 完成了 ⑤理線捻繩 kolili (消耗 1 份材料)")
+                        add_log(room_code, f"{player['name']} 完成了 ⑤理線撚繩 oviden (消耗 1 份材料)")
                         mission_progress(state, room_code, 'steps')
                         action_done = True
 
@@ -764,7 +764,7 @@ def handle_action(data):
                         emit('error', {'msg': '禁忌之月：這是專門製作貝灰的月份，即便材料已齊備，現在也絕不能動工填縫！'})
                         return
                     if player['kp'] < 8:
-                        emit('error', {'msg': '填縫完工需要 8 KP（Mamaruk / tumbek su varuk）'})
+                        emit('error', {'msg': '填縫完工需要 8 KP（Mamaruk / tumbek su varok）'})
                         return
                     if player['materials'] < 1:
                         emit('error', {'msg': '填縫完工需要 1 份材料'})
@@ -829,7 +829,7 @@ def handle_action(data):
                         score += 3
                     player['score'] += score
                     player['score_breakdown'].append(f"機器加工天然纖維 (+{score})")
-                    add_log(room_code, f"{player['name']} 用機器加工 Avaka 纖維完工，獲得 {score} 分。船仍可拆修，但少了手工曝曬與捻繩的經驗。")
+                    add_log(room_code, f"{player['name']} 用機器加工 Avaka 纖維完工，獲得 {score} 分。船仍可拆修，但少了手工曝曬與撚繩的經驗。")
                     award_badge(player, 'finish', room_code)
                 else:
                     player['industrial'] = True

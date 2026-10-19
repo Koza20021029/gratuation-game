@@ -350,7 +350,7 @@ const translations = {
             chatSendBtn: '傳送',
             leaveGameBtn: '退出遊戲',
             leaveConfirm: '確定要退出遊戲嗎？',
-            steps: ['尚未開始', '①已砍伐剝皮', '②已摩擦軟化', '③已撕絲剝離', '④已曝曬乾燥', '⑤已理線捻繩', '✅ ⑥已填縫完工'],
+            steps: ['尚未開始', '①已砍伐剝皮', '②已摩擦軟化', '③已撕絲剝離', '④已曝曬乾燥', '⑤已理線撚繩', '✅ ⑥已填縫完工'],
             meTag: '你',
             giveBtn: '🎁 贈材料 (0 AP)',
             ap: 'AP:',
@@ -391,7 +391,7 @@ const translations = {
                     moveBtn: '移動至此 (1 AP)',
                     steps: {
                         dry: '④ 脫水曝曬乾燥 (3 AP | 需 1 材料)',
-                        twine: '⑤ 理線捻繩 kolili (3 AP | 需 3 KP + 1 材料 + 跨月乾燥)',
+                        twine: '⑤ 理線撚繩 oviden (3 AP | 需 3 KP + 1 材料 + 跨月乾燥)',
                         caulk: '⑥ 填縫完工 Mamaruk (3 AP | 需 8 KP + 1 材料 + 跨月乾燥)'
                     }
                 },
@@ -413,7 +413,7 @@ const translations = {
                 <h3>🎯 體力、知識與得分</h3>
                 <ul>
                     <li><strong>⚡ 行動點數 (AP) 與每月恢復：</strong> AP 代表體力與時間。六道工序各 3 AP（耆老執行⑥填縫 0 AP）、移動 1 AP（青年免費）、贈送材料 0 AP、幫忙長者 1 AP、科學轉譯 2 AP、遠程指導 2 AP，請益依對象 1 至 3 AP。每個月初只恢復一部分體力（青年 +6、中生代與耆老 +5，不超過上限）。</li>
-                    <li><strong>💡 技術點數 (KP)：</strong> 代表對傳統工藝的理解，要向人請益才會增加。⑤理線捻繩需 3 KP，⑥填縫完工需 8 KP，機器加工需 5 KP。</li>
+                    <li><strong>💡 技術點數 (KP)：</strong> 代表對傳統工藝的理解，要向人請益才會增加。⑤理線撚繩需 3 KP，⑥填縫完工需 8 KP，機器加工需 5 KP。</li>
                     <li><strong>🙏 請益（向誰學，學到的不一樣）：</strong> 向<b>耆老</b>請益：青年 3 AP、中生代 2 AP，都獲得 3 KP，請益者與耆老<b>各 +1 分</b>。青年向<b>中生代</b>請益：1 AP 獲得 2 KP，<b>雙方各 +1 分</b>；中生代傳得快，但青年的 KP 必須低於該中生代才能問，更深的知識還是要找耆老。耆老也可以「遠程指導 (2 AP)」，對象 +1 KP，耆老 <b>+1 分</b>。請益與指導的加分，每人每月最多計 2 次；超過之後照樣得到 KP，只是不再加分。</li>
                     <li><strong>🎁 回饋與幫忙（傳統教養）：</strong> 把材料「贈送」給耆老，贈送者 <b>+1 分</b>（每月計 1 次），而且當月向耆老請益可<b>多得 1 KP</b>（帶禮請益）。與耆老在同一地點時可以「幫忙長者 (1 AP)」：耆老回復 2 AP，自己 <b>+1 分</b>（每月 1 次）。6 月好月節這兩種得分加倍。</li>
                     <li><strong>🔬 科學轉譯：</strong> 消耗 2 AP 與 2 KP，成功率 = 50% + 扣除後的 KP×5%（中生代再 +20%）；<b>第 8 個月 (Pitanatana 土器月) 必定成功</b>。成功獲得 <b>+4 分</b>與 <b>2 份材料</b>。</li>
@@ -446,7 +446,7 @@ const translations = {
                             <div class="fc-label">🌟 傳統 Avaka<br><small>🛖 灘頭工作室</small></div>
                             <div class="fc-node">④ 脫水曝曬乾燥 (3 AP | 耗 1 材料)</div>
                             <div class="fc-arrow">↓ 跨月</div>
-                            <div class="fc-node">⑤ 理線捻繩 kolili (3 AP | 需 3 KP + 1 材料)</div>
+                            <div class="fc-node">⑤ 理線撚繩 oviden (3 AP | 需 3 KP + 1 材料)</div>
                             <div class="fc-arrow">↓ 跨月</div>
                             <div class="fc-node">⑥ 填縫完工 Mamaruk (3 AP | 需 8 KP + 1 材料)</div>
                             <div class="fc-arrow">↓</div>
@@ -456,7 +456,7 @@ const translations = {
                             <div class="fc-label" style="color:#fbbf24;">⚙️ 機器加工天然纖維<br><small>🏬 商店</small></div>
                             <div class="fc-node">用機器處理 Avaka 纖維 (3 AP | 需 5 KP + 2 材料)</div>
                             <div class="fc-arrow">↓</div>
-                            <div class="fc-node" style="background: rgba(251, 191, 36, 0.12); border-color:#fbbf24; color:#fde68a; font-weight:bold;">+12 分（中生代 +15）<br>仍用 Avaka，船可拆修；少了手工曝曬與捻繩的經驗</div>
+                            <div class="fc-node" style="background: rgba(251, 191, 36, 0.12); border-color:#fbbf24; color:#fde68a; font-weight:bold;">+12 分（中生代 +15）<br>仍用 Avaka，船可拆修；少了手工曝曬與撚繩的經驗</div>
                         </div>
                         <div class="fc-branch" style="border-color: rgba(148, 163, 184, 0.5);">
                             <div class="fc-label" style="color:#cbd5e1;">🧴 工業樹脂<br><small>🏬 商店</small></div>
@@ -662,7 +662,7 @@ const translations = {
                     moveBtn: 'Move here (1 AP)',
                     steps: {
                         dry: '④ Dry & Dewater (3 AP | 1 Mat + Curing)',
-                        twine: '⑤ Twine Rope kolili (3 AP | 3 KP + 1 Mat + Cross-month)',
+                        twine: '⑤ Twine Rope oviden (3 AP | 3 KP + 1 Mat + Cross-month)',
                         caulk: '⑥ Caulk & Finish Mamaruk (3 AP | 8 KP + 1 Mat + Cross-month)'
                     }
                 },
@@ -717,7 +717,7 @@ const translations = {
                             <div class="fc-label">🌟 Traditional Avaka<br><small>🛖 Beach Workshop</small></div>
                             <div class="fc-node">④ Dry in the sun (3 AP | 1 material)</div>
                             <div class="fc-arrow">↓ next month</div>
-                            <div class="fc-node">⑤ Twine rope kolili (3 AP | 3 KP + 1 material)</div>
+                            <div class="fc-node">⑤ Twine rope oviden (3 AP | 3 KP + 1 material)</div>
                             <div class="fc-arrow">↓ next month</div>
                             <div class="fc-node">⑥ Caulk &amp; finish Mamaruk (3 AP | 8 KP + 1 material)</div>
                             <div class="fc-arrow">↓</div>
@@ -815,7 +815,7 @@ function translateLog(logText) {
         { regex: /(.+) 完成了 ①砍伐剝皮 ipana'ape \(獲得 (\d+) 份材料\)/, replace: '$1 completed ① Chop & Peel ipana\'ape (yielding $2 material(s))' },
         { regex: /(.+) 完成了 剝麻/, replace: '$1 completed peeling hemp' },
         { regex: /(.+) 完成了 刮絲/, replace: '$1 completed scraping fiber' },
-        { regex: /(.+) 完成了 捻線/, replace: '$1 completed twining rope' },
+        { regex: /(.+) 完成了 撚線/, replace: '$1 completed twining rope' },
         { regex: /(.+) 完美傳承了造船技術！獲得 (\d+) 分/, replace: '$1 perfectly inherited shipbuilding skills! Gained $2 points' },
         { regex: /(.+) 使用現代材料完工，文化流失了\.\.\./, replace: '$1 finished using modernized materials, cultural heritage was lost...' },
         { regex: /(.+) 向部落長輩請益，獲得 3 KP/, replace: '$1 learned from the Elder, gained 3 KP' },
@@ -1373,7 +1373,7 @@ const scriptEvents = {
             { role: "System", text: "This is the month of handicraft. Though time is short, your hands move smoother than ever." },
             { role: "Elder", text: "Look, as long as you follow the calendar, the land will reward you. Hurry, let's launch this boat before next year's festival!" }
         ],
-        desc_zh: "【最終衝刺】本月執行「⑤理線捻繩」不消耗任何 AP，而且⑤與⑥不必跨月等待，可以接連完成！請把握最後的機會完成拼板舟。",
+        desc_zh: "【最終衝刺】本月執行「⑤理線撚繩」不消耗任何 AP，而且⑤與⑥不必跨月等待，可以接連完成！請把握最後的機會完成拼板舟。",
         desc_en: "【Final Sprint】⑤ Twining costs 0 AP this month, and steps ⑤ and ⑥ need no cross-month wait, so you can do them back to back! Seize this final opportunity to complete your boat."
     }
 };
@@ -1390,7 +1390,7 @@ const GAME_RULES = [
     {name: "Kalimman", desc_zh: "飛魚終食祭：全部落參與祭儀，本月無法在商店完工。", desc_en: "Final Fish Feast: the whole village takes part in the ritual; you cannot finish at the store this month."},
     {name: "Kaneman", desc_zh: "禁忌之月：不允許落成，本月任何方式都不能完工（填縫、機器加工、工業樹脂皆禁止）。", desc_en: "Forbidden Month: no boat may be completed this month, by any path (caulking, machine processing and resin are all banned)."},
     {name: "Kapitowan", desc_zh: "祭神月：回合開始時，若青年／中生代與耆老處於同一個地點，可自動獲得 2 點 KP。", desc_en: "Sacred Month: Youth and Middle Generation in the same place as the Elder automatically gain +2 KP."},
-    {name: "Kaowan", desc_zh: "手工藝月（最終衝刺）：「⑤理線捻繩」消耗 0 AP，而且⑤與⑥不必跨月等待，可以在本月接連完成。", desc_en: "Handicraft Month (final sprint): ⑤ Twining costs 0 AP, and steps ⑤ and ⑥ need no cross-month wait, so they can be done back to back this month."}
+    {name: "Kaowan", desc_zh: "手工藝月（最終衝刺）：「⑤理線撚繩」消耗 0 AP，而且⑤與⑥不必跨月等待，可以在本月接連完成。", desc_en: "Handicraft Month (final sprint): ⑤ Twining costs 0 AP, and steps ⑤ and ⑥ need no cross-month wait, so they can be done back to back this month."}
 ];
 
 function showMonthEventModal(month) {
@@ -2910,13 +2910,13 @@ function renderGameOver(state) {
                                     <strong>${isEn ? 'Knowledge Loss (Deskilling): ' : '跳過工序與技術知識的消失：'}</strong>
                                     ${isEn 
                                         ? 'Buying industrial resin skips essential traditional steps (gathering, peeling, scraping, twining fiber), halting Knowledge Point (KP) growth. Without practice and intergenerational learning, living craft knowledge silently breaks.'
-                                        : '選擇買樹脂等同跳過了「剝麻、刮絲、捻線」等重要工序，技術點數 (KP) 停止累積。少了實作體驗與長輩請益傳承，傳統身體記憶與工藝技術知識便悄然消失與斷裂。'}
+                                        : '選擇買樹脂等同跳過了「剝麻、刮絲、撚線」等重要工序，技術點數 (KP) 停止累積。少了實作體驗與長輩請益傳承，傳統身體記憶與工藝技術知識便悄然消失與斷裂。'}
                                 </li>
                                 <li>
                                     <strong>${isEn ? 'The path in between: ' : '中間的那條路：'}</strong>
                                     ${isEn
                                         ? 'Machine-processing the natural fibre still uses Avaka and keeps the boat repairable, but skips the hands-on drying and twining. Ask: is this “losing culture” or “culture changing”? Change is normal; the point is to know what the core value is, why you chose this, and what you accept in return.'
-                                        : '用機器加工天然纖維，仍然使用 Avaka、船也還能拆修，但少了手工曝曬與捻繩的經驗。請學生想一想：這是「文化流失」還是「文化在變」？文化變遷是正常的，重點是知道核心價值是什麼、自己為什麼這樣選、選了之後要承擔什麼。'}
+                                        : '用機器加工天然纖維，仍然使用 Avaka、船也還能拆修，但少了手工曝曬與撚繩的經驗。請學生想一想：這是「文化流失」還是「文化在變」？文化變遷是正常的，重點是知道核心價值是什麼、自己為什麼這樣選、選了之後要承擔什麼。'}
                                 </li>
                                 <li>
                                     <strong>${isEn ? 'Why did you score what you scored: ' : '你的分數是怎麼來的：'}</strong>
@@ -3601,7 +3601,7 @@ const SHOP_VOICES = {
         },
         machine: {
             title: '⚙️ 用機器加工 Avaka 纖維完工？',
-            elder: '「材料還是山上的 Avaka，這點我放心。只是曝曬和捻繩的那段功夫，你的手沒有學到。」',
+            elder: '「材料還是山上的 Avaka，這點我放心。只是曝曬和撚繩的那段功夫，你的手沒有學到。」',
             middle: '「材料還是我們自己的，只是換一種方式處理。省下來的時間，你要拿來做什麼？」',
             result: '立刻完工，+12 分（中生代 +15 分）。船仍可拆修，但跳過了手工的④⑤兩道工序。'
         }
@@ -3656,7 +3656,7 @@ const KB_TEXT = {
         effect: '遊戲效果',
         paths: `
             <p><strong>🌟 傳統 Avaka：</strong>六道工序全部手工完成（⑤需 KP 3、⑥需 KP 8）。+20 分。船可以拆、可以修。</p>
-            <p><strong>⚙️ 機器加工天然纖維：</strong>完成山林三道工序後，帶 2 份材料到商店，KP 達 5。+12 分（中生代 +15 分）。仍然使用 Avaka、船可拆修，但少了手工曝曬與捻繩的經驗。</p>
+            <p><strong>⚙️ 機器加工天然纖維：</strong>完成山林三道工序後，帶 2 份材料到商店，KP 達 5。+12 分（中生代 +15 分）。仍然使用 Avaka、船可拆修，但少了手工曝曬與撚繩的經驗。</p>
             <p><strong>🧴 工業樹脂：</strong>完成山林三道工序後，帶 2 份材料到商店。+5 分。很快完工，但接縫黏死，壞了無法拆修。</p>
             <p>三條路都要先完成山林的三道工序，最快也要到 7 月才能完工。9 月與 10 月不能在商店完工，10 月也不能填縫。沒有哪一條路是標準答案，重點是知道自己為什麼這樣選、選了之後要承擔什麼。</p>`,
         score: `
@@ -3908,7 +3908,7 @@ const B4_TEXT = {
         tell: (kp) => `🗣️ 講述 <span style="font-size:0.8rem;opacity:0.7;font-weight:normal;">(2 AP → 身邊的人各 +${kp} KP · +1 分)</span>`, tellDone: '🗣️ 本月已講述',
         mgTitle: '🎯 抓準時機', mgHint: '指針走到綠色區域時按下。成功退回 1 AP，失敗沒有損失。', mgGo: '就是現在！', mgSkip: '跳過',
         mgWin: '抓得剛好！退回 1 AP。', mgLose: '差了一點，沒有損失。',
-        mgStep: { chop: '下刀的位置', rub: '摩擦的力道', strip: '撕絲的力道', dry: '收起來的時間', twine: '搓捻的鬆緊', caulk: '塞進縫裡的深淺' }
+        mgStep: { chop: '下刀的位置', rub: '摩擦的力道', strip: '撕絲的力道', dry: '收起來的時間', twine: '搓撚的鬆緊', caulk: '塞進縫裡的深淺' }
     },
     en: {
         plant: '🌱 Replant Avaka (1 AP | once a month · next chop +1 material)', plantDone: '🌱 Replanted this month',

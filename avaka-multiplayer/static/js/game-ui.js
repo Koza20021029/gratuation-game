@@ -138,7 +138,7 @@
     zh: {
       month: n => `第 ${n} 個月`, monthUnit: '個月', lore: '這個月的夜曆', kb: '知識庫', quit: '退出', lang: 'EN', music: '背景音樂', theme: '白天／夜晚', sfx: '音效',
       mission: '本月小組任務', missionDone: '已達成，全員 +1 分', forest: '森林', role: { elder: '耆老', youth: '青年', middle: '中生代' },
-      steps: ['砍伐剝皮', '摩擦軟化', '劃痕撕絲', '曝曬乾燥', '理線捻繩', '填縫完工'], stepWhere: ['山林', '山林', '山林', '灘頭', '灘頭', '灘頭'],
+      steps: ['砍伐剝皮', '摩擦軟化', '劃痕撕絲', '曝曬乾燥', '理線撚繩', '填縫完工'], stepWhere: ['山林', '山林', '山林', '灘頭', '灘頭', '灘頭'],
       ap: 'AP', kp: 'KP', apName: '體力 AP', kpName: '技術 KP', mat: '材料', score: '得分', scoreWhy: '分數從哪裡來', badges: '徽章',
       ready: '準備進入下個月', unready: '取消準備', readyCount: (a, b) => `${a}/${b} 人已準備`,
       finished: { traditional: '傳統 Avaka 完工', hybrid: '機器加工完工', industrial: '工業樹脂完工' }, finishedNote: '船完工了。你還可以為部落的船出力、幫耆老趕工、巡山、補種、送材料。',

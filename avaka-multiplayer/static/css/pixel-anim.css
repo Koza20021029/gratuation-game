@@ -84,7 +84,7 @@
     50% { transform: scale(1.05); filter: brightness(1.2); }
 }
 
-/* 5: 理線搓捻 (快速微小震動) */
+/* 5: 理線搓撚 (快速微小震動) */
 .px-state-5 { 
     background-image: url('../assets/icons/px_step5.png'); 
     animation: pxTwineAnim 0.3s infinite steps(2);

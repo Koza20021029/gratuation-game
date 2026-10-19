@@ -219,7 +219,7 @@
                     <h3>🎯 體力、知識與得分</h3>
                     <ul>
                         <li><strong>⚡ 行動點數 (AP) 與每月恢復：</strong> AP 代表體力與時間。六道工序各 3 AP（耆老執行⑥填縫 0 AP）、移動 1 AP（青年免費）、贈送材料 0 AP、幫忙長者 1 AP、科學轉譯 2 AP、遠程指導 2 AP，請益依對象 1 至 3 AP。每個月初只恢復一部分體力（青年 +6、中生代與耆老 +5，不超過上限）。</li>
-                        <li><strong>💡 技術點數 (KP)：</strong> 代表對傳統工藝的理解，要向人請益才會增加。⑤理線捻繩需 3 KP，⑥填縫完工需 8 KP，機器加工需 5 KP。</li>
+                        <li><strong>💡 技術點數 (KP)：</strong> 代表對傳統工藝的理解，要向人請益才會增加。⑤理線撚繩需 3 KP，⑥填縫完工需 8 KP，機器加工需 5 KP。</li>
                         <li><strong>🙏 請益（向誰學，學到的不一樣）：</strong> 向<b>耆老</b>請益：青年 3 AP、中生代 2 AP，都獲得 3 KP，請益者與耆老<b>各 +1 分</b>。青年向<b>中生代</b>請益：1 AP 獲得 2 KP，<b>雙方各 +1 分</b>；中生代傳得快，但青年的 KP 必須低於該中生代才能問，更深的知識還是要找耆老。耆老也可以「遠程指導 (2 AP)」，對象 +1 KP，耆老 <b>+1 分</b>。請益與指導的加分，每人每月最多計 2 次；超過之後照樣得到 KP，只是不再加分。</li>
                         <li><strong>🎁 回饋與幫忙（傳統教養）：</strong> 把材料「贈送」給耆老，贈送者 <b>+1 分</b>（每月計 1 次），而且當月向耆老請益可<b>多得 1 KP</b>（帶禮請益）。與耆老在同一地點時可以「幫忙長者 (1 AP)」：耆老回復 2 AP，自己 <b>+1 分</b>（每月 1 次）。6 月好月節這兩種得分加倍。</li>
                         <li><strong>🔬 科學轉譯：</strong> 消耗 2 AP 與 2 KP，成功率 = 50% + 扣除後的 KP×5%（中生代再 +20%）；<b>第 8 個月 (Pitanatana 土器月) 必定成功</b>。成功獲得 <b>+4 分</b>與 <b>2 份材料</b>。</li>
@@ -252,7 +252,7 @@
                                 <div class="fc-label">🌟 傳統 Avaka<br><small>🛖 灘頭工作室</small></div>
                                 <div class="fc-node">④ 脫水曝曬乾燥 (3 AP | 耗 1 材料)</div>
                                 <div class="fc-arrow">↓ 跨月</div>
-                                <div class="fc-node">⑤ 理線捻繩 kolili (3 AP | 需 3 KP + 1 材料)</div>
+                                <div class="fc-node">⑤ 理線撚繩 oviden (3 AP | 需 3 KP + 1 材料)</div>
                                 <div class="fc-arrow">↓ 跨月</div>
                                 <div class="fc-node">⑥ 填縫完工 Mamaruk (3 AP | 需 8 KP + 1 材料)</div>
                                 <div class="fc-arrow">↓</div>
@@ -262,7 +262,7 @@
                                 <div class="fc-label" style="color:#fbbf24;">⚙️ 機器加工天然纖維<br><small>🏬 商店</small></div>
                                 <div class="fc-node">用機器處理 Avaka 纖維 (3 AP | 需 5 KP + 2 材料)</div>
                                 <div class="fc-arrow">↓</div>
-                                <div class="fc-node" style="background: rgba(251, 191, 36, 0.12); border-color:#fbbf24; color:#fde68a; font-weight:bold;">+12 分（中生代 +15）<br>仍用 Avaka，船可拆修；少了手工曝曬與捻繩的經驗</div>
+                                <div class="fc-node" style="background: rgba(251, 191, 36, 0.12); border-color:#fbbf24; color:#fde68a; font-weight:bold;">+12 分（中生代 +15）<br>仍用 Avaka，船可拆修；少了手工曝曬與撚繩的經驗</div>
                             </div>
                             <div class="fc-branch" style="border-color: rgba(148, 163, 184, 0.5);">
                                 <div class="fc-label" style="color:#cbd5e1;">🧴 工業樹脂<br><small>🏬 商店</small></div>
@@ -635,7 +635,7 @@
                         <div class="action-grid craft-grid">
                             <button class="btn action-btn move-btn">移動至此 (1 AP)</button>
                             <button class="btn action-btn craft-btn" data-step="dry" title="將提取之 Avaka 纖維懸掛於戶外曬魚竿等通風且日照充足之處。依據當地季風與氣候條件，通常需持續曝曬約五日。此程序旨在促使纖維內部水分完全蒸發，引導物質之物理特性發生轉變，提高纖維之拉力強度並發揮防腐性能，以利後續長期保存與加工。">④ 脫水曝曬乾燥 (3 AP | 需 1 材料 + 跨月乾燥)</button>
-                            <button class="btn action-btn craft-btn" data-step="twine" title="纖維經充分乾燥後，依其最終之技術使用情境，採取兩種不同之加工方式：&#10;1. 編織與織布用途（panoazain）：不使用機械紡車，完全透過人工將纖維末端與前端以細緻之手結技術（umu，即績線）相銜接，延展為不間斷之連續紗線。&#10;2. 造舟與航海繩索用途（kolili／繫船繩）：操作者採用身體摩擦法（大腿搓捻法），將數股乾燥之 Avaka 纖維平鋪於大腿表面，以手掌施力快速向前、向後來回滾動，使多股纖維在摩擦力作用下緊密絞合，捻製成具高抗拉強度、耐海水腐蝕之編結繩索。">⑤ 理線捻繩 kolili (3 AP | 需 3 KP + 1 材料 + 跨月)</button>
+                            <button class="btn action-btn craft-btn" data-step="twine" title="纖維經充分乾燥後，依其最終之技術使用情境，採取兩種不同之加工方式：&#10;1. 編織與織布用途（panoazain）：不使用機械紡車，完全透過人工將纖維末端與前端以細緻之手結技術（umu，即績線）相銜接，延展為不間斷之連續紗線。&#10;2. 造舟與航海繩索用途（kolili／繫船繩）：操作者採用身體摩擦法（大腿搓撚法），將數股乾燥之 Avaka 纖維平鋪於大腿表面，以手掌施力快速向前、向後來回滾動，使多股纖維在摩擦力作用下緊密絞合，撚製成具高抗拉強度、耐海水腐蝕之編結繩索。">⑤ 理線撚繩 oviden (3 AP | 需 3 KP + 1 材料 + 跨月)</button>
                             <button class="btn action-btn craft-btn" data-step="caulk" title="此工序為拼板舟建造中關鍵之結構緊固與防水工程：&#10;1. 在拼接相鄰船板時，工匠首先於榫孔內插入以小葉桑（pasek）等硬質木材製成之木釘。&#10;2. 隨後，將蘭嶼花椒（varok）根部呈棉絮狀之柔軟纖維填塞於船板接縫處。&#10;3. 接著，使用乾燥之 Avaka 纖維，以「S型」路徑交替纏繞木釘，並向下施力壓緊 varok 根部之棉絮纖維，使填縫材料在縫隙中定位並壓實。&#10;4. 當上方船板拼合且木舟下水後，內部之 varok 纖維因吸水而膨脹，發揮阻絕滲水之功能；而外部之 Avaka 則因其高抗拉強度鎖定木釘與船板接縫，提供船體橫向之結構緊固力，防止船體在海洋波浪張力下解體。">⑥ 填縫完工 Mamaruk (3 AP | 需 8 KP + 1 材料 + 跨月)</button>
                         </div>
                     </div>
@@ -826,9 +826,9 @@
     <script src="js/light-rays.js?v=20261013_1"></script>
     <script src="js/prismatic-burst.js?v=20261013_1"></script>
     <script src="js/pixel-card.js?v=20261013_1"></script>
-    <script src="js/app.js?v=20261014_9"></script>
-    <script src="js/lobby.js?v=20261014_3"></script>
-    <script src="js/game-ui.js?v=20261014_10"></script>
+    <script src="js/app.js?v=20261019_1"></script>
+    <script src="js/lobby.js?v=20261019_1"></script>
+    <script src="js/game-ui.js?v=20261019_1"></script>
     <script>
     // ── Avaka BGM Controller ──────────────────────────────────────────────────
     (function () {
