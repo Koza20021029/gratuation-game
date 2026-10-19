@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>課堂版｜Avaka：島嶼的維度</title>
+<meta name="description" content="《Avaka：島嶼的維度》課堂版：90 分鐘的教學流程、朗讀台詞、精選月份與三層次反思討論。">
+<script>
+  (function () {
+    var q = new URLSearchParams(location.search), get = function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } };
+    var lang = q.get('lang') || get('avaka_lang') || 'zh', theme = get('avaka_lobby_theme');
+    document.documentElement.dataset.lang = lang === 'en' ? 'en' : 'zh';
+    document.documentElement.lang = lang === 'en' ? 'en' : 'zh-Hant';
+    if (theme === 'light') document.documentElement.dataset.theme = 'light';
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Gloock&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/rules/rules.css?v=20261020_9">
+</head>
+<body>
+
+<header class="mast">
+  <div class="mast-in">
+    <a class="brand" href="/rules/"><b>Avaka</b><span lang="zh-Hant">島嶼的維度</span><span lang="en">Dimension of the Island</span></a>
+    <nav aria-label="網站">
+      <a href="/rules/player.html"><span lang="zh-Hant">玩家規則</span><span lang="en">Player rules</span></a>
+      <a href="/rules/class.html" aria-current="page"><span lang="zh-Hant">課堂版</span><span lang="en">For teachers</span></a>
+    </nav>
+    <div class="tools">
+      <button class="tool" type="button" id="t-lang" aria-label="Switch language"><span lang="zh-Hant">EN</span><span lang="en">中文</span></button>
+      <button class="tool" type="button" id="t-theme" aria-label="白天／夜晚"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 019.5 4a8 8 0 1010.5 10.5z"/></svg></button>
+    </div>
+    <a class="play" href="/"><span lang="zh-Hant">進入遊戲</span><span lang="en">Play</span></a>
+  </div>
+</header>
+
+<nav class="rail" aria-label="章節">
+  <ol id="rope">
+    <li><a href="#prep"><span lang="zh-Hant">準備</span><span lang="en">Prepare</span><small lang="zh-Hant">課前</small><small lang="en">before class</small></a></li>
+    <li><a href="#intro"><span lang="zh-Hant">導入</span><span lang="en">Opening</span><small>0–5′</small></a></li>
+    <li><a href="#roles"><span lang="zh-Hant">選角</span><span lang="en">Roles</span><small>5–15′</small></a></li>
+    <li><a href="#play"><span lang="zh-Hant">遊戲</span><span lang="en">Play</span><small>15–65′</small></a></li>
+    <li><a href="#close"><span lang="zh-Hant">結算</span><span lang="en">Endings</span><small>65–69′</small></a></li>
+    <li><a href="#reflect"><span lang="zh-Hant">反思</span><span lang="en">Reflection</span><small>69–90′</small></a></li>
+  </ol>
+</nav>
+
+<main class="wrap">
+  <div class="lead">
+    <div>
+      <h1 lang="zh-Hant">兩節課，走完一年。</h1>
+      <h1 lang="en">Two lessons, one year.</h1>
+      <p lang="zh-Hant">九年級生活科技，90 分鐘。學生三人一組各用一台裝置玩網頁遊戲；老師投影、在五個關鍵月份停下來朗讀與提問，最後用三層次討論收尾。本頁依教學方案 10.19 修訂版整理。</p>
+      <p lang="en">Grade 9 Living Technology, 90 minutes. Students play the web game in groups of three, one device each; the teacher projects, pauses at five key months to read and ask, and closes with a three-level discussion. This page follows the lesson plan revised on 19 October.</p>
+    </div>
+  </div>
+
+  <ol class="plan" aria-label="時間分配">
+    <li><span class="min">15<small lang="zh-Hant">分</small><small lang="en">min</small></span><b lang="zh-Hant">導入與選角</b><b lang="en">Opening and roles</b><p lang="zh-Hant">生活議題、朗讀開場、選角、規則說明</p><p lang="en">Everyday question, read-aloud, roles, rules</p></li>
+    <li><span class="min">50<small lang="zh-Hant">分</small><small lang="en">min</small></span><b lang="zh-Hant">遊戲體驗</b><b lang="en">Play</b><p lang="zh-Hant">五個關鍵月份停下來，其他月份快速帶過</p><p lang="en">Stop at five months, move quickly through the rest</p></li>
+    <li><span class="min">4<small lang="zh-Hant">分</small><small lang="en">min</small></span><b lang="zh-Hant">結算</b><b lang="en">Endings</b><p lang="zh-Hant">從高分到低分唸出五種結局</p><p lang="en">Read all five endings, highest first</p></li>
+    <li><span class="min">21<small lang="zh-Hant">分</small><small lang="en">min</small></span><b lang="zh-Hant">三層次反思</b><b lang="en">Reflection</b><p lang="zh-Hant">事實層、機制層、價值層</p><p lang="en">Facts, mechanisms, values</p></li>
+  </ol>
+
+  <!-- prep -->
+  <section class="chapter" id="prep">
+    <header><h2><span lang="zh-Hant">準備</span><span lang="en">Prepare</span></h2><p lang="zh-Hant">上課前要備好的東西，以及前導影片。</p><p lang="en">What to have ready, and the opening film.</p></header>
+    <div class="col">
+      <ul class="bullets kit">
+        <li lang="zh-Hant">每位學生一台可連網的裝置（平板、筆電或手機）</li><li lang="en">One connected device per student (tablet, laptop or phone)</li>
+        <li lang="zh-Hant">教室無線網路</li><li lang="en">Classroom wifi</li>
+        <li lang="zh-Hant">教師端投影</li><li lang="en">A projector for the teacher</li>
+        <li lang="zh-Hant">三人一組、圍坐</li><li lang="en">Groups of three, seated together</li>
+        <li lang="zh-Hant">三層次反思討論學習單</li><li lang="en">The three-level reflection worksheet</li>
+        <li lang="zh-Hant">遊戲前導影片（2–3 分鐘）</li><li lang="en">The opening film (2–3 minutes)</li>
+      </ul>
+      <p class="aside"><b lang="zh-Hant">上課前先打開一次</b><b lang="en">Wake the game first</b><span lang="zh-Hant">遊戲在 <a href="/">avaka.onrender.com</a>。伺服器 15 分鐘沒人連線會睡著，上課前先打開一次，等它醒來（約 1 分鐘）再讓學生進來。建議也先自己試玩一次，確認兩節課跑得完十二個月。</span><span lang="en">The game is at <a href="/">avaka.onrender.com</a>. Its server sleeps after 15 quiet minutes, so open it once before class and give it about a minute to wake. A trial run beforehand also confirms twelve months fit in two lessons.</span></p>
+      <h3><span lang="zh-Hant">前導影片（課前播放）</span><span lang="en">The opening film (before class)</span></h3>
+      <p lang="zh-Hant">讓學生先認識 Avaka 長什麼樣子、長在哪裡，再帶出一個貼近生活的問題：跟 Avaka 同類的纖維，曾經是全世界船隻用的繩索，後來被尼龍等合成材料取代；合成繩索會磨出塑膠微粒，包含蘭嶼在內的臺灣海域每個測點都撈得到。在垃圾很難處理的小島上，壞了只能丟的東西，和可以拆開修理、最後回到土地的東西，差別特別大。</p>
+      <p lang="en">Show what Avaka looks like and where it grows, then raise an everyday question: fibre like Avaka once made the world’s ship ropes until nylon replaced it; synthetic rope sheds microplastics, found at every sampling point around Taiwan, Lanyu included. On a small island where rubbish is hard to deal with, things that can only be thrown away differ sharply from things that can be opened, mended and returned to the land.</p>
+      <p class="tip"><b lang="zh-Hant">提示</b><b lang="en">Tip</b><span lang="zh-Hant">影片播完就關掉投影，不立刻討論，直接進入不搭配畫面的朗讀開場；影片留下的疑問，到價值層再回扣。影片還沒做好的話，預留 3 分鐘口頭介紹 Avaka。</span><span lang="en">Turn the projector off after the film and go straight into the read-aloud opening without discussing it; come back to its questions at the values level. If the film is not ready, allow 3 minutes to introduce Avaka in your own words.</span></p>
+    </div>
+  </section>
+
+  <!-- intro -->
+  <section class="chapter" id="intro">
+    <header><h2><span lang="zh-Hant">導入</span><span lang="en">Opening</span></h2><p lang="zh-Hant">先從身上的衣服問起，再關掉畫面朗讀。</p><p lang="en">Start with the clothes they wear, then read with the screen off.</p></header>
+    <div class="col">
+      <div class="beat">
+        <div class="beat-head"><h3><span lang="zh-Hant">生活議題切入</span><span lang="en">An everyday question</span></h3><span class="t">2′</span></div>
+        <p lang="zh-Hant">請學生看看自己衣服上的洗標：「你身上的衣服是什麼材質？它為什麼方便？丟掉之後會怎樣？」再追問：「如果改穿天然材質，會麻煩在哪裡？有沒有既不那麼麻煩、又不製造那麼多垃圾的做法？」不需要結論，只要讓學生帶著「方便」與「代價」進入遊戲。</p>
+        <p lang="en">Ask students to read the care labels in their clothes: “What is it made of? Why is it convenient? What happens when it is thrown away?” Then: “What would be the trouble with natural materials? Is there a way that is less trouble and makes less waste?” No conclusion is needed; let them carry “convenience” and “cost” into the game.</p>
+      </div>
+      <div class="beat">
+        <div class="beat-head"><h3><span lang="zh-Hant">朗讀開場</span><span lang="en">The opening read-aloud</span></h3><span class="t">3′</span><p class="goal" lang="zh-Hant">不要開投影或遊戲畫面，讓語言單獨作用。語速放慢。</p><p class="goal" lang="en">No slides or game on screen; let the words work alone. Read slowly.</p></div>
+        <blockquote class="script"><span class="who" lang="zh-Hant">主持人</span><span class="who" lang="en">Host</span><span lang="zh-Hant">今天你們不是學生，你們是蘭嶼的工匠。這一年，你們必須完成一艘拼板舟。這艘船不只是交通工具，它是你們和祖先、和海洋之間的對話。但在這一年裡，你們會不斷面對一個問題：要用什麼方式把這艘船造好？傳統的路，需要等待季節、跟著耆老學習，每一步都有它的節奏。快的路，是去商店買化學樹脂，幾個動作就能完工。在這兩條路之間，也有人試著用機器來加工天然的纖維。每一條路都能讓你造好一艘船，但造出來的船是不一樣的。今天你們的選擇，會決定你留下什麼。</span><span lang="en">Today you are not students; you are craftspeople of Lanyu. This year you must finish a plank boat. It is more than transport: it is a conversation between you, your ancestors and the sea. All year you will face one question: how will you build it? The traditional way waits on the seasons and learns from the elders; every step has its rhythm. The quick way is resin from the store, finished in a few moves. Between them, some try processing the natural fibre by machine. Every way gives you a boat, but not the same boat. What you choose today decides what you leave behind.</span></blockquote>
+        <p class="watch"><b lang="zh-Hant">觀察</b><b lang="en">Watch for</b><span lang="zh-Hant">學生聆聽時的專注度與反應（學習目標 4）。</span><span lang="en">how attentively students listen (objective 4).</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- roles -->
+  <section class="chapter" id="roles">
+    <header><h2><span lang="zh-Hant">選角</span><span lang="en">Roles</span></h2><p lang="zh-Hant">選定之後，就是那個身份一整年。</p><p lang="en">Once chosen, the role is theirs for the year.</p></header>
+    <div class="col">
+      <div class="beat">
+        <div class="beat-head"><h3><span lang="zh-Hant">選角與角色旁白</span><span lang="en">Choosing roles</span></h3><span class="t">6′</span></div>
+        <blockquote class="script"><span class="who" lang="zh-Hant">主持人（選角前）</span><span class="who" lang="en">Host, before choosing</span><span lang="zh-Hant">你即將選擇一個身份，但選擇之後，你就是那個身份了——它的能力、它的限制、它要承擔的責任，都會跟著你一整年。現在，選出你要成為的人。</span><span lang="en">You are about to choose who you are, and once you do, you are that person: its strengths, its limits and its duties stay with you all year. Now choose who you will be.</span></blockquote>
+        <p lang="zh-Hant">各組一人開房間、把四碼房間代碼給組員加入，三人各選一個角色。<strong>遊戲不會檢查三種角色是否到齊，請提醒各組三種各一人。</strong>人數不是 3 的倍數時，多出的學生可以和同角色的人一起操作，或把一兩組編成 4 人。</p>
+        <p lang="en">One student per group opens a room and shares the four-letter code; the three each pick a role. <strong>The game does not check that all three roles are present, so remind groups to take one of each.</strong> If the class does not divide by three, extra students can share a role or a group or two can be four.</p>
+        <p lang="zh-Hant">學生選好後，用不同語氣唸出三段角色旁白（耆老沉穩、青年輕快、中生代帶點猶豫）：</p>
+        <p lang="en">Then read the three role passages in different voices (the Elder calm, the Youth bright, the Middle Generation a little unsure):</p>
+        <blockquote class="script"><span class="who" lang="zh-Hant">耆老</span><span class="who" lang="en">Elder</span><span lang="zh-Hant">你擁有最多的技術知識，但體力有限。你的存在意義，不是完成速度最快的船，而是確保知識不在你這一代斷掉。你的聲望，來自於你教會了多少人。</span><span lang="en">You hold the most knowledge but have little strength. Your purpose is not the fastest boat but making sure the knowledge does not end with you. Your standing comes from how many you teach.</span></blockquote>
+        <blockquote class="script"><span class="who" lang="zh-Hant">青年</span><span class="who" lang="en">Youth</span><span lang="zh-Hant">你移動不耗體力，學習能力最強，但你現在什麼都不會——KP 是零。你能走到哪裡、能做什麼，很大程度上取決於你願不願意跟著耆老，以及願不願意開口問中生代。沒有人會強迫你，但知識只在靠近的地方發生。</span><span lang="en">You walk without tiring and learn fastest, but you know nothing yet; your KP is zero. Where you get to depends on whether you follow the Elder and whether you ask the Middle Generation. Nobody will make you, but knowledge only happens up close.</span></blockquote>
+        <blockquote class="script"><span class="who" lang="zh-Hant">中生代</span><span class="who" lang="en">Middle generation</span><span lang="zh-Hant">你是橋樑。你小時候看過老人家怎麼做，所以學得比年輕人快；你也在另一種生活裡待過，所以知道怎麼把老人家的話說給年輕人聽。老人家能說出什麼東西不見了，你還能想出它可以轉化成什麼。這個部落要怎麼走下去，很大一部分要看你。</span><span lang="en">You are the bridge. You watched the elders as a child, so you learn faster than the young; you have lived another life too, so you can pass the elders’ words on. The elders can say what has been lost; you can imagine what it might become. Much of where this village goes depends on you.</span></blockquote>
+        <p class="watch"><b lang="zh-Hant">觀察</b><b lang="en">Watch for</b><span lang="zh-Hant">各組是否主動協調角色缺額、是否理解自己的角色定位（學習目標 1、4）。</span><span lang="en">whether groups sort out missing roles and understand their own (objectives 1 and 4).</span></p>
+      </div>
+      <div class="beat">
+        <div class="beat-head"><h3><span lang="zh-Hant">規則快速說明</span><span lang="en">Rules in brief</span></h3><span class="t">4′</span><p class="goal" lang="zh-Hant">只講核心，細節讓學生邊玩邊懂。完整規則請學生看<a href="/rules/player.html">玩家規則</a>。</p><p class="goal" lang="en">Core only; details come through play. Point students to the <a href="/rules/player.html">player rules</a>.</p></div>
+        <ul class="bullets">
+          <li lang="zh-Hant">每個月有固定的效果，例如封山、梅雨、不能完工，畫面上方會寫出來。</li><li lang="en">Each month has a fixed effect, such as the closed forest, plum rain or no finishing, shown at the top of the screen.</li>
+          <li lang="zh-Hant">體力用完就等其他人；全組按下「準備進入下個月」才會換月，換月只回復一部分體力。</li><li lang="en">When stamina runs out, wait; the month changes when everyone presses Ready, and only part of the stamina returns.</li>
+          <li lang="zh-Hant">六道工序依序做，每做完一道要等到下個月；最快 7 月完工。</li><li lang="en">The six steps go in order, one per month at most; the earliest finish is Month 7.</li>
+          <li lang="zh-Hant">三條路：傳統 +20、機器加工 +12（中生代 +15）、工業樹脂 +5，船能不能修也不同。</li><li lang="en">Three paths: traditional +20, machine +12 (Middle +15), resin +5, and they differ in whether the boat can be mended.</li>
+          <li lang="zh-Hant">請益、帶禮物給耆老、幫忙長者、搭把手都會加分；畫面上的「得分」隨時看得到分數從哪裡來。</li><li lang="en">Asking, gifts to the Elder, helping the Elder and lending a hand all score; “Score” on screen shows where points came from.</li>
+          <li lang="zh-Hant">右上角的「知識庫」可以查 Avaka、工序和月份；請益後的小問答都出自這裡。</li><li lang="en">The Knowledge button explains Avaka, the steps and the months; the quiz after asking draws from it.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- play -->
+  <section class="chapter" id="play">
+    <header><h2><span lang="zh-Hant">遊戲</span><span lang="en">Play</span></h2><p lang="zh-Hant">在五個月份停下來朗讀，其他月份讓各組自己決定。</p><p lang="en">Stop to read at five months; let groups decide the rest.</p></header>
+    <div class="col">
+      <div class="beat">
+        <div class="beat-head"><h3><span lang="zh-Hant">第 1 月 Kashyman：預警的季節</span><span lang="en">Month 1, Kashyman: a season of warning</span></h3><span class="t">6′</span><p class="goal" lang="zh-Hant">從第一個月就學會預判、提前準備。</p><p class="goal" lang="en">Plan ahead from the very first month.</p></div>
+        <blockquote class="script"><span class="who" lang="zh-Hant">主持人</span><span class="who" lang="en">Host</span><span lang="zh-Hant">這個月上山砍伐，一次可以帶回兩份材料，這是準備月的禮物。<span class="stage">（停頓兩秒）</span>但我要提醒你們一件事：下個月是 Kapowan，招魚祭的月份，山林會封閉整整一個月。你現在手上的 Avaka 原料還夠嗎？你現在的每一個決定，都在替下個月的自己鋪路。</span><span lang="en">This month a trip up the hill brings back two materials: the gift of the preparing month. <span class="stage">(pause)</span> But remember: next month is Kapowan, the month of calling the fish, and the forest will be closed all month. Do you have enough Avaka now? Every choice you make today paves the way for next month.</span></blockquote>
+        <p class="tip"><b lang="zh-Hant">提示</b><b lang="en">Tip</b><span lang="zh-Hant">說完不解釋，給 30 秒安靜決定。記下哪些組的青年快速上山、哪些組忽略了預警，第 2 月討論會用到。</span><span lang="en">Say nothing more; give 30 quiet seconds. Note which groups rush uphill and which ignore the warning, for Month 2.</span></p>
+      </div>
+      <div class="beat">
+        <div class="beat-head"><h3><span lang="zh-Hant">第 2 月 Kapowan：飛魚禁令</span><span lang="en">Month 2, Kapowan: the flying-fish ban</span></h3><span class="t">8′</span><p class="goal" lang="zh-Hant">全場第一個劇情停頓。感受「沒有選擇」，理解禁令背後的生態與社會邏輯。</p><p class="goal" lang="en">The first full pause. Feel “no choice”, and see the ecological and social sense behind a taboo.</p></div>
+        <blockquote class="script"><span class="who" lang="zh-Hant">環境旁白（可投影放大當月畫面）</span><span class="who" lang="en">Narration (project the month large)</span><span lang="zh-Hant">灘頭起了白煙。招魚祭開始了。山林封閉，門戶關閉——這叫做 Paneneb，是禁忌。<span class="stage">（停頓）</span>現在，你無法上山採集。如果你上個月沒有存夠材料，你面臨三個選擇：向同組的人求援，請隊友把材料送給你；把時間拿來學習，向耆老或中生代請益；或是枯坐一個月，等下個月解禁。</span><span lang="en">White smoke rises from the shore. The fish-calling rite has begun. The forest is closed and doors are shut: this is Paneneb, a taboo. <span class="stage">(pause)</span> You cannot gather now. If you did not store enough last month, you have three choices: ask your group to give you material; spend the time learning from the Elder or the Middle Generation; or sit out the month and wait.</span></blockquote>
+        <blockquote class="script"><span class="who" lang="zh-Hant">中生代（對青年說）</span><span class="who" lang="en">Middle generation, to the Youth</span><span lang="zh-Hant">這就是為什麼老人家說 Kashyman 月要拼命存貨。山上現在不能去，但你可以來問我，或是帶著禮物去請教老人家。等待的時候，正好把該懂的學起來。</span><span lang="en">This is why the elders say to store up in Kashyman. You cannot go up the hill, but you can ask me, or take a gift to the elders. Waiting is the time to learn what you need.</span></blockquote>
+        <blockquote class="script"><span class="who" lang="zh-Hant">耆老（靜靜地）</span><span class="who" lang="en">Elder, quietly</span><span lang="zh-Hant">飛魚隨著黑潮而來，而我們則順應時節。這是海洋的規矩，我們要好好遵守。</span><span lang="en">The flying fish come with the Kuroshio, and we follow the season. This is the sea’s law, and we keep it.</span></blockquote>
+        <p class="tip"><b lang="zh-Hant">提問</b><b lang="en">Ask</b><span lang="zh-Hant">「有哪一組選擇了枯坐一個月？為什麼？」延伸：「為什麼這個月只能專心做一件事？如果這時候不去找飛魚，會怎樣？」歲時祭儀規定的不只是禁忌，也是這段時間該專心做什麼；錯過的時間不能回頭。</span><span lang="en">“Which group sat the month out? Why?” Then: “Why only one thing this month? What if nobody went for the flying fish now?” The calendar sets not only taboos but what each season is for; missed time does not come back.</span></p>
+        <p class="watch"><b lang="zh-Hant">記錄</b><b lang="en">Record</b><span lang="zh-Hant">從「部落記事」看各組選了求援、請益還是枯坐（遊戲沒有匯出功能，請當場記下）。</span><span lang="en">From the Record, note whether each group asked for help, learned or waited (the game has no export, so write it down).</span></p>
+      </div>
+      <p class="quick"><span class="t">6′</span><span lang="zh-Hant">第 3–4 月快速帶過。<strong>第 4 月務必提醒一次：</strong>下個月是梅雨季，持有材料的人要留至少 1 AP，把體力用光的人，進入第 5 月材料就會歸零。觀察哪些組聽進去了。</span><span lang="en">Months 3–4 move quickly. <strong>In Month 4, warn once:</strong> plum rain is next; anyone holding material must keep at least 1 AP, or it rots on entering Month 5. Watch who listens.</span></p>
+      <div class="beat">
+        <div class="beat-head"><h3><span lang="zh-Hant">第 5 月 Pipilapila：梅雨腐壞</span><span lang="en">Month 5, Pipilapila: the rot</span></h3><span class="t">6′</span><p class="goal" lang="zh-Hant">體驗資源管理的壓力，以及工業材料在關鍵時刻的誘惑。</p><p class="goal" lang="en">Feel the pressure of managing stamina, and the pull of industrial materials at a hard moment.</p></div>
+        <blockquote class="script"><span class="who" lang="zh-Hant">環境旁白</span><span class="who" lang="en">Narration</span><span lang="zh-Hant">天空陰雲密佈。突如其來的降雨，讓你堆放在灘頭、還沒曬乾的 Avaka 纖維陷入腐爛危機。還沒完成脫水與曝曬乾燥的材料，要用你上個月留下的 1 AP 來遮蔽；上個月把體力全部用完的人，材料現在就腐爛歸零。</span><span lang="en">Dark clouds gather. Sudden rain threatens the undried Avaka fibre piled on the shore. Material not yet dried needs the 1 AP you saved last month to cover it; whoever spent everything last month loses it all to rot.</span></blockquote>
+        <blockquote class="script"><span class="who" lang="zh-Hant">耆老（突然抬頭看天）</span><span class="who" lang="en">Elder, looking up</span><span lang="zh-Hant">孩子，做船不能只看地上的麻，要看天上的雲。快收起來！<span class="stage">（停頓）</span>如果你的體力已經用完了——那些材料，就從你的存貨裡劃掉吧。</span><span lang="en">Child, a boat-builder watches the clouds, not only the hemp on the ground. Bring it in! <span class="stage">(pause)</span> If your strength is spent, strike that material from your store.</span></blockquote>
+        <p class="tip"><b lang="zh-Hant">提示</b><b lang="en">Tip</b><span lang="zh-Hant">之後指著商店說一句：「商店的化學樹脂今天不受天氣影響，它不怕濕，也不需要曝曬。」不強調、不評論，讓誘惑自然存在。</span><span lang="en">Then point to the Store: “The resin there does not care about the weather; it fears no damp and needs no sun.” No emphasis, no comment; let the temptation simply be there.</span></p>
+      </div>
+      <p class="quick"><span class="t">10′</span><span lang="zh-Hant">第 6–9 月快速帶過。第 6 月是好月節，送材料給耆老、幫忙長者分數加倍；第 9 月不能在商店完工。進度快的組 7 月就會完工，提醒他們不必枯等：可以備料、送材料、幫忙，或到灘頭為部落的船出力。第 9 月左右問一次：「你要先顧自己的分數，還是一起把部落的船造完？」</span><span lang="en">Months 6–9 move quickly. Month 6 doubles points for gifts and help to the Elder; Month 9 closes the Store to finishing. Fast groups finish in Month 7: remind them not to wait idle but to gather, give, help, or work on the community boat. Around Month 9 ask: “Your own score first, or finish the community boat together?”</span></p>
+      <div class="beat">
+        <div class="beat-head"><h3><span lang="zh-Hant">第 10 月 Kaneman：禁忌之月</span><span lang="en">Month 10, Kaneman: the forbidden month</span></h3><span class="t">6′</span><p class="goal" lang="zh-Hant">最容易挫折、也最值得討論的月份：在「幾乎完成」時被迫暫停，體驗等待也是技術的一部分。情意評量的重點時機。</p><p class="goal" lang="en">The most frustrating month and the richest for discussion: stopped just short of finishing, students learn that waiting is part of the craft. The key moment for affective assessment.</p></div>
+        <blockquote class="script"><span class="who" lang="zh-Hant">環境旁白（語速最慢）</span><span class="who" lang="en">Narration, slowest</span><span lang="zh-Hant">這是蘭嶼夜曆中最不吉祥的月份。這個月專門製作貝灰，不允許舉行婚禮、造屋，也不允許落成禮。即便你的材料已齊備，KP 已達標——<span class="stage">（停頓三秒）</span>現在也絕對不能動工填縫。去商店也一樣，這個月任何方式都不能完工。</span><span lang="en">This is the unluckiest month of the Lanyu calendar. Shell lime is made; no weddings, no building, no launching. Even if your material is ready and your KP enough <span class="stage">(three seconds)</span> you may not caulk now. Nor at the Store: no boat may be finished this month.</span></blockquote>
+        <blockquote class="script"><span class="who" lang="zh-Hant">中生代</span><span class="who" lang="en">Middle generation</span><span lang="zh-Hant">這就是「儀式時間」的邏輯。你得學會等待。如果你現在強行完工，這艘船在部落眼中將失去靈魂。</span><span lang="en">This is ritual time. You have to learn to wait. Force it now, and the village will see a boat without a soul.</span></blockquote>
+        <blockquote class="script"><span class="who" lang="zh-Hant">青年（緊張地）</span><span class="who" lang="en">Youth, anxious</span><span lang="zh-Hant">但我只剩兩個月就要結算了！如果不現在做，我怕來不及完成……</span><span lang="en">But there are only two months left! If I don’t do it now, I might not make it…</span></blockquote>
+        <blockquote class="script"><span class="who" lang="zh-Hant">耆老（平靜地）</span><span class="who" lang="en">Elder, calmly</span><span lang="zh-Hant">你現在可以去學你還沒學到的東西。等待，不是什麼都不做。</span><span lang="en">Now you can learn what you have not learned yet. Waiting is not doing nothing.</span></blockquote>
+        <p class="tip"><b lang="zh-Hant">全班討論</b><b lang="en">Whole class</b><span lang="zh-Hant">「你在現代生活中，有沒有一種等待是有意義的？還是所有的等待對你來說都只是浪費時間？」請 2–3 位學生發言，不需要標準答案。這個月耆老講述，後輩各得 2 KP，可以提醒各組「到老人家身邊去聽他說」。</span><span lang="en">“Is any waiting in your life meaningful, or is all waiting wasted time?” Hear two or three students; there is no right answer. An Elder telling stories now gives each listener 2 KP, so groups can gather round the Elder.</span></p>
+      </div>
+      <p class="quick"><span class="t">3′</span><span lang="zh-Hant">第 11 月快速帶過：月初和耆老在同一個地方的青年、中生代各 +2 KP，提醒一次即可。</span><span lang="en">Month 11 moves quickly: Youth and Middle with the Elder at the start of the month gain 2 KP; a single reminder is enough.</span></p>
+      <div class="beat">
+        <div class="beat-head"><h3><span lang="zh-Hant">第 12 月 Kaowan：最終衝刺</span><span lang="en">Month 12, Kaowan: the last push</span></h3><span class="t">5′</span><p class="goal" lang="zh-Hant">讓堅持傳統的人感受到順應時序的回報；也讓走樹脂的人意識到，快不等於豐收。</p><p class="goal" lang="en">Those who kept to tradition feel the season repay them; those who chose resin see that fast is not the same as rich.</p></div>
+        <blockquote class="script"><span class="who" lang="zh-Hant">主持人</span><span class="who" lang="en">Host</span><span lang="zh-Hant">這是屬於手工藝的月份。男人冶鐵織繩，女人織布——整個部落都在做手工。本月，理線與撚繩不再消耗任何體力，而且撚繩和填縫不必再等一個月，可以接連完成。<span class="stage">（給學生 10 秒）</span>你發現自己的手感前所未有的流暢。不是因為你突然變厲害了，是因為你整年都在積累，而現在，土地給了你最後的補償。</span><span lang="en">This is the month of handwork. The men forge and twist, the women weave: the whole village is making. This month twisting costs nothing, and twisting and caulking need not wait a month apart. <span class="stage">(ten seconds)</span> Your hands move more easily than ever, not because you suddenly got better, but because you have been gathering all year, and now the land repays you.</span></blockquote>
+        <blockquote class="script"><span class="who" lang="zh-Hant">耆老（第一次露出笑意）</span><span class="who" lang="en">Elder, smiling for the first time</span><span lang="zh-Hant">看吧，只要你順應時序，土地會給你最後的補償。快動手，讓這條船趕在明年飛魚祭前下水！</span><span lang="en">You see: follow the seasons and the land repays you. Quick, get this boat in the water before next year’s flying fish!</span></blockquote>
+        <p class="tip"><b lang="zh-Hant">提示</b><b lang="en">Tip</b><span lang="zh-Hant">讓這個月跑完整，不催促。主持人保持安靜，只回答規則問題，讓結局自然發生。</span><span lang="en">Let the month run to its end without hurrying. Stay quiet except for rules questions; let the endings happen.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- endings -->
+  <section class="chapter" id="close">
+    <header><h2><span lang="zh-Hant">結算</span><span lang="en">Endings</span></h2><p lang="zh-Hant">從高分到低分，每個等級都唸，不跳過。</p><p lang="en">Read every level, highest first, skipping none.</p></header>
+    <div class="col">
+      <p lang="zh-Hant">遊戲會自動算出每個人的分數與結局。等所有組都完成後，依序唸出下面五段。</p>
+      <p lang="en">The game works out each player’s score and ending. When every group is done, read these five in order.</p>
+      <details class="ending-read"><summary><b lang="zh-Hant">傳承之靈</b><b lang="en">Spirit of Heritage</b><span lang="zh-Hant">18 分以上，限傳統路徑</span><span lang="en">18+, traditional path</span></summary>
+        <blockquote class="script"><span lang="zh-Hant">這艘船是活的。不僅僅是一種比喻，而是真的活著。你花了整整一年，跟著走過祖先的同一條山路，身體記住了採集時該繞開哪棵樹、Avaka 的纖維要朝哪個方向撚才不會斷。這些動作可能沒有被文字記錄，卻藏在族人身體的記憶之中，等待被喚醒。後來，透過科學資料，證實了 Avaka 纖維吸水之後會膨脹。你忽然明白，老人說「讓船呼吸」不只是一種想像，是造船的學問。當海水滲進縫隙，纖維膨脹後，船反而變得更緊實。可以拆，可以修，可以一塊一塊換掉，再一次出海。那些你以為早已斷裂的記憶，其實只是靜靜地等著願意承接的人。而這艘船會繼續航行，帶著耆老們說過的話，也帶著你找回的那些記憶。</span><span lang="en">This boat is alive, and not as a figure of speech. You spent a whole year walking the ancestors’ path; your body learned which trees to step round and which way Avaka fibre must be twisted so it will not break. None of it was written down; it waited in the people’s bodies to be woken. Later the science confirmed that Avaka swells when wet, and you understood that “letting the boat breathe” was knowledge, not fancy: as seawater seeps in, the fibre swells and the boat grows tighter. It can be opened, mended, replaced plank by plank and sent out again. The memories you thought were broken were only waiting for someone to take them up, and this boat sails on with the elders’ words and the memories you found.</span></blockquote></details>
+      <details class="ending-read"><summary><b lang="zh-Hant">協商之光</b><b lang="en">Light of Negotiation</b><span lang="zh-Hant">11 分以上</span><span lang="en">11+</span></summary>
+        <blockquote class="script"><span lang="zh-Hant">你沒辦法只活在傳統裡，這你很清楚。孩子要上學，油費要繳，時間不等人，你在這些現實壓力裡嘗試找到縫隙，幾塊工業材料省了些工夫，但你沒有就此撒手。你還是去敲了耆老的門，還是問了那幾個不問不會有人主動說的問題：材料要怎麼選、哪道工序不能跳過。船造好的時候，你自己也說不清它到底是傳統還是現代。但或許這才是最誠實的答案，蘭嶼從來就不是一座博物館，人們在這裡過的是真實的生活，傳統也一直在真實的生活裡摩擦、磨損、又重新長出新的樣子。</span><span lang="en">You cannot live only in tradition, and you know it. Children need school, fuel needs paying, time will not wait; you looked for room within those pressures, and a few industrial pieces saved some work, but you did not let go. You still knocked on the elders’ door and asked the questions nobody answers unasked: how to choose the material, which step cannot be skipped. When the boat was done you could not say whether it was traditional or modern. Perhaps that is the honest answer: Lanyu was never a museum; people live real lives here, and tradition has always rubbed, worn and grown again within them.</span></blockquote></details>
+      <details class="ending-read"><summary><b lang="zh-Hant">效率之重</b><b lang="en">Weight of Efficiency</b><span lang="zh-Hant">6–10 分</span><span lang="en">6–10</span></summary>
+        <blockquote class="script"><span lang="zh-Hant">船造好了。但有什麼東西卻悄然失去了。南寶樹脂把縫填得密不透風，不用等木材慢慢漲開，不用對著日曆算季節，省下了大半時間。船下水的那一刻，看起來和其他船沒什麼兩樣。只是壞了就壞了，沒辦法修。那種嵌接的方式、那種拆開再組回去的可能，在你選擇跳過的那幾道工序裡，也連帶消失了。手指也忘了。忘了纖維來回時的阻力，忘了怎麼判斷木材的品種。這艘船能用，但卻沒辦法教會你任何事。它只是一件時代下的商品。</span><span lang="en">The boat is built, but something slipped away. The resin sealed every seam; no waiting for the wood to swell, no counting the seasons, most of the time saved. On launch day it looked like any other boat. Only, when it breaks, it stays broken. The joinery, the chance to take it apart and put it back, vanished with the steps you skipped. Your fingers forgot too: the drag of the fibre, how to tell one wood from another. The boat works, but it cannot teach you anything. It is a product of its time.</span></blockquote></details>
+      <details class="ending-read"><summary><b lang="zh-Hant">失落之魂</b><b lang="en">Lost Soul</b><span lang="zh-Hant">5 分以下</span><span lang="en">5 or less</span></summary>
+        <blockquote class="script"><span lang="zh-Hant">船下水了。你應該覺得完成了什麼，但內心是空的。你沒有上山採集過那些 Avaka，不知道採集時要說什麼、要避開哪些日子。你繞過了所有看起來麻煩的環節，也繞過了所有真正重要的事。這艘船和這片海沒有關係，和山也沒有關係。它只是一個形狀，一件可以賣給觀光客拍照的道具。沒有人會想修它，壞了就丟，再做一艘新的。那些採集時吟唱的歌，那些老人家說只有動手做才能理解的身體知識——你並沒有反對，只是被你忽略了。</span><span lang="en">The boat is in the water. You should feel you finished something, but you feel empty. You never went up to gather the Avaka, never learned what to say or which days to avoid. You walked round everything that looked troublesome, and round everything that mattered. This boat has nothing to do with this sea or these hills. It is a shape, a prop for tourists’ photos. Nobody will mend it; when it breaks it will be thrown away. The songs sung while gathering, the knowledge the elders say only hands can learn: you did not reject them, you simply passed them by.</span></blockquote></details>
+      <details class="ending-read"><summary><b lang="zh-Hant">文化斷裂</b><b lang="en">Cultural Rupture</b><span lang="zh-Hant">12 月結束時還沒完工</span><span lang="en">not finished by Month 12</span></summary>
+        <blockquote class="script"><span lang="zh-Hant">一年過去了，灘頭的木材還散在那裡。始終沒有開始，好像哪裡卡住了，也許是不知道下一步該問誰，也許是繞了太多遠路，隨時間一天一天過去，而你還沒準備好。一艘船的誕生需要一整年，不是因為工序真的那麼複雜，是因為它必須跟著季節走：採集、乾燥、等待、修整，每一步都有它自己的時間。你的節奏和這個節奏對不上，船就停在那裡，等一個不會來的時機。那些纖維會腐爛。那些還沒說出口的技術知識，也會隨著保有記憶的人慢慢老去，而跟著消失。</span><span lang="en">A year has passed and the timber still lies on the shore. It never really began; something got stuck, perhaps not knowing whom to ask next, perhaps too many detours, while the days went by and you were not ready. A boat takes a year not because the steps are so hard but because it must follow the seasons: gathering, drying, waiting, finishing, each with its own time. Your rhythm and that rhythm did not meet, so the boat waits for a moment that will not come. The fibre will rot. The knowledge never spoken will age with those who remember it, and be gone.</span></blockquote></details>
+    </div>
+  </section>
+
+  <!-- reflection -->
+  <section class="chapter" id="reflect">
+    <header><h2><span lang="zh-Hant">反思</span><span lang="en">Reflection</span></h2><p lang="zh-Hant">事實、機制、價值，三層往上問。保持中立，讓學生互相回應。</p><p lang="en">Facts, then mechanisms, then values. Stay neutral; let students answer each other.</p></header>
+    <div class="col">
+      <div class="beat">
+        <div class="beat-head"><h3><span lang="zh-Hant">事實層</span><span lang="en">Facts</span></h3><span class="t">5′</span></div>
+        <p lang="zh-Hant"><strong>「為什麼傳統 Avaka 這麼難拿高分？從遊戲規則說說看。」</strong>引導學生用遊戲的語言說出困難：體力不夠、月份禁令、KP 門檻高。不要急著詮釋。</p>
+        <p lang="en"><strong>“Why is traditional Avaka so hard to score well on? Answer from the rules.”</strong> Let students name the difficulty in the game’s terms: too little stamina, the month bans, high KP thresholds. Do not interpret yet.</p>
+        <blockquote class="script"><span class="who" lang="zh-Hant">主持人回應</span><span class="who" lang="en">Host</span><span lang="zh-Hant">是的，每一個門檻都對應著一個真實的文化現象。KP 需要時間累積，採集需要場域，填縫需要前面所有工序完成——這是知識的連鎖性。</span><span lang="en">Yes, and each threshold matches something real. KP takes time to gather, gathering needs a place, caulking needs every earlier step: knowledge comes in a chain.</span></blockquote>
+      </div>
+      <div class="beat">
+        <div class="beat-head"><h3><span lang="zh-Hant">機制層</span><span lang="en">Mechanisms</span></h3><span class="t">7′</span></div>
+        <ul class="bullets">
+          <li lang="zh-Hant"><strong>「三種完工的方式，各留下了什麼、又放掉了什麼？『去技能化』在遊戲裡是怎麼發生的？」</strong>讓學生說出「不能修」的意思，以及跳過工序後技術的消失。</li>
+          <li lang="en"><strong>“What did each way of finishing keep, and what did it let go? How does deskilling happen in the game?”</strong> Let them explain what “cannot be mended” means, and how skipped steps take knowledge with them.</li>
+          <li lang="zh-Hant">中間那條路：機器加工仍用 Avaka、船也能修，但少了手工曝曬與撚繩的經驗。這是文化流失，還是文化在變？</li>
+          <li lang="en">The middle path: machine processing keeps Avaka and a mendable boat but loses the experience of drying and twisting by hand. Is that loss, or change?</li>
+          <li lang="zh-Hant">看結算畫面的「得分來源」：「你為什麼分數會這麼高（或這麼低）？你做了哪些事？」請益、回饋耆老、幫忙長者背後的傳統教養，可以對照<a href="/rules/player.html#ending">玩家規則的結局</a>。</li>
+          <li lang="en">Look at “where the points came from” on the results: “Why is your score so high (or low)? What did you do?” Connect asking, giving and helping to the values behind them.</li>
+          <li lang="zh-Hant">看「這一年的山林」與部落的船：「為什麼大家都完工之後，森林反而容易老化？部落的船造了幾格？」因為需要材料，人才會去經營森林；不再需要後，人和山的關係也跟著斷了。</li>
+          <li lang="en">Look at the year’s forest and the community boat: “Why does the forest age once everyone has finished? How far did the community boat get?” People tend the forest because they need its material; when the need goes, so does the bond.</li>
+          <li lang="zh-Hant">延伸：「在蘭嶼或你自己的生活裡，有沒有技術或知識，因為被更方便的東西取代，而慢慢消失了？」</li>
+          <li lang="en">Further: “In Lanyu or your own life, is there a skill or knowledge fading because something easier replaced it?”</li>
+        </ul>
+      </div>
+      <div class="beat">
+        <div class="beat-head"><h3><span lang="zh-Hant">價值層</span><span lang="en">Values</span></h3><span class="t">9′</span></div>
+        <ul class="bullets">
+          <li lang="zh-Hant"><strong>「如果你是蘭嶼的青年，你今天會選哪條路？」</strong></li><li lang="en"><strong>“If you were a young person on Lanyu, which path would you choose today?”</strong></li>
+          <li lang="zh-Hant">「文化一定只能完全照舊或完全換掉嗎？除了遊戲裡的三種，你還想得到什麼方式？中生代告訴了我們什麼？」</li><li lang="en">“Must culture either stay exactly the same or be replaced? What other ways can you think of? What did the Middle Generation show us?”</li>
+          <li lang="zh-Hant">回扣開場：「哪一種衣服材質對環境的影響比較小？可是它比較麻煩，你有沒有別的想法？」</li><li lang="en">Back to the opening: “Which clothing material is gentler on the environment? It is more trouble; do you have another idea?”</li>
+          <li lang="zh-Hant">請扮演青年的學生回答：「你跟著耆老學習的那幾個月，帶給你什麼？如果沒有，結局會不同嗎？」</li><li lang="en">Ask the students who played the Youth: “What did the months learning from the Elder give you? Without them, would your ending differ?”</li>
+          <li lang="zh-Hant">「如果你想認真思考自己的文化，身邊可以找誰？老人家和中生代，各自會告訴你什麼？」</li><li lang="en">“If you wanted to think seriously about your own culture, whom could you ask? What would an elder and someone in the middle generation each tell you?”</li>
+        </ul>
+        <blockquote class="script"><span class="who" lang="zh-Hant">主持人收尾</span><span class="who" lang="en">Host, closing</span><span lang="zh-Hant">文化傳承不是把知識存在書裡，是把知識存在人的身體裡。這個遊戲的學徒機制，就是在說這件事。文化會變是正常的；重要的是知道核心價值是什麼、自己為什麼這樣選，以及選了之後要承擔什麼。</span><span lang="en">Passing on a culture is not storing knowledge in books; it is storing it in people’s bodies. That is what the apprenticeship in this game is about. Culture changing is normal; what matters is knowing its core, why you chose as you did, and what you take on by choosing.</span></blockquote>
+        <p class="watch"><b lang="zh-Hant">評量</b><b lang="en">Assess</b><span lang="zh-Hant">三層次反思學習單的價值層回應（學習目標 3、4）。</span><span lang="en">the values section of the reflection worksheet (objectives 3 and 4).</span></p>
+      </div>
+    </div>
+  </section>
+
+  <div class="next">
+    <p lang="zh-Hant">完整規則與月份效果在玩家規則；上課時可以把那一頁一起投影。</p>
+    <p lang="en">Full rules and month effects are in the player rules, which you can project alongside.</p>
+    <div class="links"><a class="ghost" href="/rules/player.html"><span lang="zh-Hant">玩家規則</span><span lang="en">Player rules</span></a><a class="play" href="/"><span lang="zh-Hant">進入遊戲</span><span lang="en">Play</span></a></div>
+  </div>
+  <p class="foot" lang="zh-Hant">依《Avaka：島嶼的維度》教學方案（10.19 修訂版）整理。規則以遊戲本身為準。</p>
+  <p class="foot" lang="en">From the Avaka lesson plan (revised 19 October). The game itself is the final word on the rules.</p>
+</main>
+
+<dialog class="stage-view" id="stage" aria-label="朗讀">
+  <button class="tool close" type="button" id="stage-close" aria-label="關閉"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <div id="stage-body"></div>
+</dialog>
+
+<script src="/rules/rules.js?v=20261020_7"></script>
+</body>
+</html>

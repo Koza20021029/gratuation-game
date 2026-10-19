@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Avaka：島嶼的維度｜規則與課堂</title>
+<meta name="description" content="《Avaka：島嶼的維度》的規則與課堂指引。順應夜曆，還是追求效率？">
+<script>
+  (function () {
+    var q = new URLSearchParams(location.search), get = function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } };
+    var lang = q.get('lang') || get('avaka_lang') || 'zh', theme = get('avaka_lobby_theme');
+    var d = document.documentElement;
+    d.dataset.lang = lang === 'en' ? 'en' : 'zh'; d.lang = lang === 'en' ? 'en' : 'zh-Hant';
+    if (theme === 'light') d.dataset.theme = 'light';
+    if (get('avaka_rules_seen')) d.dataset.seen = '1';     // been here before: no long opening
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Gloock&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/rules/rules.css?v=20261020_9">
+</head>
+<body class="cover">
+<canvas id="field" aria-hidden="true"></canvas>
+<div class="cover-atmo" aria-hidden="true"></div>
+
+<header class="cover-top">
+  <span class="cover-mark">Avaka · <i>Musa textilis</i></span>
+  <div class="tools">
+    <button class="tool" type="button" id="t-lang" aria-label="Switch language"><span lang="zh-Hant">EN</span><span lang="en">中文</span></button>
+    <button class="tool" type="button" id="t-theme" aria-label="白天／夜晚"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 019.5 4a8 8 0 1010.5 10.5z"/></svg></button>
+  </div>
+</header>
+
+<main class="cover-main">
+  <h1 class="cover-title" aria-label="Avaka"><span class="ch"><span class="sw">A</span></span><span class="ch"><span class="sw">v</span></span><span class="ch"><span class="sw">a</span></span><span class="ch"><span class="sw">k</span></span><span class="ch"><span class="sw">a</span></span></h1>
+  <p class="cover-sub"><span lang="zh-Hant">島嶼的維度</span><span lang="en">Dimension of the Island</span></p>
+  <svg class="cover-cord" viewBox="0 0 320 14" aria-hidden="true"><path d="M2 7C40 1 70 13 110 7S180 1 220 7 290 13 318 7"/><path d="M2 7C40 13 70 1 110 7S180 13 220 7 290 1 318 7"/></svg>
+  <p class="cover-q" id="cover-q"><span lang="zh-Hant"><span class="qa">順應夜曆</span>，還是<span class="qb">追求效率</span>？</span><span lang="en"><span class="qa">Follow the night calendar</span>, or <span class="qb">chase efficiency</span>?</span></p>
+  <p class="cover-lede" lang="zh-Hant">身為蘭嶼雅美／達悟族的工匠，你要在 12 個月內完成一艘拼板舟。在親手處理的 Avaka 和現成的樹脂之間，決定你要留下什麼。</p>
+  <p class="cover-lede" lang="en">As a Tao craftsperson of Lanyu, you have twelve months to finish a plank boat. Between Avaka worked by hand and resin off the shelf, you decide what you leave behind.</p>
+
+  <nav class="doors" aria-label="入口">
+    <a class="door" href="/rules/player.html"><b><span lang="zh-Hant">玩家規則</span><span lang="en">Player rules</span></b><span lang="zh-Hant">角色、工序、月份、結局</span><span lang="en">Roles, steps, months, endings</span></a>
+    <a class="door" href="/rules/class.html"><b><span lang="zh-Hant">課堂版</span><span lang="en">For teachers</span></b><span lang="zh-Hant">90 分鐘流程與朗讀台詞</span><span lang="en">The 90-minute lesson and scripts</span></a>
+    <a class="door go" href="/"><b><span lang="zh-Hant">進入遊戲</span><span lang="en">Play the game</span></b><span lang="zh-Hant">開一間房，或加入同組</span><span lang="en">Open a room or join your group</span></a>
+  </nav>
+  <p class="cover-hint"><span lang="zh-Hant">用手撥撥看這些纖維</span><span lang="en">Run your hand through the fibres</span></p>
+</main>
+
+<svg class="pull" id="pull" aria-hidden="true"><path id="pull-path" d=""/></svg>
+<script src="/rules/rules.js?v=20261020_7"></script>
+<script src="/rules/cover.js?v=20261020_9"></script>
+</body>
+</html>

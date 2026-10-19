@@ -109,7 +109,7 @@ const LOBBY_HTML = `
     <button class="btn secondary" type="button" id="b-create">自己開一間新的</button>
     <p class="form-msg" id="form-msg" role="alert"></p>
     <div class="foot">
-      <a href="#" id="rules-link">先看遊戲規則與流程</a>
+      <a href="/rules/player.html" id="rules-link" target="_blank" rel="noopener">先看遊戲規則與流程</a>
       <span class="lang"><button type="button" data-lang="zh" aria-pressed="true">中文</button> · <button type="button" data-lang="en" aria-pressed="false">EN</button></span>
     </div>
    </div>
@@ -616,7 +616,8 @@ const LOBBY_HTML = `
   [$('p-name'), $('room')].forEach(inp => inp.addEventListener('keydown', e => { if (e.key === 'Enter') submit($('room').value.trim() ? 'join' : 'create'); }));
   $('b-back').addEventListener('click', () => { old('leave-lobby-btn').click(); showJoin(); });
   $('b-start').addEventListener('click', () => { pluck(523, 0.1); old('start-game-btn').click(); });
-  $('rules-link').addEventListener('click', e => { e.preventDefault(); old('open-rules-btn').click(); });
+  // the rules live at /rules now; they open in their own tab so the lobby (and a room in progress) stays put
+  $('rules-link').addEventListener('click', e => { e.currentTarget.href = '/rules/player.html?lang=' + (typeof currentLang !== 'undefined' && currentLang === 'en' ? 'en' : 'zh'); });
   // A refusal from the server (say, a room code that does not exist) usually lands while the avatar
   // creator is still up, so it is kept and shown as soon as this screen is back.
   let heldError = '';

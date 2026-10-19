@@ -311,6 +311,12 @@ def record_player_kp(player, month):
 def index():
     return render_template('index.html')
 
+# the rules site lives inside the game: /rules opens the player rules, /rules/class.html the classroom guide
+@app.route('/rules')
+@app.route('/rules/')
+def rules_index():
+    return send_from_directory('static/rules', 'index.html')
+
 @app.route('/<path:path>')
 def serve_static(path):
     return send_from_directory('static', path)

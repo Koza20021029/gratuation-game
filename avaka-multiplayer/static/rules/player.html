@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>玩家規則｜Avaka：島嶼的維度</title>
+<meta name="description" content="《Avaka：島嶼的維度》玩家規則：三個角色、六道工序、十二個月與五種結局。">
+<script>
+  // choose language and theme before the page paints, so nothing flashes
+  (function () {
+    var q = new URLSearchParams(location.search), get = function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } };
+    var lang = q.get('lang') || get('avaka_lang') || 'zh', theme = get('avaka_lobby_theme');
+    document.documentElement.dataset.lang = lang === 'en' ? 'en' : 'zh';
+    document.documentElement.lang = lang === 'en' ? 'en' : 'zh-Hant';
+    if (theme === 'light') document.documentElement.dataset.theme = 'light';
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Gloock&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/rules/rules.css?v=20261020_9">
+</head>
+<body>
+
+<header class="mast">
+  <div class="mast-in">
+    <a class="brand" href="/rules/"><b>Avaka</b><span lang="zh-Hant">島嶼的維度</span><span lang="en">Dimension of the Island</span></a>
+    <nav aria-label="網站">
+      <a href="/rules/player.html" aria-current="page"><span lang="zh-Hant">玩家規則</span><span lang="en">Player rules</span></a>
+      <a href="/rules/class.html"><span lang="zh-Hant">課堂版</span><span lang="en">For teachers</span></a>
+    </nav>
+    <div class="tools">
+      <button class="tool" type="button" id="t-lang" aria-label="Switch language"><span lang="zh-Hant">EN</span><span lang="en">中文</span></button>
+      <button class="tool" type="button" id="t-theme" aria-label="白天／夜晚">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 019.5 4a8 8 0 1010.5 10.5z"/></svg>
+      </button>
+    </div>
+    <a class="play" href="/"><span lang="zh-Hant">進入遊戲</span><span lang="en">Play</span></a>
+  </div>
+</header>
+
+<nav class="rail" aria-label="章節">
+  <ol id="rope">
+    <li><a href="#start"><span lang="zh-Hant">開始</span><span lang="en">Start</span><small lang="zh-Hant">一年怎麼過</small><small lang="en">how a year runs</small></a></li>
+    <li><a href="#roles"><span lang="zh-Hant">角色</span><span lang="en">Roles</span><small lang="zh-Hant">三代人</small><small lang="en">three generations</small></a></li>
+    <li><a href="#steps"><span lang="zh-Hant">工序</span><span lang="en">Steps</span><small lang="zh-Hant">六道與三條路</small><small lang="en">six steps, three paths</small></a></li>
+    <li><a href="#months"><span lang="zh-Hant">月份</span><span lang="en">Months</span><small lang="zh-Hant">海洋夜曆</small><small lang="en">the night calendar</small></a></li>
+    <li><a href="#together"><span lang="zh-Hant">互助</span><span lang="en">Together</span><small lang="zh-Hant">請益與幫忙</small><small lang="en">asking and helping</small></a></li>
+    <li><a href="#ending"><span lang="zh-Hant">結局</span><span lang="en">Endings</span><small lang="zh-Hant">分數與五種結局</small><small lang="en">score and five endings</small></a></li>
+  </ol>
+</nav>
+
+<main class="wrap">
+
+  <div class="lead">
+    <div>
+      <h1 lang="zh-Hant">一年，一艘船。</h1>
+      <h1 lang="en">One year, one boat.</h1>
+      <p lang="zh-Hant">你是蘭嶼雅美／達悟族的工匠。照著海洋夜曆，從山上砍下 Avaka，把纖維處理成繩，填進拼板舟的縫裡。快一點的方法也有，只是每條路留下的東西不一樣。</p>
+      <p lang="en">You are a Tao (Yami) craftsperson on Lanyu. Following the night calendar, you cut Avaka on the hill, work its fibre into cord and caulk the seams of a plank boat. There are quicker ways too; each leaves something different behind.</p>
+      <p class="binomial">Avaka · <i>Musa textilis</i> · <span lang="zh-Hant">馬尼拉蕉麻</span><span lang="en">Manila hemp</span></p>
+    </div>
+    <svg class="plant" viewBox="0 0 220 230" aria-hidden="true">
+      <path class="ground" d="M10 222H210"/>
+      <path d="M104 222V96"/><path d="M114 222V104"/>
+      <path d="M104 100C86 60 52 44 22 52C48 56 78 74 104 106"/>
+      <path d="M108 96C118 50 150 26 190 30C160 40 132 64 110 104"/>
+      <path d="M106 98C100 60 106 26 122 6C126 36 118 70 108 100"/>
+      <path d="M114 110C138 86 172 82 204 96C174 96 144 106 116 124"/>
+      <path d="M104 120C80 104 46 106 16 124C46 120 76 122 102 136"/>
+      <path d="M40 222V180M40 184C32 168 20 164 10 168C20 170 30 176 40 188M40 182C46 166 60 160 70 164C60 168 50 174 40 186"/>
+    </svg>
+  </div>
+
+  <!-- one page, everything a player needs at a glance -->
+  <section class="sheet" aria-labelledby="sheet-title">
+    <div class="sheet-head">
+      <h2 id="sheet-title"><span lang="zh-Hant">一頁看懂</span><span lang="en">On one page</span></h2>
+      <p class="facts">
+        <span lang="zh-Hant"><b>3 人</b>一組</span><span lang="en"><b>3</b> to a group</span>
+        <span lang="zh-Hant"><b>12 個月</b>＝一年</span><span lang="en"><b>12 months</b>, one year</span>
+        <span lang="zh-Hant">約 <b>90 分鐘</b>（兩節課）</span><span lang="en">about <b>90 minutes</b></span>
+      </p>
+    </div>
+    <div class="fields">
+      <div class="field f-goal">
+        <h3><span lang="zh-Hant">目標</span><span lang="en">The aim</span></h3>
+        <p lang="zh-Hant">在第 12 個月結束前，造好自己的拼板舟。沒有誰贏誰輸：每個人依自己的分數，得到五種結局之一。</p>
+        <p lang="en">Finish your own plank boat before Month 12 ends. Nobody wins or loses: each player reaches one of five endings from their own score.</p>
+        <p lang="zh-Hant">每個月大家各自用體力做事，全部按下「準備進入下個月」，就一起進到下個月。</p>
+        <p lang="en">Each month everyone spends their stamina in any order; when all press “Ready for next month”, the year moves on together.</p>
+      </div>
+      <div class="field f-roles">
+        <h3><span lang="zh-Hant">三個角色</span><span lang="en">Three roles</span></h3>
+        <ul class="roles">
+          <li><b lang="zh-Hant">耆老</b><b lang="en">Elder</b>
+            <span class="nums"><span><i>AP</i>6</span><span><i>KP</i>10</span></span>
+            <p lang="zh-Hant">懂得最多，體力最少。填縫不耗體力，可以指導與講述。</p><p lang="en">Knows the most, has the least stamina. Caulks for free; guides and tells stories.</p></li>
+          <li><b lang="zh-Hant">青年</b><b lang="en">Youth</b>
+            <span class="nums"><span><i>AP</i>8</span><span><i>KP</i>0</span></span>
+            <p lang="zh-Hant">體力最多，什麼都還不會。走路不耗體力，要開口去問。</p><p lang="en">Most stamina, knows nothing yet. Walks for free and has to ask.</p></li>
+          <li><b lang="zh-Hant">中生代</b><b lang="en">Middle Gen.</b>
+            <span class="nums"><span><i>AP</i>7</span><span><i>KP</i>5</span></span>
+            <p lang="zh-Hant">承先啟後。向耆老學得快，青年也能來問你。</p><p lang="en">The bridge: learns fast from the Elder, and the Youth can learn from you.</p></li>
+        </ul>
+      </div>
+      <div class="field f-steps">
+        <h3><span lang="zh-Hant">六道工序</span><span lang="en">The six steps</span></h3>
+        <ol class="knots">
+          <li><b lang="zh-Hant">砍伐剝皮</b><b lang="en">Chop &amp; peel</b><span class="tao">ipana'ape</span><span class="where" lang="zh-Hant">山林・得到材料</span><span class="where" lang="en">Forest · gives material</span></li>
+          <li><b lang="zh-Hant">摩擦軟化</b><b lang="en">Rub soft</b><span class="tao">&nbsp;</span><span class="where" lang="zh-Hant">山林</span><span class="where" lang="en">Forest</span></li>
+          <li><b lang="zh-Hant">劃痕撕絲</b><b lang="en">Score &amp; strip</b><span class="tao">chingdasan</span><span class="where" lang="zh-Hant">山林</span><span class="where" lang="en">Forest</span></li>
+          <li class="shore"><b lang="zh-Hant">曝曬乾燥</b><b lang="en">Dry in the sun</b><span class="tao">&nbsp;</span><span class="where" lang="zh-Hant">灘頭工作室</span><span class="where" lang="en">Shore workshop</span></li>
+          <li class="shore"><b lang="zh-Hant">理線撚繩</b><b lang="en">Twist cord</b><span class="tao">oviden</span><span class="where" lang="zh-Hant">灘頭工作室</span><span class="where" lang="en">Shore workshop</span><span class="need">KP 3</span></li>
+          <li class="shore"><b lang="zh-Hant">填縫完工</b><b lang="en">Caulk &amp; finish</b><span class="tao">Mamaruk</span><span class="where" lang="zh-Hant">灘頭工作室</span><span class="where" lang="en">Shore workshop</span><span class="need">KP 8</span></li>
+        </ol>
+        <p class="legend"><span lang="zh-Hant">在山林做</span><span lang="en">done in the Forest</span><span class="shore" lang="zh-Hant">在灘頭工作室做</span><span class="shore" lang="en">done at the Shore</span><span class="plain" lang="zh-Hant">每道工序 3 AP，做完要等到下個月才能做下一道</span><span class="plain" lang="en">each step 3 AP; after one, wait for next month</span></p>
+      </div>
+      <div class="field f-paths">
+        <h3><span lang="zh-Hant">三條完工的路</span><span lang="en">Three ways to finish</span></h3>
+        <ol class="paths">
+          <li><span class="pts">+20</span><b lang="zh-Hant">傳統 Avaka</b><b lang="en">Traditional Avaka</b><p lang="zh-Hant">六道工序全部親手做完。船可拆、可修。只有這條路能得到「傳承之靈」。</p><p lang="en">All six steps by hand. The boat can be taken apart and mended. Only this path can reach “Spirit of Heritage”.</p></li>
+          <li><span class="pts">+12</span><b lang="zh-Hant">機器加工天然纖維</b><b lang="en">Machine-processed fibre</b><p lang="zh-Hant">做完山林三道，到商店用機器處理（KP 5）。仍是 Avaka、仍可修。中生代 +15。</p><p lang="en">After the three forest steps, finish by machine at the Store (KP 5). Still Avaka, still mendable. Middle Gen. +15.</p></li>
+          <li><span class="pts">+5</span><b lang="zh-Hant">工業樹脂</b><b lang="en">Industrial resin</b><p lang="zh-Hant">做完山林三道就能在商店完工，最快。接縫黏死，壞了不能拆修。</p><p lang="en">Finish at the Store right after the forest steps; the quickest. The seams are glued shut and cannot be mended.</p></li>
+        </ol>
+      </div>
+      <div class="field f-score">
+        <h3><span lang="zh-Hant">還能這樣得分</span><span lang="en">Other points</span></h3>
+        <ul class="score-list">
+          <li><span lang="zh-Hant">請益、被請益、指導、講述</span><span lang="en">Asking, being asked, guiding, telling</span><b>+1</b></li>
+          <li><span lang="zh-Hant">送材料給耆老、幫忙長者</span><span lang="en">Giving to / helping the Elder</span><b>+1</b></li>
+          <li><span lang="zh-Hant">搭把手、巡山</span><span lang="en">Lending a hand, walking the hill</span><b>+1</b></li>
+          <li><span lang="zh-Hant">科學轉譯成功</span><span lang="en">Scientific translation</span><b>+4</b></li>
+          <li><span lang="zh-Hant">小組任務達成（全組）</span><span lang="en">Group mission (all)</span><b>+1</b></li>
+          <li><span lang="zh-Hant">年底森林茂盛（全組）</span><span lang="en">Healthy forest at year end (all)</span><b>+2</b></li>
+          <li><span lang="zh-Hant">部落的船造完（全組）</span><span lang="en">Community boat built (all)</span><b>+3</b></li>
+        </ul>
+      </div>
+    </div>
+    <p class="sheet-foot" lang="zh-Hant">上面就是全部的重點。想知道細節，沿著上方的繩子往下讀。</p>
+    <p class="sheet-foot" lang="en">That is the whole game in brief. For the details, follow the rope above down the page.</p>
+  </section>
+
+  <!-- 1 start -->
+  <section class="chapter" id="start">
+    <header><h2><span lang="zh-Hant">開始</span><span lang="en">Start</span></h2><p lang="zh-Hant">一個月裡會發生什麼，地圖怎麼走。</p><p lang="en">What happens in a month, and how to get around.</p></header>
+    <div class="col">
+      <h3><span lang="zh-Hant">兩種點數</span><span lang="en">Two kinds of points</span></h3>
+      <p lang="zh-Hant"><strong>體力 AP</strong> 是你的力氣與時間，幾乎每件事都要花。每個月開始時只回復一部分（青年 +6，耆老與中生代 +5），不會超過角色上限。<strong>技術 KP</strong> 是你對傳統工藝的了解，主要靠向人請益得到；後面的工序要有足夠的 KP 才能做。</p>
+      <p lang="en"><strong>Stamina (AP)</strong> is your strength and time; almost everything costs some. Each month you recover only part of it (Youth +6, Elder and Middle +5), never above your role’s limit. <strong>Skill (KP)</strong> is how well you understand the craft; you get it mostly by asking people, and the later steps need enough of it.</p>
+      <p class="note" lang="zh-Hant">另外還有材料（處理好的 Avaka 纖維，整艘船要 5 份）和全組共用的森林狀態。</p>
+      <p class="note" lang="en">There is also material (prepared Avaka fibre; a boat takes 5) and a forest that the whole group shares.</p>
+
+      <h3><span lang="zh-Hant">一個月怎麼過</span><span lang="en">How a month goes</span></h3>
+      <ol class="steps-flow">
+        <li lang="zh-Hant"><strong>新的月份開始。</strong>畫面上方說明這個月的效果，有些月份會先跳出事件卡要你選。</li>
+        <li lang="en"><strong>A new month opens.</strong> The top of the screen shows this month’s effect; some months first hand you an event card.</li>
+        <li lang="zh-Hant"><strong>各自行動。</strong>不用輪流，想做什麼就做，直到體力用完或不想再做。</li>
+        <li lang="en"><strong>Everyone acts.</strong> No turns: do what you like until your stamina runs out or you are done.</li>
+        <li lang="zh-Hant"><strong>按「準備進入下個月」。</strong>全組都按下後，一起進到下個月，大家回復一部分體力。</li>
+        <li lang="en"><strong>Press “Ready for next month”.</strong> When everyone has, the group moves on and recovers part of its stamina.</li>
+      </ol>
+
+      <h3><span lang="zh-Hant">三個地方</span><span lang="en">Three places</span></h3>
+      <div class="tbl-wrap"><table class="tbl">
+        <thead><tr><th><span lang="zh-Hant">地方</span><span lang="en">Place</span></th><th><span lang="zh-Hant">在這裡做</span><span lang="en">What happens there</span></th></tr></thead>
+        <tbody>
+          <tr><th><span lang="zh-Hant">山林</span><span lang="en">Forest</span></th><td lang="zh-Hant">工序①②③、補種、巡山</td><td lang="en">Steps ①②③, replanting, walking the hill</td></tr>
+          <tr><th><span lang="zh-Hant">灘頭工作室</span><span lang="en">Shore workshop</span></th><td lang="zh-Hant">工序④⑤⑥、部落的船。所有人從這裡出發。</td><td lang="en">Steps ④⑤⑥ and the community boat. Everyone starts here.</td></tr>
+          <tr><th><span lang="zh-Hant">商店</span><span lang="en">Store</span></th><td lang="zh-Hant">機器加工天然纖維、工業樹脂完工</td><td lang="en">Finishing by machine or with resin</td></tr>
+        </tbody>
+      </table></div>
+      <p lang="zh-Hant">走到任何一個地方都是 <strong>1 AP</strong>，青年不用花體力。2 月不能進山林。</p>
+      <p lang="en">Walking to any place costs <strong>1 AP</strong>; the Youth walks for free. Nobody may enter the forest in Month 2.</p>
+    </div>
+  </section>
+
+  <!-- 2 roles -->
+  <section class="chapter" id="roles">
+    <header><h2><span lang="zh-Hant">角色</span><span lang="en">Roles</span></h2><p lang="zh-Hant">三代人，各缺一樣東西。</p><p lang="en">Three generations, each short of something.</p></header>
+    <div class="col">
+      <div class="tbl-wrap"><table class="tbl">
+        <thead><tr><th><span lang="zh-Hant">角色</span><span lang="en">Role</span></th><th>AP</th><th><span lang="zh-Hant">每月回復</span><span lang="en">Per month</span></th><th><span lang="zh-Hant">開局</span><span lang="en">Start</span> KP</th><th><span lang="zh-Hant">特長</span><span lang="en">Strengths</span></th></tr></thead>
+        <tbody>
+          <tr><th><span lang="zh-Hant">資深工匠（耆老）</span><span lang="en">Elder artisan</span></th><td class="num">6</td><td class="num">+5</td><td class="num">10</td>
+            <td lang="zh-Hant">填縫不耗 AP。<br>遠程指導：2 AP，讓一位後輩 +1 KP，自己 +1 分。<br>講述：2 AP，每月 1 次，身邊的後輩各 +1 KP。</td>
+            <td lang="en">Caulks for 0 AP.<br>Guide from afar: 2 AP, one learner +1 KP, you +1.<br>Tell stories: 2 AP, once a month, learners beside you +1 KP each.</td></tr>
+          <tr><th><span lang="zh-Hant">文化復振青年（青年）</span><span lang="en">Youth</span></th><td class="num">8</td><td class="num">+6</td><td class="num">0</td>
+            <td lang="zh-Hant">移動不耗 AP。<br>向耆老請益：3 AP，+3 KP。<br>向中生代請益：1 AP，+2 KP（自己的 KP 要比對方低）。</td>
+            <td lang="en">Walks for 0 AP.<br>Ask the Elder: 3 AP, +3 KP.<br>Ask the Middle Gen.: 1 AP, +2 KP (while you know less than they do).</td></tr>
+          <tr><th><span lang="zh-Hant">中生代</span><span lang="en">Middle generation</span></th><td class="num">7</td><td class="num">+5</td><td class="num">5</td>
+            <td lang="zh-Hant">向耆老請益只要 2 AP。<br>青年可以來向你請益，雙方各 +1 分。<br>科學轉譯成功率 +20%，機器加工完工 +15 分。</td>
+            <td lang="en">Asks the Elder for only 2 AP.<br>The Youth can ask you; +1 each.<br>Scientific translation +20% chance; machine finish gives +15.</td></tr>
+        </tbody>
+      </table></div>
+      <p class="note" lang="zh-Hant">不一定三種角色都要有人，一個人也能開始，但少了誰，就少了一種傳承的方式。</p>
+      <p class="note" lang="en">A room does not need all three roles, and one player can start alone, but each missing role is a way of passing knowledge that the group loses.</p>
+    </div>
+  </section>
+
+  <!-- 3 steps -->
+  <section class="chapter" id="steps">
+    <header><h2><span lang="zh-Hant">工序</span><span lang="en">Steps</span></h2><p lang="zh-Hant">一道一道來，跟著季節等。</p><p lang="en">One at a time, waiting on the seasons.</p></header>
+    <div class="col">
+      <div class="stages" id="stages">
+        <figure class="plate" aria-hidden="true">
+          <svg viewBox="0 0 240 180">
+            <g class="pl on" data-i="0">
+              <path pathLength="100" class="gr" d="M14 166H226"/>
+              <path pathLength="100" d="M96 166V92M110 166V100"/><path pathLength="100" class="cut" d="M84 132L124 120"/>
+              <path pathLength="100" d="M98 96C82 62 52 48 26 54C50 58 76 74 98 100M106 92C116 52 146 30 182 34C154 44 128 66 108 98M102 94C96 60 102 30 116 12C120 38 112 68 104 96"/>
+              <path pathLength="100" class="lit" d="M140 166C150 150 160 140 178 132M150 166C160 152 172 144 194 140M160 166C172 156 186 150 210 148"/>
+              <path pathLength="100" d="M58 118L82 128M60 112L78 124"/>
+            </g>
+            <g class="pl" data-i="1">
+              <path pathLength="100" class="gr" d="M14 166H226"/>
+              <path pathLength="100" d="M104 166C106 120 100 70 108 14M132 166C128 118 136 70 128 14"/>
+              <path pathLength="100" d="M108 60C96 50 84 52 74 44M128 52C140 44 152 46 162 38"/>
+              <path pathLength="100" class="lit" d="M52 96C80 100 96 88 106 92C118 96 124 92 134 90C150 88 168 100 190 92"/>
+              <path pathLength="100" class="lit" d="M54 104C80 108 96 96 106 100C118 104 126 100 134 98C150 96 168 108 188 100"/>
+              <path pathLength="100" d="M40 100l12-4 2 12-12 2zM188 96l12-2 0 12-12 0z"/>
+              <path pathLength="100" d="M60 128H42M42 128l7-6M42 128l7 6M180 128H198M198 128l-7-6M198 128l-7 6"/>
+            </g>
+            <g class="pl" data-i="2">
+              <path pathLength="100" class="gr" d="M14 166H226"/>
+              <path pathLength="100" d="M30 124L120 96L210 124L120 152Z"/>
+              <path pathLength="100" d="M60 116L150 142M78 110L168 136M96 104L186 130"/>
+              <path pathLength="100" class="lit" d="M150 142C170 150 186 162 200 176M168 136C186 146 204 156 222 164M186 130C200 136 214 140 232 142"/>
+              <path pathLength="100" d="M150 54L132 96M150 54l10 6-18 38"/>
+            </g>
+            <g class="pl" data-i="3">
+              <path pathLength="100" class="gr" d="M14 166H226"/>
+              <circle pathLength="100" cx="190" cy="40" r="14"/><path pathLength="100" d="M190 16v-8M190 72v-8M214 40h8M158 40h8M207 23l6-6M167 63l-6 6M207 57l6 6M167 17l-6-6"/>
+              <path pathLength="100" d="M30 166V70M150 166V70M22 74H158"/>
+              <path pathLength="100" class="lit" d="M44 74V140M54 74V146M64 74V138M74 74V150M84 74V142M94 74V148M104 74V140M114 74V146M124 74V138M134 74V144"/>
+              <path pathLength="100" d="M170 166q8-6 16 0t16 0 16 0"/>
+            </g>
+            <g class="pl" data-i="4">
+              <path class="gr" pathLength="100" d="M14 166H226"/>
+              <path class="lit" pathLength="100" d="M22.0 58.0 L24.5 60.7 L27.0 63.0 L29.5 64.8 L32.0 66.0 L34.5 66.3 L37.0 65.9 L39.5 64.8 L42.0 63.2 L44.5 61.6 L47.0 60.0 L49.5 58.8 L52.0 58.3 L54.5 58.5 L57.0 59.5 L59.5 61.3 L62.0 63.6 L64.5 66.2 L67.0 68.9 L69.5 71.3 L72.0 73.2 L74.5 74.4 L77.0 74.9 L79.5 74.5 L82.0 73.5 L84.5 72.1 L87.0 70.4 L89.5 68.8 L92.0 67.5 L94.5 66.9 L97.0 67.0 L99.5 67.9 L102.0 69.5 L104.5 71.8 L107.0 74.4 L109.5 77.1 L112.0 79.5 L114.5 81.5 L117.0 82.9 L119.5 83.4 L122.0 83.2 L124.5 82.3 L127.0 80.9 L129.5 79.2 L132.0 77.6 L134.5 76.3 L137.0 75.5 L139.5 75.5 L142.0 76.3 L144.5 77.8 L147.0 80.0 L149.5 82.6 L152.0 85.2 L154.5 87.8 L157.0 89.9 L159.5 91.3 L162.0 92.0 L164.5 91.8 L167.0 91.0 L169.5 89.7 L172.0 88.0"/><path pathLength="100" d="M22.0 58.0 L24.5 56.3 L27.0 55.0 L29.5 54.2 L32.0 54.0 L34.5 54.7 L37.0 56.1 L39.5 58.2 L42.0 60.8 L44.5 63.4 L47.0 66.0 L49.5 68.2 L52.0 69.7 L54.5 70.5 L57.0 70.5 L59.5 69.7 L62.0 68.4 L64.5 66.8 L67.0 65.1 L69.5 63.7 L72.0 62.8 L74.5 62.6 L77.0 63.1 L79.5 64.5 L82.0 66.5 L84.5 68.9 L87.0 71.6 L89.5 74.2 L92.0 76.5 L94.5 78.1 L97.0 79.0 L99.5 79.1 L102.0 78.5 L104.5 77.2 L107.0 75.6 L109.5 73.9 L112.0 72.5 L114.5 71.5 L117.0 71.1 L119.5 71.6 L122.0 72.8 L124.5 74.7 L127.0 77.1 L129.5 79.8 L132.0 82.4 L134.5 84.7 L137.0 86.5 L139.5 87.5 L142.0 87.7 L144.5 87.2 L147.0 86.0 L149.5 84.4 L152.0 82.8 L154.5 81.2 L157.0 80.1 L159.5 79.7 L162.0 80.0 L164.5 81.2 L167.0 83.0 L169.5 85.3 L172.0 88.0"/>
+              <path class="lit" pathLength="100" d="M22 58C14 50 10 40 16 30"/><path pathLength="100" d="M22 58C12 62 6 56 6 46"/>
+              <path pathLength="100" d="M172 88C196 92 208 110 196 126C182 144 140 140 140 124C140 110 166 104 182 114M150 150a32 11 0 1 0 64 0a32 11 0 1 0-64 0M158 158a24 7 0 1 0 48 0"/>
+            </g>
+            <g class="pl" data-i="5">
+              <path pathLength="100" class="gr" d="M14 166H226"/>
+              <path pathLength="100" d="M16 70C70 56 170 56 224 70L216 102C170 92 70 92 24 102Z"/>
+              <path pathLength="100" d="M24 102C70 92 170 92 216 102L206 140C164 130 76 130 34 140Z"/>
+              <path pathLength="100" d="M70 80V118M120 76V114M170 80V118"/>
+              <path pathLength="100" class="lit" d="M56 96C64 88 76 108 84 100S100 88 108 100 124 108 132 100 148 88 156 100 172 108 180 100"/>
+              <path pathLength="100" d="M30 156q10-8 20 0t20 0 20 0"/>
+            </g>
+          </svg>
+          <figcaption><span class="cap-n">①</span><span class="cap-t" lang="zh-Hant">砍伐剝皮</span><span class="cap-t" lang="en">Chop &amp; peel</span></figcaption>
+        </figure>
+        <ol class="stage-list">
+          <li class="stage-step">
+            <h3><span class="sn">①</span><span lang="zh-Hant">砍伐剝皮</span><span lang="en">Chop &amp; peel</span> <span class="tao">ipana'ape</span>
+            <p lang="zh-Hant">在開花之前砍下假莖，把葉鞘一層層剝下來。</p><p lang="en">Cut the pseudo-stem before it flowers and peel the leaf sheaths off one by one.</p>
+            <dl class="meta"><div><dt lang="zh-Hant">地方</dt><dt lang="en">Where</dt><dd lang="zh-Hant">山林</dd><dd lang="en">Forest</dd></div><div><dt>AP</dt><dd lang="zh-Hant">3</dd><dd lang="en">3</dd></div><div><dt lang="zh-Hant">需要</dt><dt lang="en">Needs</dt><dd lang="zh-Hant">無。得到 1 份材料（1 月、7 月 2 份），同一個月可以重複做</dd><dd lang="en">Nothing. Gives 1 material (2 in Months 1 and 7); can be repeated in a month</dd></div></dl>
+          </li>
+          <li class="stage-step">
+            <h3><span class="sn">②</span><span lang="zh-Hant">懸掛摩擦軟化</span><span lang="en">Hang &amp; rub soft</span>
+            <p lang="zh-Hant">把剝下的葉鞘掛在樹枝或樹幹上，抓住兩端來回拉動摩擦，讓它變軟。</p><p lang="en">Hang a stripped sheath over a branch or trunk, hold both ends and pull it back and forth until it softens.</p>
+            <dl class="meta"><div><dt lang="zh-Hant">地方</dt><dt lang="en">Where</dt><dd lang="zh-Hant">山林</dd><dd lang="en">Forest</dd></div><div><dt>AP</dt><dd lang="zh-Hant">3</dd><dd lang="en">3</dd></div><div><dt lang="zh-Hant">需要</dt><dt lang="en">Needs</dt><dd lang="zh-Hant">1 份材料</dd><dd lang="en">1 material</dd></div></dl>
+          </li>
+          <li class="stage-step">
+            <h3><span class="sn">③</span><span lang="zh-Hant">劃痕撕絲</span><span lang="en">Score &amp; strip</span> <span class="tao">chingdasan</span>
+            <p lang="zh-Hant">用小刀在葉鞘上劃開，把纖維一絲絲撕出來。</p><p lang="en">Slit the sheath with a small knife and pull the fibre out thread by thread.</p>
+            <dl class="meta"><div><dt lang="zh-Hant">地方</dt><dt lang="en">Where</dt><dd lang="zh-Hant">山林</dd><dd lang="en">Forest</dd></div><div><dt>AP</dt><dd lang="zh-Hant">3</dd><dd lang="en">3</dd></div><div><dt lang="zh-Hant">需要</dt><dt lang="en">Needs</dt><dd lang="zh-Hant">1 份材料</dd><dd lang="en">1 material</dd></div></dl>
+          </li>
+          <li class="stage-step">
+            <h3><span class="sn">④</span><span lang="zh-Hant">脫水曝曬乾燥</span><span lang="en">Dry in the sun</span>
+            <p lang="zh-Hant">掛在竿子上曬乾。潮濕會讓它腐爛，曬得太乾又會變脆、不好撚。</p><p lang="en">Hang it on a pole to dry. Damp makes it rot; too dry and it turns brittle and hard to twist.</p>
+            <dl class="meta"><div><dt lang="zh-Hant">地方</dt><dt lang="en">Where</dt><dd lang="zh-Hant">灘頭工作室</dd><dd lang="en">Shore workshop</dd></div><div><dt>AP</dt><dd lang="zh-Hant">3</dd><dd lang="en">3</dd></div><div><dt lang="zh-Hant">需要</dt><dt lang="en">Needs</dt><dd lang="zh-Hant">1 份材料</dd><dd lang="en">1 material</dd></div></dl>
+          </li>
+          <li class="stage-step">
+            <h3><span class="sn">⑤</span><span lang="zh-Hant">理線撚繩</span><span lang="en">Twist cord</span> <span class="tao">oviden</span>
+            <p lang="zh-Hant">把曬乾的纖維理順，兩股互相搓撚成繩。撚的方向不能錯。</p><p lang="en">Straighten the dry fibre and twist two strands round each other into cord, always the same way.</p>
+            <dl class="meta"><div><dt lang="zh-Hant">地方</dt><dt lang="en">Where</dt><dd lang="zh-Hant">灘頭工作室</dd><dd lang="en">Shore workshop</dd></div><div><dt>AP</dt><dd lang="zh-Hant">3（12 月 0）</dd><dd lang="en">3 (0 in Month 12)</dd></div><div><dt lang="zh-Hant">需要</dt><dt lang="en">Needs</dt><dd lang="zh-Hant">1 份材料、KP 3</dd><dd lang="en">1 material, KP 3</dd></div></dl>
+          </li>
+          <li class="stage-step">
+            <h3><span class="sn">⑥</span><span lang="zh-Hant">填縫完工</span><span lang="en">Caulk &amp; finish</span> <span class="tao">Mamaruk</span>
+            <p lang="zh-Hant">把纖維塞進船板之間的縫，遇水膨脹，船就不漏。</p><p lang="en">Press the fibre into the seams between the planks. It swells in water and the boat stays tight.</p>
+            <dl class="meta"><div><dt lang="zh-Hant">地方</dt><dt lang="en">Where</dt><dd lang="zh-Hant">灘頭工作室</dd><dd lang="en">Shore workshop</dd></div><div><dt>AP</dt><dd lang="zh-Hant">3（耆老 0）</dd><dd lang="en">3 (Elder 0)</dd></div><div><dt lang="zh-Hant">需要</dt><dt lang="en">Needs</dt><dd lang="zh-Hant">1 份材料、KP 8。完工 +20 分</dd><dd lang="en">1 material, KP 8. Finished: +20</dd></div></dl>
+          </li>
+        </ol>
+      </div>
+      <ul class="bullets">
+        <li lang="zh-Hant"><strong>依序做。</strong>做完①才能做②，依此類推。</li>
+        <li lang="en"><strong>In order.</strong> ① before ②, and so on.</li>
+        <li lang="zh-Hant"><strong>跨月等待。</strong>每做完一道，要到下個月才能做下一道。①可以重複；12 月的⑤和⑥可以同一個月接連完成。</li>
+        <li lang="en"><strong>Wait a month.</strong> After each step, the next waits until next month. ① can be repeated; in Month 12, ⑤ and ⑥ can follow in the same month.</li>
+        <li lang="zh-Hant"><strong>最快 7 月完工。</strong>因為要跨月，2 月又封山：1 月①、3 月②、4 月③、5 月④、6 月⑤、7 月⑥。</li>
+        <li lang="en"><strong>Month 7 at the earliest,</strong> because of the waiting and the closed forest in Month 2: ① in 1, ② in 3, ③ in 4, ④ in 5, ⑤ in 6, ⑥ in 7.</li>
+      </ul>
+      <p class="aside"><b lang="zh-Hant">填縫是什麼？</b><b lang="en">What is caulking?</b><span lang="zh-Hant">接合船板時，用 Avaka 纖維以 S 型纏繞木釘，壓實蘭嶼花椒（<span class="tao">varok</span>）根部的棉絮纖維，船板之間就不會漏水（<span class="tao">tumbek su varok</span>）。</span><span lang="en">When the planks are joined, Avaka fibre is wound round the wooden pegs in an S and presses down the cotton-like root fibre of the Lanyu prickly ash (<span class="tao">varok</span>), sealing the seams (<span class="tao">tumbek su varok</span>).</span></p>
+
+      <h3><span lang="zh-Hant">在商店完工的兩條路</span><span lang="en">Finishing at the Store</span></h3>
+      <p lang="zh-Hant">做完山林的三道工序、帶 2 份材料到商店，而且距離上一道工序已經跨月，就可以花 3 AP 直接完工。按下之前，畫面會先讓你聽聽耆老和中生代怎麼說。<strong>9 月和 10 月不能在商店完工。</strong></p>
+      <p lang="en">With the three forest steps done, 2 materials in hand and a month passed since your last step, you can finish at the Store for 3 AP. Before you confirm, the screen lets you hear what the Elder and the Middle Gen. think. <strong>The Store cannot finish boats in Months 9 and 10.</strong></p>
+      <div class="tbl-wrap"><table class="tbl">
+        <thead><tr><th><span lang="zh-Hant">路</span><span lang="en">Path</span></th><th><span lang="zh-Hant">還需要</span><span lang="en">Also needs</span></th><th><span lang="zh-Hant">分數</span><span lang="en">Points</span></th><th><span lang="zh-Hant">船會怎樣</span><span lang="en">The boat</span></th></tr></thead>
+        <tbody>
+          <tr><th><span lang="zh-Hant">機器加工天然纖維</span><span lang="en">Machine-processed fibre</span></th><td class="num">KP 5</td><td class="num">+12<small lang="zh-Hant">中生代 +15</small><small lang="en">Middle +15</small></td><td lang="zh-Hant">仍用 Avaka，可拆可修；少了手工曝曬與撚繩的經驗</td><td lang="en">Still Avaka, still mendable; without the experience of drying and twisting by hand</td></tr>
+          <tr><th><span lang="zh-Hant">工業樹脂</span><span lang="en">Industrial resin</span></th><td><span lang="zh-Hant">無</span><span lang="en">Nothing</span></td><td class="num">+5</td><td lang="zh-Hant">接縫黏死，壞了不能拆修</td><td lang="en">Seams glued shut; cannot be mended</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <!-- 4 months -->
+  <section class="chapter" id="months">
+    <header><h2><span lang="zh-Hant">月份</span><span lang="en">Months</span></h2><p lang="zh-Hant">雅美／達悟族的海洋夜曆。每個月的效果是固定的，點開看當月的祭儀與勞動。</p><p lang="en">The Tao night calendar. Each month’s effect is fixed; open a month to read its rituals and work.</p></header>
+    <div class="col">
+      <ol class="year">
+        <li><details><summary><span class="m">1</span><span class="nm">Kashyman<small lang="zh-Hant">準備月</small><small lang="en">preparing</small></span><span class="fx" lang="zh-Hant">砍伐剝皮得到 2 份材料</span><span class="fx" lang="en">Chop &amp; peel gives 2 materials</span><span class="tag"><span lang="zh-Hant">祝福</span><span lang="en">blessing</span></span></summary>
+          <div class="more"><p lang="zh-Hant">舉行立春與孝敬父母日，殺豬分享給祖先，祈求出海平安。準備捕魚工具、採集材料、修補大船。</p><p lang="en">Spring and the day of honouring parents; a pig is shared with the ancestors for safe voyages. Fishing gear is readied, materials gathered and the large boats repaired.</p></div></details></li>
+        <li><details><summary><span class="m">2</span><span class="nm">Kapowan<small lang="zh-Hant">招魚祭</small><small lang="en">calling the fish</small></span><span class="fx" lang="zh-Hant">不能進入山林，也不能做任何工序</span><span class="fx" lang="en">The forest is closed; no steps can be done</span><span class="tag ban"><span lang="zh-Hant">禁忌</span><span lang="en">taboo</span></span></summary>
+          <div class="more"><p lang="zh-Hant">舉行正式的招飛魚祭（<span class="tao">Manlag</span>），開始夜間火把捕魚，山林封閉，不上山工作。月初還在山林的人會被帶回灘頭。可以利用這個月請益、講述。</p><p lang="en">The flying-fish calling rite (<span class="tao">Manlag</span>) and night fishing by torchlight begin; the hills are closed to work. Anyone still in the forest is brought back to the shore. A good month for asking and listening.</p></div></details></li>
+        <li><details><summary><span class="m">3</span><span class="nm">Pikaokaod<small lang="zh-Hant">飛魚盛期</small><small lang="en">flying-fish season</small></span><span class="fx" lang="zh-Hant">所有工序少 1 AP</span><span class="fx" lang="en">Every step costs 1 AP less</span><span class="tag"><span lang="zh-Hant">祝福</span><span lang="en">blessing</span></span></summary>
+          <div class="more"><p lang="zh-Hant">全力捕撈飛魚，大船船組解散，男人回家；婦女上山採集陸蟹。大家一起勞動，事情做得快。</p><p lang="en">All hands catch flying fish; the large-boat crews break up and the men return home, while the women gather land crabs. Work goes quickly together.</p></div></details></li>
+        <li><details><summary><span class="m">4</span><span class="nm">Papataw<small lang="zh-Hant">釣鬼頭刀</small><small lang="en">mahi-mahi</small></span><span class="fx" lang="zh-Hant">請益多花 1 AP；記得留 1 AP 給下個月</span><span class="fx" lang="en">Asking costs 1 AP more; keep 1 AP for next month</span><span class="tag ban"><span lang="zh-Hant">提醒</span><span lang="en">heads up</span></span></summary>
+          <div class="more"><p lang="zh-Hant">舉行小船招魚祭，男人勤於出海釣鬼頭刀，婦女做芋頭糕慰勞丈夫。部落記事會預告下個月的梅雨。</p><p lang="en">The small-boat rite; the men go out after mahi-mahi and the women make taro cakes for them. The tribe’s record warns of next month’s plum rain.</p></div></details></li>
+        <li><details><summary><span class="m">5</span><span class="nm">Pipilapila<small lang="zh-Hant">梅雨季</small><small lang="en">plum rain</small></span><span class="fx" lang="zh-Hant">還沒曬乾的材料，要用上個月留下的 1 AP 防潮，否則全部腐爛</span><span class="fx" lang="en">Undried material needs 1 AP saved from last month, or it all rots</span><span class="tag ban"><span lang="zh-Hant">禁忌</span><span lang="en">taboo</span></span></summary>
+          <div class="more"><p lang="zh-Hant">月初的祈福祭與蒸飛魚祭（<span class="tao">mapasoad</span>）。已經做完④曝曬乾燥的材料不受影響；4 月把體力用光的人，材料歸零。</p><p lang="en">The blessing rite and the steaming of flying fish (<span class="tao">mapasoad</span>). Material that has been through step ④ is safe; whoever spent all their stamina in Month 4 loses their material.</p></div></details></li>
+        <li><details><summary><span class="m">6</span><span class="nm">Apiya vehan<small lang="zh-Hant">好月節</small><small lang="en">the good month</small></span><span class="fx" lang="zh-Hant">送材料給耆老、幫忙長者，分數加倍（+2）</span><span class="fx" lang="en">Giving to and helping the Elder score double (+2)</span><span class="tag"><span lang="zh-Hant">祝福</span><span lang="en">blessing</span></span></summary>
+          <div class="more"><p lang="zh-Hant">飛魚終了祭、收獲節與小米祭。親友之間互相贈送剩餘的飛魚，分享勞動的成果。</p><p lang="en">The end of the flying-fish season, harvest and millet rites. Families give each other the fish that remain and share what their work brought.</p></div></details></li>
+        <li><details><summary><span class="m">7</span><span class="nm">Pehhakow<small lang="zh-Hant">解禁月</small><small lang="en">reopening</small></span><span class="fx" lang="zh-Hant">砍伐剝皮得到 2 份材料</span><span class="fx" lang="en">Chop &amp; peel gives 2 materials</span><span class="tag"><span lang="zh-Hant">祝福</span><span lang="en">blessing</span></span></summary>
+          <div class="more"><p lang="zh-Hant">適合舉辦主屋、涼亭與拼板舟的落成禮，開墾新的水芋田與地瓜田。</p><p lang="en">A month for launching houses, shelters and boats, and for opening new taro and sweet-potato fields.</p></div></details></li>
+        <li><details><summary><span class="m">8</span><span class="nm">Pitanatana<small lang="zh-Hant">土器月</small><small lang="en">pottery</small></span><span class="fx" lang="zh-Hant">科學轉譯一定成功</span><span class="fx" lang="en">Scientific translation always succeeds</span><span class="tag"><span lang="zh-Hant">祝福</span><span lang="en">blessing</span></span></summary>
+          <div class="more"><p lang="zh-Hant">採集陶土、燒製陶甕。氣候乾燥，陶器容易成型。</p><p lang="en">Clay is dug and jars are fired; the dry weather helps pots hold their shape.</p></div></details></li>
+        <li><details><summary><span class="m">9</span><span class="nm">Kalimman<small lang="zh-Hant">終食祭</small><small lang="en">last of the fish</small></span><span class="fx" lang="zh-Hant">不能在商店完工</span><span class="fx" lang="en">The Store cannot finish boats</span><span class="tag ban"><span lang="zh-Hant">禁忌</span><span lang="en">taboo</span></span></summary>
+          <div class="more"><p lang="zh-Hant">飛魚終食祭，此後不再吃飛魚乾，剩下的拿去餵豬。這個月被視為驅除惡靈的月份。</p><p lang="en">The last eating of flying fish; any dried fish left goes to the pigs. The month for driving out evil spirits.</p></div></details></li>
+        <li><details><summary><span class="m">10</span><span class="nm">Kaneman<small lang="zh-Hant">不吉月</small><small lang="en">the unlucky month</small></span><span class="fx" lang="zh-Hant">任何方式都不能完工</span><span class="fx" lang="en">No boat may be finished in any way</span><span class="tag ban"><span lang="zh-Hant">禁忌</span><span lang="en">taboo</span></span></summary>
+          <div class="more"><p lang="zh-Hant">全年最不吉利的月份，不建屋、不辦落成、不為嬰兒取名。專門燒製貝灰。耆老這個月講述，後輩各得 2 KP。</p><p lang="en">The unluckiest month: no building, no launches, no naming of babies. Shell lime is burned. An Elder telling stories now gives each listener 2 KP.</p></div></details></li>
+        <li><details><summary><span class="m">11</span><span class="nm">Kapitowan<small lang="zh-Hant">祭神月</small><small lang="en">the ancestors</small></span><span class="fx" lang="zh-Hant">月初和耆老在同一個地方的青年、中生代 +2 KP</span><span class="fx" lang="en">Youth and Middle with the Elder at the start of the month +2 KP</span><span class="tag"><span lang="zh-Hant">祝福</span><span lang="en">blessing</span></span></summary>
+          <div class="more"><p lang="zh-Hant">祖靈祭（<span class="tao">Pazos</span>）與亡魂節，感謝神靈與祖先。播種小米，採伐蘆葦準備火把。</p><p lang="en">The ancestor rite (<span class="tao">Pazos</span>), giving thanks to the spirits and forebears. Millet is sown and reeds cut for torches.</p></div></details></li>
+        <li><details><summary><span class="m">12</span><span class="nm">Kaowan<small lang="zh-Hant">手工藝月</small><small lang="en">handcrafts</small></span><span class="fx" lang="zh-Hant">理線撚繩 0 AP，⑤和⑥可以同一個月做完</span><span class="fx" lang="en">Twisting is free, and ⑤ and ⑥ can be done in one month</span><span class="tag"><span lang="zh-Hant">祝福</span><span lang="en">blessing</span></span></summary>
+          <div class="more"><p lang="zh-Hant">整個部落都在做手工：男人冶鐵、做銀帽與盔甲、撚繩，女人織布、編藤籃。</p><p lang="en">The whole village makes things: the men work metal, helmets, armour and cord; the women weave cloth and baskets.</p></div></details></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 5 together -->
+  <section class="chapter" id="together">
+    <header><h2><span lang="zh-Hant">互助</span><span lang="en">Together</span></h2><p lang="zh-Hant">技術要開口問才會有，願意教的人也被肯定。</p><p lang="en">Knowledge comes from asking, and those who teach are honoured too.</p></header>
+    <div class="col">
+      <dl class="acts">
+        <dt><span lang="zh-Hant">向耆老請益</span><span lang="en">Ask the Elder</span><span class="cost" lang="zh-Hant">青年 3／中生代 2 AP</span><span class="cost" lang="en">Youth 3 / Middle 2 AP</span></dt>
+        <dd lang="zh-Hant">不限地點。自己 <b>+3 KP</b>，請益的人和耆老各 <b>+1 分</b>。當月送過材料給耆老，多得 1 KP。之後會出一題小問答，答對再 +1 KP。</dd>
+        <dd lang="en">From anywhere. You gain <b>+3 KP</b>; you and the Elder each get <b>+1</b>. If you gave the Elder material this month, +1 KP more. A short quiz follows: answer right for +1 KP.</dd>
+        <dt><span lang="zh-Hant">向中生代請益</span><span lang="en">Ask the Middle Gen.</span><span class="cost">1 AP</span></dt>
+        <dd lang="zh-Hant">限青年，自己的 KP 要比中生代低。<b>+2 KP</b>，雙方各 <b>+1 分</b>。</dd>
+        <dd lang="en">Youth only, while you know less than they do. <b>+2 KP</b>, <b>+1</b> each.</dd>
+        <dt><span lang="zh-Hant">遠程指導</span><span lang="en">Guide from afar</span><span class="cost">2 AP</span></dt>
+        <dd lang="zh-Hant">限耆老。選一位後輩 <b>+1 KP</b>，耆老 <b>+1 分</b>。</dd>
+        <dd lang="en">Elder only. One learner <b>+1 KP</b>; the Elder <b>+1</b>.</dd>
+        <dt><span lang="zh-Hant">講述</span><span lang="en">Tell stories</span><span class="cost">2 AP</span></dt>
+        <dd lang="zh-Hant">限耆老，每月 1 次，身邊要有人聽。同一個地方的青年、中生代各 <b>+1 KP</b>（2 月、10 月 +2），耆老 <b>+1 分</b>。</dd>
+        <dd lang="en">Elder only, once a month, with someone beside you. Youth and Middle in the same place <b>+1 KP</b> each (+2 in Months 2 and 10); the Elder <b>+1</b>.</dd>
+        <dt><span lang="zh-Hant">送材料</span><span lang="en">Give material</span><span class="cost">0 AP</span></dt>
+        <dd lang="zh-Hant">給同一個地方的人 1 份材料。送給耆老，自己 <b>+1 分</b>（每月 1 次，6 月 +2）。</dd>
+        <dd lang="en">Hand 1 material to someone in the same place. Giving to the Elder earns <b>+1</b> (once a month, +2 in Month 6).</dd>
+        <dt><span lang="zh-Hant">幫忙長者</span><span lang="en">Help the Elder</span><span class="cost">1 AP</span></dt>
+        <dd lang="zh-Hant">和還在造船、體力沒滿的耆老在一起時，耆老回復 <b>2 AP</b>，自己 <b>+1 分</b>（每月 1 次，6 月 +2）。自己的船完工後可以一直幫，分數仍每月算 1 次。</dd>
+        <dd lang="en">With an Elder who is still building and not at full stamina: the Elder regains <b>2 AP</b> and you get <b>+1</b> (once a month, +2 in Month 6). Once your own boat is done you may keep helping; the point still counts once a month.</dd>
+        <dt><span lang="zh-Hant">搭把手</span><span lang="en">Lend a hand</span><span class="cost">1 AP</span></dt>
+        <dd lang="zh-Hant">和還沒完工的隊友在一起時，對方這個月下一道工序少 <b>2 AP</b>（最少 1），自己 <b>+1 分</b>（每月 1 次）。</dd>
+        <dd lang="en">With a teammate still building: their next step this month costs <b>2 AP</b> less (never below 1); you get <b>+1</b> (once a month).</dd>
+        <dt><span lang="zh-Hant">補種 Avaka</span><span lang="en">Replant Avaka</span><span class="cost">1 AP</span></dt>
+        <dd lang="zh-Hant">在山林，每月 1 次，2 月不行。算作有人照顧林地；下個月起第一次砍伐多 1 份材料。</dd>
+        <dd lang="en">In the Forest, once a month, not in Month 2. Counts as tending the plots; your first chop from next month on gives 1 extra material.</dd>
+        <dt><span lang="zh-Hant">巡山</span><span lang="en">Walk the hill</span><span class="cost">1 AP</span></dt>
+        <dd lang="zh-Hant">在山林，每月 1 次，2 月不行。看過每一區的 Avaka，算作照顧林地，自己 <b>+1 分</b>。</dd>
+        <dd lang="en">In the Forest, once a month, not in Month 2. You look over every plot: it counts as tending, and you get <b>+1</b>.</dd>
+        <dt><span lang="zh-Hant">科學轉譯</span><span lang="en">Scientific translation</span><span class="cost">2 AP + 2 KP</span></dt>
+        <dd lang="zh-Hant">用科學說明祖先的經驗為什麼有道理。成功率 50% ＋ 剩下的 KP × 5%（中生代再 +20%），成功 <b>+4 分</b>、+2 份材料；8 月一定成功。船完工後成功只得材料、不加分。</dd>
+        <dd lang="en">Show with science why the ancestors’ practice works. Chance 50% + remaining KP × 5% (Middle Gen. +20%); success gives <b>+4</b> and 2 materials, and always succeeds in Month 8. After your boat is done, success gives material only.</dd>
+      </dl>
+
+      <h3><span lang="zh-Hant">全組一起的事</span><span lang="en">Things the group shares</span></h3>
+      <ul class="bullets">
+        <li lang="zh-Hant"><strong>每月小組任務：</strong>每個月抽一個全組一起完成的任務，例如「本月有人送材料給耆老」。達成後全組每人 +1 分。</li>
+        <li lang="en"><strong>Monthly group mission:</strong> each month draws one task for the whole group, such as “someone gives the Elder material”. Done: +1 for everyone.</li>
+        <li lang="zh-Hant"><strong>森林：</strong>0 到 5，開局 3。這個月有人上山砍伐、補種或巡山就 +1，整個月沒人去就 −1（2 月不算）。降到 1 以下，砍伐要多花 1 AP；年底在 4 以上，全組每人 +2 分。</li>
+        <li lang="en"><strong>The forest:</strong> 0 to 5, starting at 3. +1 in any month someone chops, replants or walks the hill; −1 if nobody goes (Month 2 aside). At 1 or below, chopping costs 1 AP more; at 4 or above at year end, everyone +2.</li>
+        <li lang="zh-Hant"><strong>部落的船：</strong>自己的船完工後，可以到灘頭每次花 1 AP 為全組共同的船出力，目標是人數 × 3 格。年底造完全組每人 +3 分，過半 +1 分；出力的人不另外加分。</li>
+        <li lang="en"><strong>The community boat:</strong> once your own boat is done, put 1 AP at a time into the group’s shared boat at the Shore; the goal is 3 sections per player. Complete at year end: everyone +3; half built: +1. Working on it earns nothing extra for yourself.</li>
+      </ul>
+
+      <h3><span lang="zh-Hant">會跳出來的小視窗</span><span lang="en">Pop-ups along the way</span></h3>
+      <p class="note" lang="zh-Hant">它們都不會讓你失去已經有的東西：答錯、不選、沒按準，只是少拿一點好處。</p>
+      <p class="note" lang="en">None of them can take away what you have: a wrong answer, a skipped choice or a missed tap only means a smaller bonus.</p>
+      <ul class="bullets">
+        <li lang="zh-Hant"><strong>請益小問答：</strong>每次請益後一題三選一，題目都在遊戲的知識庫裡。答對 +1 KP。</li>
+        <li lang="en"><strong>The asking quiz:</strong> one multiple-choice question after each ask, drawn from the game’s knowledge base. Right: +1 KP.</li>
+        <li lang="zh-Hant"><strong>事件卡：</strong>2、3、6、8、10、11 月開始時，每人一張二選一，例如 3 月「族人找你一起出海」：去的話 −2 AP、+1 分，留下來沒有變化。</li>
+        <li lang="en"><strong>Event cards:</strong> at the start of Months 2, 3, 6, 8, 10 and 11, a two-way choice for each player, such as Month 3’s “your relatives ask you out fishing”: go for −2 AP and +1, or stay with no change.</li>
+        <li lang="zh-Hant"><strong>工序小遊戲：</strong>做完一道工序後，指針走到綠色區域時按下，退回 1 AP。可以跳過。</li>
+        <li lang="en"><strong>The timing game:</strong> after a step, tap when the pointer is in the green to win back 1 AP. You can skip it.</li>
+      </ul>
+
+      <h3><span lang="zh-Hant">船完工之後</span><span lang="en">After your boat is done</span></h3>
+      <p lang="zh-Hant">一年還沒結束。你還可以移動、砍伐備料、送材料、補種、巡山、搭把手、科學轉譯（只得材料）、不限次數幫忙長者，或去灘頭為部落的船出力。不能再做的是請益、其他工序和在商店完工。</p>
+      <p lang="en">The year goes on. You can still walk, chop for others, give material, replant, walk the hill, lend a hand, translate (for material only), help the Elder as often as you like, or work on the community boat. What you can no longer do is ask, take other steps or finish at the Store.</p>
+    </div>
+  </section>
+
+  <!-- 6 endings -->
+  <section class="chapter" id="ending">
+    <header><h2><span lang="zh-Hant">結局</span><span lang="en">Endings</span></h2><p lang="zh-Hant">分數不是在評斷哪條路對，而是讓你回頭看自己做了什麼。</p><p lang="en">The score does not judge which path was right; it shows you what you did.</p></header>
+    <div class="col">
+      <p lang="zh-Hant">第 12 個月結束後，加總完工的分數和這一年得到的分數，每個人得到自己的結局。遊戲中隨時可以在「得分」看到分數從哪裡來。</p>
+      <p lang="en">When Month 12 ends, each player’s finishing points and the points earned through the year are added up, and each reaches their own ending. In the game, “Score” shows where your points came from at any time.</p>
+      <ol class="endings" id="endings">
+        <li tabindex="0" class="open"><span><b lang="zh-Hant">傳承之靈</b><b lang="en">Spirit of Heritage</b><span class="when" lang="zh-Hant">18 分以上，走傳統路徑</span><span class="when" lang="en">18+, traditional path</span></span><p lang="zh-Hant">這艘船是活的：可以拆、可以修，帶著耆老說過的話繼續航行。</p><p lang="en">The boat is alive: it can be opened and mended, and sails on carrying what the elders said.</p><blockquote class="ex"><span lang="zh-Hant">「這艘船是活的。可以拆，可以修，可以一塊一塊換掉，再一次出海。」</span><span lang="en">“This boat is alive. It can be opened, mended, replaced plank by plank and sent out again.”</span></blockquote></li>
+        <li tabindex="0"><span><b lang="zh-Hant">協商之光</b><b lang="en">Light of Negotiation</b><span class="when" lang="zh-Hant">11 分以上</span><span class="when" lang="en">11+</span></span><p lang="zh-Hant">在傳統與現實之間找到縫隙，船帶著工業的氣味，也帶著老人家的智慧。</p><p lang="en">You found room between tradition and daily life; the boat smells of industry and carries the elders’ wisdom.</p><blockquote class="ex"><span lang="zh-Hant">「蘭嶼從來就不是一座博物館，人們在這裡過的是真實的生活，傳統也一直在真實的生活裡摩擦、磨損、又重新長出新的樣子。」</span><span lang="en">“Lanyu was never a museum; people live real lives here, and tradition has always rubbed, worn and grown again within them.”</span></blockquote></li>
+        <li tabindex="0"><span><b lang="zh-Hant">效率之重</b><b lang="en">Weight of Efficiency</b><span class="when" lang="zh-Hant">6 到 10 分</span><span class="when" lang="en">6 to 10</span></span><p lang="zh-Hant">船造好了，但壞了就沒辦法修，手也忘了纖維的阻力。</p><p lang="en">The boat is built, but cannot be mended, and your hands forgot the pull of the fibre.</p><blockquote class="ex"><span lang="zh-Hant">「這艘船能用，但卻沒辦法教會你任何事。它只是一件時代下的商品。」</span><span lang="en">“The boat works, but it cannot teach you anything. It is a product of its time.”</span></blockquote></li>
+        <li tabindex="0"><span><b lang="zh-Hant">失落之魂</b><b lang="en">Lost Soul</b><span class="when" lang="zh-Hant">5 分以下</span><span class="when" lang="en">5 or less</span></span><p lang="zh-Hant">船下水了，卻繞過了所有真正重要的事。</p><p lang="en">The boat is in the water, but everything that mattered was walked around.</p><blockquote class="ex"><span lang="zh-Hant">「你繞過了所有看起來麻煩的環節，也繞過了所有真正重要的事。」</span><span lang="en">“You walked round everything that looked troublesome, and round everything that mattered.”</span></blockquote></li>
+        <li tabindex="0"><span><b lang="zh-Hant">文化斷裂</b><b lang="en">Cultural Rupture</b><span class="when" lang="zh-Hant">12 月結束時還沒完工</span><span class="when" lang="en">not finished by Month 12</span></span><p lang="zh-Hant">纖維會腐爛，沒說出口的技術也會跟著保有記憶的人老去。</p><p lang="en">The fibre will rot, and the knowledge never spoken will age with those who hold it.</p><blockquote class="ex"><span lang="zh-Hant">「那些纖維會腐爛。那些還沒說出口的技術知識，也會隨著保有記憶的人慢慢老去，而跟著消失。」</span><span lang="en">“The fibre will rot. The knowledge never spoken will age with those who remember it, and be gone.”</span></blockquote></li>
+      </ol>
+      <p class="note" lang="zh-Hant">請益與指導的加分，每人每月最多算 2 次，超過照樣得到 KP。徽章與年終稱號（最會傳承、最懂回饋、長者的幫手、山林守護者）不加分。</p>
+      <p class="note" lang="en">Points for asking and guiding count at most twice per player per month; beyond that you still gain KP. Badges and year-end titles (Best at Passing On, Most Giving, The Elder’s Helper, Guardian of the Forest) carry no points.</p>
+    </div>
+  </section>
+
+  <div class="next">
+    <p lang="zh-Hant">讀完了？進遊戲開一間房，或請老師看課堂版。</p>
+    <p lang="en">Ready? Open a room in the game, or point your teacher to the classroom guide.</p>
+    <div class="links"><a class="play" href="/"><span lang="zh-Hant">進入遊戲</span><span lang="en">Play</span></a><a class="ghost" href="/rules/class.html"><span lang="zh-Hant">課堂版（給老師）</span><span lang="en">For teachers</span></a></div>
+  </div>
+  <p class="foot" lang="zh-Hant">《Avaka：島嶼的維度》畢業專題。規則以遊戲本身為準。</p>
+  <p class="foot" lang="en">Avaka: Dimension of the Island, a graduation project. The game itself is the final word on the rules.</p>
+</main>
+
+<script src="/rules/rules.js?v=20261020_7"></script>
+</body>
+</html>
