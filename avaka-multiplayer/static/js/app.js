@@ -254,7 +254,7 @@ const translations = {
                 desc: '填縫專家<br>遠程指導'
             },
             youth: {
-                title: '文化復振青年<br><span style="font-size:0.8rem; font-weight:normal; opacity:0.8;">(青年)</span>',
+                title: '文化復振青年',
                 badgeAp: 'AP 8 (+6/月)',
                 badgeKp: 'KP 0',
                 desc: '快速移動<br>學徒請益'
@@ -379,9 +379,9 @@ const translations = {
                     desc: '採集 Avaka 假莖與蘭嶼花椒的區域（前三道工序在此執行）',
                     moveBtn: '移動至此 (1 AP)',
                     steps: {
-                        chop: "① 砍伐剝皮 ipana'ape (3 AP | 產出材料)",
+                        chop: "① 砍伐剝皮 (3 AP | 產出材料)",
                         rub: '② 懸掛摩擦軟化 (3 AP | 需 1 材料 + 跨月)',
-                        strip: '③ 劃痕撕絲 chingdasan (3 AP | 需 1 材料 + 跨月)'
+                        strip: '③ 劃痕撕絲 (3 AP | 需 1 材料 + 跨月)'
                     }
                 },
                 '灘頭工作室': {
@@ -392,7 +392,7 @@ const translations = {
                     steps: {
                         dry: '④ 脫水曝曬乾燥 (3 AP | 需 1 材料)',
                         twine: '⑤ 理線撚繩 oviden (3 AP | 需 3 KP + 1 材料 + 跨月乾燥)',
-                        caulk: '⑥ 填縫完工 Mamaruk (3 AP | 需 8 KP + 1 材料 + 跨月乾燥)'
+                        caulk: '⑥ 填縫完工 varokan (3 AP | 需 8 KP + 1 材料 + 跨月乾燥)'
                     }
                 },
                 '商店': {
@@ -409,37 +409,38 @@ const translations = {
             <h2>📜 遊戲規則介紹與流程</h2>
             <div class="rules-scroll-area custom-scrollbar">
                 <p><strong>《Avaka：島嶼的維度》</strong> 是一款關於蘭嶼傳統造船與文化選擇的多人合作與競合遊戲。您將扮演雅美／達悟族的工匠，必須在 12 個月（回合）內完成一艘拼板舟。完工的方式有三種，沒有標準答案，但每一種都有它的結果；未在期限內完工則視為失敗。</p>
+                <p class="rules-group"><strong>👥 建議 3 人一組：</strong>耆老、文化復振青年、中生代各一人。三種角色缺一，就少了一種傳承的方式（遊戲不會自動檢查，請自己確認）。</p>
 
                 <h3>🎯 體力、知識與得分</h3>
                 <ul>
-                    <li><strong>⚡ 行動點數 (AP) 與每月恢復：</strong> AP 代表體力與時間。六道工序各 3 AP（耆老執行⑥填縫 0 AP）、移動 1 AP（青年免費）、贈送材料 0 AP、幫忙長者 1 AP、科學轉譯 2 AP、遠程指導 2 AP，請益依對象 1 至 3 AP。每個月初只恢復一部分體力（青年 +6、中生代與耆老 +5，不超過上限）。</li>
+                    <li><strong>⚡ 行動點數 (AP) 與每月恢復：</strong> AP 代表體力與時間。六道工序各 3 AP（耆老執行⑥填縫 0 AP）、移動 1 AP（文化復振青年免費）、贈送材料 0 AP、幫忙長者 1 AP、科學轉譯 2 AP、遠程指導 2 AP，請益依對象 1 至 3 AP。每個月初只恢復一部分體力（文化復振青年 +6、中生代與耆老 +5，不超過上限）。</li>
                     <li><strong>💡 技術點數 (KP)：</strong> 代表對傳統工藝的理解，要向人請益才會增加。⑤理線撚繩需 3 KP，⑥填縫完工需 8 KP，機器加工需 5 KP。</li>
-                    <li><strong>🙏 請益（向誰學，學到的不一樣）：</strong> 向<b>耆老</b>請益：青年 3 AP、中生代 2 AP，都獲得 3 KP，請益者與耆老<b>各 +1 分</b>。青年向<b>中生代</b>請益：1 AP 獲得 2 KP，<b>雙方各 +1 分</b>；中生代傳得快，但青年的 KP 必須低於該中生代才能問，更深的知識還是要找耆老。耆老也可以「遠程指導 (2 AP)」，對象 +1 KP，耆老 <b>+1 分</b>。請益與指導的加分，每人每月最多計 2 次；超過之後照樣得到 KP，只是不再加分。</li>
+                    <li><strong>🙏 請益（向誰學，學到的不一樣）：</strong> 向<b>耆老</b>請益：文化復振青年 3 AP、中生代 2 AP，都獲得 3 KP，請益者與耆老<b>各 +1 分</b>。文化復振青年向<b>中生代</b>請益：1 AP 獲得 2 KP，<b>雙方各 +1 分</b>；中生代傳得快，但文化復振青年的 KP 必須低於該中生代才能問，更深的知識還是要找耆老。耆老也可以「遠程指導 (2 AP)」，對象 +1 KP，耆老 <b>+1 分</b>。請益與指導的加分，每人每月最多計 2 次；超過之後照樣得到 KP，只是不再加分。</li>
                     <li><strong>🎁 回饋與幫忙（傳統教養）：</strong> 把材料「贈送」給耆老，贈送者 <b>+1 分</b>（每月計 1 次），而且當月向耆老請益可<b>多得 1 KP</b>（帶禮請益）。與耆老在同一地點時可以「幫忙長者 (1 AP)」：耆老回復 2 AP，自己 <b>+1 分</b>（每月 1 次）。6 月好月節這兩種得分加倍。</li>
                     <li><strong>🔬 科學轉譯：</strong> 消耗 2 AP 與 2 KP，成功率 = 50% + 扣除後的 KP×5%（中生代再 +20%）；<b>第 8 個月 (Pitanatana 土器月) 必定成功</b>。成功獲得 <b>+4 分</b>與 <b>2 份材料</b>。</li>
                     <li><strong>⏳ 跨月等待：</strong> 除了「①砍伐剝皮」可以在同一個月重複執行外，每完成一道工序都要等到<b>下一個月</b>才能做下一道（12 月的⑤與⑥例外，可以接連完成）。最快也要到 7 月才能完工。</li>
                     <li><strong>🌿 材料：</strong> 在山林執行「①砍伐剝皮」產出材料（每次 1 份，1 月與 7 月 2 份），工序②至⑥各消耗 1 份。</li>
                     <li><strong>🌳 森林狀態：</strong> 全房間共用，0 到 5，開局 3。這個月有人上山「①砍伐剝皮」、照顧林地，森林就 +1；整個月沒有人上山就 −1（2 月封山不計）。森林降到 1 以下時，砍伐多耗 1 AP；結算時森林在 4 以上，所有人 +2 分。因為需要材料，所以會去照顧山林；大家都不上山，森林就會老化。</li>
                     <li><strong>🎯 每月小組任務與徽章：</strong> 每個月系統會抽一個全組一起完成的任務（例如「本月有人送材料給耆老」），達成後所有人 <b>+1 分</b>，任務顯示在畫面上方。第一次做到某些事會得到徽章，年終會頒發稱號；徽章與稱號不加分。</li>
-                    <li><strong>🎲 更多可以做的事：</strong> <b>請益小問答</b>：請益後會出一題三選一，答對多得 1 KP，答錯沒有損失（答案都在知識庫裡）。<b>事件卡</b>：2、3、6、8、10、11 月每個人會收到一張二選一的事件卡。<b>講述</b>（耆老，2 AP，每月 1 次）：和耆老在同一個地點的青年與中生代各 +1 KP（2 月與 10 月 +2 KP），耆老 +1 分。<b>補種 Avaka</b>（山林，1 AP，每月 1 次）：算作有人照顧林地，下個月起第一次砍伐多得 1 份材料。<b>搭把手</b>（同地點，1 AP）：隊友本月下一道工序少 2 AP，自己 +1 分（每月計 1 次）。<b>工序小遊戲</b>：做完工序後抓準時機按下，成功退回 1 AP，可以跳過。</li>
+                    <li><strong>🎲 更多可以做的事：</strong> <b>請益小問答</b>：請益後會出一題三選一，答對多得 1 KP，答錯沒有損失（答案都在知識庫裡）。<b>事件卡</b>：2、3、6、8、10、11 月每個人會收到一張二選一的事件卡。<b>講述</b>（耆老，2 AP，每月 1 次）：和耆老在同一個地點的文化復振青年與中生代各 +1 KP（2 月與 10 月 +2 KP），耆老 +1 分。<b>補種 Avaka</b>（山林，1 AP，每月 1 次）：算作有人照顧林地，下個月起第一次砍伐多得 1 份材料。<b>搭把手</b>（同地點，1 AP）：隊友本月下一道工序少 2 AP，自己 +1 分（每月計 1 次）。<b>工序小遊戲</b>：做完工序後抓準時機按下，成功退回 1 AP，可以跳過。</li>
                     <li><strong>📅 曆法禁忌：</strong> 依循蘭嶼 12 個月的夜曆，例如 2 月封山不能進山林、4 月底要留 1 AP 準備梅雨、9 月不能在商店完工、10 月任何方式都不能完工。每個月的效果會顯示在畫面上方。</li>
                 </ul>
 
                 <h3>👤 角色能力介紹</h3>
                 <ul>
                     <li><strong>👑 資深工匠 (耆老)：</strong> AP 上限 6（每月 +5），開局 10 KP。技藝最純熟，執行「⑥填縫」不耗 AP，可遠程指導後輩。體力有限，很需要後輩送材料與幫忙。</li>
-                    <li><strong>🏃 文化復振青年 (青年)：</strong> AP 上限 8（每月 +6），開局 0 KP。移動不耗 AP；可以向耆老請益（學得深），也可以向中生代請益（學得快）。</li>
-                    <li><strong>🌉 中生代 (中生代工匠)：</strong> AP 上限 7（每月 +5），開局 5 KP。小時候有過傳統生活的經驗，向耆老請益只要 2 AP 就能獲得 3 KP；能把知識有效率地傳給青年；熟悉兩種文化，科學轉譯成功率 +20%，走「機器加工天然纖維」路線額外 +3 分。</li>
+                    <li><strong>🏃 文化復振青年：</strong> AP 上限 8（每月 +6），開局 0 KP。移動不耗 AP；可以向耆老請益（學得深），也可以向中生代請益（學得快）。</li>
+                    <li><strong>🌉 中生代 (中生代工匠)：</strong> AP 上限 7（每月 +5），開局 5 KP。小時候有過傳統生活的經驗，向耆老請益只要 2 AP 就能獲得 3 KP；能把知識有效率地傳給文化復振青年；熟悉兩種文化，科學轉譯成功率 +20%，走「機器加工天然纖維」路線額外 +3 分。</li>
                 </ul>
 
                 <h3>🗺️ 造船流程圖：三種完工方式</h3>
                 <div class="css-flowchart">
                     <div class="fc-node fc-start">🌲 山林階段（三條路都要先完成）</div>
-                    <div class="fc-node">① 砍伐剝皮 ipana'ape (3 AP | 產出 1 材料，可重複)</div>
+                    <div class="fc-node">① 砍伐剝皮 (3 AP | 產出 1 材料，可重複)</div>
                     <div class="fc-arrow">↓ 跨月</div>
                     <div class="fc-node">② 懸掛摩擦軟化 (3 AP | 耗 1 材料)</div>
                     <div class="fc-arrow">↓ 跨月</div>
-                    <div class="fc-node">③ 劃痕撕絲 chingdasan (3 AP | 耗 1 材料)</div>
+                    <div class="fc-node">③ 劃痕撕絲 (3 AP | 耗 1 材料)</div>
                     <div class="fc-arrow" style="margin: 12px 0;">↓ 跨月，接下來選一條路</div>
                     <div class="fc-branches" style="flex-direction: column;">
                         <div class="fc-branch traditional">
@@ -448,7 +449,7 @@ const translations = {
                             <div class="fc-arrow">↓ 跨月</div>
                             <div class="fc-node">⑤ 理線撚繩 oviden (3 AP | 需 3 KP + 1 材料)</div>
                             <div class="fc-arrow">↓ 跨月</div>
-                            <div class="fc-node">⑥ 填縫完工 Mamaruk (3 AP | 需 8 KP + 1 材料)</div>
+                            <div class="fc-node">⑥ 填縫完工 varokan (3 AP | 需 8 KP + 1 材料)</div>
                             <div class="fc-arrow">↓</div>
                             <div class="fc-node fc-win">+20 分<br>船可拆、可修</div>
                         </div>
@@ -469,6 +470,14 @@ const translations = {
 
                 <h3>🏆 結算</h3>
                 <p>12 個月結束後，系統會結算「文化韌性總分」與 KP 演進曲線圖。完工分數如上圖，請益、指導、回饋長者、幫忙長者與科學轉譯都會另外加分，遊戲中可以隨時在畫面下方的「得分紀錄」看到自己的分數從哪裡來。最高等級的結局「傳承之靈」只有走傳統路線才能獲得。船完工之後這一年還沒結束：你仍然可以砍伐備料、贈送材料、指導或幫忙其他人，這些也都會加分。分數不是在評斷哪條路對或錯，而是讓你回頭想：我做了哪些事？為什麼這些事會加分？</p>
+                <p><strong>五種結局</strong>（依自己的分數）：</p>
+                <ul>
+                    <li><b>傳承之靈</b>：18 分以上，而且走傳統 Avaka 路徑</li>
+                    <li><b>協商之光</b>：11 分以上</li>
+                    <li><b>效率之重</b>：6 到 10 分</li>
+                    <li><b>失落之魂</b>：5 分以下</li>
+                    <li><b>文化斷裂</b>：第 12 個月結束時還沒完工</li>
+                </ul>
             </div>
             <button id="close-rules-btn" class="btn primary mt-4">我已經完全了解了</button>
         `,
@@ -496,7 +505,7 @@ const translations = {
             tickerTitle: '📢 部落動態日誌',
             tides: ['漲潮', '退潮', '乾潮', '滿潮'],
             tickerMessages: [
-                '青年在灘頭工作室開始剝麻...',
+                '文化復振青年在灘頭工作室開始剝麻...',
                 '耆老在灘頭開始大船下水祈福...',
                 '中生代在現代商店購置了工業樹脂...',
                 '島民在山林採集蘭嶼花椒...',
@@ -650,9 +659,9 @@ const translations = {
                     desc: 'Gather Avaka stems & Lanyu prickly ash (Steps 1-3 performed here)',
                     moveBtn: 'Move here (1 AP)',
                     steps: {
-                        chop: "① Chop & Peel Stem ipana'ape (3 AP | Yields Mat)",
+                        chop: "① Chop & Peel Stem (3 AP | Yields Mat)",
                         rub: '② Hang & Rub Soften (3 AP | 1 Mat + Cross-month)',
-                        strip: '③ Score & Strip Fiber chingdasan (3 AP | 1 Mat + Cross-month)'
+                        strip: '③ Score & Strip Fiber (3 AP | 1 Mat + Cross-month)'
                     }
                 },
                 '灘頭工作室': {
@@ -663,7 +672,7 @@ const translations = {
                     steps: {
                         dry: '④ Dry & Dewater (3 AP | 1 Mat + Curing)',
                         twine: '⑤ Twine Rope oviden (3 AP | 3 KP + 1 Mat + Cross-month)',
-                        caulk: '⑥ Caulk & Finish Mamaruk (3 AP | 8 KP + 1 Mat + Cross-month)'
+                        caulk: '⑥ Caulk & Finish varokan (3 AP | 8 KP + 1 Mat + Cross-month)'
                     }
                 },
                 '商店': {
@@ -680,6 +689,7 @@ const translations = {
             <h2>📜 Game Rules & Process</h2>
             <div class="rules-scroll-area custom-scrollbar">
                 <p><strong>"Avaka: Dimension of the Island"</strong> is a multiplayer cooperative & competitive game about traditional boat building and cultural choices on Lanyu (Orchid Island). You play a Yami/Tao artisan who must complete a plank boat within 12 months (rounds). There are three ways to finish. None is the "right answer", but each has its own consequences; not finishing in time counts as failure.</p>
+                <p class="rules-group"><strong>👥 Best in groups of 3:</strong> one Elder, one Youth and one Middle Generation. Each missing role is one way of passing on knowledge the group loses (the game does not check this for you).</p>
 
                 <h3>🎯 Stamina, Knowledge & Scoring</h3>
                 <ul>
@@ -706,11 +716,11 @@ const translations = {
                 <h3>🗺️ Boat-building Flowchart: three ways to finish</h3>
                 <div class="css-flowchart">
                     <div class="fc-node fc-start">🌲 Forest stage (required for all three paths)</div>
-                    <div class="fc-node">① Chop &amp; Peel ipana'ape (3 AP | yields 1 material, repeatable)</div>
+                    <div class="fc-node">① Chop &amp; Peel (3 AP | yields 1 material, repeatable)</div>
                     <div class="fc-arrow">↓ next month</div>
                     <div class="fc-node">② Hang &amp; Rub to soften (3 AP | 1 material)</div>
                     <div class="fc-arrow">↓ next month</div>
-                    <div class="fc-node">③ Score &amp; Strip fibre chingdasan (3 AP | 1 material)</div>
+                    <div class="fc-node">③ Score &amp; Strip fibre (3 AP | 1 material)</div>
                     <div class="fc-arrow" style="margin: 12px 0;">↓ next month, then choose a path</div>
                     <div class="fc-branches" style="flex-direction: column;">
                         <div class="fc-branch traditional">
@@ -719,7 +729,7 @@ const translations = {
                             <div class="fc-arrow">↓ next month</div>
                             <div class="fc-node">⑤ Twine rope oviden (3 AP | 3 KP + 1 material)</div>
                             <div class="fc-arrow">↓ next month</div>
-                            <div class="fc-node">⑥ Caulk &amp; finish Mamaruk (3 AP | 8 KP + 1 material)</div>
+                            <div class="fc-node">⑥ Caulk &amp; finish varokan (3 AP | 8 KP + 1 material)</div>
                             <div class="fc-arrow">↓</div>
                             <div class="fc-node fc-win">+20 points<br>Boat can be taken apart and repaired</div>
                         </div>
@@ -740,6 +750,14 @@ const translations = {
 
                 <h3>🏆 Settlement</h3>
                 <p>After 12 months the system totals everyone's Cultural Resilience score and draws the KP curve chart. Finishing scores are shown in the chart above. Asking, guiding, giving back to the Elder, helping the Elder and Scientific Translation all add points; during the game the "Score log" at the bottom of the screen shows where your points come from. The top ending is reserved for the traditional path. Finishing your boat does not end your year: you can still gather materials, give them away, guide or help the others, and all of that scores too. The score does not judge which path is right or wrong; it invites you to look back: what did I do, and why did those things earn points?</p>
+                <p><strong>Five endings</strong> (from your own score):</p>
+                <ul>
+                    <li><b>Spirit of Heritage</b>: 18 or more, on the traditional Avaka path</li>
+                    <li><b>Light of Negotiation</b>: 11 or more</li>
+                    <li><b>Weight of Efficiency</b>: 6 to 10</li>
+                    <li><b>Lost Soul</b>: 5 or less</li>
+                    <li><b>Cultural Rupture</b>: the boat is not finished by the end of Month 12</li>
+                </ul>
             </div>
             <button id="close-rules-btn" class="btn primary mt-4">I understand completely</button>
         `,
@@ -812,7 +830,7 @@ function translateLog(logText) {
         { regex: /遊戲開始！第 1 個月：Kashyman/, replace: 'Game started! Month 1: Kashyman' },
         { regex: /(.+) 移動到了 (.+)/, replace: '$1 moved to $2' },
         { regex: /(.+) 執行了砍伐剝皮，獲得了 (\d+) 份材料/, replace: '$1 performed chop & peel, yielding $2 material(s)' },
-        { regex: /(.+) 完成了 ①砍伐剝皮 ipana'ape \(獲得 (\d+) 份材料\)/, replace: '$1 completed ① Chop & Peel ipana\'ape (yielding $2 material(s))' },
+        { regex: /(.+) 完成了 ①砍伐剝皮 \(獲得 (\d+) 份材料\)/, replace: '$1 completed ① Chop & Peel ipana\'ape (yielding $2 material(s))' },
         { regex: /(.+) 完成了 剝麻/, replace: '$1 completed peeling hemp' },
         { regex: /(.+) 完成了 刮絲/, replace: '$1 completed scraping fiber' },
         { regex: /(.+) 完成了 撚線/, replace: '$1 completed twining rope' },
@@ -1382,14 +1400,14 @@ const GAME_RULES = [
     {name: "Kashyman", desc_zh: "準備月：為接下來的封山存貨，執行「①砍伐剝皮」可獲得 2 份材料（原為 1 份）。", desc_en: "Prep Month: Stock up before the forest closes. ① Chop & Peel yields 2 materials instead of 1."},
     {name: "Kapowan", desc_zh: "飛魚禁令：禁止進入山林（會被強制退回灘頭），無法執行「①砍伐剝皮」。", desc_en: "Flying Fish Ban: Forest closed. Cannot enter it or perform ① Chop & Peel."},
     {name: "Pikaokaod", desc_zh: "捕撈飛魚盛期（集體勞動）：部落分工合作，執行任何一道工序，AP 消耗減少 1 點。", desc_en: "Peak Fishing (collective labour): the village shares the work, so every craft step costs 1 AP less."},
-    {name: "Papataw", desc_zh: "男人勤於出海：所有「請益」多消耗 1 AP（青年向耆老 4 AP、中生代向耆老 3 AP、青年向中生代 2 AP）。下個月是梅雨季：持有材料的人，本月結束前請留下 1 AP 防潮。", desc_en: "Men at Sea: Every Ask costs +1 AP (Youth→Elder 4, Middle Generation→Elder 3, Youth→Middle Generation 2). Plum rain comes next month: if you hold materials, keep 1 AP unspent at the end of this month."},
+    {name: "Papataw", desc_zh: "男人勤於出海：所有「請益」多消耗 1 AP（文化復振青年向耆老 4 AP、中生代向耆老 3 AP、文化復振青年向中生代 2 AP）。下個月是梅雨季：持有材料的人，本月結束前請留下 1 AP 防潮。", desc_en: "Men at Sea: Every Ask costs +1 AP (Youth→Elder 4, Middle Generation→Elder 3, Youth→Middle Generation 2). Plum rain comes next month: if you hold materials, keep 1 AP unspent at the end of this month."},
     {name: "Pipilapila", desc_zh: "梅雨季節：進入本月時，持有材料且「未完成工序④乾燥」的人，要用上個月留下的 1 AP 防潮；上個月把 AP 用光的人，材料腐爛歸零。", desc_en: "Plum Rain Season: On entering this month, players holding materials who have not finished step ④ Drying spend 1 AP left over from last month to keep them dry; if you used up all your AP last month, your materials rot to zero."},
     {name: "Apiya vehan", desc_zh: "好月節（送禮分享的吉月）：贈送材料給耆老、幫忙長者的得分加倍（各 +2 分）。", desc_en: "Good Month Festival (a month for giving and sharing): gifts to the Elder and helping the Elder score double (+2 each)."},
     {name: "Pehhakow", desc_zh: "解禁重啟：山林解禁，執行「①砍伐剝皮」（消耗 3 AP）可獲得 2 份材料（原為 1 份）。", desc_en: "Forest Reopened: ① Chop & Peel yields 2 materials instead of 1."},
     {name: "Pitanatana", desc_zh: "土器月（物質掌握）：採陶土、燒陶器，是掌握材料性質的月份，執行「科學轉譯」必定成功。", desc_en: "Clay Vessel Month (mastering materials): the month of digging clay and firing pots. Scientific Translation always succeeds."},
     {name: "Kalimman", desc_zh: "飛魚終食祭：全部落參與祭儀，本月無法在商店完工。", desc_en: "Final Fish Feast: the whole village takes part in the ritual; you cannot finish at the store this month."},
     {name: "Kaneman", desc_zh: "禁忌之月：不允許落成，本月任何方式都不能完工（填縫、機器加工、工業樹脂皆禁止）。", desc_en: "Forbidden Month: no boat may be completed this month, by any path (caulking, machine processing and resin are all banned)."},
-    {name: "Kapitowan", desc_zh: "祭神月：回合開始時，若青年／中生代與耆老處於同一個地點，可自動獲得 2 點 KP。", desc_en: "Sacred Month: Youth and Middle Generation in the same place as the Elder automatically gain +2 KP."},
+    {name: "Kapitowan", desc_zh: "祭神月：回合開始時，若文化復振青年／中生代與耆老處於同一個地點，可自動獲得 2 點 KP。", desc_en: "Sacred Month: Youth and Middle Generation in the same place as the Elder automatically gain +2 KP."},
     {name: "Kaowan", desc_zh: "手工藝月（最終衝刺）：「⑤理線撚繩」消耗 0 AP，而且⑤與⑥不必跨月等待，可以在本月接連完成。", desc_en: "Handicraft Month (final sprint): ⑤ Twining costs 0 AP, and steps ⑤ and ⑥ need no cross-month wait, so they can be done back to back this month."}
 ];
 
@@ -1439,7 +1457,7 @@ function showMonthEventModal(month) {
                 const isSys = d.role === '系統' || d.role === 'System';
                 let color = 'var(--text-muted)';
                 if (!isSys) {
-                    if (d.role.includes('青年') || d.role.includes('Apprentice')) color = '#4CAF50';
+                    if (d.role.includes('文化復振青年') || d.role.includes('Apprentice')) color = '#4CAF50';
                     else if (d.role.includes('耆老') || d.role.includes('Elder')) color = '#FFC107';
                     else color = '#03A9F4';
                 }
@@ -2501,7 +2519,7 @@ function renderGame(state) {
 
         // Teach targets
         if (p.role === 'youth' || p.role === 'middle') {
-            const roleSuffix = isEn ? (p.role === 'middle' ? ' (Middle Generation)' : ' (Youth)') : (p.role === 'middle' ? ' (中生代)' : ' (青年)');
+            const roleSuffix = isEn ? (p.role === 'middle' ? ' (Middle Generation)' : ' (Youth)') : (p.role === 'middle' ? ' (中生代)' : ' (文化復振青年)');
             youthOptions += `<option value="${id}">${p.name}${roleSuffix}</option>`;
         }
 

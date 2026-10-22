@@ -137,7 +137,7 @@
   const TEXT = {
     zh: {
       month: n => `第 ${n} 個月`, monthUnit: '個月', lore: '這個月的夜曆', kb: '知識庫', quit: '退出', lang: 'EN', music: '背景音樂', theme: '白天／夜晚', sfx: '音效',
-      mission: '本月小組任務', missionDone: '已達成，全員 +1 分', forest: '森林', role: { elder: '耆老', youth: '青年', middle: '中生代' },
+      mission: '本月小組任務', missionDone: '已達成，全員 +1 分', forest: '森林', role: { elder: '耆老', youth: '文化復振青年', middle: '中生代' },
       steps: ['砍伐剝皮', '摩擦軟化', '劃痕撕絲', '曝曬乾燥', '理線撚繩', '填縫完工'], stepWhere: ['山林', '山林', '山林', '灘頭', '灘頭', '灘頭'],
       ap: 'AP', kp: 'KP', apName: '體力 AP', kpName: '技術 KP', mat: '材料', score: '得分', scoreWhy: '分數從哪裡來', badges: '徽章',
       ready: '準備進入下個月', unready: '取消準備', readyCount: (a, b) => `${a}/${b} 人已準備`,
@@ -560,6 +560,10 @@
       if (lobbyWasPlaying && bgm && old('lobby') && old('lobby').classList.contains('active')) bgm.play().catch(() => {});
     }
   }
+  // whatever starts the lobby's track while the game is up (an old click handler, a stray play()), it stops at once
+  const lobbyTrack = old('bgm');
+  if (lobbyTrack) lobbyTrack.addEventListener('play', () => { if (visible) lobbyTrack.pause(); });
+
   socket.on('state_update', s => {
     fx = changes(state, s);
     if (fx.at) {

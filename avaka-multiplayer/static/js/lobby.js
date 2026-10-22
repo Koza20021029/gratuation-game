@@ -86,7 +86,7 @@ const LOBBY_HTML = `
             <path d="M60 36c4-10 9-20 16-30"/>
             <path d="M44 72h32"/>
           </svg>
-          <span class="knot" aria-hidden="true"></span><span class="name">文化復振青年</span><span class="aka">青年</span>
+          <span class="knot" aria-hidden="true"></span><span class="name">文化復振青年</span><span class="aka"></span>
           <span class="does">走得快、體力好，但一切要從開口問開始。</span>
           <span class="stats"><span>體力<b>8</b></span><span>技術<b>0</b></span></span></label>
         <label class="role"><input type="radio" name="role" value="middle">
@@ -102,11 +102,13 @@ const LOBBY_HTML = `
       </div>
     </fieldset>
 
+    <p class="step3" id="step3">③ 拿到同組給你的 4 碼房間代碼就「加入房間」；第一個到的人「自己開一間新的」。</p>
     <div class="room">
       <input type="text" id="room" maxlength="4" placeholder="房間代碼（4 碼）" aria-label="房間代碼">
       <button class="btn primary magnetic" type="button" id="b-join">加入房間</button>
     </div>
     <button class="btn secondary" type="button" id="b-create">自己開一間新的</button>
+    <p class="hint" id="hint" aria-live="polite"></p>
     <p class="form-msg" id="form-msg" role="alert"></p>
     <div class="foot">
       <a href="/rules/player.html" id="rules-link" target="_blank" rel="noopener">先看遊戲規則與流程</a>
@@ -138,10 +140,11 @@ const LOBBY_HTML = `
   const oldLobby = document.getElementById('lobby');
   if (!oldLobby || !document.documentElement.attachShadow) return;
   document.body.classList.add('newui');
+  requestAnimationFrame(() => document.documentElement.classList.remove('nu-boot'));   // the new lobby is in place: show the page
   const host = document.createElement('div');
   host.id = 'lobby2';
   const root = host.attachShadow({ mode: 'open' });
-  root.innerHTML = '<link rel="stylesheet" href="css/lobby.css?v=20261014_3">' + LOBBY_HTML;   // fixed markup defined below, no user input
+  root.innerHTML = '<link rel="stylesheet" href="css/lobby.css?v=20261023_1">' + LOBBY_HTML;   // fixed markup defined below, no user input
   document.body.appendChild(host);
   const old = id => document.getElementById(id);
 
@@ -611,10 +614,25 @@ const LOBBY_HTML = `
     old('room-code').value = code;
     old(kind === 'join' ? 'join-btn' : 'create-btn').click();     // opens the avatar creator, then joins
   }
+  // what to do next, said in place: the next field is lit and the hint under the buttons names it
+  function guide() {
+    const join = $('join'); if (!join) return;
+    const next = !$('p-name').value.trim() ? 'name' : !root.querySelector('.role input:checked') ? 'role' : 'room';
+    join.dataset.next = next;
+    $('hint').textContent = T(next === 'name' ? 'nextName' : next === 'role' ? 'nextRole' : 'nextRoom');
+  }
+  $('p-name').addEventListener('input', guide);
+  root.querySelectorAll('.role input').forEach(r => r.addEventListener('change', guide));
+  // coming back from a room (leaving, or the year-end button): say so, so the form is not a surprise
+  document.addEventListener('click', e => {
+    const b = e.target.closest && e.target.closest('button');
+    if (b && (b.id === 'leave-confirm-btn' || b.id === 'leave-lobby-btn' || /重新回到部落|Return to Tribe/.test(b.textContent))) { try { sessionStorage.setItem('avaka_left', '1'); } catch (err) { /* private mode */ } }
+  }, true);
+  try { if (sessionStorage.getItem('avaka_left')) { sessionStorage.removeItem('avaka_left'); setTimeout(() => formMsg(T('left')), 600); } } catch (err) { /* private mode */ }
   $('b-join').addEventListener('click', () => submit('join'));
   $('b-create').addEventListener('click', () => submit('create'));
   [$('p-name'), $('room')].forEach(inp => inp.addEventListener('keydown', e => { if (e.key === 'Enter') submit($('room').value.trim() ? 'join' : 'create'); }));
-  $('b-back').addEventListener('click', () => { old('leave-lobby-btn').click(); showJoin(); });
+  $('b-back').addEventListener('click', () => { old('leave-lobby-btn').click(); showJoin(); formMsg(T('left')); });
   $('b-start').addEventListener('click', () => { pluck(523, 0.1); old('start-game-btn').click(); });
   // the rules live at /rules now; they open in their own tab so the lobby (and a room in progress) stays put
   $('rules-link').addEventListener('click', e => { e.currentTarget.href = '/rules/player.html?lang=' + (typeof currentLang !== 'undefined' && currentLang === 'en' ? 'en' : 'zh'); });
@@ -638,9 +656,9 @@ const LOBBY_HTML = `
       binomial: 'Musa textilis，馬尼拉麻', titleTc: '島嶼的維度', lede: '一株植物，六道工序，一條能讓船出海的繩。這一年，你要親手把它做出來。',
       hint: '用手撥撥看這些纖維；按住拖一圈，可以把它們撚成繩', showMe: '看示範', idle: '把游標移到任何一道工序上，看纖維怎麼變。',
       steps: ['砍伐剝皮', '摩擦軟化', '劃痕撕絲', '曝曬乾燥', '理線撚繩', '填縫完工'], finale: '一株植物，成了一條繩。這就是你接下來一年要走的路。',
-      h2: '你是誰，要去哪一間工作室', nameLabel: '你的名字', namePh: '例如：小明', roleLegend: '你的角色', ap: '體力', kp: '技術',
+      h2: '你是誰，要去哪一間工作室', nameLabel: '① 你的名字', namePh: '例如：小明', roleLegend: '② 你的角色', step3: '③ 拿到同組給你的 4 碼房間代碼就「加入房間」；第一個到的人「自己開一間新的」。', nextName: '先在上面輸入你的名字', nextRole: '再選一個角色', nextRoom: '最後：加入同組的房間，或自己開一間新的', left: '你已經離開房間。可以加入別的房間，或自己開一間新的。', ap: '體力', kp: '技術',
       name_elder: '資深工匠', aka_elder: '耆老', does_elder: '什麼都會，體力有限。把話傳下去的人。',
-      name_youth: '文化復振青年', aka_youth: '青年', does_youth: '走得快、體力好，但一切要從開口問開始。',
+      name_youth: '文化復振青年', aka_youth: '', does_youth: '走得快、體力好，但一切要從開口問開始。',
       name_middle: '中生代', aka_middle: '中生代工匠', does_middle: '小時候看過老人家怎麼做，學得快，也傳得快。',
       roomPh: '房間代碼（4 碼）', join: '加入房間', create: '自己開一間新的', rules: '先看遊戲規則與流程',
       waitH2: '等大家到齊', waitSub: '把這四個字告訴同組的人。每個人是一股纖維，到齊了才撚得成繩。', copy: '複製', copied: '已複製',
@@ -655,7 +673,7 @@ const LOBBY_HTML = `
       binomial: 'Musa textilis, Manila hemp', titleTc: 'Dimensions of the Island', lede: 'One plant, six steps, one rope that lets a boat go to sea. This year you make it with your own hands.',
       hint: 'Run your hand through the fibres; press and drag to twist them into rope', showMe: 'Show me', idle: 'Move over any step to see what the fibres do.',
       steps: ['Chop', 'Rub', 'Strip', 'Dry', 'Twist', 'Caulk'], finale: 'One plant has become one rope. That is the road ahead of you this year.',
-      h2: 'Who are you, and which workshop?', nameLabel: 'Your name', namePh: 'e.g. Ming', roleLegend: 'Your role', ap: 'Stamina', kp: 'Skill',
+      h2: 'Who are you, and which workshop?', nameLabel: '1 Your name', namePh: 'e.g. Ming', roleLegend: '2 Your role', step3: '3 Got a 4-character code from your group? Join that room. First one here? Open a new room.', nextName: 'Start by typing your name above', nextRole: 'Now pick a role', nextRoom: 'Last: join your group’s room, or open a new one', left: 'You have left the room. Join another room, or open a new one.', ap: 'Stamina', kp: 'Skill',
       name_elder: 'Elder', aka_elder: 'Senior artisan', does_elder: 'Knows it all, tires fast. Passes the word on.',
       name_youth: 'Youth', aka_youth: 'Reviving the craft', does_youth: 'Fast and strong, but it all starts with asking.',
       name_middle: 'Middle', aka_middle: 'Middle generation', does_middle: 'Watched the elders as a child. Learns fast, teaches fast.',
@@ -674,7 +692,7 @@ const LOBBY_HTML = `
   function applyLang() {
     const set = (sel, k) => { const e = root.querySelector(sel); if (e) e.textContent = T(k); };
     set('.binomial', 'binomial'); set('.title-tc', 'titleTc'); set('.lede', 'lede'); set('#hint-text', 'hint'); set('#show-me', 'showMe');
-    set('#join h2', 'h2'); set('label[for=p-name]', 'nameLabel'); set('legend', 'roleLegend'); set('#b-join', 'join'); set('#b-create', 'create'); set('#rules-link', 'rules');
+    set('#join h2', 'h2'); set('label[for=p-name]', 'nameLabel'); set('legend', 'roleLegend'); set('#b-join', 'join'); set('#b-create', 'create'); set('#rules-link', 'rules'); set('#step3', 'step3'); guide();
     set('#waiting h2', 'waitH2'); set('#waiting .sub', 'waitSub'); set('#b-copy', 'copy'); set('#b-start', 'start'); set('#b-back', 'back');
     $('p-name').placeholder = T('namePh'); $('room').placeholder = T('roomPh'); $('room').setAttribute('aria-label', T('roomPh'));
     stepBtns.forEach((b, i) => { b.lastChild.textContent = T('steps')[i]; });

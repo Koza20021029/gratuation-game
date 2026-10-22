@@ -283,14 +283,14 @@ MONTH_RULES = [
     {"month": 1, "name": "Kashyman", "desc": "準備月：為接下來的封山存貨，執行「①砍伐剝皮」可獲得 2 份材料（原為 1 份）。"},
     {"month": 2, "name": "Kapowan", "desc": "飛魚禁令：禁止進入山林（會被強制退回灘頭），無法執行「①砍伐剝皮」。"},
     {"month": 3, "name": "Pikaokaod", "desc": "捕撈飛魚盛期（集體勞動）：部落分工合作，執行任何一道工序，AP 消耗減少 1 點。"},
-    {"month": 4, "name": "Papataw", "desc": "男人勤於出海：所有「請益」多消耗 1 AP（青年向耆老 4 AP、中生代向耆老 3 AP、青年向中生代 2 AP）。下個月是梅雨季：持有材料的人，本月結束前請留下 1 AP 防潮。"},
+    {"month": 4, "name": "Papataw", "desc": "男人勤於出海：所有「請益」多消耗 1 AP（文化復振青年向耆老 4 AP、中生代向耆老 3 AP、文化復振青年向中生代 2 AP）。下個月是梅雨季：持有材料的人，本月結束前請留下 1 AP 防潮。"},
     {"month": 5, "name": "Pipilapila", "desc": "梅雨季節：進入本月時，持有材料且「未完成工序④乾燥」的人，要用上個月留下的 1 AP 防潮；上個月把 AP 用光的人，材料腐爛歸零。"},
     {"month": 6, "name": "Apiya vehan", "desc": "好月節（送禮分享的吉月）：贈送材料給耆老、幫忙長者的得分加倍（各 +2 分）。"},
     {"month": 7, "name": "Pehhakow", "desc": "解禁重啟：山林解禁，執行「①砍伐剝皮」（消耗 3 AP）可獲得 2 份材料（原為 1 份）。"},
     {"month": 8, "name": "Pitanatana", "desc": "土器月（物質掌握）：採陶土、燒陶器，是掌握材料性質的月份，執行「科學轉譯」必定成功。"},
     {"month": 9, "name": "Kalimman", "desc": "飛魚終食祭：全部落參與祭儀，本月無法在商店完工。"},
     {"month": 10, "name": "Kaneman", "desc": "禁忌之月：不允許落成，本月任何方式都不能完工（填縫、機器加工、工業樹脂皆禁止）。"},
-    {"month": 11, "name": "Kapitowan", "desc": "祭神月：回合開始時，若青年／中生代與耆老處於同一個地點，可自動獲得 2 點 KP。"},
+    {"month": 11, "name": "Kapitowan", "desc": "祭神月：回合開始時，若文化復振青年／中生代與耆老處於同一個地點，可自動獲得 2 點 KP。"},
     {"month": 12, "name": "Kaowan", "desc": "手工藝月（最終衝刺）：「⑤理線撚繩」消耗 0 AP，而且⑤與⑥不必跨月等待，可以在本月接連完成。"}
 ]
 
@@ -688,7 +688,7 @@ def handle_action(data):
                             player['progress'] = 1
                             player['last_step_month'] = month
                             mission_progress(state, room_code, 'steps')
-                            add_log(room_code, f"{player['name']} 完成了 ①砍伐剝皮 ipana'ape (獲得 {amount} 份材料)")
+                            add_log(room_code, f"{player['name']} 完成了 ①砍伐剝皮 (獲得 {amount} 份材料)")
                         else:
                             add_log(room_code, f"{player['name']} 執行了砍伐剝皮，獲得了 {amount} 份材料")
                         if replanted:
@@ -719,7 +719,7 @@ def handle_action(data):
                         player['materials'] -= 1
                         player['progress'] = 3
                         player['last_step_month'] = month
-                        add_log(room_code, f"{player['name']} 完成了 ③劃痕撕絲 chingdasan (消耗 1 份材料)")
+                        add_log(room_code, f"{player['name']} 完成了 ③劃痕撕絲 (消耗 1 份材料)")
                         mission_progress(state, room_code, 'steps')
                         action_done = True
 
@@ -770,7 +770,7 @@ def handle_action(data):
                         emit('error', {'msg': '禁忌之月：這是專門製作貝灰的月份，即便材料已齊備，現在也絕不能動工填縫！'})
                         return
                     if player['kp'] < 8:
-                        emit('error', {'msg': '填縫完工需要 8 KP（Mamaruk / tumbek su varok）'})
+                        emit('error', {'msg': '填縫完工需要 8 KP'})
                         return
                     if player['materials'] < 1:
                         emit('error', {'msg': '填縫完工需要 1 份材料'})
@@ -940,7 +940,7 @@ def handle_action(data):
             listeners = [p for p in state['players'].values()
                          if p['role'] in ('youth', 'middle') and p['location'] == player['location']]
             if not listeners:
-                emit('error', {'msg': '身邊沒有人在聽。請青年或中生代先來到你所在的地點。'})
+                emit('error', {'msg': '身邊沒有人在聽。請文化復振青年或中生代先來到你所在的地點。'})
                 return
             if consume_ap(2):
                 gain = 2 if month in (2, 10) else 1   # the months when work is forbidden are for listening
