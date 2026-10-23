@@ -1,0 +1,1488 @@
+{
+ "schemaVersion": 2,
+ "meta": {
+  "title": {
+   "zh": "Avaka 之島",
+   "en": "Avaka Island"
+  },
+  "subtitle": {
+   "zh": "六個部落，三個地方，一年的工序",
+   "en": "Six villages, three places, a year of work"
+  },
+  "mapNote": {
+   "zh": "海岸線、山頭與部落位置取自 OpenStreetMap，山的高度放大三倍。房屋、船與人物是示意，不是實際的樣子或位置。",
+   "en": "Coastline, peaks and village positions come from OpenStreetMap; mountain heights are tripled. Houses, boats and figures are illustrative, not real buildings or positions."
+  }
+ },
+ "sources": [
+  {
+   "id": "rules",
+   "title": {
+    "zh": "遊戲規則與邏輯（2026-10-12）",
+    "en": "Game rules and logic (2026-10-12)"
+   }
+  },
+  {
+   "id": "kb",
+   "title": {
+    "zh": "遊戲知識庫「Avaka 是什麼」，整理自《馬尼拉蕉麻 Avaka》",
+    "en": "In-game knowledge base, \"What is Avaka\""
+   }
+  },
+  {
+   "id": "thesis",
+   "title": {
+    "zh": "專題文本（10.21 修訂版）",
+    "en": "Project thesis (rev. 10.21)"
+   }
+  },
+  {
+   "id": "appendix5",
+   "title": {
+    "zh": "專題文本附錄五：族語詞彙對照表",
+    "en": "Thesis appendix 5: Tao vocabulary"
+   }
+  },
+  {
+   "id": "sumida1985",
+   "title": {
+    "zh": "住田イサミ（1985：202）avaka 採集法",
+    "en": "Sumida (1985: 202), the avaka harvesting method"
+   }
+  },
+  {
+   "id": "kaminan",
+   "title": {
+    "zh": "田野訪談（朗島族人）",
+    "en": "Field interview (an Iraraley community member)"
+   }
+  },
+  {
+   "id": "dong2016",
+   "title": {
+    "zh": "董恩慈、汪明輝（2016：160）",
+    "en": "Dong & Wang (2016: 160)"
+   }
+  },
+  {
+   "id": "arnaud2001",
+   "title": {
+    "zh": "Arnaud（2001：第 23 段）",
+    "en": "Arnaud (2001: para. 23)"
+   }
+  },
+  {
+   "id": "cheng2002",
+   "title": {
+    "zh": "鄭漢文等（2002：35）",
+    "en": "Cheng et al. (2002: 35)"
+   }
+  },
+  {
+   "id": "sakayan2012",
+   "title": {
+    "zh": "希婻‧紗旮燕（2012）〈雅美（達悟）語的「畫圖」與「圖畫」〉，《原教界》47 期，頁 78–79",
+    "en": "sinan Sakayan (2012), \"To draw\" and \"picture\" in the Yami/Tao language, Aboriginal Education World 47: 78–79"
+   },
+   "url": "https://web.alcd.center/aew/54/chapter/1372"
+  },
+  {
+   "id": "osm",
+   "title": {
+    "zh": "OpenStreetMap（© OpenStreetMap 貢獻者，ODbL）",
+    "en": "OpenStreetMap (© OpenStreetMap contributors, ODbL)"
+   },
+   "url": "https://www.openstreetmap.org/"
+  },
+  {
+   "id": "photo",
+   "title": {
+    "zh": "本研究田野照片（作品圖片／手冊）",
+    "en": "Project field photographs"
+   }
+  },
+  {
+   "id": "cip",
+   "title": {
+    "zh": "原住民族委員會〈原住民族部落位置GIS點位表〉（政府資料開放平臺，2022-07-25 資料）",
+    "en": "Council of Indigenous Peoples, Indigenous community locations (government open data, 2022-07-25)"
+   },
+   "url": "https://data.gov.tw/dataset/156632"
+  },
+  {
+   "id": "yang2025",
+   "title": {
+    "zh": "楊政賢（2025：123）海洋夜曆，轉引自專題文本",
+    "en": "Yang (2025: 123), the ocean night calendar, as cited in the thesis"
+   }
+  },
+  {
+   "id": "nightcal",
+   "title": {
+    "zh": "專題額外資料〈達悟夜曆的十二個月概說〉（研究團隊整理；含紅頭部落耆老與東清部落耆老的口述及統整表）",
+    "en": "Project notes, 'The twelve months of the Tao night calendar' (compiled by the team from the accounts of an Imaorod elder and an Iranmeylek elder)"
+   }
+  },
+  {
+   "id": "wu2012",
+   "title": {
+    "zh": "吳建翰（2012：99）kagagan：朋友，見專題文本附錄五",
+    "en": "Wu (2012: 99), kagagan: friend, via thesis appendix 5"
+   }
+  },
+  {
+   "id": "boch_yeyin",
+   "title": {
+    "zh": "文化部文化資產局 國家文化資產網〈蘭嶼雅美族野銀部落傳統建築〉（歷史建築，臺東縣政府 2002 年登錄），查閱 2026-10-23",
+    "en": "Bureau of Cultural Heritage, National Cultural Heritage Database: 'Traditional architecture of Ivalino' (historic building, registered by Taitung County 2002), accessed 2026-10-23"
+   },
+   "url": "http://nchdb.boch.gov.tw/assets/advanceSearch/historicalBuilding/20021205000007"
+  },
+  {
+   "id": "boch_weather",
+   "title": {
+    "zh": "文化部文化資產局 國家文化資產網〈蘭嶼氣象站〉（歷史建築，臺東縣政府 2005 年登錄），查閱 2026-10-23",
+    "en": "Bureau of Cultural Heritage, National Cultural Heritage Database: 'Lanyu Weather Station' (historic building, registered 2005), accessed 2026-10-23"
+   },
+   "url": "http://nchdb.boch.gov.tw/assets/advanceSearch/historicalBuilding/20050929000003"
+  }
+ ],
+ "places": [
+  {
+   "id": "forest",
+   "kind": "place",
+   "number": "01",
+   "anchor": {
+    "lon": 121.5225,
+    "lat": 22.0725,
+    "shore": 2.3
+   },
+   "name": {
+    "zh": "山林",
+    "en": "The mountain plots"
+   },
+   "short": {
+    "zh": "Avaka 長在這裡，前三道工序在這裡做",
+    "en": "Where Avaka grows and the first three steps happen"
+   },
+   "game": {
+    "zh": "工序①②③、補種 Avaka、巡山。2 月封山，不能進入。",
+    "en": "Steps ① ② ③, replanting Avaka, walking the forest. Closed in month 2."
+   },
+   "body": [
+    {
+     "zh": "Avaka（馬尼拉蕉麻，Musa textilis）外型像香蕉樹，但較纖細，葉片較窄、較尖。纖維不是取自樹幹，而是一層層疊成假莖的葉鞘。",
+     "en": "Avaka (Manila hemp, Musa textilis) looks like a banana plant but is more slender, with narrower, pointed leaves. The fibre comes from the leaf sheaths that layer into its pseudo-stem.",
+     "src": [
+      "kb"
+     ]
+    },
+    {
+     "zh": "蘭嶼是 Avaka 自然分布的北界之一，種在家族照顧的林地裡。",
+     "en": "Lanyu is one of the northern limits of its natural range; it grows in plots looked after by families.",
+     "src": [
+      "kb"
+     ]
+    },
+    {
+     "zh": "地圖上把山林放在朗島部落後方的山坡，因為本研究主要在朗島部落蹲點。",
+     "en": "On this map the plots sit on the slope behind Iraraley (朗島), where most of this project's fieldwork took place.",
+     "src": [
+      "thesis"
+     ]
+    }
+   ],
+   "photo": {
+    "file": "R0001528.jpg",
+    "caption": {
+     "zh": "砍下的假莖",
+     "en": "Cut pseudo-stems"
+    },
+    "src": "photo"
+   },
+   "terms": [
+    {
+     "tao": "Avaka",
+     "zh": "馬尼拉蕉麻，本研究的核心植物",
+     "en": "Manila hemp, the plant at the centre of this project",
+     "src": "appendix5"
+    },
+    {
+     "tao": "macimoamoa",
+     "zh": "集約照顧",
+     "en": "intensive tending",
+     "src": "appendix5"
+    }
+   ],
+   "steps": [
+    "s1",
+    "s2",
+    "s3"
+   ]
+  },
+  {
+   "id": "beach",
+   "kind": "place",
+   "number": "02",
+   "anchor": {
+    "lon": 121.5195,
+    "lat": 22.0809,
+    "shore": 0.2
+   },
+   "name": {
+    "zh": "灘頭工作室",
+    "en": "The beach workshop"
+   },
+   "short": {
+    "zh": "曬乾、撚繩、填縫，船在這裡完成",
+    "en": "Drying, twisting and caulking: the boat is finished here"
+   },
+   "game": {
+    "zh": "工序④⑤⑥、為部落的船出力。所有玩家從這裡出發。",
+    "en": "Steps ④ ⑤ ⑥ and helping build the village boat. Every player starts here."
+   },
+   "body": [
+    {
+     "zh": "地圖上把工作室放在朗島部落的海灘。朗島族人（本研究主要學習對象）在朗島示範處理纖維，本研究也跟著學習。",
+     "en": "On this map the workshop is on the beach at Iraraley (朗島), where a community member, the project's main teacher, demonstrated fibre processing and the researchers learned alongside.",
+     "src": [
+      "thesis"
+     ]
+    },
+    {
+     "zh": "船身的紋樣是依文獻畫的通用紋樣示意：紅白黑三色的船眼（mata no tatala）、人形紋（taotao）與三角幾何邊紋，不代表任何特定家族的船。文獻也提到，達悟族要複製別人的圖樣，傳統上必須以物交換，否則視為盜用。",
+     "en": "The hull markings are a generic illustration based on the literature: the red, white and black boat eye (mata no tatala), the human figure (taotao) and a triangle border. They do not represent any family's boat. The same source notes that copying another's design traditionally required an exchange of goods, otherwise it was theft.",
+     "src": [
+      "sakayan2012"
+     ]
+    }
+   ],
+   "terms": [
+    {
+     "tao": "mamaren so tatala",
+     "zh": "造舟",
+     "en": "building a boat",
+     "src": "dong2016"
+    },
+    {
+     "tao": "kolili",
+     "zh": "纜繩",
+     "en": "rope",
+     "src": "kaminan"
+    }
+   ],
+   "steps": [
+    "s4",
+    "s5",
+    "s6"
+   ]
+  },
+  {
+   "id": "shop",
+   "kind": "place",
+   "number": "03",
+   "anchor": {
+    "lon": 121.5112,
+    "lat": 22.0545,
+    "shore": 0.9
+   },
+   "name": {
+    "zh": "商店",
+    "en": "The shop"
+   },
+   "short": {
+    "zh": "比較快的兩條路：機器加工或工業樹脂",
+    "en": "Two faster ways: machine-processed fibre or industrial resin"
+   },
+   "game": {
+    "zh": "完成山林三道工序、帶 2 份材料，就能在這裡完工。9 月與 10 月不能在商店完工。",
+    "en": "After the three forest steps, bring 2 materials to finish here. Not possible in months 9 and 10."
+   },
+   "body": [
+    {
+     "zh": "機器加工天然纖維：船仍然用 Avaka，可以拆、可以修，但少了手工曝曬與撚繩的經驗。",
+     "en": "Machine-processed natural fibre: the boat still uses Avaka and can be taken apart and repaired, but without the experience of drying and twisting by hand.",
+     "src": [
+      "rules"
+     ]
+    },
+    {
+     "zh": "工業樹脂：很快完工，但接縫黏死，壞了無法拆修。朗島族人說，拼板舟的修造「現在都用南寶樹酯了」。",
+     "en": "Industrial resin: finished quickly, but the seams are glued shut. An Iraraley community member noted that plank boats are now repaired with commercial resin.",
+     "src": [
+      "rules",
+      "thesis"
+     ]
+    },
+    {
+     "zh": "商店的位置是示意，不代表真的商店。",
+     "en": "The shop's position is illustrative, not a real shop.",
+     "src": []
+    }
+   ],
+   "terms": []
+  }
+ ],
+ "steps": [
+  {
+   "id": "s1",
+   "number": "①",
+   "place": "forest",
+   "offset": [
+    0.55,
+    0.15
+   ],
+   "name": {
+    "zh": "砍伐剝皮",
+    "en": "Cut and peel"
+   },
+   "game": {
+    "zh": "3 AP（森林老化時 4）。得 1 份材料，1 月與 7 月得 2 份；同一個月可以重複做。",
+    "en": "3 AP (4 when the forest has aged). 1 material, 2 in months 1 and 7; can repeat in a month."
+   },
+   "body": [
+    {
+     "zh": "在開花之前，從近地面處砍斷假莖、剝下葉鞘。開花後纖維品質會下降。",
+     "en": "Before it flowers, the pseudo-stem is cut near the ground and the sheaths peeled off. After flowering the fibre is poorer.",
+     "src": [
+      "sumida1985",
+      "kb"
+     ]
+    }
+   ],
+   "terms": [
+    {
+     "tao": "manba",
+     "zh": "砍伐",
+     "en": "to cut down",
+     "src": "kaminan"
+    },
+    {
+     "tao": "ipana'ape so avaka",
+     "zh": "avaka 的採集法（砍斷剝皮、掛在樹枝上摩擦、劃痕撕絲、掛竿曬乾）",
+     "en": "the avaka harvesting method (cut and peel, rub over a branch, score and tear, hang to dry)",
+     "src": "appendix5"
+    }
+   ],
+   "photo": {
+    "file": "R0001376.jpg",
+    "caption": {
+     "zh": "朗島族人把 Nyaga 的假莖剝成一層層葉鞘（朗島）。照片中的植物是 Nyaga，不是 Avaka。",
+     "en": "An Iraraley community member peels a Nyaga pseudo-stem into sheaths (Iraraley). The plant shown is Nyaga, not Avaka."
+    },
+    "src": "photo"
+   }
+  },
+  {
+   "id": "s2",
+   "number": "②",
+   "place": "forest",
+   "offset": [
+    -0.6,
+    0.55
+   ],
+   "name": {
+    "zh": "懸掛摩擦軟化",
+    "en": "Hang and rub"
+   },
+   "game": {
+    "zh": "3 AP，需要 1 份材料。",
+    "en": "3 AP, needs 1 material."
+   },
+   "body": [
+    {
+     "zh": "把葉鞘掛在樹枝或樹幹上，抓住兩端來回拉動摩擦，讓它變軟。",
+     "en": "The sheath is hung over a branch or trunk and pulled back and forth by both ends until it softens.",
+     "src": [
+      "sumida1985",
+      "rules"
+     ]
+    },
+    {
+     "zh": "這一步沒有田野影像。研究者在田野中沒能親眼看到 Avaka 的傳統取纖工序，正確的做法只能透過朗島耆老的口述得知。",
+     "en": "There is no field footage of this step. The researchers never saw the traditional Avaka process first-hand; it is known only from the accounts of Iraraley elders.",
+     "src": [
+      "thesis"
+     ]
+    }
+   ],
+   "terms": []
+  },
+  {
+   "id": "s3",
+   "number": "③",
+   "place": "forest",
+   "offset": [
+    0.1,
+    -0.7
+   ],
+   "name": {
+    "zh": "劃痕撕絲",
+    "en": "Score and tear"
+   },
+   "game": {
+    "zh": "3 AP，需要 1 份材料。",
+    "en": "3 AP, needs 1 material."
+   },
+   "body": [
+    {
+     "zh": "以小刀在葉鞘內側劃開，把纖維一絲絲撕出。",
+     "en": "A small knife scores the inside of the sheath and the fibre is torn out strand by strand.",
+     "src": [
+      "sumida1985",
+      "rules"
+     ]
+    },
+    {
+     "zh": "田野中看到的 Nyaga 做法是刮除肉質層，和文獻記載的 Avaka 做法（劃痕後撕絲）不同。",
+     "en": "In the field, Nyaga was processed by scraping off the flesh, unlike the scoring and tearing recorded for Avaka.",
+     "src": [
+      "thesis"
+     ]
+    }
+   ],
+   "terms": [
+    {
+     "tao": "ipanagan",
+     "zh": "撕絲前在葉鞘內側劃痕用的小刀",
+     "en": "the small knife used to score the sheath",
+     "src": "appendix5"
+    },
+    {
+     "tao": "chingdasan",
+     "zh": "採自 Avaka 的纖維",
+     "en": "fibre taken from Avaka",
+     "src": "appendix5"
+    }
+   ],
+   "photo": {
+    "file": "R0001380.jpg",
+    "caption": {
+     "zh": "朗島族人刮除 Nyaga 葉鞘的肉質層（朗島）。照片中的植物是 Nyaga，不是 Avaka。",
+     "en": "An Iraraley community member scrapes the flesh from a Nyaga sheath (Iraraley). The plant shown is Nyaga, not Avaka."
+    },
+    "src": "photo"
+   }
+  },
+  {
+   "id": "s4",
+   "number": "④",
+   "place": "beach",
+   "offset": [
+    0.95,
+    0
+   ],
+   "name": {
+    "zh": "脫水曝曬乾燥",
+    "en": "Dry in the sun"
+   },
+   "game": {
+    "zh": "3 AP，需要 1 份材料。5 月梅雨前沒做完，材料可能泡壞。",
+    "en": "3 AP, needs 1 material. Not done before the May rains, the material may spoil."
+   },
+   "body": [
+    {
+     "zh": "撕下的纖維帶回來掛在竿子上曬乾。潮濕會腐爛，曬得太乾又會變脆，不好撚。",
+     "en": "The fibre is brought back and hung on poles to dry. Damp fibre rots; fibre dried too far turns brittle and hard to twist.",
+     "src": [
+      "rules",
+      "sumida1985"
+     ]
+    }
+   ],
+   "terms": [
+    {
+     "tao": "kozain",
+     "zh": "曬乾的纖維",
+     "en": "dried fibre",
+     "src": "kaminan"
+    }
+   ],
+   "photo": {
+    "file": "R0001387.jpg",
+    "caption": {
+     "zh": "Nyaga 纖維掛起來曬乾（朗島）。照片中的植物是 Nyaga，不是 Avaka。",
+     "en": "Nyaga fibre hung up to dry (Iraraley). The plant shown is Nyaga, not Avaka."
+    },
+    "src": "photo"
+   }
+  },
+  {
+   "id": "s5",
+   "number": "⑤",
+   "place": "beach",
+   "offset": [
+    1.85,
+    0
+   ],
+   "name": {
+    "zh": "理線撚繩",
+    "en": "Comb and twist"
+   },
+   "game": {
+    "zh": "3 AP（12 月 0 AP），需要 1 份材料與 KP 3。",
+    "en": "3 AP (0 in month 12), needs 1 material and KP 3."
+   },
+   "body": [
+    {
+     "zh": "把曬乾的纖維理順，兩股互相搓撚成繩，撚的方向不能錯。",
+     "en": "The dried fibre is combed straight and two strands are twisted against each other into cord, always in the right direction.",
+     "src": [
+      "rules"
+     ]
+    }
+   ],
+   "terms": [
+    {
+     "tao": "oviden",
+     "zh": "撚線",
+     "en": "twisting fibre into cord",
+     "src": "kaminan"
+    },
+    {
+     "tao": "kolili",
+     "zh": "纜繩",
+     "en": "rope",
+     "src": "kaminan"
+    }
+   ],
+   "photo": {
+    "file": "R0001414.jpg",
+    "caption": {
+     "zh": "以 Nyaga 纖維撚成的繩。照片中的纖維是 Nyaga，不是 Avaka。",
+     "en": "Cord twisted from Nyaga fibre. The fibre shown is Nyaga, not Avaka."
+    },
+    "src": "photo"
+   }
+  },
+  {
+   "id": "s6",
+   "number": "⑥",
+   "place": "beach",
+   "offset": [
+    -1.05,
+    0
+   ],
+   "name": {
+    "zh": "填縫完工",
+    "en": "Caulk and finish"
+   },
+   "game": {
+    "zh": "3 AP（耆老 0 AP），需要 1 份材料與 KP 8。完工 +20 分。10 月不能做。",
+    "en": "3 AP (0 for the elder), needs 1 material and KP 8. +20 points. Not in month 10."
+   },
+   "body": [
+    {
+     "zh": "接合船板時，以蘭嶼花椒（varok）根部的棉絮填塞船板接縫，讓船不漏水。",
+     "en": "When the planks are joined, the seams are packed with floss from the roots of varok (Lanyu prickly ash) so the boat does not leak.",
+     "src": [
+      "rules",
+      "arnaud2001"
+     ]
+    },
+    {
+     "zh": "這一步沒有田野影像。",
+     "en": "There is no field footage of this step.",
+     "src": []
+    }
+   ],
+   "terms": [
+    {
+     "tao": "tumbek su varuk",
+     "zh": "以 varok 根部棉絮填塞船板接縫（原文拼作 varuk）",
+     "en": "packing plank seams with varok root floss (spelled varuk in the source)",
+     "src": "arnaud2001"
+    },
+    {
+     "tao": "varok",
+     "zh": "蘭嶼花椒，根部纖維用於拼板舟填縫",
+     "en": "Lanyu prickly ash; its root fibre caulks plank boats",
+     "src": "cheng2002"
+    }
+   ]
+  }
+ ],
+ "villages": [
+  {
+   "id": "iraraley",
+   "zh": "朗島",
+   "lon": 121.5285,
+   "lat": 22.07941,
+   "facts": [
+    {
+     "zh": "位於朗島村 1–7 鄰。",
+     "en": "Covers neighbourhoods 1–7 of Langdao village.",
+     "src": [
+      "cip"
+     ]
+    },
+    {
+     "zh": "本研究主要的田野地點，2026 年 1 月到 9 月共去了五次。",
+     "en": "The project's main field site, visited five times from January to September 2026.",
+     "src": [
+      "thesis"
+     ]
+    },
+    {
+     "zh": "朗島族人（本研究主要學習對象）在這裡示範處理纖維；Avaka 的傳統做法，來自朗島耆老的口述與文獻相互印證。",
+     "en": "A community member, the project's main teacher, demonstrated fibre processing here; the traditional Avaka method comes from the account of an Iraraley elder checked against the literature.",
+     "src": [
+      "thesis"
+     ]
+    },
+    {
+     "zh": "1966 年政府拆除傳統家屋、改建國宅時，朗島和野銀的國宅另建在村落附近，傳統家屋因此保留下來；不過 1994 年起的改建計畫後，朗島舊聚落的傳統家屋大多改成了水泥房屋。",
+     "en": "When traditional houses were demolished for state housing from 1966, Iraraley's and Ivalino's new houses were built beside the old villages, so their traditional houses survived; after the rebuilding plan of 1994 most of Iraraley's old houses became concrete.",
+     "src": [
+      "boch_yeyin"
+     ]
+    }
+   ],
+   "en": "Iraraley",
+   "tao": "Iraraley",
+   "cipPoint": "朗島國小"
+  },
+  {
+   "id": "iranmeylek",
+   "zh": "東清",
+   "lon": 121.5647,
+   "lat": 22.0568,
+   "facts": [
+    {
+     "zh": "位於東清村 1–5 鄰。",
+     "en": "Covers neighbourhoods 1–5 of Dongqing village.",
+     "src": [
+      "cip"
+     ]
+    },
+    {
+     "zh": "目前判斷最有可能是 Avaka 的植株，在東清耆老的田區。",
+     "en": "The plants judged most likely to be Avaka grow in the field of an Iranmeylek elder here.",
+     "src": [
+      "thesis"
+     ]
+    },
+    {
+     "zh": "東清部落的報導人說，現在會處理 Avaka 的人「全鄉幾乎都沒有，大概在我們東清才有兩三個」。",
+     "en": "An Iranmeylek interviewee said hardly anyone on the island still processes Avaka, perhaps two or three people in Iranmeylek.",
+     "src": [
+      "thesis"
+     ]
+    },
+    {
+     "zh": "東清的耆老說，在 Kapowan（夜曆 2 月）東清會燒山，把乾的蘆葦莖割下來做捕飛魚的火把。",
+     "en": "An Iranmeylek elder recalls that in Kapowan the hillside reeds are burned and the dry stems cut for flying-fish torches.",
+     "src": [
+      "nightcal"
+     ]
+    }
+   ],
+   "en": "Iranmeylek",
+   "tao": "Iranmeylek",
+   "cipPoint": "東清國小"
+  },
+  {
+   "id": "ivalino",
+   "zh": "野銀",
+   "lon": 121.5671,
+   "lat": 22.03804,
+   "facts": [
+    {
+     "zh": "位於東清村 6–13 鄰。",
+     "en": "Covers neighbourhoods 6–13 of Dongqing village.",
+     "src": [
+      "cip"
+     ]
+    },
+    {
+     "zh": "野銀的傳統家屋是保存最完整的雅美（達悟）族傳統建築聚落，2002 年由臺東縣政府登錄為歷史建築。",
+     "en": "Ivalino has the most complete surviving village of traditional Tao houses, registered as a historic building by Taitung County in 2002.",
+     "src": [
+      "boch_yeyin"
+     ]
+    },
+    {
+     "zh": "傳統家屋依山面海，在緩坡上挖深約 1–2 公尺做主屋和工作房的地基；一戶通常有主屋、工作房、涼台，還有前庭、靠背石、曬魚架。外人常叫它「地下屋」，其實是深穴式建築。",
+     "en": "Houses face the sea with their backs to the hill, set into pits 1–2 m deep on the slope: a main house, a workhouse and a raised platform, with a forecourt, backrest stones and fish racks. Outsiders call them 'underground houses', but they are deep-pit houses.",
+     "src": [
+      "boch_yeyin"
+     ]
+    }
+   ],
+   "en": "Ivalino",
+   "tao": "Ivalino",
+   "cipPoint": "環島公路"
+  },
+  {
+   "id": "imorod",
+   "zh": "紅頭",
+   "lon": 121.5629,
+   "lat": 22.01959,
+   "facts": [
+    {
+     "zh": "位於紅頭村 1–5 鄰。",
+     "en": "Covers neighbourhoods 1–5 of Hongtou village.",
+     "src": [
+      "cip"
+     ]
+    },
+    {
+     "zh": "紅頭部落的耆老說，紅頭在 Paneneb 月的初二就開始舉行招魚祭，並說飛魚的文化是紅頭的祖先創造的。",
+     "en": "An Imaorod elder recalls that Imaorod begins its flying-fish calling rite on the second day of Paneneb, and says the flying-fish culture began with Imaorod's ancestors.",
+     "src": [
+      "nightcal"
+     ]
+    },
+    {
+     "zh": "紅頭村的蘭嶼氣象站建於 1940 年，是蘭嶼唯一僅存的日治時期建築，2005 年登錄為歷史建築。",
+     "en": "The Lanyu weather station in Hongtou village, built in 1940, is the island's only surviving building from the Japanese era; it was registered as a historic building in 2005.",
+     "src": [
+      "boch_weather"
+     ]
+    }
+   ],
+   "en": "Imaorod",
+   "tao": "Imaorod",
+   "cipPoint": "蘭嶼國小"
+  },
+  {
+   "id": "iratay",
+   "zh": "漁人",
+   "lon": 121.5358,
+   "lat": 22.02781,
+   "facts": [
+    {
+     "zh": "位於紅頭村 6–11 鄰。",
+     "en": "Covers neighbourhoods 6–11 of Hongtou village.",
+     "src": [
+      "cip"
+     ]
+    }
+   ],
+   "en": "Iratay",
+   "tao": "Iratay",
+   "cipPoint": "蘭嶼航空站"
+  },
+  {
+   "id": "yayo",
+   "zh": "椰油",
+   "lon": 121.5175,
+   "lat": 22.04538,
+   "facts": [
+    {
+     "zh": "位於椰油村 1–7 鄰。",
+     "en": "Covers neighbourhoods 1–7 of Yeyou village.",
+     "src": [
+      "cip"
+     ]
+    }
+   ],
+   "en": "Yayo",
+   "tao": "Yayo",
+   "cipPoint": "椰油國小"
+  }
+ ],
+ "sites": [
+  {
+   "id": "avaka-field",
+   "kind": "site",
+   "number": "✿",
+   "lon": 121.56,
+   "lat": 22.056,
+   "shore": 2.5,
+   "name": {
+    "zh": "東清的 Avaka 田",
+    "en": "The Avaka plot at Iranmeylek"
+   },
+   "short": {
+    "zh": "判斷最有可能是 Avaka 的植株",
+    "en": "Plants judged most likely to be Avaka"
+   },
+   "body": [
+    {
+     "zh": "目前判斷最有可能是 Avaka 的植株，在東清耆老的田區；這位耆老確信它是 Avaka。本研究收集的 Avaka 纖維，只有取自這塊田、曬乾的纖維。",
+     "en": "The plants judged most likely to be Avaka grow in an Iranmeylek (東清) elder's field; the elder is sure they are Avaka. The only Avaka fibre the project collected came from here.",
+     "src": [
+      "thesis"
+     ]
+    },
+    {
+     "zh": "這裡的植株要開花結果才能確認物種，可能需要一年以上。地圖上的位置是示意。",
+     "en": "Confirming the species needs the plants to flower and fruit, which may take more than a year. The position on this map is illustrative.",
+     "src": [
+      "thesis"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "weather",
+   "kind": "site",
+   "number": "◎",
+   "lon": 121.5583,
+   "lat": 22.037,
+   "shore": null,
+   "name": {
+    "zh": "蘭嶼氣象站",
+    "en": "Lanyu Weather Station"
+   },
+   "short": {
+    "zh": "紅頭村山頂，蘭嶼唯一僅存的日治時期建築",
+    "en": "On the hilltop in Hongtou village; the island's only surviving Japanese-era building"
+   },
+   "body": [
+    {
+     "zh": "位於蘭嶼中央的山頂，海拔 324 公尺，天晴時可以看見鵝鑾鼻燈塔和菲律賓的巴士群島。",
+     "en": "On a hilltop in the middle of the island, 324 m up; on clear days the Eluanbi lighthouse and the Batanes can be seen.",
+     "src": [
+      "boch_weather"
+     ]
+    },
+    {
+     "zh": "1940 年由臺灣總督府強行徵調雅美（達悟）族人修建，翌年完工；戰時曾遭轟炸，牆上仍留有彈孔。",
+     "en": "Built in 1940 with Tao labour forcibly conscripted by the colonial government and finished the next year; it was bombed in the war and bullet holes remain in the walls.",
+     "src": [
+      "boch_weather"
+     ]
+    },
+    {
+     "zh": "是蘭嶼唯一僅存的日治時期建築，2005 年由臺東縣政府登錄為歷史建築。地圖上的模型是示意。",
+     "en": "It is Lanyu's only surviving Japanese-era building, registered as a historic building by Taitung County in 2005. The model on the map is illustrative.",
+     "src": [
+      "boch_weather"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "airport",
+   "kind": "site",
+   "number": "✈",
+   "lon": 121.5359,
+   "lat": 22.0278,
+   "shore": null,
+   "name": {
+    "zh": "蘭嶼航空站",
+    "en": "Lanyu Airport"
+   },
+   "short": {
+    "zh": "漁人部落旁的機場",
+    "en": "The airport beside Iratay"
+   },
+   "body": [
+    {
+     "zh": "原住民族委員會的部落位置資料，以蘭嶼航空站作為漁人部落的定位點。",
+     "en": "The Council of Indigenous Peoples uses Lanyu Airport as the reference point for Iratay.",
+     "src": [
+      "cip"
+     ]
+    },
+    {
+     "zh": "跑道與航廈的位置依 OpenStreetMap；模型與飛機是示意。",
+     "en": "Runway and terminal positions from OpenStreetMap; the models and the plane are illustrative.",
+     "src": [
+      "osm"
+     ]
+    }
+   ]
+  }
+ ],
+ "ui": {
+  "places": {
+   "zh": "島上的地方",
+   "en": "Places on the island"
+  },
+  "villages": {
+   "zh": "六個部落",
+   "en": "Six villages"
+  },
+  "village": {
+   "zh": "部落",
+   "en": "Village"
+  },
+  "step": {
+   "zh": "工序",
+   "en": "Step"
+  },
+  "steps": {
+   "zh": "在這裡做的工序",
+   "en": "Steps done here"
+  },
+  "overview": {
+   "zh": "全景",
+   "en": "Overview"
+  },
+  "back": {
+   "zh": "回到遊戲",
+   "en": "Back to the game"
+  },
+  "inGame": {
+   "zh": "在遊戲裡",
+   "en": "In the game"
+  },
+  "terms": {
+   "zh": "族語",
+   "en": "Tao words"
+  },
+  "sources": {
+   "zh": "出處",
+   "en": "Sources"
+  },
+  "close": {
+   "zh": "關閉",
+   "en": "Close"
+  },
+  "taoPending": {
+   "zh": "族語名稱待確認",
+   "en": "Tao name to be confirmed"
+  },
+  "position": {
+   "zh": "族語名稱與位置依原住民族委員會公告的部落位置資料（定位點：{pt}）",
+   "en": "Tao name and position from the Council of Indigenous Peoples community data (reference point: {pt})"
+  },
+  "hint": {
+   "zh": "拖曳旋轉・滾輪或雙指縮放・點地名看說明",
+   "en": "Drag to turn · scroll or pinch to zoom · tap a name"
+  },
+  "loading": {
+   "zh": "正在把島嶼拼起來…",
+   "en": "Putting the island together…"
+  },
+  "failed": {
+   "zh": "島嶼載入失敗，請重新整理頁面。",
+   "en": "The island could not load. Please refresh the page."
+  },
+  "canvas": {
+   "zh": "3D 蘭嶼島，可以拖曳旋轉；完整文字內容請用左邊的清單",
+   "en": "3D island of Lanyu. Drag to turn; the list has all the text."
+  },
+  "taoName": {
+   "zh": "族語名稱",
+   "en": "Tao name"
+  },
+  "month": {
+   "zh": "月",
+   "en": "Month"
+  },
+  "play": {
+   "zh": "播放一年",
+   "en": "Play the year"
+  },
+  "pause": {
+   "zh": "暫停",
+   "en": "Pause"
+  },
+  "thisMonth": {
+   "zh": "這個月在遊戲裡",
+   "en": "This month in the game"
+  },
+  "walker": {
+   "zh": "文化復振青年",
+   "en": "Youth"
+  },
+  "monthNote": {
+   "zh": "天色是每個月的示意，不是氣象紀錄。",
+   "en": "The sky is a mood for each month, not a weather record."
+  },
+  "calendarLine": {
+   "zh": "夜曆裡",
+   "en": "In the night calendar"
+  },
+  "variants": {
+   "zh": "其他寫法",
+   "en": "Also written"
+  },
+  "pedHint": {
+   "zh": "點我打招呼",
+   "en": "Tap to say hello"
+  },
+  "more": {
+   "zh": "更多",
+   "en": "More"
+  },
+  "hasPhoto": {
+   "zh": "有田野照片",
+   "en": "Field photo"
+  },
+  "heritage": {
+   "zh": "歷史建築",
+   "en": "Historic building"
+  },
+  "landmark": {
+   "zh": "地標",
+   "en": "Landmark"
+  },
+  "names": {
+   "zh": "名牌",
+   "en": "Names"
+  },
+  "people": {
+   "zh": "行人",
+   "en": "People"
+  },
+  "bird": {
+   "zh": "鳥瞰",
+   "en": "Top view"
+  },
+  "help": {
+   "zh": "操作說明",
+   "en": "How to use"
+  },
+  "introNext": {
+   "zh": "下一步 →",
+   "en": "Next →"
+  },
+  "introDone": {
+   "zh": "開始探索 →",
+   "en": "Start exploring →"
+  },
+  "introSkip": {
+   "zh": "略過",
+   "en": "Skip"
+  },
+  "intro": [
+   {
+    "title": {
+     "zh": "這是蘭嶼",
+     "en": "This is Lanyu"
+    },
+    "body": {
+     "zh": "拖曳可以旋轉，滾輪或雙指可以縮放。海岸線、山頭與六個部落的位置，都照真實的蘭嶼。",
+     "en": "Drag to turn, scroll or pinch to zoom. The coastline, the peaks and the six villages follow the real Lanyu."
+    }
+   },
+   {
+    "title": {
+     "zh": "點地名看說明",
+     "en": "Tap a name"
+    },
+    "body": {
+     "zh": "點地圖上的地名或左邊的清單，鏡頭會飛過去並打開說明卡。卡片有族語、田野照片和出處。",
+     "en": "Tap a name on the map or in the list: the camera flies there and a card opens, with Tao words, field photos and sources."
+    }
+   },
+   {
+    "title": {
+     "zh": "走過一年",
+     "en": "Walk through the year"
+    },
+    "body": {
+     "zh": "上方的月份軸可以切換十二個月，按「播放一年」，看文化復振青年一個月一個月做完六道工序。",
+     "en": "The month bar switches between the twelve months. Press 'Play the year' to follow the youth through the six steps, month by month."
+    }
+   }
+  ]
+ },
+ "months": [
+  {
+   "n": 1,
+   "name": "Kashyman",
+   "label": {
+    "zh": "準備月",
+    "en": "Preparation month"
+   },
+   "game": {
+    "zh": "①砍伐剝皮獲得 2 份材料。",
+    "en": "① Cut and peel yields 2 materials instead of 1."
+   },
+   "src": [
+    "rules"
+   ],
+   "walker": {
+    "target": "s1",
+    "carry": "sheath",
+    "note": {
+     "zh": "照最快的進度，這個月做①砍伐剝皮。",
+     "en": "On the fastest schedule, this month is for ① cut and peel."
+    }
+   },
+   "closed": {},
+   "calendar": {
+    "zh": "舉行立春儀式與孝敬父母日；殺豬祈求出海平安。準備捕魚工具、修補大船。東清的耆老也提到，這個月的祈福儀式會用到絲芭蕉（avaka）和蘆葦。",
+    "en": "The spring rite and a day honouring parents; a pig is offered for safe fishing. Fishing gear is readied and the big boats repaired. An Iranmeylek elder adds that the month's blessing uses avaka and reeds.",
+    "src": [
+     "nightcal"
+    ]
+   },
+   "variants": "Kasyaman、Kashyaman、Kashyman"
+  },
+  {
+   "n": 2,
+   "name": "Kapowan",
+   "label": {
+    "zh": "飛魚禁令",
+    "en": "Flying-fish ban"
+   },
+   "game": {
+    "zh": "不能進入山林；月初還在山林的人會被移回灘頭工作室。這個月無法做任何工序。",
+    "en": "The forest is closed; anyone still there is sent back to the beach workshop. No craft step can be done this month."
+   },
+   "src": [
+    "rules"
+   ],
+   "walker": {
+    "target": "beach",
+    "carry": "none",
+    "note": {
+     "zh": "封山，留在灘頭工作室。",
+     "en": "The forest is closed; staying at the beach workshop."
+    }
+   },
+   "closed": {
+    "forest": {
+     "zh": "封山",
+     "en": "Closed"
+    }
+   },
+   "calendar": {
+    "zh": "舉行招飛魚祭，開始夜間火把捕魚；上山砍曬魚架的材料。Paneneb 是「關起」的意思，天冷閉戶，是禁忌最多的月份。",
+    "en": "The flying-fish calling rite; night fishing by torchlight begins, and wood is cut for drying racks. Paneneb means 'closed': a cold month of shut doors and the most taboos.",
+    "src": [
+     "nightcal"
+    ]
+   },
+   "variants": "Kapowan、Paneneb"
+  },
+  {
+   "n": 3,
+   "name": "Pikaokaod",
+   "label": {
+    "zh": "捕撈飛魚盛期",
+    "en": "Peak flying-fish season"
+   },
+   "game": {
+    "zh": "所有工序少 1 AP。",
+    "en": "Every craft step costs 1 AP less."
+   },
+   "src": [
+    "rules"
+   ],
+   "walker": {
+    "target": "s2",
+    "carry": "sheath",
+    "note": {
+     "zh": "照最快的進度，這個月做②懸掛摩擦軟化。",
+     "en": "On the fastest schedule, this month is for ② hang and rub."
+    }
+   },
+   "closed": {},
+   "calendar": {
+    "zh": "全力捕撈飛魚，飛魚可帶回家塗鹽晾曬；婦女上山採集陸蟹。kaod 是「划（出漁）」的意思。",
+    "en": "Full flying-fish season; fish are salted and dried at home, and women gather land crabs. kaod means 'to paddle out'.",
+    "src": [
+     "nightcal"
+    ]
+   },
+   "variants": "Pikaokaod、Peykaokaod"
+  },
+  {
+   "n": 4,
+   "name": "Papataw",
+   "label": {
+    "zh": "男人勤於出海",
+    "en": "Men at sea"
+   },
+   "game": {
+    "zh": "所有請益多 1 AP。部落記事會預告下個月的梅雨。",
+    "en": "Every Ask costs 1 AP more. The village log warns of next month's plum rain."
+   },
+   "src": [
+    "rules"
+   ],
+   "walker": {
+    "target": "s3",
+    "carry": "strands",
+    "note": {
+     "zh": "照最快的進度，這個月做③劃痕撕絲。",
+     "en": "On the fastest schedule, this month is for ③ score and tear."
+    }
+   },
+   "closed": {},
+   "calendar": {
+    "zh": "小船招魚祭，開始白天釣鬼頭刀；舉行慰勞節，婦女做芋頭糕慰勞丈夫。",
+    "en": "The small-boat calling rite and daytime fishing for mahi-mahi; at the thanksgiving feast women make taro cakes for their husbands.",
+    "src": [
+     "nightcal"
+    ]
+   },
+   "variants": "Papataw、Papatow"
+  },
+  {
+   "n": 5,
+   "name": "Pipilapila",
+   "label": {
+    "zh": "梅雨季節",
+    "en": "Plum rain season"
+   },
+   "game": {
+    "zh": "進入本月時，持有材料且未完成④的人，用 4 月剩下的 1 AP 防潮；4 月把 AP 用光的人，材料全部歸零。",
+    "en": "On entering this month, players holding materials who have not finished ④ spend 1 AP left from month 4 to keep them dry; anyone who used all their AP loses their materials."
+   },
+   "src": [
+    "rules"
+   ],
+   "walker": {
+    "target": "s4",
+    "carry": "fibre",
+    "note": {
+     "zh": "照最快的進度，這個月做④脫水曝曬乾燥。",
+     "en": "On the fastest schedule, this month is for ④ dry."
+    }
+   },
+   "closed": {},
+   "calendar": {
+    "zh": "月初祈福祭；蒸飛魚、儲存飛魚乾；製作木臼與木杵。",
+    "en": "A blessing at the start of the month; flying fish are steamed and stored dry; mortars and pestles are made.",
+    "src": [
+     "nightcal"
+    ]
+   },
+   "variants": "Pipilapila、Peypilapila"
+  },
+  {
+   "n": 6,
+   "name": "Apiya vehan",
+   "label": {
+    "zh": "好月節",
+    "en": "Good Month Festival"
+   },
+   "game": {
+    "zh": "送禮給耆老、幫忙長者的得分加倍（各 +2 分）。",
+    "en": "Gifts to the elder and helping the elder score double (+2 each)."
+   },
+   "src": [
+    "rules"
+   ],
+   "walker": {
+    "target": "s5",
+    "carry": "cord",
+    "note": {
+     "zh": "照最快的進度，這個月做⑤理線撚繩。",
+     "en": "On the fastest schedule, this month is for ⑤ comb and twist."
+    }
+   },
+   "closed": {},
+   "calendar": {
+    "zh": "「好月節」：親友互相贈送飛魚、分享勞動成果；捕飛魚到本月結束。",
+    "en": "The 'good month': relatives give each other flying fish and share the year's work; flying-fish catching ends this month.",
+    "src": [
+     "nightcal"
+    ]
+   },
+   "variants": "Apiya vehan、Apia vehan、Piyaverhan"
+  },
+  {
+   "n": 7,
+   "name": "Pehhakow",
+   "label": {
+    "zh": "解禁重啟",
+    "en": "Forest reopened"
+   },
+   "game": {
+    "zh": "①砍伐剝皮獲得 2 份材料。",
+    "en": "① Cut and peel yields 2 materials instead of 1."
+   },
+   "src": [
+    "rules"
+   ],
+   "walker": {
+    "target": "s6",
+    "carry": "cord",
+    "note": {
+     "zh": "照最快的進度，這個月做⑥填縫完工。",
+     "en": "On the fastest schedule, this month is for ⑥ caulk and finish."
+    }
+   },
+   "closed": {},
+   "calendar": {
+    "zh": "開墾新的水芋田與地瓜田；適合主屋、涼台與拼板舟的落成禮。",
+    "en": "New taro and sweet-potato fields are opened; a good month for launching houses, platforms and plank boats.",
+    "src": [
+     "nightcal"
+    ]
+   },
+   "variants": "Pehhakow、Pehakaw"
+  },
+  {
+   "n": 8,
+   "name": "Pitanatana",
+   "label": {
+    "zh": "土器月",
+    "en": "Clay vessel month"
+   },
+   "game": {
+    "zh": "科學轉譯必定成功。",
+    "en": "Scientific translation always succeeds."
+   },
+   "src": [
+    "rules"
+   ],
+   "walker": {
+    "target": "s6",
+    "carry": "rope",
+    "note": {
+     "zh": "自己的船完工後，繼續為部落的船出力。",
+     "en": "With their own boat finished, helping build the village boat."
+    }
+   },
+   "closed": {},
+   "calendar": {
+    "zh": "採陶土、燒陶甕（tana 是泥土）。",
+    "en": "Clay is dug and pots are fired (tana means earth).",
+    "src": [
+     "nightcal"
+    ]
+   },
+   "variants": "Pitanatana、Peytanatana"
+  },
+  {
+   "n": 9,
+   "name": "Kalimman",
+   "label": {
+    "zh": "飛魚終食祭",
+    "en": "Final flying-fish feast"
+   },
+   "game": {
+    "zh": "不能在商店完工。",
+    "en": "You cannot finish at the shop this month."
+   },
+   "src": [
+    "rules"
+   ],
+   "walker": {
+    "target": "s6",
+    "carry": "rope",
+    "note": {
+     "zh": "自己的船完工後，繼續為部落的船出力。",
+     "en": "With their own boat finished, helping build the village boat."
+    }
+   },
+   "closed": {
+    "shop": {
+     "zh": "本月不能完工",
+     "en": "No finishing"
+    }
+   },
+   "calendar": {
+    "zh": "月中舉行飛魚終食祭，之後不再吃、也不再儲存飛魚乾。",
+    "en": "Mid-month the flying-fish ending rite; after it no dried flying fish is eaten or kept.",
+    "src": [
+     "nightcal"
+    ]
+   },
+   "variants": "Kalimman、Kaliman"
+  },
+  {
+   "n": 10,
+   "name": "Kaneman",
+   "label": {
+    "zh": "禁忌之月",
+    "en": "Forbidden month"
+   },
+   "game": {
+    "zh": "任何方式都不能完工（填縫、機器加工、工業樹脂）。",
+    "en": "No boat may be finished by any path (caulking, machine processing or resin)."
+   },
+   "src": [
+    "rules"
+   ],
+   "walker": {
+    "target": "s6",
+    "carry": "rope",
+    "note": {
+     "zh": "自己的船完工後，繼續為部落的船出力。",
+     "en": "With their own boat finished, helping build the village boat."
+    }
+   },
+   "closed": {
+    "shop": {
+     "zh": "本月不能完工",
+     "en": "No finishing"
+    },
+    "s6": {
+     "zh": "本月不能填縫",
+     "en": "No caulking"
+    }
+   },
+   "calendar": {
+    "zh": "全年最不吉利的月份，不建屋、不讓船落成、不為嬰兒取名；專門燒製貝灰（也是彩繪船身的白色原料）。",
+    "en": "The least auspicious month: no house or boat is completed and no baby named. Shells are burned for lime, also the white used to paint boats.",
+    "src": [
+     "nightcal"
+    ]
+   },
+   "variants": "Kaneman、Kanuman"
+  },
+  {
+   "n": 11,
+   "name": "Kapitowan",
+   "label": {
+    "zh": "祭神月",
+    "en": "Sacred month"
+   },
+   "game": {
+    "zh": "月初與耆老同地點的文化復振青年、中生代各 +2 KP。",
+    "en": "At the start of the month, the youth and middle generation in the same place as the elder gain +2 KP each."
+   },
+   "src": [
+    "rules"
+   ],
+   "walker": {
+    "target": "s6",
+    "carry": "rope",
+    "note": {
+     "zh": "自己的船完工後，繼續為部落的船出力。",
+     "en": "With their own boat finished, helping build the village boat."
+    }
+   },
+   "closed": {},
+   "calendar": {
+    "zh": "祭拜天神與祖靈（Pazos）；播種小米；採伐蘆葦準備做火把。",
+    "en": "Offerings to the heavens and the ancestors (Pazos); millet is sown; reeds are cut for future torches.",
+    "src": [
+     "nightcal"
+    ]
+   },
+   "variants": "Kapitowan、Kapitoan、Kapitwan"
+  },
+  {
+   "n": 12,
+   "name": "Kaowan",
+   "label": {
+    "zh": "手工藝月",
+    "en": "Handicraft month"
+   },
+   "game": {
+    "zh": "⑤理線撚繩 0 AP；⑤與⑥不必跨月等待，可以同月接連完成。",
+    "en": "⑤ Comb and twist costs 0 AP, and ⑤ and ⑥ can be done back to back this month."
+   },
+   "src": [
+    "rules"
+   ],
+   "walker": {
+    "target": "s5",
+    "carry": "cord",
+    "note": {
+     "zh": "自己的船完工後，繼續為部落的船出力。",
+     "en": "With their own boat finished, helping build the village boat."
+    }
+   },
+   "closed": {},
+   "extra": {
+    "zh": "在夜曆中，Kaowan（約陽曆 12–1 月）是紡織及手工之月。",
+    "en": "In the night calendar, Kaowan (about December–January) is the month of weaving and handicraft.",
+    "src": [
+     "yang2025"
+    ]
+   },
+   "calendar": {
+    "zh": "男人冶鐵、製作槳繩；女人織布、編藤籃；婦女祝福芋頭田。",
+    "en": "Men forge metal and make paddle ropes; women weave cloth and rattan baskets and bless the taro fields.",
+    "src": [
+     "nightcal"
+    ]
+   },
+   "variants": "Kaowan、Kawuwan"
+  }
+ ]
+}

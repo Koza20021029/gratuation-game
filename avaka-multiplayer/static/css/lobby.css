@@ -131,7 +131,8 @@ button.btn.pulled { transition: background-color 0.3s var(--ease), color 0.3s va
 .secondary { width: 100%; margin-top: 0.6rem; background: transparent; color: var(--fibre); border: 1px solid #4d6b58; }
 .secondary:hover { border-color: var(--fibre); background: rgba(239, 230, 207, 0.06); }
 button.btn:active { transform: translate(var(--tx, 0px), calc(var(--ty, 0px) + 1px)) scale(0.985); }
-.foot { margin-top: 1.1rem; display: flex; justify-content: space-between; align-items: baseline; font-size: 0.9rem; }
+.foot { margin-top: 1.1rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0.5rem 1.2rem; font-size: 0.9rem; }
+.foot .lang { margin-left: auto; }
 .foot a { color: var(--leaf); text-underline-offset: 0.3em; text-decoration-thickness: 1px; }
 .foot a:hover { color: var(--fibre); }
 .lang { font-family: var(--latin); }
@@ -244,3 +245,11 @@ button.btn:active { transform: translate(var(--tx, 0px), calc(var(--ty, 0px) + 1
 #join[data-next=room] .room, #join[data-next=room] #b-create { animation: ready 0.6s var(--ease); }
 @keyframes ready { from { transform: translateY(4px); } to { transform: none; } }
 @media (prefers-reduced-motion: reduce) { .hint::before { animation: none; } }
+
+/* phones: the two links become equal-width buttons side by side, the language switch goes on its own line */
+@media (max-width: 520px) {
+  .foot { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; align-items: stretch; }
+  .foot a { display: flex; align-items: center; justify-content: center; text-align: center; min-height: 44px; padding: 0.5rem 0.6rem; border: 1px solid #4d6b58; border-radius: 10px; text-decoration: none; line-height: 1.35; }
+  .foot a:hover { border-color: var(--fibre); }
+  .foot .lang { grid-column: 1 / -1; margin: 0.2rem 0 0; text-align: center; }
+}

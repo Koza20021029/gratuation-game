@@ -112,6 +112,7 @@ const LOBBY_HTML = `
     <p class="form-msg" id="form-msg" role="alert"></p>
     <div class="foot">
       <a href="/rules/player.html" id="rules-link" target="_blank" rel="noopener">先看遊戲規則與流程</a>
+      <a href="/island" id="island-link" target="_blank" rel="noopener">探索 Avaka 島</a>
       <span class="lang"><button type="button" data-lang="zh" aria-pressed="true">中文</button> · <button type="button" data-lang="en" aria-pressed="false">EN</button></span>
     </div>
    </div>
@@ -144,7 +145,7 @@ const LOBBY_HTML = `
   const host = document.createElement('div');
   host.id = 'lobby2';
   const root = host.attachShadow({ mode: 'open' });
-  root.innerHTML = '<link rel="stylesheet" href="css/lobby.css?v=20261023_1">' + LOBBY_HTML;   // fixed markup defined below, no user input
+  root.innerHTML = '<link rel="stylesheet" href="css/lobby.css?v=20261023_2">' + LOBBY_HTML;   // fixed markup defined below, no user input
   document.body.appendChild(host);
   const old = id => document.getElementById(id);
 
@@ -636,6 +637,8 @@ const LOBBY_HTML = `
   $('b-start').addEventListener('click', () => { pluck(523, 0.1); old('start-game-btn').click(); });
   // the rules live at /rules now; they open in their own tab so the lobby (and a room in progress) stays put
   $('rules-link').addEventListener('click', e => { e.currentTarget.href = '/rules/player.html?lang=' + (typeof currentLang !== 'undefined' && currentLang === 'en' ? 'en' : 'zh'); });
+  // the 3D island explorer, also in its own tab
+  $('island-link').addEventListener('click', e => { e.currentTarget.href = '/island?lang=' + (typeof currentLang !== 'undefined' && currentLang === 'en' ? 'en' : 'zh'); });
   // A refusal from the server (say, a room code that does not exist) usually lands while the avatar
   // creator is still up, so it is kept and shown as soon as this screen is back.
   let heldError = '';
@@ -660,7 +663,7 @@ const LOBBY_HTML = `
       name_elder: '資深工匠', aka_elder: '耆老', does_elder: '什麼都會，體力有限。把話傳下去的人。',
       name_youth: '文化復振青年', aka_youth: '', does_youth: '走得快、體力好，但一切要從開口問開始。',
       name_middle: '中生代', aka_middle: '中生代工匠', does_middle: '小時候看過老人家怎麼做，學得快，也傳得快。',
-      roomPh: '房間代碼（4 碼）', join: '加入房間', create: '自己開一間新的', rules: '先看遊戲規則與流程',
+      roomPh: '房間代碼（4 碼）', join: '加入房間', create: '自己開一間新的', rules: '先看遊戲規則與流程', island: '探索 Avaka 島',
       waitH2: '等大家到齊', waitSub: '把這四個字告訴同組的人。每個人是一股纖維，到齊了才撚得成繩。', copy: '複製', copied: '已複製',
       start: '開始這一年', back: '離開這個房間',
       meMark: '（你）', alone: '你先到了。把房間代碼給同組的人。', together: '{n} 個人到了，纖維開始撚在一起。',
@@ -677,7 +680,7 @@ const LOBBY_HTML = `
       name_elder: 'Elder', aka_elder: 'Senior artisan', does_elder: 'Knows it all, tires fast. Passes the word on.',
       name_youth: 'Youth', aka_youth: 'Reviving the craft', does_youth: 'Fast and strong, but it all starts with asking.',
       name_middle: 'Middle', aka_middle: 'Middle generation', does_middle: 'Watched the elders as a child. Learns fast, teaches fast.',
-      roomPh: 'Room code (4 characters)', join: 'Join room', create: 'Open a new room', rules: 'Read the rules first',
+      roomPh: 'Room code (4 characters)', join: 'Join room', create: 'Open a new room', rules: 'Read the rules first', island: 'Explore Avaka Island',
       waitH2: 'Waiting for everyone', waitSub: 'Give these four characters to your group. Each player is one strand; the rope is twisted when all are here.', copy: 'Copy', copied: 'Copied',
       start: 'Begin the year', back: 'Leave this room',
       meMark: ' (you)', alone: 'You are the first one here. Share the room code with your group.', together: '{n} players are here. The strands begin to twist together.',
@@ -692,7 +695,7 @@ const LOBBY_HTML = `
   function applyLang() {
     const set = (sel, k) => { const e = root.querySelector(sel); if (e) e.textContent = T(k); };
     set('.binomial', 'binomial'); set('.title-tc', 'titleTc'); set('.lede', 'lede'); set('#hint-text', 'hint'); set('#show-me', 'showMe');
-    set('#join h2', 'h2'); set('label[for=p-name]', 'nameLabel'); set('legend', 'roleLegend'); set('#b-join', 'join'); set('#b-create', 'create'); set('#rules-link', 'rules'); set('#step3', 'step3'); guide();
+    set('#join h2', 'h2'); set('label[for=p-name]', 'nameLabel'); set('legend', 'roleLegend'); set('#b-join', 'join'); set('#b-create', 'create'); set('#rules-link', 'rules'); set('#island-link', 'island'); set('#step3', 'step3'); guide();
     set('#waiting h2', 'waitH2'); set('#waiting .sub', 'waitSub'); set('#b-copy', 'copy'); set('#b-start', 'start'); set('#b-back', 'back');
     $('p-name').placeholder = T('namePh'); $('room').placeholder = T('roomPh'); $('room').setAttribute('aria-label', T('roomPh'));
     stepBtns.forEach((b, i) => { b.lastChild.textContent = T('steps')[i]; });

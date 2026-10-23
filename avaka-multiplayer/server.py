@@ -1,3 +1,4 @@
+import gzip
 import os
 import sys
 
@@ -316,6 +317,35 @@ def index():
 @app.route('/rules/')
 def rules_index():
     return send_from_directory('static/rules', 'index.html')
+
+# the 3D island explorer: a standalone page, not connected to any game room
+@app.route('/island')
+@app.route('/island/')
+def island_index():
+    return send_from_directory('static/island', 'index.html')
+
+# gzip the island page's text files (three.js alone is 670 KB raw, about 170 KB gzipped);
+# limited to /island and its three.js copy so the game's own responses are untouched
+_island_gzip_cache = {}
+
+@app.after_request
+def gzip_island_files(response):
+    path = request.path
+    if not (path.startswith('/island') or path.startswith('/vendor/three-r160/')):
+        return response
+    if response.status_code != 200 or 'gzip' not in request.headers.get('Accept-Encoding', '') \
+            or response.mimetype not in ('text/html', 'text/css', 'text/javascript', 'application/javascript', 'application/json'):
+        return response
+    response.direct_passthrough = False
+    data = response.get_data()
+    key = (path, len(data), hash(data))
+    if key not in _island_gzip_cache:
+        _island_gzip_cache[key] = gzip.compress(data, 6)
+    response.set_data(_island_gzip_cache[key])
+    response.headers['Content-Encoding'] = 'gzip'
+    response.headers['Vary'] = 'Accept-Encoding'
+    response.headers['Content-Length'] = str(len(response.get_data()))
+    return response
 
 @app.route('/<path:path>')
 def serve_static(path):

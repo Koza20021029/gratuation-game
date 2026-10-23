@@ -1,0 +1,250 @@
+/* Avaka island explorer. The 3D island is daylight, so the frame uses the rules site's light tokens
+   (cream paper, dark ink, deep leaf and rope accents): interface and scene share one palette. */
+:root {
+  --night: #f6f1e4; --night-2: #ece4cf; --night-3: #e3ead2; --line: #d3c7a8;
+  --fibre: #1b2a1f; --fibre-dim: #56634f; --leaf: #3f7a3a; --leaf-deep: #3f7a3a; --rope: #a8742f;
+  --panel: rgba(251, 248, 240, 0.93);
+  --serif-tc: 'Noto Serif TC', 'Songti TC', serif; --sans-tc: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  --display: 'Gloock', 'Noto Serif TC', serif;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  color-scheme: light;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: #cfe2e6; color: var(--fibre); font-family: var(--sans-tc); -webkit-font-smoothing: antialiased; }
+:root[data-lang=en] [lang=zh-Hant], :root[data-lang=zh] [lang=en] { display: none !important; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--leaf); outline-offset: 3px; }
+h1, h2, h3, p, ol, ul, dl, dd { margin: 0; }
+ol, ul { padding: 0; list-style: none; }
+
+#app { position: fixed; inset: 0; }
+#stage { position: absolute; inset: 0; z-index: 0; }
+#stage canvas { display: block; width: 100%; height: 100%; touch-action: none; outline: none; }
+.labels { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+
+/* panels share one surface */
+.brand, .tools .tool, .side, .card, .hint { background: var(--panel); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(27, 42, 31, 0.08); box-shadow: 0 10px 28px rgba(60, 50, 30, 0.14); }
+
+.brand { position: absolute; top: 16px; left: 16px; display: flex; align-items: center; gap: 14px; padding: 10px 18px 10px 14px; border-radius: 14px; z-index: 5; }
+.brand .mark { font-family: var(--display); font-size: 1.9rem; line-height: 1; color: var(--fibre); text-decoration: none; letter-spacing: -0.02em; padding-right: 14px; border-right: 1px solid var(--line); }
+.brand h1 { font-family: var(--serif-tc); font-weight: 900; font-size: 1.05rem; letter-spacing: 0.12em; }
+.brand p { font-size: 0.8rem; color: var(--fibre-dim); margin-top: 2px; }
+
+.tools { position: absolute; top: 16px; right: 16px; display: flex; gap: 8px; z-index: 5; }
+.tool { display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 14px; border-radius: 10px; cursor: pointer; font-size: 0.9rem; color: var(--fibre); text-decoration: none; transition: background 0.2s; }
+.tool:hover { background: var(--night-3); }
+.tool svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+.side { position: absolute; left: 16px; top: 96px; width: 290px; padding: 16px; border-radius: 14px; z-index: 4; }
+.side h2 { font-family: var(--serif-tc); font-size: 0.95rem; letter-spacing: 0.14em; color: var(--fibre-dim); margin-bottom: 10px; }
+.list { display: grid; gap: 6px; }
+.place { all: unset; box-sizing: border-box; display: grid; grid-template-columns: 34px 1fr; column-gap: 10px; width: 100%; padding: 10px 10px; border-radius: 10px; cursor: pointer; transition: background 0.2s; }
+.place i { grid-row: span 2; font-style: normal; font-family: var(--display); font-size: 1.25rem; color: var(--rope); align-self: center; }
+.place b { font-family: var(--serif-tc); font-size: 1.05rem; }
+.place span { font-size: 0.8rem; color: var(--fibre-dim); line-height: 1.45; }
+.place:hover { background: var(--night-3); }
+.place[aria-pressed=true] { background: var(--night-3); box-shadow: inset 3px 0 0 var(--leaf); }
+.place:focus-visible { outline: 2px solid var(--leaf); }
+.note { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); font-size: 0.72rem; line-height: 1.6; color: var(--fibre-dim); }
+
+/* place pins in the 3D view */
+.pin { pointer-events: auto; display: inline-flex; align-items: center; gap: 7px; padding: 5px 12px 5px 5px; border-radius: 999px; border: 1px solid rgba(27, 42, 31, 0.14); background: rgba(251, 248, 240, 0.96); color: var(--fibre); cursor: pointer; font-family: var(--serif-tc); font-weight: 700; font-size: 0.92rem; white-space: nowrap; box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25); transition: background 0.2s, color 0.2s; }
+.pin i { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--rope); color: var(--night); font-style: normal; font-family: var(--display); font-size: 0.78rem; }
+.pin::after { content: ''; position: absolute; left: 50%; bottom: -7px; width: 1px; height: 7px; background: rgba(27, 42, 31, 0.35); }
+.pin:hover, .pin.on { background: var(--leaf); color: #fbf8f0; }
+.pin.on i { background: #fbf8f0; color: var(--leaf); }
+
+.card { position: absolute; right: 16px; top: 72px; bottom: 16px; width: min(400px, calc(100% - 32px)); padding: 26px 26px 22px; border-radius: 16px; overflow-y: auto; z-index: 6; line-height: 1.8; font-size: 0.95rem; }
+.card[hidden] { display: none; }
+.card .close { position: absolute; top: 10px; right: 10px; width: 36px; height: 36px; border: 0; border-radius: 8px; background: transparent; cursor: pointer; font-size: 1.4rem; color: var(--fibre-dim); }
+.card .close:hover { background: var(--night-3); color: var(--fibre); }
+.card .eyebrow { font-family: var(--display); color: var(--rope); font-size: 1.1rem; }
+.card h2 { font-family: var(--serif-tc); font-weight: 900; font-size: 1.6rem; letter-spacing: 0.06em; margin-bottom: 12px; }
+.card p + p { margin-top: 10px; }
+.card .game { padding: 10px 12px; border-radius: 10px; background: rgba(63, 122, 58, 0.07); border: 1px solid rgba(63, 122, 58, 0.2); margin-bottom: 14px; font-size: 0.88rem; }
+.card .game b { display: block; color: var(--leaf); font-size: 0.78rem; letter-spacing: 0.1em; }
+.card h3 { margin: 18px 0 8px; font-family: var(--serif-tc); font-size: 0.85rem; letter-spacing: 0.16em; color: var(--fibre-dim); }
+.terms { display: grid; gap: 6px; margin: 0; }
+.terms div { display: grid; grid-template-columns: minmax(96px, auto) 1fr; gap: 10px; padding: 6px 0; border-bottom: 1px dashed var(--line); }
+.terms dt { font-style: italic; color: var(--rope); font-weight: 500; }
+.terms dd { color: var(--fibre); font-size: 0.88rem; }
+.src { margin-top: 16px; font-size: 0.78rem; color: var(--fibre-dim); }
+.src summary { cursor: pointer; }
+.src li { margin-top: 4px; padding-left: 10px; border-left: 2px solid var(--line); }
+
+.hint { position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%); padding: 8px 16px; border-radius: 999px; font-size: 0.82rem; color: var(--fibre-dim); white-space: nowrap; z-index: 3; transition: opacity 0.6s; }
+.hint.gone { opacity: 0; pointer-events: none; }
+
+.loading { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 14px; background: radial-gradient(60% 50% at 50% 40%, var(--night-2), var(--night)); z-index: 20; text-align: center; font-family: var(--serif-tc); letter-spacing: 0.1em; color: var(--fibre-dim); }
+.loading[hidden] { display: none; }
+.loading .cord { width: 140px; fill: none; stroke: var(--rope); stroke-width: 2; }
+.loading .cord path:last-child { stroke: var(--fibre-dim); }
+.loading .cord path { stroke-dasharray: 140; animation: twist 1.6s var(--ease) infinite alternate; }
+.loading .err { font-family: ui-monospace, monospace; font-size: 0.75rem; letter-spacing: 0; opacity: 0.7; }
+@keyframes twist { from { stroke-dashoffset: 140; } to { stroke-dashoffset: 0; } }
+
+/* phones: list becomes a row of chips at the bottom, the card a bottom sheet */
+@media (max-width: 800px) {
+  .brand { top: 10px; left: 10px; padding: 8px 12px; gap: 10px; }
+  .brand .mark { font-size: 1.4rem; padding-right: 10px; }
+  .brand h1 { font-size: 0.92rem; }
+  .brand p { display: none; }
+  .tools { top: 10px; right: 10px; gap: 6px; }
+  .tool { height: 38px; padding: 0 11px; }
+  .tool span { display: none; }
+  .side { left: 10px; right: 10px; top: auto; bottom: calc(10px + env(safe-area-inset-bottom)); width: auto; padding: 8px; }
+  .side h2, .note { display: none; }
+  .list { grid-template-columns: repeat(3, 1fr); }
+  .place { grid-template-columns: 1fr; text-align: center; padding: 8px 4px; }
+  .place i { grid-row: auto; font-size: 0.9rem; }
+  .place b { font-size: 0.95rem; }
+  .place span { display: none; }
+  .card { left: 0; right: 0; top: auto; bottom: 0; width: 100%; max-height: 58vh; border-radius: 18px 18px 0 0; padding: 22px 20px calc(20px + env(safe-area-inset-bottom)); }
+  .has-card .side { display: none; }
+  .hint { bottom: 96px; font-size: 0.75rem; }
+  .pin { font-size: 0.8rem; padding: 4px 10px 4px 4px; }
+  .pin i { width: 20px; height: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+
+/* ---- v2: villages, steps, sites ---- */
+.side { max-height: calc(100% - 112px); overflow-y: auto; }
+.side h2.sub { margin-top: 14px; }
+.list.villages { grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.place.village { grid-template-columns: 1fr; text-align: center; padding: 7px 4px; }
+.place.village b { font-size: 0.95rem; }
+.place.site i { font-size: 1rem; color: var(--leaf); }
+.pin.k-village { padding: 3px 10px; font-size: 0.82rem; background: #ffffff; color: var(--fibre); border-color: rgba(27, 42, 31, 0.16); font-weight: 900; letter-spacing: 0.12em; }
+.pin.k-village::after { background: rgba(27, 42, 31, 0.35); }
+.pin.k-step { padding: 3px; gap: 0; font-size: 0.78rem; }
+.pin.k-step i { width: 22px; height: 22px; font-family: var(--sans-tc); font-size: 0.85rem; background: var(--fibre); }
+.pin.k-step span { max-width: 0; overflow: hidden; transition: max-width 0.25s var(--ease), margin 0.25s; }
+.pin.k-step:hover span, .pin.k-step.on span, .pin.k-step:focus-visible span { max-width: 9em; margin: 0 8px 0 6px; }
+.pin.k-site i { background: var(--leaf); color: var(--night); font-family: var(--sans-tc); }
+.pin.culled { opacity: 0; pointer-events: none; }
+.pin { transition: background 0.2s, color 0.2s, opacity 0.2s; }
+.card figure { margin: 4px 0 14px; }
+.card figure img { display: block; width: 100%; height: auto; max-height: 260px; object-fit: cover; border-radius: 10px; background: var(--night-3); }
+.card figcaption { margin-top: 6px; font-size: 0.78rem; line-height: 1.6; color: var(--fibre-dim); }
+.card .crumb { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 8px; color: var(--fibre); font-size: 0.9rem; }
+.card .crumb:hover, .card .crumb:focus-visible { background: var(--night-3); }
+.card .crumb.back { margin: -6px 0 6px -10px; color: var(--fibre-dim); font-size: 0.82rem; }
+.card .crumb i { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--fibre); color: var(--night); font-style: normal; font-size: 0.85rem; }
+.card .steps { display: grid; gap: 2px; margin-left: -10px; }
+.card .tao-pending { display: inline-block; margin-bottom: 12px; padding: 2px 10px; border-radius: 999px; border: 1px dashed var(--rope); color: var(--rope); font-size: 0.78rem; }
+.card .muted { color: var(--fibre-dim); font-size: 0.8rem; }
+.src a { color: var(--leaf); text-decoration: none; }
+@media (max-width: 800px) {
+  .side { max-height: none; overflow: visible; }
+  .side h2.sub, .list.villages { display: none; }
+  .list { grid-template-columns: repeat(4, 1fr); }
+  .place.site span { display: none; }
+  .pin.k-village { font-size: 0.72rem; padding: 2px 8px; }
+}
+
+/* ---- v3: clearer labels and road names ---- */
+.pin { font-size: 1rem; padding: 6px 14px 6px 6px; text-shadow: none; box-shadow: 0 2px 0 rgba(0,0,0,0.25), 0 8px 18px rgba(0,0,0,0.3); }
+.pin i { width: 26px; height: 26px; font-size: 0.85rem; }
+.pin.k-village { display: inline-flex; flex-direction: column; align-items: center; gap: 0; padding: 4px 11px 3px; line-height: 1.15; font-size: 0.9rem; }
+.pin.k-village span { display: flex; flex-direction: column; align-items: center; }
+.pin.k-village small { font-family: var(--sans-tc); font-weight: 500; font-size: 0.66rem; letter-spacing: 0.04em; font-style: italic; color: var(--fibre-dim); }
+.pin.k-road { pointer-events: none; padding: 2px 9px; font-family: var(--sans-tc); font-weight: 700; font-size: 0.72rem; letter-spacing: 0.12em; background: rgba(75, 76, 79, 0.88); color: #f2efe6; border: 1px solid rgba(240, 198, 58, 0.7); border-radius: 4px; box-shadow: none; }
+.pin.k-road::after { display: none; }
+.card .tao-name { display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px; }
+.card .tao-name span { font-size: 0.78rem; color: var(--fibre-dim); letter-spacing: 0.1em; }
+.card .tao-name b { font-size: 1.25rem; font-style: italic; color: var(--rope); font-weight: 500; }
+@media (max-width: 800px) {
+  .pin { font-size: 0.82rem; padding: 4px 10px 4px 4px; }
+  .pin i { width: 21px; height: 21px; }
+  .pin.k-village { font-size: 0.76rem; }
+  .pin.k-road { font-size: 0.64rem; }
+}
+
+/* ---- v4: the twelve months ---- */
+.calendar { position: absolute; top: 16px; left: 50%; transform: translateX(-50%); z-index: 5; width: min(560px, calc(100% - 760px)); min-width: 420px; display: grid; gap: 6px; }
+.months { display: flex; align-items: center; gap: 3px; padding: 5px; border-radius: 12px; background: var(--panel); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(27, 42, 31, 0.08); box-shadow: 0 10px 30px rgba(60, 50, 30, 0.14); }
+.months .mo { all: unset; box-sizing: border-box; cursor: pointer; flex: 1; height: 30px; display: grid; place-items: center; border-radius: 7px; font-family: var(--display); font-size: 0.95rem; color: var(--fibre-dim); transition: background 0.2s, color 0.2s; }
+.months .mo:hover { background: var(--night-3); color: var(--fibre); }
+.months .mo[aria-pressed=true] { background: var(--leaf); color: #fbf8f0; }
+.months .mo:focus-visible, .months .play:focus-visible { outline: 2px solid var(--leaf); outline-offset: 1px; }
+.months .play { all: unset; box-sizing: border-box; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px; margin-right: 4px; border-radius: 7px; background: var(--night-3); color: var(--leaf); font-size: 0.78rem; white-space: nowrap; }
+.months .play span { color: var(--fibre); }
+.month-info { padding: 10px 14px; border-radius: 12px; background: var(--panel); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(27, 42, 31, 0.08); font-size: 0.84rem; line-height: 1.6; }
+.month-info .mname { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
+.month-info .mname b { font-family: var(--display); font-size: 1.5rem; line-height: 1; color: var(--leaf); font-weight: 400; }
+.month-info .mname span { font-size: 0.78rem; color: var(--fibre-dim); }
+.month-info .mname i { font-family: var(--serif-tc); font-style: italic; color: var(--rope); font-size: 1.05rem; }
+.month-info .mname em { font-style: normal; font-family: var(--serif-tc); font-weight: 700; }
+.month-info .mgame span { display: inline-block; margin-right: 8px; padding: 0 7px; border-radius: 999px; background: rgba(63, 122, 58, 0.12); color: var(--leaf); font-size: 0.72rem; }
+.month-info .mwalk, .month-info .mextra { margin-top: 2px; color: var(--fibre-dim); font-size: 0.78rem; }
+.month-note { justify-self: center; font-size: 0.68rem; color: var(--fibre-dim); padding: 1px 8px; border-radius: 999px; background: rgba(251, 248, 240, 0.8); }
+.pin .badge { margin-left: 6px; padding: 1px 7px; border-radius: 999px; background: #b3342a; color: #fff; font-style: normal; font-family: var(--sans-tc); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em; }
+.pin.shut { filter: saturate(0.6); }
+.pin.k-walker { pointer-events: none; padding: 2px 8px; font-family: var(--sans-tc); font-size: 0.7rem; font-weight: 700; background: #9fcb72; color: var(--fibre); border-color: rgba(12,22,16,0.3); box-shadow: none; }
+@media (max-width: 1180px) { .calendar { left: auto; right: 16px; top: 66px; transform: none; width: 440px; min-width: 0; } }
+@media (max-width: 800px) {
+  .calendar { left: 10px; right: 10px; top: 58px; width: auto; gap: 4px; }
+  .months { overflow-x: auto; padding: 4px; }
+  .months .mo { flex: 0 0 26px; height: 28px; font-size: 0.85rem; }
+  .months .play span { display: none; }
+  .month-info { padding: 7px 10px; font-size: 0.74rem; }
+  .month-info .mwalk, .month-info .mextra, .month-note { display: none; }
+  .has-card .calendar { display: none; }
+}
+.month-info .mcal span { display: inline-block; margin-right: 8px; padding: 0 7px; border-radius: 999px; background: rgba(210, 164, 92, 0.18); color: var(--rope); font-size: 0.72rem; }
+.month-info .mcal { margin-top: 3px; }
+.month-info .mvar { margin-top: 2px; font-size: 0.68rem; color: var(--fibre-dim); opacity: 0.8; }
+@media (max-width: 800px) { .month-info .mvar { display: none; } .month-info .mcal { font-size: 0.72rem; } }
+/* ---- v6: speech bubbles ---- */
+.bubble { position: relative; pointer-events: none; padding: 4px 10px; border-radius: 12px; background: #fffdf6; color: #1c2a20; font-family: var(--sans-tc); font-weight: 700; font-size: 0.82rem; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.25); }
+.bubble::after { content: ''; position: absolute; left: 50%; bottom: -5px; margin-left: -5px; border: 5px solid transparent; border-bottom: 0; border-top-color: #fffdf6; }
+/* ---- v9: card chips, summary and "more" ---- */
+.card .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: -2px 0 12px; }
+.card .chip { padding: 3px 10px; border-radius: 999px; background: var(--leaf); color: #fbf8f0; font-size: 0.76rem; font-weight: 700; letter-spacing: 0.04em; }
+.card .chip.soft { background: rgba(63, 122, 58, 0.12); color: var(--leaf); }
+.card .chip.warn { background: rgba(179, 52, 42, 0.12); color: #a3342a; }
+.card .summary { font-size: 1.02rem; line-height: 1.75; }
+.card details.more { margin-top: 8px; border-top: 1px dashed var(--line); padding-top: 6px; }
+.card details.more summary { cursor: pointer; color: var(--leaf); font-weight: 700; font-size: 0.86rem; list-style: none; }
+.card details.more summary::before { content: '＋ '; }
+.card details.more[open] summary::before { content: '－ '; }
+.card details.more p { margin-top: 8px; }
+/* ---- v9: toolbar toggles and the first-visit intro ---- */
+.tool.tog[aria-pressed=true] { background: var(--leaf); color: #fbf8f0; }
+.tool.tog[aria-pressed=true] svg { stroke: #fbf8f0; }
+#t-help { min-width: 40px; justify-content: center; font-weight: 700; }
+.labels.off .pin { opacity: 0 !important; pointer-events: none !important; }
+.intro { position: absolute; inset: 0; z-index: 30; display: grid; place-items: center; background: rgba(40, 34, 20, 0.28); }
+.intro[hidden] { display: none; }
+.intro-box { width: min(420px, calc(100% - 32px)); padding: 26px 26px 20px; border-radius: 18px; background: var(--panel); border: 1px solid rgba(27, 42, 31, 0.08); box-shadow: 0 20px 50px rgba(60, 50, 30, 0.25); }
+.intro-box .eyebrow { font-family: var(--display); color: var(--rope); }
+.intro-box h2 { font-family: var(--serif-tc); font-weight: 900; font-size: 1.45rem; margin: 6px 0 10px; }
+.intro-box p { line-height: 1.8; }
+.intro-actions { display: flex; justify-content: space-between; margin-top: 18px; }
+.intro-actions button { all: unset; cursor: pointer; padding: 8px 14px; border-radius: 10px; font-weight: 700; color: var(--fibre-dim); }
+.intro-actions .next { background: var(--leaf); color: #fbf8f0; }
+.intro-actions button:focus-visible { outline: 2px solid var(--leaf); outline-offset: 2px; }
+@media (max-width: 800px) { #t-names span, #t-people span, #t-bird span { display: none; } }
+@media (max-width: 420px) { #t-bird { display: none; } }
+/* the month bar sits at the bottom centre on wide screens, leaving the top for the toolbar */
+@media (min-width: 801px) {
+  .calendar { top: auto; bottom: 16px; left: 50%; right: auto; transform: translateX(-50%); width: min(600px, calc(100% - 760px)); min-width: 460px; display: flex; flex-direction: column-reverse; }
+  .hint { bottom: auto; top: 76px; }
+}
+@media (min-width: 801px) and (max-width: 1180px) { .calendar { left: auto; right: 16px; transform: none; width: 460px; } .has-card .calendar { display: none; } }
+.has-card .month-info .mvar, .has-card .month-info .mcal, .has-card .month-info .mwalk, .has-card .month-note { display: none; }
+@media (max-width: 800px) {
+  .brand > div h1 { font-size: 0.85rem; }
+  .tools { gap: 4px; }
+  .tool { height: 34px; padding: 0 9px; }
+  #t-help { min-width: 34px; }
+}
+@media (max-width: 420px) { .brand > div { display: none; } .brand .mark { border-right: 0; padding-right: 0; } }
+@media (max-width: 800px) {
+  .side .list:not(.villages) { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 4px; }
+  .side .list:not(.villages) li { flex: 0 0 auto; scroll-snap-align: start; }
+  .side .list:not(.villages) .place { min-width: 84px; padding: 8px 10px; }
+  .side .list:not(.villages) .place b { font-size: 0.88rem; white-space: nowrap; }
+}
