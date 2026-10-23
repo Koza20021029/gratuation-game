@@ -9,10 +9,12 @@ const store = {
 };
 let lang = (params.get('lang') || store.get('avaka_lang')) === 'en' ? 'en' : 'zh';
 const t = (o) => (o ? (lang === 'en' ? o.en || o.zh : o.zh) || '' : '');
+// links back to the game and the rules carry the language along (they open in this same tab)
+const withLang = (href) => (lang === 'en' && href.startsWith('/') ? `${href}${href.includes('?') ? '&' : '?'}lang=en` : href);
 const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
 try {
-  const V = '?v=20261023_60';
+  const V = '?v=20261023_65';
   const [THREE, { OrbitControls }, { CSS2DRenderer, CSS2DObject }, W, E, K, M, D] = await Promise.all([
     import('three'),
     import('three/addons/OrbitControls.js'),
@@ -952,7 +954,7 @@ try {
     const rq = s.rq.length ? s.rq.map((k) => ({ text: `${t(D.ui.rq)}${lang === 'en' ? ' ' : ''}${t(D.ui.rqNames[k])}` })) : [{ text: t(D.ui.rqBg), tone: 'soft' }];
     const dots = D.story.map((x, k) => `<li><button type="button" data-stop="${k}" aria-current="${k === i ? 'step' : 'false'}" title="${esc(t(x.title))}"><span>${k + 1}</span></button></li>`).join('');
     const links = s.links.length ? `<h3>${esc(t(D.ui.goTo))}</h3><p class="links">${s.links.map((id) => `<button type="button" class="crumb" data-id="${id}">${esc(t(items.get(id).name))}</button>`).join('')}</p>` : '';
-    const outputs = s.outputs ? `<h3>${esc(t(D.ui.elsewhere))}</h3><p class="links">${D.outputs.map((o) => `<a class="crumb" href="${esc(o.href)}">${esc(t(o.label))}</a>`).join('')}</p>` : '';
+    const outputs = s.outputs ? `<h3>${esc(t(D.ui.elsewhere))}</h3><p class="links">${D.outputs.map((o) => `<a class="crumb" href="${esc(withLang(o.href))}">${esc(t(o.label))}</a>`).join('')}</p>` : '';
     if (s.era) { D.era.items.forEach((r) => r.src.forEach((x) => srcIds.add(x))); }
     $('#card-body').innerHTML = `<p class="eyebrow">${esc(t(D.ui.storyEyebrow))}　${i + 1} / ${n}</p>
       <ol class="story-dots">${dots}</ol>
@@ -1046,7 +1048,8 @@ try {
     $('#list-title').textContent = t(D.ui.places);
     $('#vlist-title').textContent = t(D.ui.villages);
     $('#home span').textContent = t(D.ui.overview);
-    $('#back span').textContent = t(D.ui.back);
+    $('#back span').textContent = t(D.ui.back); $('#back .short').textContent = t(D.ui.backShort); $('#back').setAttribute('aria-label', t(D.ui.back));
+    $('#back').href = withLang('/'); $('.brand .mark').href = withLang('/rules');
     $('#lang').textContent = lang === 'en' ? '中文' : 'EN';
     $('#t-names span').textContent = t(D.ui.names); $('#t-people span').textContent = t(D.ui.people); $('#t-bird span').textContent = t(D.ui.bird);
     $('#t-help').setAttribute('aria-label', t(D.ui.help));

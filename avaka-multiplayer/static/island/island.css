@@ -289,3 +289,11 @@ ol, ul { padding: 0; list-style: none; }
 .era-table td.on { color: var(--fibre); background: rgba(210, 164, 92, 0.12); }
 @media (min-width: 801px) and (max-width: 1360px) { #t-names span, #t-people span, #t-bird span { display: none; } }
 @media (max-width: 420px) { #t-era { display: none; } }
+
+/* back to the game home: on phones the long label hides, a short one stays so the arrow is not on its own */
+#back .short { display: none; font-weight: 500; font-size: 0.8rem; }
+@media (max-width: 800px) { #back .short { display: inline; } #back { gap: 3px; } }
+@media (max-width: 420px) { .tools { gap: 3px; } .tools .tool { padding: 0 7px; } #back { padding: 0 7px 0 5px; gap: 2px; } #back svg { width: 12px; height: 12px; } }
+/* while the first-visit guide is open, "back to the game" stays reachable above it; the other tools wait */
+#app:has(.intro:not([hidden])) .tools { z-index: 31; }
+#app:has(.intro:not([hidden])) .tools .tool:not(#back) { pointer-events: none; opacity: 0.45; }

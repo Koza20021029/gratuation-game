@@ -14,6 +14,14 @@
     dispatchEvent(new Event('avaka:lang'));
   });
 
+  // links to the island and the game open in this same tab and carry the language along
+  const doors = () => document.querySelectorAll('a[href^="/island"], a[href="/"], a[href^="/?"]').forEach(a => {
+    const u = new URL(a.getAttribute('href'), location.origin);
+    if (root.dataset.lang === 'en') u.searchParams.set('lang', 'en'); else u.searchParams.delete('lang');
+    a.setAttribute('href', u.pathname + u.search);
+  });
+  doors(); addEventListener('avaka:lang', doors);
+
   // ── day and night: the same setting as the game's lobby ──
   const theme = document.getElementById('t-theme');
   if (theme) theme.addEventListener('click', () => {

@@ -112,7 +112,7 @@ const LOBBY_HTML = `
     <p class="form-msg" id="form-msg" role="alert"></p>
     <div class="foot">
       <a href="/rules/player.html" id="rules-link" target="_blank" rel="noopener">先看遊戲規則與流程</a>
-      <a href="/island" id="island-link" target="_blank" rel="noopener">探索 Avaka 島</a>
+      <a href="/island" id="island-link">探索 Avaka 島</a>
       <span class="lang"><button type="button" data-lang="zh" aria-pressed="true">中文</button> · <button type="button" data-lang="en" aria-pressed="false">EN</button></span>
     </div>
    </div>
@@ -637,7 +637,7 @@ const LOBBY_HTML = `
   $('b-start').addEventListener('click', () => { pluck(523, 0.1); old('start-game-btn').click(); });
   // the rules live at /rules now; they open in their own tab so the lobby (and a room in progress) stays put
   $('rules-link').addEventListener('click', e => { e.currentTarget.href = '/rules/player.html?lang=' + (typeof currentLang !== 'undefined' && currentLang === 'en' ? 'en' : 'zh'); });
-  // the 3D island explorer, also in its own tab
+  // the 3D island explorer opens in this same tab; its back button (or the browser's) brings you here again
   $('island-link').addEventListener('click', e => { e.currentTarget.href = '/island?lang=' + (typeof currentLang !== 'undefined' && currentLang === 'en' ? 'en' : 'zh'); });
   // A refusal from the server (say, a room code that does not exist) usually lands while the avatar
   // creator is still up, so it is kept and shown as soon as this screen is back.
@@ -716,8 +716,15 @@ const LOBBY_HTML = `
   root.querySelectorAll('.lang button').forEach(b => b.addEventListener('click', () => {
     if (typeof currentLang !== 'undefined' && currentLang !== b.dataset.lang && old('lang-btn')) old('lang-btn').click();   // the game switches all of its own text
     lang = b.dataset.lang; applyLang(); if (room) syncRoom(room); pluck(330, 0.08);
+    // keep the choice in the address, so coming back from the island (or the browser's back) opens in the same language
+    try { const u = new URL(location.href); if (lang === 'en') u.searchParams.set('lang', 'en'); else u.searchParams.delete('lang'); history.replaceState(history.state, '', u); } catch (e) { /* ignore */ }
   }));
   applyLang();
+  // ?lang=en (from the island's or the rules' back links): switch once the game's own language button is wired up
+  if (new URLSearchParams(location.search).get('lang') === 'en') {
+    const toEn = () => { const b = root.querySelector('.lang button[data-lang="en"]'); if (b && lang !== 'en') b.click(); };
+    if (document.readyState === 'loading') addEventListener('DOMContentLoaded', toEn); else toEn();
+  }
 
   // ───────── copy the room code ─────────
   $('b-copy').addEventListener('click', () => {

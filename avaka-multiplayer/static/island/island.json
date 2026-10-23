@@ -1091,8 +1091,12 @@
    "en": "Overview"
   },
   "back": {
-   "zh": "回到遊戲",
+   "zh": "回遊戲首頁",
    "en": "Back to the game"
+  },
+  "backShort": {
+   "zh": "首頁",
+   "en": "Game"
   },
   "inGame": {
    "zh": "在遊戲裡",
