@@ -248,3 +248,44 @@ ol, ul { padding: 0; list-style: none; }
   .side .list:not(.villages) .place { min-width: 84px; padding: 8px 10px; }
   .side .list:not(.villages) .place b { font-size: 0.88rem; white-space: nowrap; }
 }
+/* ---- v10: where each paragraph comes from ---- */
+.ev { display: inline-block; margin-right: 6px; padding: 0 7px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; line-height: 1.6; vertical-align: 0.12em; white-space: nowrap; }
+.ev-obs { background: rgba(63, 122, 58, 0.14); color: #2f6a2b; }
+.ev-oral { background: rgba(168, 116, 47, 0.16); color: #8a5a1c; }
+.ev-lit { background: rgba(47, 92, 120, 0.13); color: #2c5873; }
+.ev-infer { background: transparent; color: #8a4a12; border: 1px dashed rgba(168, 98, 30, 0.7); line-height: 1.45; }
+.card .ref { color: var(--fibre-dim); font-size: 0.74rem; white-space: nowrap; }
+.card .ref.block { display: block; margin: -6px 0 10px; white-space: normal; }
+.ev-note { display: flex; flex-wrap: wrap; gap: 4px 0; align-items: baseline; }
+.ev-note span:last-child { flex-basis: 100%; margin-top: 4px; }
+/* ---- v10: Avaka's life ---- */
+.tool.story-btn { color: #7a4f17; }
+.tool.story-btn[aria-pressed=true] { background: var(--rope); color: #fbf8f0; }
+.story-dots { display: flex; gap: 6px; margin: 8px 0 12px; }
+.story-dots button { all: unset; cursor: pointer; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; font-size: 0.78rem; font-weight: 700; color: var(--fibre-dim); box-shadow: inset 0 0 0 1px var(--line); }
+.story-dots button[aria-current=step] { background: var(--rope); color: #fbf8f0; box-shadow: none; }
+.story-dots button:focus-visible { outline: 2px solid var(--leaf); outline-offset: 2px; }
+.card .story-p { margin-top: 10px; line-height: 1.8; }
+.card .story-p:first-of-type { font-size: 1.02rem; }
+.card .links { display: flex; flex-wrap: wrap; gap: 6px; }
+.card .links .crumb { box-shadow: inset 0 0 0 1px var(--line); }
+.story-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 18px; padding-top: 12px; border-top: 1px solid var(--line); }
+.story-nav button { all: unset; cursor: pointer; padding: 8px 14px; border-radius: 10px; font-weight: 700; color: var(--fibre-dim); }
+.story-nav button:hover { background: var(--night-3); }
+.story-nav .next { background: var(--rope); color: #fbf8f0; }
+.story-nav .next:hover { background: #8f6226; }
+.story-nav button:focus-visible { outline: 2px solid var(--leaf); outline-offset: 2px; }
+.pin.k-story { pointer-events: none; padding: 3px 10px; background: var(--rope); color: #fbf8f0; border-color: transparent; font-size: 0.78rem; font-weight: 700; }
+/* ---- v10: then and now ---- */
+.seg { display: inline-flex; margin: 4px 0 10px; padding: 3px; border-radius: 10px; background: var(--night-2); }
+.seg button { all: unset; cursor: pointer; padding: 5px 16px; border-radius: 8px; font-weight: 700; font-size: 0.86rem; color: var(--fibre-dim); }
+.seg button[aria-pressed=true] { background: var(--fibre); color: var(--night); }
+.seg button:focus-visible { outline: 2px solid var(--leaf); outline-offset: 2px; }
+.era-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; line-height: 1.55; margin-bottom: 8px; }
+.era-table th, .era-table td { padding: 7px 6px; border-bottom: 1px dashed var(--line); text-align: left; vertical-align: top; }
+.era-table thead th { font-size: 0.74rem; color: var(--fibre-dim); }
+.era-table tbody th { white-space: nowrap; font-weight: 700; color: var(--fibre); }
+.era-table td { color: var(--fibre-dim); }
+.era-table td.on { color: var(--fibre); background: rgba(210, 164, 92, 0.12); }
+@media (min-width: 801px) and (max-width: 1360px) { #t-names span, #t-people span, #t-bird span { display: none; } }
+@media (max-width: 420px) { #t-era { display: none; } }

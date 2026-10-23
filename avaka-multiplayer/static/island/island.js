@@ -12,7 +12,7 @@ const t = (o) => (o ? (lang === 'en' ? o.en || o.zh : o.zh) || '' : '');
 const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
 try {
-  const V = '?v=20261023_51';
+  const V = '?v=20261023_60';
   const [THREE, { OrbitControls }, { CSS2DRenderer, CSS2DObject }, W, E, K, M, D] = await Promise.all([
     import('three'),
     import('three/addons/OrbitControls.js'),
@@ -541,6 +541,59 @@ try {
     }
   }
 
+  // ---------- story props ----------
+  // a sign on the southernmost shore, pointing out to sea toward the Batanes
+  const signSpot = (() => {
+    let s = shape.coast[0];
+    for (const p of shape.coast) if (p[1] > s[1]) s = p; // +z is south
+    const q = { x: s[0], z: s[1] };
+    for (let i = 0; i < 30; i++) { const [nx, nz] = shape.inland(q.x, q.z), e = 0.4 - shape.polyDist(q.x, q.z); q.x += nx * e * 0.6; q.z += nz * e * 0.6; }
+    const [nx, nz] = shape.inland(q.x, q.z);
+    q.seaward = Math.atan2(-nx, -nz);
+    return q;
+  })();
+  {
+    const g = new THREE.Group();
+    g.position.set(signSpot.x, shape.height(signSpot.x, signSpot.z), signSpot.z);
+    g.rotation.y = signSpot.seaward;
+    crowd.slot(g, 'box', 0x7a5a3a, [0, 0.16, 0], [0.03, 0.32, 0.03]);
+    crowd.slot(g, 'box', 0xf3ead6, [0, 0.28, 0.06], [0.025, 0.07, 0.16]);
+    crowd.slot(g, 'cone', 0xa8742f, [0, 0.28, 0.17], [0.11, 0.08, 0.11], [Math.PI / 2, 0, 0]);
+    scene.add(crowd.track(g));
+  }
+  // the evening market at 椰油: in the village lane then, along both sides of the ring road now (Yang 2014)
+  const market = (() => {
+    const s = spots.yayo, f = kit.frame(s.x, 0, s.z, s.seaward);
+    const roadZ = 1.0 - ROAD_D; // the village spot sits at shore 1.0, the road at ROAD_D
+    const now = [[-0.55, roadZ + 0.17], [-0.2, roadZ + 0.17], [0.3, roadZ - 0.17], [0.65, roadZ - 0.17]].map(([x, z]) => f.at(x, z));
+    const past = [[-0.13, -0.45], [0.13, -0.6], [-0.13, -0.8], [0.13, -0.95]].map(([x, z]) => f.at(x, z));
+    const tops = [0xd8584a, 0x3f7a3a, 0x2f6f8f, 0xe0a33a];
+    const stalls = tops.map((c) => {
+      const g = new THREE.Group();
+      crowd.slot(g, 'box', 0x9b7b55, [0, 0.06, 0], [0.15, 0.03, 0.09]);
+      for (const sx of [-1, 1]) crowd.slot(g, 'box', 0x6b5238, [sx * 0.07, 0.08, -0.04], [0.012, 0.16, 0.012]);
+      crowd.slot(g, 'box', c, [0, 0.165, 0], [0.18, 0.012, 0.12], [0.18, 0, 0]);
+      const goods = new THREE.Group(); // processed flying fish on the table, only in the present
+      for (let k = 0; k < 3; k++) crowd.slot(goods, 'box', 0xc9d2d6, [-0.045 + k * 0.045, 0.085, 0], [0.03, 0.015, 0.05]);
+      g.add(goods);
+      g.userData.goods = goods;
+      g.scale.setScalar(0.8);
+      scene.add(crowd.track(g));
+      return g;
+    });
+    function set(era) {
+      const pts = era === 'past' ? past : now;
+      stalls.forEach((g, i) => {
+        const [x, z] = pts[i];
+        g.position.set(x, shape.height(x, z), z);
+        g.rotation.y = s.seaward + (era === 'past' ? (i % 2 ? -1 : 1) * Math.PI / 2 : 0);
+        g.userData.goods.visible = era !== 'past';
+      });
+    }
+    const centre = (era) => { const pts = era === 'past' ? past : now, x = pts.reduce((a, p) => a + p[0], 0) / 4, z = pts.reduce((a, p) => a + p[1], 0) / 4; return new THREE.Vector3(x, shape.height(x, z) + 0.1, z); };
+    return { set, centre, seaward: s.seaward };
+  })();
+
   const crowdMat = K.addRim(new THREE.MeshStandardMaterial({ roughness: 0.75, metalness: 0 }), 0.12);
   crowd.build(scene, crowdMat);
   M.buildBoats(THREE, scene, boatGeo);
@@ -590,6 +643,9 @@ try {
   function updateUrl() {
     const q = new URLSearchParams();
     if (selected) q.set('focus', selected);
+    if (story >= 0) q.set('story', story + 1);
+    if (eraOpen) q.set('view', 'era');
+    if (era === 'past') q.set('era', 'past');
     if (month !== 1) q.set('month', month);
     if (lang === 'en') q.set('lang', 'en');
     const qs = q.toString();
@@ -704,9 +760,12 @@ try {
     return `<li>${esc(t(src.title))}${src.url ? ` <a href="${esc(src.url)}" target="_blank" rel="noopener">↗</a>` : ''}</li>`;
   }).join('');
   const chipRow = (chips) => (chips.length ? `<p class="chips">${chips.map((c) => `<span class="chip${c.tone ? ' ' + c.tone : ''}">${esc(c.text)}</span>`).join('')}</p>` : '');
+  // each paragraph says where it comes from: field observation, oral account, literature or inference
+  const evTags = (ev) => (ev || []).map((k) => `<span class="ev ev-${k}">${esc(t(D.ui.ev[k]))}</span>`).join('');
+  const para = (p, cls = '') => `<p${cls ? ` class="${cls}"` : ''}>${evTags(p.ev)}${esc(t(p))}${p.ref ? ` <span class="ref">${esc(t(p.ref))}</span>` : ''}</p>`;
   // the first paragraph is the summary; anything after it folds into "more"
-  const summaryMore = (paras) => paras.length <= 1 ? paras.map((p) => `<p class="summary">${esc(p)}</p>`).join('')
-    : `<p class="summary">${esc(paras[0])}</p><details class="more"><summary>${esc(t(D.ui.more))}</summary>${paras.slice(1).map((p) => `<p>${esc(p)}</p>`).join('')}</details>`;
+  const summaryMore = (paras) => paras.length <= 1 ? paras.map((p) => para(p, 'summary')).join('')
+    : `${para(paras[0], 'summary')}<details class="more"><summary>${esc(t(D.ui.more))}</summary>${paras.slice(1).map((p) => para(p)).join('')}</details>`;
   function chipsFor(it) {
     const c = [];
     if (it.kind === 'village') {
@@ -723,6 +782,7 @@ try {
     } else {
       if (it.id === 'weather') c.push({ text: t(D.ui.heritage) });
       if (it.id === 'airport' || it.id === 'avaka-field') c.push({ text: t(D.ui.landmark) });
+      if (it.id === 'avaka-field') c.push({ text: t(D.ui.unconfirmed), tone: 'warn' });
     }
     return chipRow(c);
   }
@@ -736,7 +796,7 @@ try {
         <h2 id="card-title">${esc(it.zh)}</h2>
         <p class="tao-name"><span>${esc(t(D.ui.taoName))}</span><b lang="tao">${esc(it.tao)}</b></p>
         ${chipsFor(it)}
-        ${summaryMore(it.facts.slice(1).map((f) => t(f)))}
+        ${summaryMore(it.facts.slice(1))}
         <p class="muted">${esc(t(D.ui.position).replace('{pt}', it.cipPoint))}</p>`;
     } else {
       (it.body || []).forEach((b) => b.src.forEach((s) => srcIds.add(s)));
@@ -752,7 +812,7 @@ try {
         ${chipsFor(it)}
         ${it.game ? `<p class="game"><b>${esc(t(D.ui.inGame))}</b>${esc(t(it.game))}</p>` : ''}
         ${photo}
-        ${summaryMore((it.body || []).map((b) => t(b)))}
+        ${summaryMore(it.body || [])}
         ${steps}${terms}`;
     }
     $('#card-body').innerHTML = `${html}<details class="src"><summary>${esc(t(D.ui.sources))}</summary><ul>${srcList(srcIds)}</ul></details>`;
@@ -760,6 +820,7 @@ try {
   }
   function select(id, { silent } = {}) {
     if (!items.has(id)) return;
+    leaveModes();
     selected = id;
     renderCard(id);
     $('#card').hidden = false;
@@ -773,6 +834,7 @@ try {
     hideHint();
   }
   function closeCard() {
+    leaveModes();
     selected = null;
     $('#card').hidden = true;
     document.body.classList.remove('has-card');
@@ -781,6 +843,198 @@ try {
     renderList();
     updateUrl();
   }
+  // ---------- "Avaka's life": five stops along one thread, which thickens from fibre to rope as the story goes on ----------
+  const ropeMap = (() => {
+    const c = document.createElement('canvas'); c.width = 64; c.height = 16;
+    const g = c.getContext('2d');
+    g.fillStyle = '#c9a26a'; g.fillRect(0, 0, 64, 16);
+    g.strokeStyle = '#8f6a3c'; g.lineWidth = 3;
+    for (let x = -16; x < 80; x += 10) { g.beginPath(); g.moveTo(x, 16); g.lineTo(x + 16, 0); g.stroke(); }
+    const tex = new THREE.CanvasTexture(c);
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.colorSpace = THREE.SRGBColorSpace;
+    return tex;
+  })();
+  const signTop = new THREE.Vector3(signSpot.x, shape.height(signSpot.x, signSpot.z) + 0.4, signSpot.z);
+  const lift = (v) => v.clone().add(new THREE.Vector3(0, 0.3, 0));
+  // stop k (k >= 1) draws segment k-1; the first segment runs from the sign over the island to the forest, then the beach
+  const legs = [[signTop, lift(focus.forest), lift(focus.beach)], [lift(focus.beach), lift(focus.iraraley)], [lift(focus.iraraley), lift(focus.shop)], [lift(focus.shop), lift(focus['avaka-field'])]];
+  const thread = legs.map((way, k) => {
+    const pts = [];
+    for (let w = 0; w < way.length - 1; w++) {
+      const a = way[w], b = way[w + 1], len = a.distanceTo(b), n = Math.max(14, Math.ceil(len * 7)), arc = Math.min(0.55, len * 0.06);
+      for (let i = w ? 1 : 0; i <= n; i++) {
+        const u = i / n, x = a.x + (b.x - a.x) * u, z = a.z + (b.z - a.z) * u;
+        let g = 0;
+        for (const [dx, dz] of [[0, 0], [0.18, 0], [-0.18, 0], [0, 0.18], [0, -0.18]]) g = Math.max(g, shape.height(x + dx, z + dz));
+        pts.push(new THREE.Vector3(x, Math.max(g + 0.22, a.y + (b.y - a.y) * u) + Math.sin(Math.PI * u) * arc, z));
+      }
+    }
+    for (let pass = 0; pass < 3; pass++) for (let i = 1; i < pts.length - 1; i++) pts[i].y = Math.max(pts[i].y, (pts[i - 1].y + pts[i].y + pts[i + 1].y) / 3);
+    const curve = new THREE.CatmullRomCurve3(pts), segs = pts.length * 3, radial = 7;
+    const geo = new THREE.TubeGeometry(curve, segs, 0.022 + k * 0.012, radial, false);
+    const map = ropeMap.clone(); map.needsUpdate = true; map.repeat.set(curve.getLength() * 7, 1);
+    const mesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ map, roughness: 0.9, metalness: 0 }));
+    mesh.castShadow = false;
+    mesh.visible = false;
+    mesh.userData = { total: geo.index.count, quad: radial * 6, shown: 0, goal: 0 };
+    geo.setDrawRange(0, 0);
+    scene.add(mesh);
+    return mesh;
+  });
+  const tag = (text, pos, cls) => {
+    const el = document.createElement('span');
+    el.className = `pin ${cls}`;
+    const o = new CSS2DObject(el);
+    o.position.copy(pos);
+    o.visible = false;
+    scene.add(o);
+    return { el, o, text };
+  };
+  const batanesTag = tag('batanes', signTop.clone().add(new THREE.Vector3(0, 0.25, 0)), 'k-story');
+  const marketTag = tag('market', market.centre('now').add(new THREE.Vector3(0, 0.35, 0)), 'k-story');
+  let story = -1, eraOpen = false;
+  let era = params.get('era') === 'past' ? 'past' : 'now';
+  function showThread(upTo, animate = true) {
+    thread.forEach((m, k) => {
+      const d = m.userData, on = k < upTo;
+      d.goal = on ? d.total : 0;
+      if (!animate || reduced.matches || !on) d.shown = d.goal;
+      if (on) m.visible = true;
+      m.geometry.setDrawRange(0, Math.floor(d.shown / d.quad) * d.quad);
+      if (!on) m.visible = false;
+    });
+    dirty = true;
+  }
+  function stepThread(dt) {
+    let moving = false;
+    for (const m of thread) {
+      const d = m.userData;
+      if (d.shown === d.goal) continue;
+      d.shown = Math.min(d.goal, d.shown + d.total * dt * 0.7);
+      m.geometry.setDrawRange(0, Math.floor(d.shown / d.quad) * d.quad);
+      moving = true;
+    }
+    return moving;
+  }
+  function look(target, sea, dist, elev = 0.7) {
+    if (stage.clientWidth / stage.clientHeight < 0.8) dist *= 1.45;
+    const dir = new THREE.Vector3(Math.sin(sea) * Math.cos(elev), Math.sin(elev), Math.cos(sea) * Math.cos(elev));
+    return { pos: target.clone().add(dir.multiplyScalar(dist)), target };
+  }
+  function storyView(i) {
+    const id = D.story[i].id;
+    if (id === 'from') { // from the island side, looking out past the sign to the southern sea
+      const out = new THREE.Vector3(Math.sin(signSpot.seaward), 0, Math.cos(signSpot.seaward));
+      return look(signTop.clone().add(out.multiplyScalar(1.4)).setY(0.2), signSpot.seaward + Math.PI, 12, 1.05);
+    }
+    if (id === 'making') return look(focus.forest.clone().lerp(focus.beach, 0.5), spots.beach.seaward, 15, 0.85);
+    if (id === 'ritual') return look(focus.iraraley.clone(), spots.iraraley.seaward, 9, 0.7);
+    if (id === 'replaced') return look(focus.shop.clone(), spots.shop.seaward, 10, 0.75);
+    return look(focus['avaka-field'].clone(), spots['avaka-field'].seaward, 12, 0.8);
+  }
+  const srcIdsOf = (paras) => new Set(paras.flatMap((p) => p.src || []));
+  function eraTable() {
+    const E = D.era;
+    return `<div class="seg" role="group" aria-label="${esc(t(D.ui.era))}">${['past', 'now'].map((e) => `<button type="button" data-era="${e}" aria-pressed="${era === e}">${esc(t(e === 'past' ? D.ui.eraPast : D.ui.eraNow))}</button>`).join('')}</div>
+      <table class="era-table"><thead><tr><th></th><th>${esc(t(D.ui.eraPast))}</th><th>${esc(t(D.ui.eraNow))}</th></tr></thead><tbody>
+      ${E.items.map((r) => `<tr><th scope="row">${esc(t(r.what))}</th><td${era === 'past' ? ' class="on"' : ''}>${esc(t(r.past))}</td><td${era === 'now' ? ' class="on"' : ''}>${esc(t(r.now))}</td></tr>`).join('')}
+      </tbody></table><p class="muted">${evTags(['lit'])}${esc(t(E.note))}</p>`;
+  }
+  function wireCard() {
+    $('#card-body').querySelectorAll('.crumb').forEach((b) => (b.onclick = () => select(b.dataset.id)));
+    $('#card-body').querySelectorAll('[data-stop]').forEach((b) => (b.onclick = () => openStory(+b.dataset.stop)));
+    $('#card-body').querySelectorAll('[data-era]').forEach((b) => (b.onclick = () => setEra(b.dataset.era)));
+    $('#card-body').querySelector('.end')?.addEventListener('click', () => { closeCard(); moveTo(overview()); });
+    $('#card-body').querySelector('.open-era')?.addEventListener('click', () => openEra());
+  }
+  function renderStory(i) {
+    const s = D.story[i], n = D.story.length, srcIds = srcIdsOf(s.paras);
+    const rq = s.rq.length ? s.rq.map((k) => ({ text: `${t(D.ui.rq)}${lang === 'en' ? ' ' : ''}${t(D.ui.rqNames[k])}` })) : [{ text: t(D.ui.rqBg), tone: 'soft' }];
+    const dots = D.story.map((x, k) => `<li><button type="button" data-stop="${k}" aria-current="${k === i ? 'step' : 'false'}" title="${esc(t(x.title))}"><span>${k + 1}</span></button></li>`).join('');
+    const links = s.links.length ? `<h3>${esc(t(D.ui.goTo))}</h3><p class="links">${s.links.map((id) => `<button type="button" class="crumb" data-id="${id}">${esc(t(items.get(id).name))}</button>`).join('')}</p>` : '';
+    const outputs = s.outputs ? `<h3>${esc(t(D.ui.elsewhere))}</h3><p class="links">${D.outputs.map((o) => `<a class="crumb" href="${esc(o.href)}">${esc(t(o.label))}</a>`).join('')}</p>` : '';
+    if (s.era) { D.era.items.forEach((r) => r.src.forEach((x) => srcIds.add(x))); }
+    $('#card-body').innerHTML = `<p class="eyebrow">${esc(t(D.ui.storyEyebrow))}　${i + 1} / ${n}</p>
+      <ol class="story-dots">${dots}</ol>
+      <h2 id="card-title">${esc(t(s.title))}</h2>
+      ${chipRow(rq)}<p class="ref block">${esc(t(s.ref))}</p>
+      ${s.paras.map((p) => para(p, 'story-p')).join('')}
+      ${s.month && story === i && monthMoved ? `<p class="muted">${esc(t(D.ui.monthMoved))}</p>` : ''}
+      ${s.era ? `<h3>${esc(t(D.era.title))}</h3>${eraTable()}` : ''}
+      ${links}${outputs}
+      <nav class="story-nav">${i > 0 ? `<button type="button" data-stop="${i - 1}">← ${esc(t(D.ui.prev))}</button>` : '<span></span>'}${i < n - 1 ? `<button type="button" class="next" data-stop="${i + 1}">${esc(t(D.ui.next))} →</button>` : `<button type="button" class="next end">${esc(t(D.ui.end))}</button>`}</nav>
+      <details class="src"><summary>${esc(t(D.ui.sources))}</summary><ul>${srcList(srcIds)}</ul></details>`;
+    wireCard();
+  }
+  let monthMoved = false;
+  function openStory(i) {
+    i = Math.max(0, Math.min(D.story.length - 1, i));
+    if (bird) setBird(false);
+    selected = null; eraOpen = false;
+    labelEls.forEach((el) => el.classList.remove('on'));
+    story = i;
+    const s = D.story[i];
+    monthMoved = false;
+    if (s.month && (month < 2 || month > 8)) { stopPlay(); setMonth(s.month); monthMoved = true; }
+    renderStory(i);
+    $('#card').hidden = false;
+    $('#card').scrollTop = 0;
+    document.body.classList.add('has-card');
+    $('#t-story').setAttribute('aria-pressed', 'true');
+    cardShift();
+    renderList();
+    showThread(i);
+    batanesTag.o.visible = s.id === 'from';
+    marketTag.o.visible = !!s.era;
+    moveTo(storyView(i));
+    updateUrl();
+    hideHint();
+  }
+  function renderEra() {
+    const srcIds = new Set(D.era.items.flatMap((r) => r.src));
+    $('#card-body').innerHTML = `<p class="eyebrow">${esc(t(D.ui.era))}</p>
+      <h2 id="card-title">${esc(t(D.era.title))}</h2>
+      <p class="summary">${esc(t(D.era.lead))}</p>
+      ${eraTable()}
+      <p class="links"><button type="button" class="crumb" data-stop="3">${esc(t(D.ui.story))}・${esc(t(D.story[3].title))}</button></p>
+      <details class="src"><summary>${esc(t(D.ui.sources))}</summary><ul>${srcList(srcIds)}</ul></details>`;
+    wireCard();
+  }
+  function openEra() {
+    if (bird) setBird(false);
+    leaveModes();
+    selected = null; eraOpen = true;
+    labelEls.forEach((el) => el.classList.remove('on'));
+    renderEra();
+    $('#card').hidden = false;
+    $('#card').scrollTop = 0;
+    document.body.classList.add('has-card');
+    cardShift();
+    renderList();
+    marketTag.o.visible = true;
+    moveTo(look(market.centre(era), market.seaward, 6.2, 0.62));
+    updateUrl();
+    hideHint();
+  }
+  function setEra(e) {
+    era = e;
+    market.set(era);
+    crowd.sync();
+    marketTag.o.position.copy(market.centre(era).add(new THREE.Vector3(0, 0.35, 0)));
+    $('#t-era').setAttribute('aria-pressed', String(era === 'past'));
+    $('#t-era span').textContent = t(era === 'past' ? D.ui.eraPast : D.ui.era);
+    if (eraOpen) { renderEra(); moveTo(look(market.centre(era), market.seaward, 6.2, 0.62)); }
+    else if (story >= 0) renderStory(story);
+    updateUrl();
+    dirty = true;
+  }
+  // leaving the story or the then/now card: fold the thread away and hide their tags
+  function leaveModes() {
+    if (story >= 0) showThread(0, false);
+    story = -1; eraOpen = false;
+    batanesTag.o.visible = marketTag.o.visible = false;
+    $('#t-story').setAttribute('aria-pressed', 'false');
+  }
   function applyLang() {
     document.documentElement.lang = lang === 'en' ? 'en' : 'zh-Hant';
     document.documentElement.dataset.lang = lang;
@@ -788,6 +1042,7 @@ try {
     $('#title').textContent = t(D.meta.title);
     $('#subtitle').textContent = t(D.meta.subtitle);
     $('#map-note').textContent = t(D.meta.mapNote);
+    $('#ev-note').innerHTML = `${['obs', 'oral', 'lit', 'infer'].map((k) => evTags([k])).join('')}<span>${esc(t(D.ui.evLegend))}</span>`;
     $('#list-title').textContent = t(D.ui.places);
     $('#vlist-title').textContent = t(D.ui.villages);
     $('#home span').textContent = t(D.ui.overview);
@@ -811,6 +1066,12 @@ try {
     labelEls.forEach((el, id) => { const c = months.get(month).closed?.[id], b = el.querySelector('em.badge'); if (b && c) b.textContent = t(c); });
     renderList();
     if (selected) renderCard(selected);
+    else if (story >= 0) renderStory(story);
+    else if (eraOpen) renderEra();
+    $('#t-story span').textContent = t(D.ui.story);
+    $('#t-era span').textContent = t(era === 'past' ? D.ui.eraPast : D.ui.era);
+    batanesTag.el.textContent = t(D.ui.batanes);
+    marketTag.el.textContent = t(D.ui.market);
   }
   function hideHint() { $('#hint').classList.add('gone'); }
 
@@ -835,6 +1096,8 @@ try {
     moveTo(on ? { pos: tgt.clone().add(new THREE.Vector3(0.001, d, 0.01)), target: tgt } : selected ? viewFor(selected) : overview());
   }
   $('#t-bird').onclick = () => setBird(!bird);
+  $('#t-story').onclick = () => (story >= 0 ? closeCard() : openStory(0));
+  $('#t-era').onclick = () => { setEra(era === 'past' ? 'now' : 'past'); if (!eraOpen) openEra(); };
   // ---------- first-visit intro (remembered; ? replays it) ----------
   let introStep = 0;
   function showIntro(step = 0) {
@@ -985,6 +1248,7 @@ try {
       if (k === 1) fly = null;
       dirty = true;
     }
+    if (stepThread(dt)) dirty = true;
     if (shift.distanceTo(shiftGoal) > 0.5) {
       shift.lerp(shiftGoal, reduced.matches ? 1 : Math.min(1, dt * 7));
       applyShift();
@@ -1026,11 +1290,15 @@ try {
   frame();
   $('#loading').hidden = true;
   document.body.classList.add('ready');
-  const f = params.get('focus');
+  market.set(era); crowd.sync();
+  const f = params.get('focus'), st = parseInt(params.get('story'), 10);
+  if (era === 'past') setEra('past');
   if (items.has(f)) select(f, { silent: true });
+  else if (st >= 1 && st <= D.story.length) openStory(st - 1);
+  else if (params.get('view') === 'era') openEra();
   else if (!store.get('avaka_island_intro')) showIntro(0);
   // debugging hook for screenshots and tests
-  window.avakaIsland = { perf, degrade, select, setMonth, hello: (n = 6, dur = 3.6) => peds.slice(0, n).forEach((p) => sayHello(p, dur)), overview: () => moveTo(overview()), quality, stats: () => renderer.info.render, camera, leaves: plants.count() };
+  window.avakaIsland = { openStory, openEra, setEra, perf, degrade, select, setMonth, hello: (n = 6, dur = 3.6) => peds.slice(0, n).forEach((p) => sayHello(p, dur)), overview: () => moveTo(overview()), quality, stats: () => renderer.info.render, camera, leaves: plants.count() };
 } catch (err) {
   console.error(err);
   const msg = lang === 'en' ? 'The island could not load. Please refresh the page.' : '島嶼載入失敗，請重新整理頁面。';

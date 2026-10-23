@@ -145,6 +145,55 @@
     "en": "Bureau of Cultural Heritage, National Cultural Heritage Database: 'Lanyu Weather Station' (historic building, registered 2005), accessed 2026-10-23"
    },
    "url": "http://nchdb.boch.gov.tw/assets/advanceSearch/historicalBuilding/20050929000003"
+  },
+  {
+   "id": "hb7",
+   "title": {
+    "zh": "《Avaka》手冊七稿（2026-10-15）",
+    "en": "Avaka handbook, seventh draft (2026-10-15)"
+   }
+  },
+  {
+   "id": "kerfant2020",
+   "title": {
+    "zh": "Kerfant（2020：70、90、164），轉引自專題文本與手冊",
+    "en": "Kerfant (2020: 70, 90, 164), as cited in the thesis and handbook"
+   }
+  },
+  {
+   "id": "ross2005",
+   "title": {
+    "zh": "Ross（2005：2），轉引自專題文本",
+    "en": "Ross (2005: 2), as cited in the thesis"
+   }
+  },
+  {
+   "id": "yang2015",
+   "title": {
+    "zh": "楊政賢（2015：97），轉引自專題文本",
+    "en": "Yang (2015: 97), as cited in the thesis"
+   }
+  },
+  {
+   "id": "zheng1996",
+   "title": {
+    "zh": "鄭漢文（1996：102），轉引自專題文本",
+    "en": "Cheng (1996: 102), as cited in the thesis"
+   }
+  },
+  {
+   "id": "jian2024",
+   "title": {
+    "zh": "簡齊儒、郭健平（2024：82、85），轉引自專題文本",
+    "en": "Chien & Kuo (2024: 82, 85), as cited in the thesis"
+   }
+  },
+  {
+   "id": "yang2014",
+   "title": {
+    "zh": "楊政賢（2014：123、131–132），轉引自專題文本",
+    "en": "Yang (2014: 123, 131–132), as cited in the thesis"
+   }
   }
  ],
  "places": [
@@ -175,6 +224,9 @@
      "en": "Avaka (Manila hemp, Musa textilis) looks like a banana plant but is more slender, with narrower, pointed leaves. The fibre comes from the leaf sheaths that layer into its pseudo-stem.",
      "src": [
       "kb"
+     ],
+     "ev": [
+      "lit"
      ]
     },
     {
@@ -182,6 +234,9 @@
      "en": "Lanyu is one of the northern limits of its natural range; it grows in plots looked after by families.",
      "src": [
       "kb"
+     ],
+     "ev": [
+      "lit"
      ]
     },
     {
@@ -247,13 +302,23 @@
      "en": "On this map the workshop is on the beach at Iraraley (朗島), where a community member, the project's main teacher, demonstrated fibre processing and the researchers learned alongside.",
      "src": [
       "thesis"
-     ]
+     ],
+     "ev": [
+      "obs"
+     ],
+     "ref": {
+      "zh": "文本 肆-一、表4",
+      "en": "Thesis §4.1, Table 4"
+     }
     },
     {
      "zh": "船身的紋樣是依文獻畫的通用紋樣示意：紅白黑三色的船眼（mata no tatala）、人形紋（taotao）與三角幾何邊紋，不代表任何特定家族的船。文獻也提到，達悟族要複製別人的圖樣，傳統上必須以物交換，否則視為盜用。",
      "en": "The hull markings are a generic illustration based on the literature: the red, white and black boat eye (mata no tatala), the human figure (taotao) and a triangle border. They do not represent any family's boat. The same source notes that copying another's design traditionally required an exchange of goods, otherwise it was theft.",
      "src": [
       "sakayan2012"
+     ],
+     "ev": [
+      "lit"
      ]
     }
    ],
@@ -312,7 +377,14 @@
      "src": [
       "rules",
       "thesis"
-     ]
+     ],
+     "ev": [
+      "oral"
+     ],
+     "ref": {
+      "zh": "文本 伍-一（二）",
+      "en": "Thesis §5.1(2)"
+     }
     },
     {
      "zh": "商店的位置是示意，不代表真的商店。",
@@ -347,6 +419,9 @@
      "src": [
       "sumida1985",
       "kb"
+     ],
+     "ev": [
+      "lit"
      ]
     }
    ],
@@ -396,6 +471,9 @@
      "src": [
       "sumida1985",
       "rules"
+     ],
+     "ev": [
+      "lit"
      ]
     },
     {
@@ -403,7 +481,14 @@
      "en": "There is no field footage of this step. The researchers never saw the traditional Avaka process first-hand; it is known only from the accounts of Iraraley elders.",
      "src": [
       "thesis"
-     ]
+     ],
+     "ev": [
+      "obs"
+     ],
+     "ref": {
+      "zh": "文本 陸-二",
+      "en": "Thesis §6.2"
+     }
     }
    ],
    "terms": []
@@ -431,6 +516,9 @@
      "src": [
       "sumida1985",
       "rules"
+     ],
+     "ev": [
+      "lit"
      ]
     },
     {
@@ -438,7 +526,14 @@
      "en": "In the field, Nyaga was processed by scraping off the flesh, unlike the scoring and tearing recorded for Avaka.",
      "src": [
       "thesis"
-     ]
+     ],
+     "ev": [
+      "obs"
+     ],
+     "ref": {
+      "zh": "文本 伍-一（一）、表4、圖5",
+      "en": "Thesis §5.1(1), Table 4, Fig. 5"
+     }
     }
    ],
    "terms": [
@@ -487,6 +582,9 @@
      "src": [
       "rules",
       "sumida1985"
+     ],
+     "ev": [
+      "lit"
      ]
     }
    ],
@@ -578,6 +676,9 @@
      "src": [
       "rules",
       "arnaud2001"
+     ],
+     "ev": [
+      "lit"
      ]
     },
     {
@@ -621,20 +722,38 @@
      "en": "The project's main field site, visited five times from January to September 2026.",
      "src": [
       "thesis"
-     ]
+     ],
+     "ev": [
+      "obs"
+     ],
+     "ref": {
+      "zh": "文本 肆-一",
+      "en": "Thesis §4.1"
+     }
     },
     {
      "zh": "朗島族人（本研究主要學習對象）在這裡示範處理纖維；Avaka 的傳統做法，來自朗島耆老的口述與文獻相互印證。",
      "en": "A community member, the project's main teacher, demonstrated fibre processing here; the traditional Avaka method comes from the account of an Iraraley elder checked against the literature.",
      "src": [
       "thesis"
-     ]
+     ],
+     "ev": [
+      "oral",
+      "lit"
+     ],
+     "ref": {
+      "zh": "文本 伍-一（一）",
+      "en": "Thesis §5.1(1)"
+     }
     },
     {
      "zh": "1966 年政府拆除傳統家屋、改建國宅時，朗島和野銀的國宅另建在村落附近，傳統家屋因此保留下來；不過 1994 年起的改建計畫後，朗島舊聚落的傳統家屋大多改成了水泥房屋。",
      "en": "When traditional houses were demolished for state housing from 1966, Iraraley's and Ivalino's new houses were built beside the old villages, so their traditional houses survived; after the rebuilding plan of 1994 most of Iraraley's old houses became concrete.",
      "src": [
       "boch_yeyin"
+     ],
+     "ev": [
+      "lit"
      ]
     }
    ],
@@ -660,20 +779,37 @@
      "en": "The plants judged most likely to be Avaka grow in the field of an Iranmeylek elder here.",
      "src": [
       "thesis"
-     ]
+     ],
+     "ev": [
+      "infer"
+     ],
+     "ref": {
+      "zh": "文本 貳-四",
+      "en": "Thesis §2.4"
+     }
     },
     {
      "zh": "東清部落的報導人說，現在會處理 Avaka 的人「全鄉幾乎都沒有，大概在我們東清才有兩三個」。",
      "en": "An Iranmeylek interviewee said hardly anyone on the island still processes Avaka, perhaps two or three people in Iranmeylek.",
      "src": [
       "thesis"
-     ]
+     ],
+     "ev": [
+      "oral"
+     ],
+     "ref": {
+      "zh": "文本 伍-一（二）",
+      "en": "Thesis §5.1(2)"
+     }
     },
     {
      "zh": "東清的耆老說，在 Kapowan（夜曆 2 月）東清會燒山，把乾的蘆葦莖割下來做捕飛魚的火把。",
      "en": "An Iranmeylek elder recalls that in Kapowan the hillside reeds are burned and the dry stems cut for flying-fish torches.",
      "src": [
       "nightcal"
+     ],
+     "ev": [
+      "oral"
      ]
     }
    ],
@@ -699,6 +835,9 @@
      "en": "Ivalino has the most complete surviving village of traditional Tao houses, registered as a historic building by Taitung County in 2002.",
      "src": [
       "boch_yeyin"
+     ],
+     "ev": [
+      "lit"
      ]
     },
     {
@@ -706,6 +845,9 @@
      "en": "Houses face the sea with their backs to the hill, set into pits 1–2 m deep on the slope: a main house, a workhouse and a raised platform, with a forecourt, backrest stones and fish racks. Outsiders call them 'underground houses', but they are deep-pit houses.",
      "src": [
       "boch_yeyin"
+     ],
+     "ev": [
+      "lit"
      ]
     }
    ],
@@ -731,6 +873,9 @@
      "en": "An Imaorod elder recalls that Imaorod begins its flying-fish calling rite on the second day of Paneneb, and says the flying-fish culture began with Imaorod's ancestors.",
      "src": [
       "nightcal"
+     ],
+     "ev": [
+      "oral"
      ]
     },
     {
@@ -738,6 +883,9 @@
      "en": "The Lanyu weather station in Hongtou village, built in 1940, is the island's only surviving building from the Japanese era; it was registered as a historic building in 2005.",
      "src": [
       "boch_weather"
+     ],
+     "ev": [
+      "lit"
      ]
     }
    ],
@@ -804,14 +952,29 @@
      "en": "The plants judged most likely to be Avaka grow in an Iranmeylek (東清) elder's field; the elder is sure they are Avaka. The only Avaka fibre the project collected came from here.",
      "src": [
       "thesis"
-     ]
+     ],
+     "ev": [
+      "infer",
+      "oral"
+     ],
+     "ref": {
+      "zh": "文本 貳-四、陸-二",
+      "en": "Thesis §2.4, §6.2"
+     }
     },
     {
      "zh": "這裡的植株要開花結果才能確認物種，可能需要一年以上。地圖上的位置是示意。",
      "en": "Confirming the species needs the plants to flower and fruit, which may take more than a year. The position on this map is illustrative.",
      "src": [
       "thesis"
-     ]
+     ],
+     "ev": [
+      "infer"
+     ],
+     "ref": {
+      "zh": "文本 陸-三",
+      "en": "Thesis §6.3"
+     }
     }
    ]
   },
@@ -836,6 +999,9 @@
      "en": "On a hilltop in the middle of the island, 324 m up; on clear days the Eluanbi lighthouse and the Batanes can be seen.",
      "src": [
       "boch_weather"
+     ],
+     "ev": [
+      "lit"
      ]
     },
     {
@@ -843,6 +1009,9 @@
      "en": "Built in 1940 with Tao labour forcibly conscripted by the colonial government and finished the next year; it was bombed in the war and bullet holes remain in the walls.",
      "src": [
       "boch_weather"
+     ],
+     "ev": [
+      "lit"
      ]
     },
     {
@@ -850,6 +1019,9 @@
      "en": "It is Lanyu's only surviving Japanese-era building, registered as a historic building by Taitung County in 2005. The model on the map is illustrative.",
      "src": [
       "boch_weather"
+     ],
+     "ev": [
+      "lit"
      ]
     }
    ]
@@ -875,6 +1047,9 @@
      "en": "The Council of Indigenous Peoples uses Lanyu Airport as the reference point for Iratay.",
      "src": [
       "cip"
+     ],
+     "ev": [
+      "lit"
      ]
     },
     {
@@ -882,6 +1057,9 @@
      "en": "Runway and terminal positions from OpenStreetMap; the models and the plane are illustrative.",
      "src": [
       "osm"
+     ],
+     "ev": [
+      "lit"
      ]
     }
    ]
@@ -1067,11 +1245,129 @@
      "en": "Walk through the year"
     },
     "body": {
-     "zh": "上方的月份軸可以切換十二個月，按「播放一年」，看文化復振青年一個月一個月做完六道工序。",
-     "en": "The month bar switches between the twelve months. Press 'Play the year' to follow the youth through the six steps, month by month."
+     "zh": "下方的月份軸可以切換十二個月，按「播放一年」，看文化復振青年一個月一個月做完六道工序。",
+     "en": "The month bar at the bottom switches between the twelve months. Press 'Play the year' to follow the youth through the six steps, month by month."
+    }
+   },
+   {
+    "title": {
+     "zh": "Avaka 的一生",
+     "en": "Avaka's life"
+    },
+    "body": {
+     "zh": "按工具列的「Avaka 的一生」，鏡頭會帶你走五站，每站對應這份研究的一個問題。每段文字都標出它來自田野觀察、口述、文獻，還是推論。",
+     "en": "Press 'Avaka's life' in the toolbar and the camera takes you through five stops, each tied to one of this study's questions. Every paragraph is tagged as field observation, oral account, literature or inference."
     }
    }
-  ]
+  ],
+  "ev": {
+   "obs": {
+    "zh": "田野觀察",
+    "en": "Observed"
+   },
+   "oral": {
+    "zh": "口述",
+    "en": "Oral account"
+   },
+   "lit": {
+    "zh": "文獻",
+    "en": "Literature"
+   },
+   "infer": {
+    "zh": "推論",
+    "en": "Inference"
+   }
+  },
+  "evLegend": {
+   "zh": "標籤說明每段文字從哪裡來。研究者是漢人，提問來自外部視角，詮釋可能有偏誤。",
+   "en": "Tags show where each paragraph comes from. The researcher is Han Taiwanese and asks from an outside view, so the reading may be biased."
+  },
+  "unconfirmed": {
+   "zh": "推論，尚未開花確認",
+   "en": "Inference, not yet confirmed by flowering"
+  },
+  "story": {
+   "zh": "Avaka 的一生",
+   "en": "Avaka's life"
+  },
+  "storyEyebrow": {
+   "zh": "Avaka 的一生",
+   "en": "Avaka's life"
+  },
+  "rq": {
+   "zh": "研究問題",
+   "en": "Research question"
+  },
+  "rqBg": {
+   "zh": "研究背景",
+   "en": "Background"
+  },
+  "rqNames": {
+   "1": {
+    "zh": "一",
+    "en": "1"
+   },
+   "2": {
+    "zh": "二",
+    "en": "2"
+   },
+   "3": {
+    "zh": "三",
+    "en": "3"
+   }
+  },
+  "prev": {
+   "zh": "上一站",
+   "en": "Previous"
+  },
+  "next": {
+   "zh": "下一站",
+   "en": "Next"
+  },
+  "end": {
+   "zh": "回到全景",
+   "en": "Back to the island"
+  },
+  "goTo": {
+   "zh": "在島上看",
+   "en": "See on the island"
+  },
+  "elsewhere": {
+   "zh": "其他產出",
+   "en": "Other outputs"
+  },
+  "era": {
+   "zh": "過去／現在",
+   "en": "Then / now"
+  },
+  "eraPast": {
+   "zh": "過去",
+   "en": "Then"
+  },
+  "eraNow": {
+   "zh": "現在",
+   "en": "Now"
+  },
+  "eraOpen": {
+   "zh": "看過去和現在的對照",
+   "en": "Compare then and now"
+  },
+  "market": {
+   "zh": "黃昏市場（示意）",
+   "en": "Evening market (illustrative)"
+  },
+  "seam": {
+   "zh": "船縫",
+   "en": "Boat seams"
+  },
+  "batanes": {
+   "zh": "往巴丹群島",
+   "en": "Toward the Batanes"
+  },
+  "monthMoved": {
+   "zh": "地圖切到 3 月：曬魚架上才有飛魚。",
+   "en": "The map has moved to month 3, when fish hang on the racks."
+  }
  },
  "months": [
   {
@@ -1484,5 +1780,465 @@
    },
    "variants": "Kaowan、Kawuwan"
   }
- ]
+ ],
+ "story": [
+  {
+   "id": "from",
+   "rq": [],
+   "title": {
+    "zh": "從何而來",
+    "en": "Where it came from"
+   },
+   "ref": {
+    "zh": "文本 貳-一",
+    "en": "Thesis §2.1"
+   },
+   "links": [
+    "weather"
+   ],
+   "paras": [
+    {
+     "zh": "Avaka（馬尼拉蕉麻，Musa textilis）原產菲律賓，不是蘭嶼本來就有的植物。蘭嶼和巴丹群島的語言同屬 Batanic 語群，兩地也都留有用芭蕉屬纖維打結、編結的工藝。",
+     "en": "Avaka (Manila hemp, Musa textilis) is native to the Philippines, not to Lanyu. The languages of Lanyu and the Batanes Islands both belong to the Batanic group, and both places keep a craft of knotting and tying banana-family fibre.",
+     "ev": [
+      "lit"
+     ],
+     "src": [
+      "kerfant2020",
+      "ross2005",
+      "hb7"
+     ],
+     "ref": {
+      "zh": "手冊〈我以為它很好找〉",
+      "en": "Handbook, \"I thought it would be easy to find\""
+     }
+    },
+    {
+     "zh": "兩地的往來，約在三百年前因不明原因中斷。",
+     "en": "Contact between the two broke off, for unknown reasons, about three hundred years ago.",
+     "ev": [
+      "lit"
+     ],
+     "src": [
+      "yang2015"
+     ],
+     "ref": {
+      "zh": "文本 貳-一",
+      "en": "Thesis §2.1"
+     }
+    },
+    {
+     "zh": "命名、技術、考古三類線索只能互相參照，不足以重建 Avaka 的傳入史。它是不是跟著祖先渡海而來，目前還沒有證據能回答。",
+     "en": "Names, techniques and archaeology can only be read against each other; together they are not enough to reconstruct how Avaka arrived. Whether it crossed the sea with the ancestors cannot yet be answered.",
+     "ev": [
+      "infer"
+     ],
+     "src": [
+      "thesis",
+      "hb7"
+     ],
+     "ref": {
+      "zh": "文本 貳-一、陸-二",
+      "en": "Thesis §2.1, §6.2"
+     }
+    },
+    {
+     "zh": "從蘭嶼氣象站所在的山頂，天晴時看得見菲律賓的巴士群島。",
+     "en": "From the hilltop of the Lanyu weather station, the Bashi (Batanes) Islands of the Philippines can be seen on clear days.",
+     "ev": [
+      "lit"
+     ],
+     "src": [
+      "boch_weather"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "making",
+   "rq": [
+    1,
+    2
+   ],
+   "title": {
+    "zh": "怎麼做成",
+    "en": "How it was made"
+   },
+   "ref": {
+    "zh": "文本 伍-一（一）、圖3、表4",
+    "en": "Thesis §5.1(1), Fig. 3, Table 4"
+   },
+   "links": [
+    "forest",
+    "beach"
+   ],
+   "paras": [
+    {
+     "zh": "依文獻與耆老口述相互印證，Avaka 的工序重建為六道：在山林砍伐剝皮、懸掛摩擦、劃痕撕絲，再到灘頭曝曬、撚線、填縫。",
+     "en": "Read against the literature and an elder's account, Avaka's work is reconstructed as six steps: felling and stripping, rubbing and softening, scoring and tearing in the forest, then drying, twisting and caulking at the beach.",
+     "ev": [
+      "lit",
+      "oral"
+     ],
+     "src": [
+      "thesis",
+      "sumida1985"
+     ],
+     "ref": {
+      "zh": "文本 伍-一（一）、圖3",
+      "en": "Thesis §5.1(1), Fig. 3"
+     }
+    },
+    {
+     "zh": "研究者在五次田野中沒能親眼看到 Avaka 的傳統取纖。田野裡還有人動手做的，是朗島族人在 Nyaga 上摸索出的做法：刮除肉質層，而不是劃痕後順著纖維撕絲。",
+     "en": "In five field trips the researcher never saw Avaka fibre taken the traditional way. What people still do by hand is a method an Iraraley community member worked out on Nyaga: scraping off the flesh rather than scoring the sheath and tearing along the fibre.",
+     "ev": [
+      "obs"
+     ],
+     "src": [
+      "thesis"
+     ],
+     "ref": {
+      "zh": "文本 表4、圖5",
+      "en": "Thesis Table 4, Fig. 5"
+     }
+    },
+    {
+     "zh": "「那是我的打法，那個不是蘭嶼的打法，那是我從網路抓的打法，因為沒有人教我。」——朗島族人談接線",
+     "en": "\"That's my way of tying it, not the Lanyu way. I got it off the internet, because nobody taught me.\" — an Iraraley community member, on joining fibre",
+     "ev": [
+      "oral"
+     ],
+     "src": [
+      "hb7"
+     ],
+     "ref": {
+      "zh": "手冊〈記憶裡的做法，手上的做法〉",
+      "en": "Handbook, \"Remembered methods, hands-on methods\""
+     }
+    }
+   ]
+  },
+  {
+   "id": "ritual",
+   "rq": [
+    2
+   ],
+   "title": {
+    "zh": "儀式中的位置",
+    "en": "Its place in ritual"
+   },
+   "ref": {
+    "zh": "文本 貳-三、伍-一（二）",
+    "en": "Thesis §2.3, §5.1(2)"
+   },
+   "links": [
+    "iraraley",
+    "imorod"
+   ],
+   "month": 3,
+   "paras": [
+    {
+     "zh": "招魚祭時，捕到的飛魚沾上雞血，再用 Avaka 綁吊起來；小船祭的準備清單把 Avaka 列為首要的祈禱物件，用作釣鬼頭刀和飛魚的吊繩。",
+     "en": "At the fish-calling rite, caught flying fish were dabbed with chicken blood and hung up with Avaka; the preparation list for the small-boat rite puts Avaka first among the prayer items, as the hanging cord for dorado and flying fish.",
+     "ev": [
+      "lit"
+     ],
+     "src": [
+      "zheng1996",
+      "jian2024"
+     ],
+     "ref": {
+      "zh": "文本 貳-三",
+      "en": "Thesis §2.3"
+     }
+    },
+    {
+     "zh": "朗島部落的報導人說，「一開始飛魚季它是用avaka去綁」，之後飛魚變多才改用林投的氣根；飛魚季有分階段，「前面那兩個月規矩最嚴謹」。",
+     "en": "An Iraraley interviewee said that at the start of the flying-fish season the fish were tied with avaka, and only later, when the catch grew, with pandanus aerial roots; the season has stages, and the rules are strictest in the first two months.",
+     "ev": [
+      "oral"
+     ],
+     "src": [
+      "thesis"
+     ],
+     "ref": {
+      "zh": "文本 伍-一（二）",
+      "en": "Thesis §5.1(2)"
+     }
+    },
+    {
+     "zh": "本研究據此認為，Avaka 在儀式中是連結人與魚、祈求漁獲的媒介，意義不止於繩材。",
+     "en": "From this, the study reads Avaka in ritual as a medium linking people and fish and asking for a catch, more than a cord.",
+     "ev": [
+      "infer"
+     ],
+     "src": [
+      "thesis"
+     ],
+     "ref": {
+      "zh": "文本 貳-三",
+      "en": "Thesis §2.3"
+     }
+    }
+   ]
+  },
+  {
+   "id": "replaced",
+   "rq": [
+    3
+   ],
+   "title": {
+    "zh": "被取代",
+    "en": "Replaced"
+   },
+   "ref": {
+    "zh": "文本 貳-四、陸-一",
+    "en": "Thesis §2.4, §6.1"
+   },
+   "links": [
+    "shop"
+   ],
+   "era": true,
+   "paras": [
+    {
+     "zh": "1975 年後化學樹脂進入蘭嶼，很快取代了用 Avaka 壓實蘭嶼花椒的填縫。",
+     "en": "After 1975 chemical resin reached Lanyu and quickly replaced caulking with Avaka pressed over Lanyu prickly-ash fibre.",
+     "ev": [
+      "lit"
+     ],
+     "src": [
+      "cheng2002"
+     ],
+     "ref": {
+      "zh": "文本 貳-四",
+      "en": "Thesis §2.4"
+     }
+    },
+    {
+     "zh": "化學膠讓船板難以拆開修補，船從「可循環維修的有機體」變成「一次性消耗品」；族人也不再需要為造舟撫育 Avaka。",
+     "en": "Glue makes the planks hard to take apart and mend, so a boat turns from something that can be repaired again and again into something used once; people no longer need to tend Avaka for boatbuilding.",
+     "ev": [
+      "infer"
+     ],
+     "src": [
+      "thesis"
+     ],
+     "ref": {
+      "zh": "文本 貳-四",
+      "en": "Thesis §2.4"
+     }
+    },
+    {
+     "zh": "朗島族人說：「連我爸爸的時代都用南寶樹酯了。」",
+     "en": "An Iraraley community member: \"Even in my father's time they already used Nanpao resin.\"",
+     "ev": [
+      "oral"
+     ],
+     "src": [
+      "thesis"
+     ],
+     "ref": {
+      "zh": "文本 伍-一（二）",
+      "en": "Thesis §5.1(2)"
+     }
+    },
+    {
+     "zh": "不過島上的說法並不一致：有報導人記得 Avaka 做成繩子綁槳架，有人聽過壓縫的做法，也有人沒聽過。手冊在這裡不下結論。",
+     "en": "On the island, accounts differ: one interviewee remembers Avaka made into cord for oar rests, one has heard of the caulking method, one has not. The handbook draws no conclusion here.",
+     "ev": [
+      "oral"
+     ],
+     "src": [
+      "hb7"
+     ],
+     "ref": {
+      "zh": "手冊〈船縫裡的問號〉",
+      "en": "Handbook, \"A question in the seams\""
+     }
+    },
+    {
+     "zh": "島上的經濟也在變：從分享飛魚的「人魚網絡」，轉向觀光的貨幣經濟。",
+     "en": "The island economy is changing too: from a network of sharing flying fish toward a tourist cash economy.",
+     "ev": [
+      "lit"
+     ],
+     "src": [
+      "yang2014"
+     ],
+     "ref": {
+      "zh": "文本 貳-四",
+      "en": "Thesis §2.4"
+     }
+    }
+   ]
+  },
+  {
+   "id": "now",
+   "rq": [
+    1,
+    3
+   ],
+   "title": {
+    "zh": "現在",
+    "en": "Today"
+   },
+   "ref": {
+    "zh": "文本 貳-四、陸-一、陸-三",
+    "en": "Thesis §2.4, §6.1, §6.3"
+   },
+   "links": [
+    "avaka-field",
+    "iranmeylek"
+   ],
+   "outputs": true,
+   "paras": [
+    {
+     "zh": "研究者原以為 Avaka 不難找，卻屢次聽到它已經消失；有族人把 Nyaga 認作 Avaka，經過多次比對才釐清。",
+     "en": "The researcher expected Avaka to be easy to find, but heard again and again that it was gone; some took Nyaga for Avaka, and it took many comparisons to sort out.",
+     "ev": [
+      "obs"
+     ],
+     "src": [
+      "thesis"
+     ],
+     "ref": {
+      "zh": "文本 貳-四、圖4",
+      "en": "Thesis §2.4, Fig. 4"
+     }
+    },
+    {
+     "zh": "目前判斷最有可能是 Avaka 的植株在東清耆老的田區，還沒等到開花結果，物種無法確認。Avaka 的斷裂，已經延伸到植物本身的辨認。",
+     "en": "The plants judged most likely to be Avaka grow in an Iranmeylek elder's field; they have not yet flowered or fruited, so the species is unconfirmed. The break in Avaka's story now reaches the plant's identity itself.",
+     "ev": [
+      "infer"
+     ],
+     "src": [
+      "thesis"
+     ],
+     "ref": {
+      "zh": "文本 貳-四、陸-二",
+      "en": "Thesis §2.4, §6.2"
+     }
+    },
+    {
+     "zh": "朗島族人希望 Avaka「可以被保留，被我們的孩子看到，可以來保護」。",
+     "en": "An Iraraley community member hopes Avaka \"can be kept, seen by our children, and protected\".",
+     "ev": [
+      "oral"
+     ],
+     "src": [
+      "thesis"
+     ],
+     "ref": {
+      "zh": "文本 伍-一（二）",
+      "en": "Thesis §5.1(2)"
+     }
+    },
+    {
+     "zh": "本研究以纖維展示盒（三種芭蕉並列，可以摸）、手冊、紀錄片、這個遊戲和課堂，延續它的社會生命。",
+     "en": "The study carries on its social life through a fibre display box (three banana plants side by side, to touch), a handbook, a documentary, this game and a lesson plan.",
+     "ev": [],
+     "src": [
+      "thesis",
+      "hb7"
+     ],
+     "ref": {
+      "zh": "文本 伍-二",
+      "en": "Thesis §5.2"
+     }
+    }
+   ]
+  }
+ ],
+ "outputs": [
+  {
+   "href": "/",
+   "label": {
+    "zh": "網頁遊戲",
+    "en": "The web game"
+   }
+  },
+  {
+   "href": "/rules",
+   "label": {
+    "zh": "規則網站",
+    "en": "Rules site"
+   }
+  },
+  {
+   "href": "/rules/class.html",
+   "label": {
+    "zh": "課堂版",
+    "en": "Classroom version"
+   }
+  }
+ ],
+ "era": {
+  "title": {
+   "zh": "過去和現在",
+   "en": "Then and now"
+  },
+  "lead": {
+   "zh": "切換「過去／現在」，島上的黃昏市場會移動位置。下面只列文本有出處的對照。",
+   "en": "Switch between then and now and the evening market moves. Only contrasts with a source in the thesis are listed."
+  },
+  "items": [
+   {
+    "what": {
+     "zh": "黃昏市場",
+     "en": "Evening market"
+    },
+    "past": {
+     "zh": "擺在部落巷道",
+     "en": "Set up in the village lanes"
+    },
+    "now": {
+     "zh": "移到環島公路兩旁，賣的幾乎都是島外進口的食物",
+     "en": "Moved to both sides of the ring road, selling food almost all brought from off the island"
+    },
+    "src": [
+     "yang2014"
+    ]
+   },
+   {
+    "what": {
+     "zh": "飛魚",
+     "en": "Flying fish"
+    },
+    "past": {
+     "zh": "受歲時祭儀規範，禁止買賣",
+     "en": "Governed by the seasonal rites, not to be sold"
+    },
+    "now": {
+     "zh": "做成各式加工食品，在市場與餐廳販售",
+     "en": "Made into processed foods sold in markets and restaurants"
+    },
+    "src": [
+     "yang2014"
+    ]
+   },
+   {
+    "what": {
+     "zh": "船縫",
+     "en": "Boat seams"
+    },
+    "past": {
+     "zh": "蘭嶼花椒的纖維塞進船縫，再用 Avaka 纏繞木釘壓實",
+     "en": "Lanyu prickly-ash fibre packed into the seams, pressed down with Avaka wound round wooden pegs"
+    },
+    "now": {
+     "zh": "1975 年後改用化學樹脂",
+     "en": "Chemical resin since 1975"
+    },
+    "src": [
+     "cheng2002"
+    ]
+   }
+  ],
+  "note": {
+   "zh": "市場在地圖上的位置是示意，不代表實際的攤位。",
+   "en": "The market's position on the map is illustrative, not real stalls."
+  }
+ }
 }
