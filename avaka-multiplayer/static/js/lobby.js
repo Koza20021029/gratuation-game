@@ -353,7 +353,7 @@ const LOBBY_HTML = `
     cut: '砍伐剝皮：在開花之前砍下假莖，把葉鞘一層層剝下來。',
     rub: '摩擦軟化：把葉鞘掛在樹枝上，抓住兩端來回摩擦，讓它變軟。',
     strip: '劃痕撕絲：用小刀在葉鞘上劃開，把纖維一絲絲撕出來。',
-    dry: '曝曬乾燥：掛在通風有太陽的地方曬乾，潮濕會讓它腐爛。',
+    dry: '曝曬乾燥：掛在太陽下曬，文獻記 Avaka 約五天，田野裡夏天約一天、冬天約兩天；潮濕會爛，太乾會脆。',
     twist: '理線撚繩：把曬乾的纖維理順，兩股互相搓撚成繩。',
     caulk: '填縫完工：把纖維塞進船板之間的縫，遇水膨脹，船就不漏。'
   };
@@ -650,7 +650,7 @@ const LOBBY_HTML = `
     cut: 'Chop and peel: cut the pseudo-stem before it flowers and peel the leaf sheaths off one by one.',
     rub: 'Rub soft: hang a sheath over a branch, hold both ends and work it back and forth until it softens.',
     strip: 'Score and strip: slit the sheath with a small knife and pull the fibre out thread by thread.',
-    dry: 'Dry in the sun: hang it where the air moves and the sun reaches. Damp makes it rot.',
+    dry: 'Dry in the sun: about five days for Avaka in the literature, a day in summer or two in winter in the field. Damp makes it rot; too dry and it turns brittle.',
     twist: 'Comb and twist: straighten the dry fibre and twist two strands round each other into rope.',
     caulk: 'Caulk: press the fibre into the seam between the planks. It swells in water and the boat stays tight.'
   };
