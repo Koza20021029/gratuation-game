@@ -14,8 +14,8 @@ const withLang = (href) => (lang === 'en' && href.startsWith('/') ? `${href}${hr
 const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
 try {
-  const V = '?v=20261023_65';
-  const [THREE, { OrbitControls }, { CSS2DRenderer, CSS2DObject }, W, E, K, M, D] = await Promise.all([
+  const V = '?v=20261023_78';
+  const [THREE, { OrbitControls }, { CSS2DRenderer, CSS2DObject }, W, E, K, M, S, D] = await Promise.all([
     import('three'),
     import('three/addons/OrbitControls.js'),
     import('three/addons/CSS2DRenderer.js'),
@@ -23,6 +23,7 @@ try {
     import('./env.js' + V),
     import('./kit.js' + V),
     import('./models.js' + V),
+    import('./sea.js' + V),
     fetch('/island/island.json' + V).then((r) => { if (!r.ok) throw new Error('island.json ' + r.status); return r.json(); }),
   ]);
   M.useThree(THREE);
@@ -33,6 +34,8 @@ try {
   D.steps.forEach((s) => items.set(s.id, { ...s, kind: 'step' }));
   D.villages.forEach((v) => items.set(v.id, { ...v, kind: 'village', name: { zh: `${v.zh} ${v.tao}`, en: `${v.tao} (${v.zh})` } }));
   D.sites.forEach((s) => items.set(s.id, { ...s, kind: 'site' }));
+  D.sea.forEach((s) => items.set(s.id, { ...s, kind: 'sea' }));
+  const weather = new Map(D.weather.months.map((w) => [w.n, w]));
 
   const mobile = innerWidth <= 800 || /Mobi|Android/i.test(navigator.userAgent);
   const quality = ['low', 'medium', 'high'].includes(params.get('quality')) ? params.get('quality') : mobile ? 'medium' : 'high';
@@ -600,6 +603,12 @@ try {
   crowd.build(scene, crowdMat);
   M.buildBoats(THREE, scene, boatGeo);
 
+  // ---------- the sea: Kuroshio, flying fish, mahi-mahi, turtles, monsoon arrows (illustrative) ----------
+  const sea = S.createSea(THREE, scene, { shape, W, quality });
+  for (const id of Object.keys(sea.anchors)) { focus[id] = sea.anchors[id]; spots[id] = { seaward: sea.seaward[id] }; }
+  const CHOP = { 1: 1, 2: 0.9, 3: 0.6, 4: 0.3, 5: 0.3, 6: 0.35, 7: 0.35, 8: 0.35, 9: 0.15, 10: 0.6, 11: 0.9, 12: 1 };
+  const windTag = (() => { const el = document.createElement('span'); el.className = 'pin k-wind'; const o = new CSS2DObject(el); o.userData = { id: 'wind', kind: 'road' }; scene.add(o); return { el, o }; })();
+
   // ---------- months ----------
   const months = new Map(D.months.map((m) => [m.n, m]));
   let month = Math.min(12, Math.max(1, parseInt(params.get('month'), 10) || 1)), playing = null;
@@ -612,9 +621,16 @@ try {
     $('#month-info').innerHTML = `<p class="mname"><b>${month}</b><span>${esc(t(D.ui.month))}</span><i lang="tao">${esc(m.name)}</i><em>${esc(t(m.label))}</em></p>
       <p class="mgame"><span>${esc(t(D.ui.thisMonth))}</span>${esc(t(m.game))}</p>
       <p class="mcal"><span>${esc(t(D.ui.calendarLine))}</span>${esc(t(m.calendar))}</p>
+      ${weatherLine()}
       <p class="mwalk">${esc(t(D.ui.walker))}：${esc(t(m.walker.note))}</p>
       <p class="mvar">${esc(t(D.ui.variants))}：${esc(m.variants)}・${esc(t(sources.get('nightcal').title))}</p>
       ${m.extra ? `<p class="mextra">${esc(t(m.extra))}</p>` : ''}`;
+  }
+  // one line of climate averages under the month (CWA Lanyu station 1991–2020; the page's month axis is the night calendar)
+  function weatherLine() {
+    const w = weather.get(month), f = (v) => (lang === 'en' ? String(v) : String(v));
+    const txt = t(D.ui.weatherFmt).replace('{n}', w.n).replace('{t}', f(w.t)).replace('{rain}', Math.round(w.rain)).replace('{days}', Math.round(w.days)).replace('{ws}', f(w.ws)).replace('{wind}', t(D.weather.wind[w.wind]));
+    return `<p class="mwx"><span>${esc(t(D.ui.weatherLine))}</span>${esc(txt)}</p>${w.typhoon ? `<p class="mty">${esc(t(D.ui.typhoon))}</p>` : ''}<p class="mwxsrc">${esc(t(D.ui.weatherSrc))}</p>`;
   }
   function setMonth(n, { instant = false } = {}) {
     month = n;
@@ -625,6 +641,9 @@ try {
     limeFires.forEach((f) => (f.g.visible = n === 10));
     crowd.sync(); M.syncBoats();
     walker.setMonth(m);
+    const w = weather.get(n), dir = sea.setMonth(n, w.wind);
+    env.setWind(dir ? dir[0] / Math.SQRT2 : 0, dir ? dir[1] / Math.SQRT2 : 0, dir ? CHOP[n] : 0, instant || reduced.matches);
+    windTag.o.visible = !!dir; windTag.o.position.copy(sea.windAnchor); windTag.el.textContent = dir ? t(D.weather.windNote[w.wind]) : '';
     // places that are closed or cannot be finished this month get a small badge
     labelEls.forEach((el, id) => {
       el.querySelector('em.badge')?.remove();
@@ -665,20 +684,21 @@ try {
     el.innerHTML = it.kind === 'village' ? '<span></span>' : `<i>${esc(it.number)}</i><span></span>`;
     el.addEventListener('click', (e) => { e.stopPropagation(); select(id); });
     const o = new CSS2DObject(el);
-    const lift = { place: id === 'forest' ? 2.6 : 0.6, step: 0.35, village: 0.5, site: 1.1 }[it.kind];
+    const lift = { place: id === 'forest' ? 2.6 : 0.6, step: 0.35, village: 0.5, site: 1.1, sea: 0.7 }[it.kind];
     o.position.copy(focus[id]).add(new THREE.Vector3(0, lift, 0));
     o.userData = { id, kind: it.kind };
     scene.add(o);
     labelEls.set(id, el);
     labelObjs.set(id, o);
-    const r = { place: id === 'forest' ? 1.4 : 1.0, step: 0.4, village: 1.0, site: 0.6 }[it.kind];
+    const r = { place: id === 'forest' ? 1.4 : 1.0, step: 0.4, village: 1.0, site: 0.6, sea: 1.2 }[it.kind];
     const hit = new THREE.Mesh(new THREE.SphereGeometry(r, 8, 6), new THREE.MeshBasicMaterial({ visible: false }));
     hit.position.copy(focus[id]);
     hit.userData = { id, kind: it.kind };
     scene.add(hit);
     pickables.push(hit);
   }
-  const PRIORITY = { place: 4, village: 3, site: 2, step: 1, road: 0 };
+  pickables.push(...sea.pickables);
+  const PRIORITY = { place: 4, village: 3, site: 2, sea: 1.5, step: 1, road: 0 };
   const roadTags = [];
   for (const [curve, t0, name] of [[ringRoad.userData.curve, 0.6, { zh: '環島公路', en: 'Round-island road' }], [crossRoad.userData.curve, 0.55, { zh: '橫貫公路', en: 'Cross-island road' }]]) {
     const p = curve.getPointAt(t0), el = document.createElement('span');
@@ -702,8 +722,8 @@ try {
   // keeping the first one whose line of sight is not blocked by the ground or a building (cached per place)
   const viewCache = new Map(), sight = new THREE.Raycaster();
   function viewFor(id) {
-    const it = items.get(id), target = focus[id].clone();
-    let dist = { place: id === 'forest' ? 6.2 : 5.2, step: 3.2, village: 5.4, site: 4.4 }[it.kind];
+    const it = items.get(id), target = (sea.viewTarget[id] || focus[id]).clone();
+    let dist = { place: id === 'forest' ? 6.2 : 5.2, step: 3.2, village: 5.4, site: 4.4, sea: id === 'kuroshio' ? 36 : 8 }[it.kind];
     if (stage.clientWidth / stage.clientHeight < 0.8) dist *= 1.45;
     const key = id + ':' + dist.toFixed(2);
     if (!viewCache.has(key)) {
@@ -748,13 +768,14 @@ try {
   function listButton(id) {
     const it = items.get(id);
     const num = it.kind === 'village' ? '' : `<i>${esc(it.number)}</i>`;
-    const sub = it.kind === 'village' ? '' : `<span>${esc(t(it.short) || '')}</span>`;
+    const sub = it.kind === 'village' || it.kind === 'sea' ? '' : `<span>${esc(t(it.short) || '')}</span>`;
     const label = it.kind === 'village' ? (lang === 'en' ? it.en : it.zh) : t(it.name);
     return `<li><button type="button" class="place ${it.kind}" data-id="${id}" aria-pressed="${selected === id}">${num}<b>${esc(label)}</b>${sub}</button></li>`;
   }
   function renderList() {
     $('#list').innerHTML = D.places.map((p) => listButton(p.id)).join('') + D.sites.map((s) => listButton(s.id)).join('');
     $('#vlist').innerHTML = D.villages.map((v) => listButton(v.id)).join('');
+    $('#slist').innerHTML = D.sea.map((v) => listButton(v.id)).join('');
     document.querySelectorAll('.side .place').forEach((b) => (b.onclick = () => select(b.dataset.id)));
   }
   const srcList = (ids) => [...ids].filter((s) => sources.has(s)).map((s) => {
@@ -781,6 +802,9 @@ try {
     } else if (it.kind === 'place') {
       if (it.steps?.length) c.push({ text: `${t(D.ui.step)} ${it.steps.map((x) => items.get(x).number).join('')}` });
       for (const m of D.months) if (m.closed?.[it.id]) c.push({ text: `${m.n} ${t(D.ui.month)}・${t(m.closed[it.id])}`, tone: 'warn' });
+    } else if (it.kind === 'sea') {
+      c.push({ text: t(D.ui.seaKind) });
+      c.push({ text: `${t(D.ui.seaWhen)}・${t(it.when)}`, tone: 'soft' });
     } else {
       if (it.id === 'weather') c.push({ text: t(D.ui.heritage) });
       if (it.id === 'airport' || it.id === 'avaka-field') c.push({ text: t(D.ui.landmark) });
@@ -811,6 +835,7 @@ try {
       const steps = it.steps?.length ? `<h3>${esc(t(D.ui.steps))}</h3><ol class="steps">${it.steps.map((s) => `<li><button type="button" class="crumb" data-id="${s}"><i>${esc(items.get(s).number)}</i>${esc(t(items.get(s).name))}</button></li>`).join('')}</ol>` : '';
       html = `${parent}<p class="eyebrow">${eyebrow}</p>
         <h2 id="card-title">${esc(t(it.name))}</h2>
+        ${it.tao ? `<p class="tao-name"><span>${esc(t(D.ui.taoName))}</span><b lang="tao">${esc(it.tao)}</b>${it.taoNote ? `<small>${esc(t(it.taoNote))}</small>` : ''}</p>` : ''}
         ${chipsFor(it)}
         ${it.game ? `<p class="game"><b>${esc(t(D.ui.inGame))}</b>${esc(t(it.game))}</p>` : ''}
         ${photo}
@@ -1047,6 +1072,7 @@ try {
     $('#ev-note').innerHTML = `${['obs', 'oral', 'lit', 'infer'].map((k) => evTags([k])).join('')}<span>${esc(t(D.ui.evLegend))}</span>`;
     $('#list-title').textContent = t(D.ui.places);
     $('#vlist-title').textContent = t(D.ui.villages);
+    $('#slist-title').textContent = t(D.ui.sea);
     $('#home span').textContent = t(D.ui.overview);
     $('#back span').textContent = t(D.ui.back); $('#back .short').textContent = t(D.ui.backShort); $('#back').setAttribute('aria-label', t(D.ui.back));
     $('#back').href = withLang('/'); $('.brand .mark').href = withLang('/rules');
@@ -1063,6 +1089,7 @@ try {
       else span.textContent = t(it.name);
     });
     roadTags.forEach((r) => (r.el.textContent = t(r.name)));
+    { const w = weather.get(month).wind; windTag.el.textContent = D.weather.windNote[w] ? t(D.weather.windNote[w]) : ''; }
     walker.tagEl.textContent = t(D.ui.walker);
     $('#month-note').textContent = t(D.ui.monthNote);
     renderMonths();
@@ -1195,12 +1222,14 @@ try {
       if (k === 'step') vis = dist < 15 || selPlace === items.get(id).place;
       if (k === 'village') vis = dist > 4.5 || selected === id;
       if (k === 'site') vis = dist < 60 || selected === id;
+      if (k === 'sea') vis = (sea.present(id) && dist < 80) || selected === id;
       o.visible = vis;
       labelEls.get(id).classList.remove('culled');
     }
     for (const r of roadTags) { r.o.visible = dist < 70; r.el.classList.remove('culled'); }
     walker.tag.visible = dist < 14;
-    const shown = [...labelObjs.values(), ...roadTags.map((r) => r.o)].filter((o) => o.visible)
+    if (windTag.o.visible && dist > 90) windTag.o.visible = false;
+    const shown = [...labelObjs.values(), ...roadTags.map((r) => r.o), windTag.o].filter((o) => o.visible)
       .map((o) => ({ el: labelEls.get(o.userData.id) || o.element, p: PRIORITY[o.userData.kind] + (o.userData.id === 'beach' ? 0.5 : 0) + (o.userData.id === selected ? 10 : 0) }))
       .sort((a, b) => b.p - a.p);
     // a label that collides is first nudged below the one in its way; only if it still collides is it hidden
@@ -1228,6 +1257,7 @@ try {
     else if (perf.level === 3) {
       [...peds.filter((_, i) => i % 2), ...traffic.filter((_, i) => i % 2).map((c) => ({ g: c.g })), ...goats.filter((_, i) => i % 2)].forEach((o) => (o.g.visible = false));
       crowd.sync();
+      sea.lite(); env.setWind(0, 0, 0, true); windTag.o.visible = false;
     } else if (perf.level === 4) renderer.setPixelRatio(1);
     resize();
   }
@@ -1264,6 +1294,7 @@ try {
       env.uniforms.uTime.value = time;
       env.update(time, dt);
       walker.update(dt, time);
+      sea.update(time, dt);
       moveTraffic(dt, time);
       movePeople(dt, time, true);
       crowd.sync(); M.syncBoats();
@@ -1284,6 +1315,7 @@ try {
   }
 
   setMonth(month, { instant: true });
+  sea.update(1.3, 0);
   applyLang();
   resize();
   const start = overview();
@@ -1301,7 +1333,7 @@ try {
   else if (params.get('view') === 'era') openEra();
   else if (!store.get('avaka_island_intro')) showIntro(0);
   // debugging hook for screenshots and tests
-  window.avakaIsland = { openStory, openEra, setEra, perf, degrade, select, setMonth, hello: (n = 6, dur = 3.6) => peds.slice(0, n).forEach((p) => sayHello(p, dur)), overview: () => moveTo(overview()), quality, stats: () => renderer.info.render, camera, leaves: plants.count() };
+  window.avakaIsland = { openStory, openEra, setEra, perf, degrade, select, setMonth, hello: (n = 6, dur = 3.6) => peds.slice(0, n).forEach((p) => sayHello(p, dur)), overview: () => moveTo(overview()), quality, stats: () => renderer.info.render, drawOnce: () => { renderer.render(scene, camera); return { ...renderer.info.render }; }, sea, tick: frame, closeCard, camera, leaves: plants.count() };
 } catch (err) {
   console.error(err);
   const msg = lang === 'en' ? 'The island could not load. Please refresh the page.' : '島嶼載入失敗，請重新整理頁面。';

@@ -72,6 +72,7 @@ export function createEnv(THREE, scene, { quality, shore, peaks = [] }) {
     uniforms: THREE.UniformsUtils.merge([THREE.UniformsLib.fog, {
       uTime: { value: 0 }, uShore: { value: null }, uBox: { value: new THREE.Vector4(shore.box.x, shore.box.z, shore.box.w, shore.box.d) },
       uShallow: { value: cur.shallow.clone() }, uDeep: { value: cur.deep.clone() }, uFar: { value: C(0x3d86a8) }, uRain: { value: 0 },
+      uWind: { value: new THREE.Vector2(0, 0) }, uChop: { value: 0 },
     }]),
     vertexShader: `#include <fog_pars_vertex>
       varying vec3 vW;
@@ -79,7 +80,7 @@ export function createEnv(THREE, scene, { quality, shore, peaks = [] }) {
       #include <fog_vertex>
       }`,
     fragmentShader: `#include <fog_pars_fragment>
-      uniform float uTime, uRain; uniform sampler2D uShore; uniform vec4 uBox; uniform vec3 uShallow, uDeep, uFar; varying vec3 vW;
+      uniform float uTime, uRain, uChop; uniform vec2 uWind; uniform sampler2D uShore; uniform vec4 uBox; uniform vec3 uShallow, uDeep, uFar; varying vec3 vW;
       void main(){
         vec2 uv = (vW.xz - uBox.xy) / uBox.zw;
         float inBox = step(0.0, uv.x) * step(uv.x, 1.0) * step(0.0, uv.y) * step(uv.y, 1.0);
@@ -91,6 +92,13 @@ export function createEnv(THREE, scene, { quality, shore, peaks = [] }) {
         float w2 = sin((vW.x + vW.z * 0.7) * 1.6 + uTime * 0.9) * sin(vW.x * 1.1 - vW.z * 0.5 - uTime * 0.3);
         float aa = clamp(1.0 - fwidth(w2) * 2.5, 0.0, 1.0);
         col += w1 * 0.02 + smoothstep(0.95, 1.0, w2 * 0.5 + 0.5) * 0.06 * aa * (1.0 - uRain) * (1.0 - smoothstep(10.0, 40.0, length(vW.xz)));
+        // monsoon whitecaps: a few more on the windward side of the island (the side the wind comes from)
+        float r = length(vW.xz);
+        float windward = smoothstep(0.15, 0.7, dot(vW.xz / max(r, 0.001), -uWind));
+        float w3 = sin(dot(vW.xz, vec2(1.7, 1.1)) * 1.9 - uTime * 1.3) * sin(dot(vW.xz, vec2(-0.9, 1.6)) * 2.3 + uTime * 0.8);
+        float patchy = sin(vW.x * 0.37 + uTime * 0.2 + sin(vW.z * 0.5) * 2.0) * sin(vW.z * 0.29 - uTime * 0.15 + sin(vW.x * 0.41) * 1.7) * 0.5 + 0.5;
+        float caps = smoothstep(0.86, 0.98, w3) * smoothstep(0.45, 0.85, patchy) * clamp(1.0 - fwidth(w3) * 2.0, 0.0, 1.0);   // patchy, not a grid
+        col = mix(col, vec3(0.97, 0.98, 0.95), caps * uChop * windward * smoothstep(6.0, 10.0, r) * (1.0 - smoothstep(26.0, 44.0, r)) * 0.85);
         float band = sin(d * 9.0 + uTime * 1.6) * 0.5 + 0.5;
         float foam = smoothstep(-0.45, -0.08, d) * (1.0 - smoothstep(-0.08, 0.05, d)) * (0.45 + 0.55 * band);
         foam += smoothstep(-0.1, -0.01, d) * 0.6;
@@ -196,6 +204,7 @@ export function createEnv(THREE, scene, { quality, shore, peaks = [] }) {
   // returns true while a month change is still easing in, so the page keeps drawing
   env.update = (t, dt = 0.016, animate = true) => {
     const easing = step(Math.min(1, dt * 1.8));
+    stepWind(Math.min(1, dt * 1.2));
     if (!animate) return easing;
     seaMat.uniforms.uTime.value = t;
     for (const g of clouds.children) {
@@ -214,6 +223,17 @@ export function createEnv(THREE, scene, { quality, shore, peaks = [] }) {
       rainGeo.attributes.position.needsUpdate = true;
     }
     return easing;
+  };
+  // the monsoon on the sea (illustrative): wind direction (toward) and how choppy the windward side is
+  const windGoal = { x: 0, z: 0, chop: 0 };
+  env.setWind = (x, z, chop, instant = false) => {
+    Object.assign(windGoal, { x, z, chop });
+    if (instant) { seaMat.uniforms.uWind.value.set(x, z); seaMat.uniforms.uChop.value = chop; }
+  };
+  const stepWind = (k) => {
+    const w = seaMat.uniforms.uWind.value;
+    w.x += (windGoal.x - w.x) * k; w.y += (windGoal.z - w.y) * k;
+    seaMat.uniforms.uChop.value += (windGoal.chop - seaMat.uniforms.uChop.value) * k;
   };
   env.sun = sun;
   return env;

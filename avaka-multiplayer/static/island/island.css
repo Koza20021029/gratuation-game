@@ -297,3 +297,24 @@ ol, ul { padding: 0; list-style: none; }
 /* while the first-visit guide is open, "back to the game" stays reachable above it; the other tools wait */
 #app:has(.intro:not([hidden])) .tools { z-index: 31; }
 #app:has(.intro:not([hidden])) .tools .tool:not(#back) { pointer-events: none; opacity: 0.45; }
+
+/* ---- v12: weather, the Kuroshio and sea life ---- */
+.list.sealist { grid-template-columns: repeat(2, 1fr); }
+.list.sealist .place i { font-size: 1rem; color: #2f6a8a; }
+.pin.k-sea i { background: #2f6a8a; color: #fbf8f0; font-family: var(--sans-tc); font-size: 0.8rem; }
+.pin.k-wind { pointer-events: none; padding: 2px 10px; font-family: var(--sans-tc); font-weight: 700; font-size: 0.74rem; letter-spacing: 0.08em; background: rgba(47, 106, 138, 0.86); color: #fbf8f0; border: 0; border-radius: 6px; box-shadow: none; }
+.pin.k-wind::after { display: none; }
+.pin.k-wind:empty { display: none; }
+.card .tao-name small { font-size: 0.74rem; color: var(--fibre-dim); }
+.month-info .mwx { margin-top: 3px; font-size: 0.8rem; }
+.month-info .mwx span { display: inline-block; margin-right: 8px; padding: 0 7px; border-radius: 999px; background: rgba(47, 106, 138, 0.13); color: #2f6a8a; font-size: 0.72rem; }
+.month-info .mty { margin-top: 2px; font-size: 0.74rem; color: #8a4a12; }
+.month-info .mwxsrc { margin-top: 2px; font-size: 0.66rem; color: var(--fibre-dim); opacity: 0.8; }
+.has-card .month-info .mwx, .has-card .month-info .mty, .has-card .month-info .mwxsrc { display: none; }
+@media (max-width: 800px) {
+  .month-info .mwx { font-size: 0.7rem; line-height: 1.45; }
+  .month-info .mwx span { display: none; }
+  .month-info .mty { font-size: 0.68rem; }
+  .month-info .mwxsrc { display: none; }
+  .pin.k-wind { font-size: 0.66rem; padding: 1px 7px; }
+}

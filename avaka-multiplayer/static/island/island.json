@@ -194,6 +194,83 @@
     "zh": "楊政賢（2014：123、131–132），轉引自專題文本",
     "en": "Yang (2014: 123, 131–132), as cited in the thesis"
    }
+  },
+  {
+   "id": "cwa_mean",
+   "title": {
+    "zh": "交通部中央氣象署〈氣候月平均〉，蘭嶼站 1991–2020 年月平均（氣溫、降水量、降水日數、風速），查閱 2026-11-02",
+    "en": "Central Weather Administration, \"Monthly climate means\", Lanyu station 1991–2020 (temperature, precipitation, rain days, wind speed), accessed 2026-11-02"
+   },
+   "url": "https://www.cwa.gov.tw/V8/C/C/Statistics/monthlymean.html"
+  },
+  {
+   "id": "cwa_typhoon",
+   "title": {
+    "zh": "交通部中央氣象署〈颱風百問〉第 38 題與表 7（1911–2025 年侵臺颱風各月個數），查閱 2026-11-02",
+    "en": "Central Weather Administration, \"100 questions on typhoons\", Q38 and Table 7 (typhoons striking Taiwan by month, 1911–2025), accessed 2026-11-02"
+   },
+   "url": "https://www.cwa.gov.tw/V8/C/K/Encyclopedia/typhoon/index.html"
+  },
+  {
+   "id": "hu2014",
+   "title": {
+    "zh": "胡正恆（2014：47）〈讓艱困海岸成為練習場？：雅美／達悟族森林農藝裡的傳統生態知識〉，《南島研究學報》5(2)：43–68",
+    "en": "Hu Cheng-Heng (2014: 47), \"Making Stressful Coasts into Austronesian Practice Ground?: Traditional Ecological Knowledge in Yami/Tao Agro-Forests\", Journal of Austronesian Studies 5(2): 43–68"
+   },
+   "url": "http://dx.doi.org/10.29884/JAS.201412_5(2).0002"
+  },
+  {
+   "id": "dong2016sea",
+   "title": {
+    "zh": "董恩慈、汪明輝（2016：147、152、153）〈達悟族傳統生態知識與其永續性價值〉，《地理研究》65",
+    "en": "Syaman Lamuran (Dong En-Ci) and Tibusungu 'e Vayayana (Wang Ming-Huey) (2016: 147, 152, 153), \"Tao Traditional Ecological Knowledge and Its Value for Sustainability\", Journal of Geographical Research 65"
+   },
+   "url": "https://doi.org/10.6234/JGR.2016.65.06"
+  },
+  {
+   "id": "yang2014sea",
+   "title": {
+    "zh": "楊政賢（2014：126–127）〈從交換到交易─蘭嶼飛魚物資處置「人魚網絡」的當代變遷〉，《台灣原住民族研究學報》4(3)：123–144",
+    "en": "Yang Cheng-Hsien (2014: 126–127), \"From Exchange to Trade: Contemporary Changes in the Flying-fish Network of Lanyu\", Journal of the Taiwan Indigenous Studies Association 4(3): 123–144"
+   }
+  },
+  {
+   "id": "yang2025sea",
+   "title": {
+    "zh": "楊政賢（2025：96）〈島嶼生態、生計經濟與歲時祭儀：蘭嶼 Minganangana（慰勞祭）與 Mapasamorang So Piyavean（收穫祭）的民俗變遷〉，《民俗曲藝》227：89–135",
+    "en": "Yang Cheng-Hsien (2025: 96), \"Island Ecology, Livelihood and Seasonal Rites: Changes in Minganangana and Mapasamorang So Piyavean on Lanyu\", Journal of Chinese Ritual, Theatre and Folklore 227: 89–135"
+   }
+  },
+  {
+   "id": "hu2007",
+   "title": {
+    "zh": "胡正恆、余光弘（2007：209–210、215）〈蘭嶼的地名：蘭嶼地誌資料庫介紹〉，《民族學研究所資料彙編》20：185–244",
+    "en": "Hu Cheng-Heng and Yu Kuang-Hong (2007: 209–210, 215), \"Place Names of Lanyu: The Lanyu Gazetteer Database\", Institute of Ethnology Data Series 20: 185–244"
+   }
+  },
+  {
+   "id": "oca_turtle",
+   "title": {
+    "zh": "海洋委員會海洋保育署〈海洋公民科學家－綠蠵龜〉（2019-10-08 發布），查閱 2026-11-02",
+    "en": "Ocean Conservation Administration, \"Ocean citizen science: green turtle\" (published 2019-10-08), accessed 2026-11-02"
+   },
+   "url": "https://www.oca.gov.tw/ch/home.jsp?id=204&parentpath=0%2C6%2C190&mcustomize=ocamaritime_view.jsp&dataserno=201910080028"
+  },
+  {
+   "id": "oca_atlas",
+   "title": {
+    "zh": "海洋委員會海洋保育署〈臺灣百種海洋動物圖鑑－綠蠵龜〉（2021-03-17 發布），查閱 2026-11-02",
+    "en": "Ocean Conservation Administration, \"100 marine animals of Taiwan: green turtle\" (published 2021-03-17), accessed 2026-11-02"
+   },
+   "url": "https://www.oca.gov.tw/ch/home.jsp?id=289&parentpath=0%2C5&mcustomize=ocamaritime_view.jsp&dataserno=202103170001"
+  },
+  {
+   "id": "oca_2025",
+   "title": {
+    "zh": "海洋委員會海洋保育署新聞快訊〈南沙太平島成海龜寶寶出生熱點！綠蠵龜卵窩數創新紀錄〉（2025-02-17），查閱 2026-11-02",
+    "en": "Ocean Conservation Administration press release on green turtle nesting (2025-02-17), accessed 2026-11-02"
+   },
+   "url": "https://www.oca.gov.tw/ch/home.jsp?id=14&parentpath=0%2C2&mcustomize=news_view.jsp&dataserno=202502140001"
   }
  ],
  "places": [
@@ -1023,6 +1100,16 @@
      "ev": [
       "lit"
      ]
+    },
+    {
+     "zh": "年平均風速 7.5 m/s，在中央氣象署有月平均資料的測站中排第二，僅次於東吉島（7.8 m/s）。（1991–2020 年平均）",
+     "en": "Its average wind speed is 7.5 m/s, second among the stations with CWA monthly means, after Dongji Island (7.8 m/s). (1991–2020 averages)",
+     "src": [
+      "cwa_mean"
+     ],
+     "ev": [
+      "lit"
+     ]
     }
    ]
   },
@@ -1371,6 +1458,34 @@
   "monthMoved": {
    "zh": "地圖切到 3 月：曬魚架上才有飛魚。",
    "en": "The map has moved to month 3, when fish hang on the racks."
+  },
+  "sea": {
+   "zh": "海與季節",
+   "en": "Sea and seasons"
+  },
+  "weatherLine": {
+   "zh": "這個月的天氣",
+   "en": "Weather this month"
+  },
+  "weatherFmt": {
+   "zh": "國曆 {n} 月平均 {t}°C・雨量 {rain} mm（約 {days} 天有雨）・風速 {ws} m/s・{wind}",
+   "en": "Average for calendar month {n}: {t}°C, {rain} mm of rain (about {days} rainy days), wind {ws} m/s, {wind}"
+  },
+  "typhoon": {
+   "zh": "7–9 月是臺灣的颱風季，8 月最多（臺灣 1911–2025 年統計，不是蘭嶼專屬）",
+   "en": "July–September is Taiwan's typhoon season, August the busiest (Taiwan-wide 1911–2025 statistics, not Lanyu alone)"
+  },
+  "weatherSrc": {
+   "zh": "出處：氣象署蘭嶼站 1991–2020 月平均；風向：胡正恆 2014、董恩慈與汪明輝 2016。天色、雨、霧仍是示意。",
+   "en": "Sources: CWA Lanyu station 1991–2020 means; wind: Hu 2014, Dong & Wang 2016. Sky, rain and mist remain illustrative."
+  },
+  "seaWhen": {
+   "zh": "出現月份",
+   "en": "When"
+  },
+  "seaKind": {
+   "zh": "海與季節",
+   "en": "Sea and seasons"
   }
  },
  "months": [
@@ -2244,5 +2359,426 @@
    "zh": "市場在地圖上的位置是示意，不代表實際的攤位。",
    "en": "The market's position on the map is illustrative, not real stalls."
   }
+ },
+ "sea": [
+  {
+   "id": "kuroshio",
+   "number": "≋",
+   "name": {
+    "zh": "黑潮",
+    "en": "The Kuroshio"
+   },
+   "short": {
+    "zh": "由南往北流經蘭嶼附近海域（示意）",
+    "en": "Flows north past Lanyu (illustrative)"
+   },
+   "when": {
+    "zh": "全年",
+    "en": "All year"
+   },
+   "months": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+   ],
+   "body": [
+    {
+     "zh": "黑潮每年固定流經蘭嶼附近海域，帶來飛魚、鬼頭刀等大量迴游性魚類。",
+     "en": "Every year the Kuroshio flows past the waters around Lanyu, bringing large numbers of migratory fish such as flying fish and mahi-mahi.",
+     "src": [
+      "yang2025sea",
+      "yang2014sea"
+     ],
+     "ev": [
+      "lit"
+     ]
+    },
+    {
+     "zh": "黑潮由南往北流；飛魚群隨著黑潮從南方湧來，後面跟著鬼頭刀等大型魚類追逐。",
+     "en": "The current runs from south to north; schools of flying fish come up with it from the south, chased by large fish such as mahi-mahi.",
+     "src": [
+      "yang2014sea"
+     ],
+     "ev": [
+      "lit"
+     ]
+    },
+    {
+     "zh": "飛魚每年隨著季節順著黑潮來到蘭嶼，達悟人的歲時祭儀與曆法就是以飛魚為主軸。",
+     "en": "Each season the flying fish follow the Kuroshio to Lanyu, and the Tao calendar of rites is built around them.",
+     "src": [
+      "dong2016sea"
+     ],
+     "ev": [
+      "lit"
+     ]
+    },
+    {
+     "zh": "海面上的流線只是示意，位置、寬度與流速都不是實測。",
+     "en": "The lines on the sea are illustrative; their position, width and speed are not measurements.",
+     "src": []
+    }
+   ]
+  },
+  {
+   "id": "flyingfish",
+   "number": "⌒",
+   "name": {
+    "zh": "飛魚",
+    "en": "Flying fish"
+   },
+   "tao": "alibangbang",
+   "taoNote": {
+    "zh": "也寫作 libangbang",
+    "en": "also spelled libangbang"
+   },
+   "short": {
+    "zh": "約國曆 3–6 月成群出現",
+    "en": "Arrive in schools, about March to June"
+   },
+   "when": {
+    "zh": "約國曆 3–6 月",
+    "en": "About March–June"
+   },
+   "months": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "body": [
+    {
+     "zh": "主要的飛魚汛期約在國曆 3 到 6 月，是達悟人一年中最忙碌的時期。",
+     "en": "The main flying-fish run is roughly March to June, the busiest time of the Tao year.",
+     "src": [
+      "yang2014sea"
+     ],
+     "ev": [
+      "lit"
+     ]
+    },
+    {
+     "zh": "依島頁的夜曆，第 2 個月 Kapowan 舉行招飛魚祭、開始夜間火把捕魚，捕飛魚到第 6 個月 Apiya vehan 結束。",
+     "en": "In the night calendar on this page, the flying-fish rite and torch fishing begin in month 2 (Kapowan), and fishing for them ends in month 6 (Apiya vehan).",
+     "src": [
+      "nightcal"
+     ],
+     "ev": [
+      "oral"
+     ]
+    },
+    {
+     "zh": "族語 alibangbang 見於胡正恆、余光弘的地名詞解；董恩慈、汪明輝依原民會書寫系統拼作 libangbang。",
+     "en": "The Tao word alibangbang appears in Hu and Yu's place-name glosses; Dong and Wang, using the official Tao orthography, write libangbang.",
+     "src": [
+      "hu2007",
+      "dong2016sea"
+     ],
+     "ev": [
+      "lit"
+     ]
+    },
+    {
+     "zh": "畫面中的飛魚在夜曆第 2 到 6 個月出現，第 2 個月較少，是示意動畫。",
+     "en": "On the map the flying fish appear in months 2 to 6, fewer in month 2; the animation is illustrative.",
+     "src": []
+    }
+   ]
+  },
+  {
+   "id": "mahimahi",
+   "number": "➶",
+   "name": {
+    "zh": "鬼頭刀",
+    "en": "Mahi-mahi"
+   },
+   "tao": "arayo",
+   "short": {
+    "zh": "追著飛魚群而來，Papataw 起白天釣",
+    "en": "Follow the flying fish; caught by day from Papataw"
+   },
+   "when": {
+    "zh": "夜曆第 4 個月起",
+    "en": "From month 4"
+   },
+   "months": [
+    4,
+    5,
+    6
+   ],
+   "body": [
+    {
+     "zh": "飛魚季的第三個月（達悟曆 papatao）起約兩個月，族人用單人或兩三人的小船在白天繩釣，主要釣 arayo（鬼頭刀）、vahoyo（鮪魚）等大型迴游魚。",
+     "en": "From the third month of the flying-fish season (papatao) for about two months, men line-fish by day from one- to three-person boats, mainly for arayo (mahi-mahi) and vahoyo (tuna).",
+     "src": [
+      "dong2016sea"
+     ],
+     "ev": [
+      "lit"
+     ]
+    },
+    {
+     "zh": "飛魚群隨黑潮湧現時，後頭跟著鬼頭刀等大型魚類追逐。",
+     "en": "When the flying fish come up with the Kuroshio, mahi-mahi and other large fish follow behind them.",
+     "src": [
+      "yang2014sea"
+     ],
+     "ev": [
+      "lit"
+     ]
+    },
+    {
+     "zh": "夜曆第 4 個月 Papataw：小船招魚祭，開始白天釣鬼頭刀。",
+     "en": "Month 4, Papataw: the small-boat rite, and daytime fishing for mahi-mahi begins.",
+     "src": [
+      "nightcal"
+     ],
+     "ev": [
+      "oral"
+     ]
+    },
+    {
+     "zh": "族語 arayo 也見於胡正恆、余光弘整理的多個地名詞解。",
+     "en": "The word arayo also appears in several place-name glosses collected by Hu and Yu.",
+     "src": [
+      "hu2007"
+     ],
+     "ev": [
+      "lit"
+     ]
+    },
+    {
+     "zh": "畫面中的鬼頭刀在夜曆第 4 到 6 個月出現：董恩慈、汪明輝寫 Papataw 起約兩個月，耆老口述則說一直釣到捕飛魚結束。示意動畫。",
+     "en": "On the map mahi-mahi appear in months 4 to 6: Dong and Wang give about two months from Papataw, while an elder says the fishing goes on until the flying-fish season ends. The animation is illustrative.",
+     "src": []
+    }
+   ]
+  },
+  {
+   "id": "turtle",
+   "number": "◍",
+   "name": {
+    "zh": "綠蠵龜",
+    "en": "Green turtle"
+   },
+   "short": {
+    "zh": "八代灣一帶有產卵紀錄，高峰 6–9 月",
+    "en": "Nesting records around Badai Bay, peak June–September"
+   },
+   "when": {
+    "zh": "高峰 6–9 月",
+    "en": "Peak June–September"
+   },
+   "months": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+   ],
+   "peak": [
+    6,
+    7,
+    8,
+    9
+   ],
+   "body": [
+    {
+     "zh": "蘭嶼是臺灣主要的海龜產卵地之一。",
+     "en": "Lanyu is one of Taiwan's main sea-turtle nesting grounds.",
+     "src": [
+      "oca_atlas",
+      "oca_turtle"
+     ],
+     "ev": [
+      "lit"
+     ]
+    },
+    {
+     "zh": "島上 6 個沙灘中，八代灣、小八代灣、東清灣有產卵紀錄，大多集中在小八代灣；幾乎整年都有紀錄，高峰在 6 到 9 月。",
+     "en": "Of the island's six beaches, nests have been recorded at Badai Bay, Little Badai Bay and Dongqing Bay, mostly at Little Badai Bay; there are records almost all year, peaking June to September.",
+     "src": [
+      "oca_turtle"
+     ],
+     "ev": [
+      "lit"
+     ]
+    },
+    {
+     "zh": "海保署估計蘭嶼每年約有 10 到 20 隻母龜上岸產卵，總卵窩數不到 40 窩。",
+     "en": "The Ocean Conservation Administration estimates that 10 to 20 females nest on Lanyu each year, with fewer than 40 nests in all.",
+     "src": [
+      "oca_2025"
+     ],
+     "ev": [
+      "lit"
+     ]
+    },
+    {
+     "zh": "畫面中的海龜畫在八代灣一帶（小八代灣的精確位置還沒核對）；6–9 月會看到上岸的海龜，其他月份偶爾在海裡出現。示意動畫。",
+     "en": "On the map the turtles are drawn around Badai Bay (the exact spot of Little Badai Bay is not yet checked); in June–September one comes ashore, in other months one is sometimes seen at sea. The animation is illustrative.",
+     "src": []
+    }
+   ]
+  }
+ ],
+ "weather": {
+  "months": [
+   {
+    "n": 1,
+    "t": 18.6,
+    "rain": 249.9,
+    "days": 22.0,
+    "ws": 7.3,
+    "wind": "ne",
+    "typhoon": false
+   },
+   {
+    "n": 2,
+    "t": 19.0,
+    "rain": 190.7,
+    "days": 18.4,
+    "ws": 7.1,
+    "wind": "ne",
+    "typhoon": false
+   },
+   {
+    "n": 3,
+    "t": 20.4,
+    "rain": 135.2,
+    "days": 16.1,
+    "ws": 6.8,
+    "wind": "ne",
+    "typhoon": false
+   },
+   {
+    "n": 4,
+    "t": 22.3,
+    "rain": 142.9,
+    "days": 14.3,
+    "ws": 6.9,
+    "wind": "sw",
+    "typhoon": false
+   },
+   {
+    "n": 5,
+    "t": 24.3,
+    "rain": 247.2,
+    "days": 15.1,
+    "ws": 7.2,
+    "wind": "sw",
+    "typhoon": false
+   },
+   {
+    "n": 6,
+    "t": 25.9,
+    "rain": 245.8,
+    "days": 13.7,
+    "ws": 8.7,
+    "wind": "sw",
+    "typhoon": false
+   },
+   {
+    "n": 7,
+    "t": 26.2,
+    "rain": 252.0,
+    "days": 14.9,
+    "ws": 7.9,
+    "wind": "sw",
+    "typhoon": true
+   },
+   {
+    "n": 8,
+    "t": 26.0,
+    "rain": 328.8,
+    "days": 16.9,
+    "ws": 7.5,
+    "wind": "sw",
+    "typhoon": true
+   },
+   {
+    "n": 9,
+    "t": 25.3,
+    "rain": 361.1,
+    "days": 18.4,
+    "ws": 6.8,
+    "wind": "shift",
+    "typhoon": true
+   },
+   {
+    "n": 10,
+    "t": 23.7,
+    "rain": 299.0,
+    "days": 18.2,
+    "ws": 7.7,
+    "wind": "ne",
+    "typhoon": false
+   },
+   {
+    "n": 11,
+    "t": 21.9,
+    "rain": 282.6,
+    "days": 19.9,
+    "ws": 7.8,
+    "wind": "ne",
+    "typhoon": false
+   },
+   {
+    "n": 12,
+    "t": 19.5,
+    "rain": 243.5,
+    "days": 21.7,
+    "ws": 7.7,
+    "wind": "ne",
+    "typhoon": false
+   }
+  ],
+  "wind": {
+   "ne": {
+    "zh": "東北季風",
+    "en": "NE monsoon"
+   },
+   "sw": {
+    "zh": "西南季風",
+    "en": "SW monsoon"
+   },
+   "shift": {
+    "zh": "季風轉換（兩篇文獻月份不同）",
+    "en": "Monsoon turning (the two sources differ on the months)"
+   }
+  },
+  "windNote": {
+   "ne": {
+    "zh": "東北季風（示意）",
+    "en": "NE monsoon (illustrative)"
+   },
+   "sw": {
+    "zh": "西南季風（示意）",
+    "en": "SW monsoon (illustrative)"
+   }
+  },
+  "src": [
+   "cwa_mean",
+   "hu2014",
+   "dong2016sea",
+   "cwa_typhoon"
+  ]
  }
 }
