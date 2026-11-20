@@ -28,6 +28,7 @@ export function createSea(THREE, scene, { shape, W, quality }) {
   const at = (x, y, z, sx = 1, sy = 1, sz = 1, rx = 0, ry = 0, rz = 0) =>
     M4().compose(new THREE.Vector3(x, y, z), new THREE.Quaternion().setFromEuler(new THREE.Euler(rx, ry, rz)), new THREE.Vector3(sx, sy, sz));
   const ball = new THREE.SphereGeometry(1, 10, 8), cone = new THREE.ConeGeometry(1, 1, 8);
+  const small = new THREE.SphereGeometry(1, 6, 4);   // eyes and flippers: every creature instance carries every shape, so the tiny parts are kept plain
   const wing = (() => { const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute([0, 0, 0, -0.5, 0, 1, 0.35, 0, 0.8, 0, 0, 0, 0.35, 0, 0.8, -0.5, 0, 1], 3)); return g; })();
   const mat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.55, metalness: 0, flatShading: true });
   const rnd = W.mulberry(77);
@@ -86,8 +87,8 @@ export function createSea(THREE, scene, { shape, W, quality }) {
     [cone, 0x3f6a95, at(-0.2, 0, 0, 0.05, 0.1, 0.02, 0, 0, Math.PI / 2)],
     [wing, 0xa6d4e8, at(0.04, 0.03, 0.03, 0.22, 1, 0.22)],
     [wing, 0xa6d4e8, at(0.04, 0.03, -0.03, 0.22, 1, -0.22)],
-    [ball, 0x1b2a1f, at(0.13, 0.02, 0.04, 0.018, 0.018, 0.018)],
-    [ball, 0x1b2a1f, at(0.13, 0.02, -0.04, 0.018, 0.018, 0.018)],
+    [small, 0x1b2a1f, at(0.13, 0.02, 0.04, 0.018, 0.018, 0.018)],
+    [small, 0x1b2a1f, at(0.13, 0.02, -0.04, 0.018, 0.018, 0.018)],
   ].map(([g, c, m]) => [g, c, S(1.25).multiply(m)])), FISH);
   // mahi-mahi: blunt head, gold body, green back and fins
   const mahiGeo = tag(merge(THREE, [
@@ -96,8 +97,8 @@ export function createSea(THREE, scene, { shape, W, quality }) {
     [ball, 0xd8b83a, at(0.2, 0.03, 0, 0.1, 0.1, 0.07)],
     [cone, 0x2f7a68, at(0.02, 0.11, 0, 0.16, 0.08, 0.015, 0, 0, Math.PI)],
     [cone, 0x2f7a68, at(-0.33, 0, 0, 0.08, 0.16, 0.02, 0, 0, Math.PI / 2)],
-    [ball, 0x1b2a1f, at(0.26, 0.05, 0.05, 0.022, 0.022, 0.022)],
-    [ball, 0x1b2a1f, at(0.26, 0.05, -0.05, 0.022, 0.022, 0.022)],
+    [small, 0x1b2a1f, at(0.26, 0.05, 0.05, 0.022, 0.022, 0.022)],
+    [small, 0x1b2a1f, at(0.26, 0.05, -0.05, 0.022, 0.022, 0.022)],
   ].map(([g, c, m]) => [g, c, S(1.3).multiply(m)])), MAHI);
   // green turtle: domed shell, cream belly, four flippers
   const turtleGeo = tag(merge(THREE, [
@@ -105,12 +106,12 @@ export function createSea(THREE, scene, { shape, W, quality }) {
     [ball, 0x8a9d4e, at(0, 0.075, 0, 0.12, 0.035, 0.095)],
     [ball, 0xe2d6a2, at(0, -0.005, 0, 0.18, 0.03, 0.14)],
     [ball, 0x93a85c, at(0.22, 0.04, 0, 0.065, 0.055, 0.055)],
-    [ball, 0x1b2a1f, at(0.26, 0.06, 0.035, 0.012, 0.012, 0.012)],
-    [ball, 0x1b2a1f, at(0.26, 0.06, -0.035, 0.012, 0.012, 0.012)],
-    [ball, 0x93a85c, at(0.09, 0.0, 0.17, 0.09, 0.015, 0.05, 0, -0.5, 0)],
-    [ball, 0x93a85c, at(0.09, 0.0, -0.17, 0.09, 0.015, 0.05, 0, 0.5, 0)],
-    [ball, 0x93a85c, at(-0.15, 0.0, 0.1, 0.05, 0.012, 0.03, 0, 0.4, 0)],
-    [ball, 0x93a85c, at(-0.15, 0.0, -0.1, 0.05, 0.012, 0.03, 0, -0.4, 0)],
+    [small, 0x1b2a1f, at(0.26, 0.06, 0.035, 0.012, 0.012, 0.012)],
+    [small, 0x1b2a1f, at(0.26, 0.06, -0.035, 0.012, 0.012, 0.012)],
+    [small, 0x93a85c, at(0.09, 0.0, 0.17, 0.09, 0.015, 0.05, 0, -0.5, 0)],
+    [small, 0x93a85c, at(0.09, 0.0, -0.17, 0.09, 0.015, 0.05, 0, 0.5, 0)],
+    [small, 0x93a85c, at(-0.15, 0.0, 0.1, 0.05, 0.012, 0.03, 0, 0.4, 0)],
+    [small, 0x93a85c, at(-0.15, 0.0, -0.1, 0.05, 0.012, 0.03, 0, -0.4, 0)],
   ].map(([g, c, m]) => [g, c, S(1.0).multiply(m)])), TURTLE);
   // monsoon chevron, lying flat on the sea and pointing downwind
   const chev = (() => { const s = new THREE.Shape(); s.moveTo(-0.5, 0.45); s.lineTo(0.15, 0); s.lineTo(-0.5, -0.45); s.lineTo(-0.25, 0); s.closePath(); return new THREE.ShapeGeometry(s); })();

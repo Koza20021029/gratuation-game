@@ -1,13 +1,13 @@
 // What stands on the island: Avaka, trees, the plank boat, the workshop, the shop, village houses and the step scenes.
 // All of it is symbolic and built from simple shapes; none of it is a measured drawing.
-import { mulberry } from './world.js?v=20261023_51';
+import { mulberry } from './world.js';   // no version here: the import map in index.html adds it
 let THREE_Group, THREE_Object3D;
 export function useThree(THREE) { THREE_Group = THREE.Group; THREE_Object3D = THREE.Object3D; }
 
 // ---------- leafy plants (Avaka, palms, pandanus, tree ferns) ----------
 // One leaf: long and narrow, rising from the stem and drooping at the tip, folded slightly along the midrib.
-function leafGeometry(THREE) {
-  const seg = 10, pos = [], idx = [];
+function leafGeometry(THREE, seg = 10) {
+  const pos = [], idx = [];
   for (let i = 0; i <= seg; i++) {
     const t = i / seg;
     const y = 0.62 * t - 0.82 * t * t;
@@ -87,11 +87,14 @@ export function createLeaves(THREE, kit) {
           transformed.x += sin(uTime * 1.3 + ph * 1.7) * 0.04 * position.z * position.z;
         #endif`);
     };
-    const mesh = new THREE.InstancedMesh(leafGeometry(THREE), mat, leaves.length);
+    // 40 triangles a leaf up close (24 on phones), 12 from afar: thousands of leaves are on screen in the overview
+    const mesh = new THREE.InstancedMesh(leafGeometry(THREE, kit.lite ? 6 : 10), mat, leaves.length);
     leaves.forEach((l, i) => { mesh.setMatrixAt(i, l.m); mesh.setColorAt(i, l.c); });
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
-    scene.add(mesh);
+    const far = new THREE.InstancedMesh(leafGeometry(THREE, 3), mat, leaves.length);
+    far.instanceMatrix = mesh.instanceMatrix; far.instanceColor = mesh.instanceColor;
+    far.visible = false;
+    for (const m of [mesh, far]) { m.castShadow = true; m.receiveShadow = true; scene.add(m); }
+    kit.lod.push({ near: mesh, far });
     return mesh;
   }
   return { avaka, palm, pandanus, treeFern, build, count: () => leaves.length };
@@ -126,12 +129,22 @@ export function rock(kit, x, y, z, s, rnd) {
 // Both ends sweep up high. The paint follows the literature in a generic way (sinan Sakayan 2012):
 // red, white and black, a boat eye (mata no tatala) near each end, human figures (taotao) and a triangle border.
 // It is an illustration, not any family's boat.
-export function boatTexture(THREE) {
+// k: drawn at k times the resolution (the hero boat on the workshop beach uses 2), with faint wood grain
+export function boatTexture(THREE, k = 1) {
   const W = 1024, H = 512, c = document.createElement('canvas');
-  c.width = W; c.height = H;
+  c.width = W * k; c.height = H * k;
   const g = c.getContext('2d');
+  g.scale(k, k);
   const RED = '#b3342a', BLACK = '#211e1c', WHITE = '#f3efe5';
   g.fillStyle = WHITE; g.fillRect(0, 0, W, H);
+  if (k > 1) {
+    // the grain of the planks, running bow to stern, and a few worn patches where hands and feet go
+    for (let i = 0; i < 260; i++) {
+      const y = (i * 97.13) % H, x = (i * 211.7) % W, len = 60 + (i * 37) % 180;
+      g.strokeStyle = `rgba(150,128,100,${0.05 + (i % 5) * 0.015})`; g.lineWidth = 0.7;
+      g.beginPath(); g.moveTo(x, y); g.bezierCurveTo(x + len * 0.3, y + 1.5, x + len * 0.7, y - 1.5, x + len, y); g.stroke();
+    }
+  }
   // plank joins
   g.strokeStyle = 'rgba(120,110,95,0.55)'; g.lineWidth = 2;
   for (const y of [0.24, 0.36, 0.64, 0.76]) { g.beginPath(); g.moveTo(0, y * H); g.lineTo(W, y * H); g.stroke(); }
@@ -187,8 +200,8 @@ export function boatTexture(THREE) {
   tex.anisotropy = 8;
   return tex;
 }
-export function boatGeometry(THREE) {
-  const nu = 40, nv = 18, pos = [], uv = [], idx = [];
+export function boatGeometry(THREE, nu = 40, nv = 18) {
+  const pos = [], uv = [], idx = [];
   for (let i = 0; i <= nu; i++) {
     const u = -1 + (2 * i) / nu, a = Math.abs(u);
     const half = 0.2 * Math.pow(Math.max(0, 1 - a * a), 0.55) + 0.006;
@@ -225,6 +238,50 @@ export function boat(THREE, scene, geo, x, y, z, rot, len) {
   boats.push(m);
   return m;
 }
+// ---------- the hero boat: the one on the workshop beach, drawn in full ----------
+// The same hull and the same generic paint as every other boat (sinan Sakayan 2012), at a higher resolution and
+// with what a close look needs: an unpainted inside, a rail along each gunwale, three thwarts, the bow and stern
+// posts, two paddles laid against it and the logs it rests on. Its own meshes, so it is drawn sharper than the
+// instanced fleet; it is still only an illustration, not any family's boat.
+function sheerPoints(THREE, side) {
+  const pts = [];
+  for (let i = 0; i <= 48; i++) {
+    const u = -1 + (2 * i) / 48, a = Math.abs(u);
+    const half = 0.2 * Math.pow(Math.max(0, 1 - a * a), 0.55) + 0.006;
+    pts.push(new THREE.Vector3(u * (1 + 0.04 * Math.pow(a, 3)), 0.17 + 0.66 * Math.pow(a, 3.6), side * half));
+  }
+  return pts;
+}
+export function heroBoat(THREE, scene, x, y, z, rot, len) {
+  const g = new THREE.Group();
+  g.position.set(x, y, z); g.rotation.y = rot; g.scale.setScalar(len / 2);
+  const paint = new THREE.MeshStandardMaterial({ map: boatTexture(THREE, 2), side: THREE.DoubleSide, roughness: 0.62 });
+  // the inside of the hull is bare, darker wood
+  paint.onBeforeCompile = (sh) => {
+    sh.fragmentShader = sh.fragmentShader.replace('#include <map_fragment>', `#include <map_fragment>
+      if (!gl_FrontFacing) diffuseColor.rgb = vec3(0.47, 0.37, 0.27);`);
+  };
+  paint.customProgramCacheKey = () => 'avaka-hero-hull';
+  const wood = new THREE.MeshStandardMaterial({ color: 0x9a7a52, roughness: 0.8 }), dark = new THREE.MeshStandardMaterial({ color: 0x2a2623, roughness: 0.7 });
+  const add = (geo, mat, px = 0, py = 0, pz = 0, rx = 0, ry = 0, rz = 0) => {
+    const m = new THREE.Mesh(geo, mat); m.position.set(px, py, pz); m.rotation.set(rx, ry, rz);
+    m.castShadow = true; m.receiveShadow = true; g.add(m); return m;
+  };
+  add(boatGeometry(THREE, 96, 32), paint);
+  for (const side of [-1, 1]) add(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(sheerPoints(THREE, side)), 64, 0.012, 6, false), dark);
+  for (const tx of [-0.38, 0, 0.38]) add(new THREE.BoxGeometry(0.035, 0.014, 0.38), wood, tx, 0.15, 0);
+  for (const s of [-1, 1]) add(new THREE.CylinderGeometry(0.008, 0.016, 0.2, 6), dark, s * 1.03, 0.92, 0, 0, 0, -s * 0.25);   // bow and stern posts
+  // two paddles leaning on the seaward side, and the logs the boat is rolled on
+  for (const [px, tilt] of [[-0.28, 0.12], [0.18, -0.1]]) {
+    const p = new THREE.Group(); p.position.set(px, 0.0, 0.3); p.rotation.set(-0.95, 0, tilt); g.add(p);
+    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.42, 6), wood); shaft.position.y = 0.21; shaft.castShadow = true; p.add(shaft);
+    const blade = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.16, 0.008), wood); blade.position.y = 0.47; blade.castShadow = true; p.add(blade);
+  }
+  for (const lx of [-0.5, 0.45]) add(new THREE.CylinderGeometry(0.03, 0.03, 0.56, 8), wood, lx, -0.02, 0, Math.PI / 2, 0, 0);
+  scene.add(g);
+  return g;
+}
+
 const PARTS = { thwart: [[-0.35, 0.15, 0, 0], [0, 0.15, 0, 0], [0.35, 0.15, 0, 0]], prow: [[-1.03, 0.9, 0, 0.25], [1.03, 0.9, 0, -0.25]] };
 let boatMeshes = null;
 export function buildBoats(THREE, scene, geo) {
@@ -376,7 +433,7 @@ export function person(kit, x, y, z, rot, pose, rnd) {
 export function chibi(crowd, { body = 0x8fbf6a, skin = 0xb07a56, pack = true } = {}) {
   const g = new THREE_Group();
   const legs = [-1, 1].map((s) => { const p = new THREE_Object3D(); p.position.set(s * 0.011, 0.036, 0); g.add(p); crowd.slot(p, 'cyl', 0x4a4f5a, [0, -0.018, 0], [0.017, 0.036, 0.017]); return p; });
-  crowd.slot(g, 'sphere', body, [0, 0.062, 0], [0.05, 0.056, 0.04]);
+  const torso = crowd.slot(g, 'sphere', body, [0, 0.062, 0], [0.05, 0.056, 0.04]);
   const head = new THREE_Object3D(); head.position.y = 0.111; g.add(head);
   crowd.slot(head, 'sphere', skin, [0, 0, 0], [0.058, 0.054, 0.054]);
   crowd.slot(head, 'cap', 0x2a211c, [0, 0.004, -0.004], [0.062, 0.058, 0.06], [-0.35, 0, 0]);
@@ -386,8 +443,9 @@ export function chibi(crowd, { body = 0x8fbf6a, skin = 0xb07a56, pack = true } =
   }
   const arms = [-1, 1].map((s) => { const p = new THREE_Object3D(); p.position.set(s * 0.03, 0.082, 0.004); p.rotation.z = s * 0.25; g.add(p); crowd.slot(p, 'cyl', skin, [0, -0.017, 0], [0.013, 0.034, 0.013]); return p; });
   if (pack) crowd.slot(g, 'box', 0xd2a45c, [0, 0.066, -0.026], [0.036, 0.04, 0.018]);
+  crowd.shade(g, 0.11);
   crowd.track(g);
-  return { g, legs, arms, head };
+  return { g, legs, arms, head, torso };
 }
 
 // ---------- things that move: vehicles and goats ----------
@@ -414,6 +472,7 @@ export function vehicle(crowd, kind, rnd) {
     crowd.slot(g, 'sphere', CLOTH[Math.floor(rnd() * CLOTH.length)], [0, 0.075, -0.01], [0.04, 0.045, 0.035]);
     crowd.slot(g, 'sphere', [0xe8826a, 0xf3efe6, 0x7fb6d8][Math.floor(rnd() * 3)], [0, 0.118, -0.006], [0.045, 0.045, 0.045]);
   }
+  crowd.shade(g, kind === 'scooter' ? 0.1 : 0.2, kind === 'scooter' ? 0.2 : 0.3);
   g.scale.setScalar(1.0);
   crowd.track(g);
   return g;
@@ -430,6 +489,7 @@ export function goat(crowd, rnd) {
     crowd.slot(p, 'cyl', 0x2a2420, [0, -0.0175, 0], [0.01, 0.035, 0.01]);
     legs.push(p);
   }
+  crowd.shade(g, 0.1, 0.16);
   crowd.track(g);
   return { g, legs };
 }

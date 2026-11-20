@@ -21,6 +21,12 @@ ol, ul { padding: 0; list-style: none; }
 #stage { position: absolute; inset: 0; z-index: 0; }
 #stage canvas { display: block; width: 100%; height: 100%; touch-action: none; outline: none; }
 .labels { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+/* the lens (high setting): blur toward the top and bottom edges, a faint darkening at the corners; under the labels */
+.lens { position: absolute; inset: 0; pointer-events: none; z-index: 0; background: radial-gradient(125% 95% at 50% 46%, transparent 58%, rgba(27, 42, 31, 0.15) 100%); }
+.lens[hidden] { display: none; }
+.lens::before, .lens::after { content: ''; position: absolute; left: 0; right: 0; }
+.lens::before { top: 0; height: 19%; -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); -webkit-mask-image: linear-gradient(#000, transparent); mask-image: linear-gradient(#000, transparent); }
+.lens::after { bottom: 0; height: 23%; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); -webkit-mask-image: linear-gradient(transparent, #000); mask-image: linear-gradient(transparent, #000); }
 
 /* panels share one surface */
 .brand, .tools .tool, .side, .card, .hint { background: var(--panel); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(27, 42, 31, 0.08); box-shadow: 0 10px 28px rgba(60, 50, 30, 0.14); }
@@ -318,3 +324,18 @@ ol, ul { padding: 0; list-style: none; }
   .month-info .mwxsrc { display: none; }
   .pin.k-wind { font-size: 0.66rem; padding: 1px 7px; }
 }
+
+/* ── Embedded in the game screen (/island?embed=1): only the island and the three place names. The game
+   tells it which month it is and where the player stands; nothing here can be clicked. ── */
+html[data-embed] .brand, html[data-embed] .tools, html[data-embed] .calendar, html[data-embed] .side,
+html[data-embed] .card, html[data-embed] .hint, html[data-embed] .intro { display: none !important; }
+html[data-embed] .pin:not(.k-place):not(.k-guest) { display: none !important; }
+/* a player of the game room: name, and how many of the six steps are done */
+.pin.k-guest { pointer-events: none; display: inline-flex; flex-direction: column; align-items: center; gap: 0; padding: 2px 7px 3px; border-radius: 6px; font-family: var(--sans-tc); font-size: 0.68rem; line-height: 1.25; background: rgba(251, 248, 240, 0.94); box-shadow: 0 3px 8px rgba(0, 0, 0, 0.22); }
+.pin.k-guest b { font-weight: 700; }
+.pin.k-guest i { all: unset; font-style: normal; font-size: 0.42rem; letter-spacing: 0.12em; color: var(--rope); }
+.pin.k-guest.me { background: var(--leaf); color: #fbf8f0; }
+.pin.k-guest.me i { color: #fbf8f0; }
+.pin.k-guest::after { display: none; }
+html[data-embed], html[data-embed] body { pointer-events: none; overflow: hidden; }
+html[data-embed] .pin.k-place { font-size: 0.72rem; padding: 0.15rem 0.5rem 0.15rem 0.2rem; }

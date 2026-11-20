@@ -88,6 +88,78 @@ body.newui #avatar-screen :focus-visible { outline: 2px solid #b6e268; outline-o
 body.newui #avatar-screen .avatar-ctrl-group[style*="56,189,248"] { border-color: #7c5a30 !important; }
 body.newui #avatar-screen .avatar-ctrl-group[style*="56,189,248"] .avatar-ctrl-label { color: #d2a45c !important; }
 
+/* the 3D preview is fetched when the creator opens: this sits over the canvas while it loads (or if it fails) */
+#avatar-stage-note {
+    position: absolute; left: 0; right: 0; top: 38%; margin: 0 auto; width: fit-content; max-width: 86%;
+    padding: 0.5rem 0.9rem; border-radius: 6px; border: 1px solid #2e4737; background: rgba(12, 22, 16, 0.88);
+    color: #b9b196; font: 500 0.85rem/1.5 'Noto Sans TC', 'PingFang TC', sans-serif; text-align: center; pointer-events: none;
+}
+#avatar-stage-note[data-kind="failed"] { color: #efe6cf; border-color: #7c5a30; pointer-events: auto; cursor: pointer; }
+#avatar-stage-note[hidden], #avatar-enter-note[hidden] { display: none; }
+/* shown under the buttons when the server is slow to answer "confirm" */
+#avatar-enter-note {
+    margin: 0.9rem 0 0; padding: 0.6rem 0.8rem; border-left: 3px solid #d2a45c; background: rgba(210, 164, 92, 0.08);
+    color: #efe6cf !important; font-size: 0.88rem; line-height: 1.6; text-align: left;
+}
+#avatar-confirm-btn:disabled { opacity: 0.75; cursor: progress; transform: none; }
+
+/* The page's own language and music buttons. The lobby and the game have their own, so these are only
+   seen on the avatar creator (and with ?ui=old). */
+#lang-btn, #music-btn {
+    position: fixed; right: 16px; z-index: 9998; display: flex; align-items: center; justify-content: center;
+    background: rgba(19, 34, 26, 0.94); border: 1px solid #2e4737; color: #efe6cf;
+    font-family: 'Noto Sans TC', 'PingFang TC', sans-serif;
+    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+#lang-btn { top: 14px; padding: 0.42rem 0.85rem; border-radius: 6px; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.06em; }
+#music-btn { bottom: 16px; width: 44px; height: 44px; border-radius: 50%; }
+#lang-btn:hover, #music-btn:hover { border-color: #b6e268; color: #b6e268; }
+#music-btn.muted { color: #7f8a78; }
+#music-btn.muted::after { content: ''; position: absolute; width: 58%; height: 1.5px; background: currentColor; transform: rotate(-45deg); }
+#lang-btn:focus-visible, #music-btn:focus-visible { outline: 2px solid #b6e268; outline-offset: 3px; }
+
+/* While the island sweeps over the screen for a new month (game-ui.js, monthSweep), the cards that open
+   with the month wait behind it instead of covering it. */
+body.sweep-on .modal-overlay, body.sweep-on #event-choice-modal, body.sweep-on #quiz-modal, body.sweep-on #minigame-modal { visibility: hidden !important; }
+
+/* "Leave the game?" (built by app.js) */
+.leave-dialog {
+    position: fixed; inset: 0; z-index: 9900; display: flex; align-items: center; justify-content: center; padding: 1rem;
+    background: rgba(5, 10, 7, 0.8); font-family: 'Noto Sans TC', 'PingFang TC', sans-serif; animation: modal-fade-in 0.25s ease;
+}
+.leave-dialog-card {
+    width: 100%; max-width: 340px; padding: 1.6rem 1.5rem 1.4rem; text-align: left;
+    background: linear-gradient(180deg, #18281e, #0c1610 46%); border: 1px solid #2e4737; border-radius: 10px;
+    box-shadow: inset 0 1px 0 rgba(239, 230, 207, 0.09), 0 18px 30px -12px rgba(0, 0, 0, 0.55);
+}
+.leave-dialog-card h3 { margin: 0 0 0.6rem; font: 700 1.1rem/1.4 'Noto Serif TC', 'Songti TC', serif; letter-spacing: 0.04em; color: #efe6cf; }
+.leave-dialog-card p { margin: 0 0 1.3rem; font-size: 0.88rem; line-height: 1.6; color: #b9b196; }
+.leave-dialog-actions { display: flex; gap: 0.7rem; justify-content: flex-end; }
+.leave-dialog-actions button {
+    padding: 0.6rem 1.2rem; border-radius: 6px; font: 700 0.9rem/1 inherit; font-family: inherit; letter-spacing: 0.05em;
+    background: transparent; color: #efe6cf; border: 1px solid #4d6b58;
+    transition: background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.leave-dialog-actions button:hover { border-color: #efe6cf; background: rgba(239, 230, 207, 0.06); }
+.leave-dialog-actions #leave-confirm-btn { color: #e59a78; border-color: #e59a78; }
+.leave-dialog-actions #leave-confirm-btn:hover { background: rgba(229, 154, 120, 0.14); border-color: #f0ad8d; }
+.leave-dialog-actions button:focus-visible { outline: 2px solid #b6e268; outline-offset: 2px; }
+
+/* Narrow screens: leave a strip at the top for the language button so it never sits on the title, and
+   stack the creator: the character on top, the choices under it (they scroll with the page). */
+@media (max-width: 1080px) {
+    body.newui #avatar-screen.active { padding-top: 3.6rem; }
+}
+@media (max-width: 640px) {
+    body.newui #avatar-screen.active { padding: 3.6rem 0.75rem 5rem; }
+    body.newui #avatar-screen .lobby-card { flex-shrink: 0; }       /* the screen is a fixed-height column: let the card be as tall as its content and the screen scroll */
+    body.newui #avatar-screen .avatar-layout { flex-direction: column; align-items: stretch !important; gap: 1rem !important; }
+    body.newui #avatar-screen .avatar-stage { flex: none !important; }
+    body.newui #avatar-canvas { aspect-ratio: auto !important; height: 38vh; min-height: 220px; max-height: 340px; }
+    body.newui #avatar-controls { flex: none !important; max-height: none !important; overflow: visible !important; padding-right: 0 !important; }
+    body.newui #avatar-screen h2 { font-size: 1.25rem !important; }
+}
+
 /* ═════════════ Pop-ups and the year-end screen, in the same world ═════════════
    These are drawn by app.js with its own colour variables and a good deal of inline styling. The
    variables are re-pointed here, and the rest is overridden where the old look was written inline. */
@@ -198,3 +270,28 @@ body.newui #app > .screen > .glass [style*="color: #94a3b8"], body.newui #app > 
 body.newui #app > .screen > .glass [style*="rgba(56,189,248,0.2)"] { border-bottom-color: #2e4737 !important; }
 body.newui #app > .screen > .glass canvas { background: #0c1610 !important; border-color: #2e4737 !important; border-radius: 8px !important; }
 body.newui #app > .screen > .glass span[style*="border-radius:12px"] { border-radius: 4px !important; }
+
+/* ═════════════ The year-end screen: the year on the island, and the rope of knowledge (js/year-end.js) ═════════════ */
+body.newui .ye { text-align: left; margin: 0 0 2.2rem; display: grid; gap: 1.6rem; }
+body.newui .ye-title { font-family: 'Noto Serif TC', 'Songti TC', serif; font-size: 1.35rem; color: #efe6cf; letter-spacing: 0.06em; margin: 0; }
+body.newui .ye-block h2 { font-family: 'Noto Serif TC', 'Songti TC', serif; font-size: 1.05rem; font-weight: 700; color: #d2a45c; margin: 0 0 0.6rem; letter-spacing: 0.04em; }
+body.newui .ye-isle { position: relative; aspect-ratio: 16 / 9; border: 1px solid #2e4737; border-radius: 8px; overflow: hidden; background: #dfe7e2; }
+body.newui .ye-isle iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; pointer-events: none; }
+body.newui .ye-month { position: absolute; left: 0.8rem; top: 0.6rem; margin: 0; padding: 0.25rem 0.7rem; border-radius: 4px; background: rgba(12, 22, 16, 0.78); color: #efe6cf; font-size: 0.9rem; letter-spacing: 0.08em; }
+body.newui .ye-controls { display: flex; align-items: center; gap: 0.8rem; margin-top: 0.6rem; }
+body.newui .ye-btn { padding: 0.45rem 1rem; border-radius: 6px; border: 1px solid #4d6b58; background: transparent; color: #efe6cf; font: 700 0.85rem/1 'Noto Sans TC', 'PingFang TC', sans-serif; letter-spacing: 0.05em; cursor: pointer; }
+body.newui .ye-btn:hover { border-color: #b6e268; color: #b6e268; }
+body.newui .ye-btn:focus-visible { outline: 2px solid #b6e268; outline-offset: 2px; }
+body.newui .ye-bar { flex: 1; display: grid; grid-template-columns: repeat(12, 1fr); gap: 3px; }
+body.newui .ye-bar i { height: 5px; border-radius: 2px; background: #2e4737; transition: background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+body.newui .ye-bar i.on { background: #b6e268; }
+body.newui .ye-note, body.newui .ye-talk { color: #b9b196; font-size: 0.86rem; line-height: 1.65; margin: 0 0 0.6rem; }
+body.newui .ye-talk { color: #efe6cf; border-left: 3px solid #d2a45c; padding-left: 0.8rem; margin-top: 0.8rem; }
+body.newui .ye-rope-wrap { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 1rem; align-items: center; }
+body.newui .ye-rope { width: 100%; height: auto; display: block; }
+body.newui .ye-name { fill: #efe6cf; font: 700 13px 'Noto Sans TC', 'PingFang TC', sans-serif; }
+body.newui .ye-tally { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+body.newui .ye-tally li { display: grid; grid-template-columns: auto 1fr; gap: 0.1rem 0.6rem; padding: 0.5rem 0.7rem; border: 1px solid #2e4737; border-radius: 6px; font-size: 0.84rem; color: #b9b196; }
+body.newui .ye-tally b { color: #efe6cf; font-family: 'Noto Serif TC', 'Songti TC', serif; }
+body.newui .ye-tally li > span:last-child { grid-column: 1 / -1; }
+@media (max-width: 640px) { body.newui .ye-rope-wrap { grid-template-columns: minmax(0, 1fr); } }

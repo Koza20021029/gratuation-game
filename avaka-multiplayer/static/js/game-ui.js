@@ -131,12 +131,12 @@
     }
     return no('notIn');
   }
-  window.AvakaGameUI = { can };
+  window.AvakaGameUI = { can, debug: () => ({ ac, amb, musicOn, isleFrame }) };   // debug(): for tests
 
   // ───────── words ─────────
   const TEXT = {
     zh: {
-      month: n => `第 ${n} 個月`, monthUnit: '個月', lore: '這個月的夜曆', kb: '知識庫', quit: '退出', lang: 'EN', music: '背景音樂', theme: '白天／夜晚', sfx: '音效',
+      month: n => `第 ${n} 個月`, monthUnit: '個月', lore: '這個月的夜曆', kb: '知識庫', quit: '退出', lang: 'EN', music: '音樂與環境音', theme: '白天／夜晚', sfx: '音效',
       mission: '本月小組任務', missionDone: '已達成，全員 +1 分', forest: '森林', role: { elder: '耆老', youth: '文化復振青年', middle: '中生代' },
       steps: ['砍伐剝皮', '摩擦軟化', '劃痕撕絲', '曝曬乾燥', '理線撚繩', '填縫完工'], stepWhere: ['山林', '山林', '山林', '灘頭', '灘頭', '灘頭'],
       ap: 'AP', kp: 'KP', apName: '體力 AP', kpName: '技術 KP', mat: '材料', score: '得分', scoreWhy: '分數從哪裡來', badges: '徽章',
@@ -150,6 +150,7 @@
       social: '和人有關的事', askElder: '向耆老請益', askElderSub: kp => `得到 ${kp} KP，雙方各 +1 分`, askMiddle: '向中生代請益', askMiddleSub: '得到 2 KP，雙方各 +1 分',
       help: '幫忙長者', helpSub: s => `耆老回復 2 AP，你 +${s} 分`, helpMore: '耆老回復 2 AP；這個月的分數已經拿過', patrol: '巡山', patrolSub: '看過每一區的 Avaka；算作照顧林地，你 +1 分', tribe: '為部落的船出力', tribeSub: (a, b) => `全組一起造的船 ${a}/${b}；年底全員加分`, tribeBoat: '部落的船', tribeNote: '完工的人可以到灘頭出力', tribeDone: '完成了，年底全員 +3 分', tell: '講述', tellSub: kp => `身邊的人各得 ${kp} KP，你 +1 分`, teach: '遠程指導', teachSub: '對方得 1 KP，你 +1 分', translate: '科學轉譯', translateSub: '用掉 2 KP；成功 +4 分、+2 材料', translateDone: '用掉 2 KP；成功得 2 份材料，可以送人（完工後不加分）',
       nextStep: '下一步', log: '部落記事', chat: '聊天', chatEmpty: '還沒有人說話。', chatPh: '跟同組的人說…', send: '送出', film: '蘭嶼影像',
+      island: '島上現在的樣子', islandOpen: '看整座島', thereNext: s => `你的下一道工序在這裡：${s}`, thereCan: list => `到了可以做：${list}`, thereNone: '現在到這裡還沒有能做的事',
       why: {
         ap: n => `體力不夠，要 ${n} AP`, kp: n => `技術還不夠，要 KP ${n}`, mat: n => `材料不夠，要 ${n} 份`, here: '你已經在這裡', closed: '2 月封山，不能上山', goForest: '要先走到山林', goShore: '要先走到灘頭工作室', goShop: '要先走到商店',
         doneStep: '這道已經做完了', earlier: '要先做完前一道', wait: '剛做完一道，要等下個月', taboo: '10 月不能完工', feast: '9 月商店不能完工', three: '要先做完山林的三道工序', once: '這個月做過了',
@@ -158,7 +159,7 @@
       }
     },
     en: {
-      month: n => `Month ${n}`, monthUnit: 'month', lore: 'This month in the calendar', kb: 'Knowledge', quit: 'Leave', lang: '中文', music: 'Music', theme: 'Day / night', sfx: 'Sound',
+      month: n => `Month ${n}`, monthUnit: 'month', lore: 'This month in the calendar', kb: 'Knowledge', quit: 'Leave', lang: '中文', music: 'Music and ambience', theme: 'Day / night', sfx: 'Sound',
       mission: 'Group mission', missionDone: 'done, +1 for everyone', forest: 'Forest', role: { elder: 'Elder', youth: 'Youth', middle: 'Middle' },
       steps: ['Chop', 'Rub', 'Strip', 'Dry', 'Twist', 'Caulk'], stepWhere: ['Forest', 'Forest', 'Forest', 'Shore', 'Shore', 'Shore'],
       ap: 'AP', kp: 'KP', apName: 'Stamina AP', kpName: 'Skill KP', mat: 'Material', score: 'Score', scoreWhy: 'Where the points came from', badges: 'Badges',
@@ -172,6 +173,7 @@
       social: 'With other people', askElder: 'Ask the Elder', askElderSub: kp => `+${kp} KP; +1 point each`, askMiddle: 'Ask the Middle Gen.', askMiddleSub: '+2 KP; +1 point each',
       help: 'Help the Elder', helpSub: s => `Elder recovers 2 AP; you +${s}`, helpMore: 'Elder recovers 2 AP; this month\'s point is already yours', patrol: 'Walk the hill', patrolSub: 'Check every Avaka plot; counts as tending, you +1', tribe: 'Work on the community boat', tribeSub: (a, b) => `The boat everyone builds ${a}/${b}; points for all at year end`, tribeBoat: 'Community boat', tribeNote: 'those who have finished can work on it at the Shore', tribeDone: 'finished: +3 for everyone at year end', tell: 'Tell stories', tellSub: kp => `+${kp} KP for those nearby; you +1`, teach: 'Guide from afar', teachSub: 'They gain 1 KP; you +1', translate: 'Scientific translation', translateSub: 'Uses 2 KP; success +4 points, +2 materials', translateDone: 'Uses 2 KP; success gives 2 materials to pass on (no points once finished)',
       nextStep: 'Next', log: 'Record', chat: 'Chat', chatEmpty: 'Nobody has said anything yet.', chatPh: 'Say something to your group…', send: 'Send', film: 'Lanyu on film',
+      island: 'The island right now', islandOpen: 'See the whole island', thereNext: s => `Your next step is here: ${s}`, thereCan: list => `There you can: ${list}`, thereNone: 'Nothing you can do there yet',
       why: {
         ap: n => `Not enough stamina (${n} AP needed)`, kp: n => `Not enough skill (KP ${n} needed)`, mat: n => `Not enough material (${n} needed)`, here: 'You are already here', closed: 'The forest is closed in Month 2', goForest: 'Walk to the Forest first', goShore: 'Walk to the Shore workshop first', goShop: 'Walk to the Store first',
         doneStep: 'Already done', earlier: 'Finish the step before it first', wait: 'A step was just done; wait for next month', taboo: 'No boat may be finished in Month 10', feast: 'The Store cannot finish boats in Month 9', three: 'Do the three forest steps first', once: 'Already done this month',
@@ -190,7 +192,10 @@
   const host = document.createElement('div');
   host.id = 'game2'; host.hidden = true;
   const root = host.attachShadow({ mode: 'open' });
-  root.innerHTML = '<link rel="stylesheet" href="css/game-ui.css?v=20261014_10"><div class="g" id="g"></div>';     // fixed markup, no user input
+  // fixed markup, no user input. The four parts are redrawn separately, so the island panel (#g-film) is never rebuilt.
+  root.innerHTML = '<link rel="stylesheet" href="css/game-ui.css?v=20261117_1"><div class="g" id="g"><div id="g-head"></div><div class="work">'
+    + '<aside class="panel col" id="g-mates"></aside><div id="g-centre"></div>'
+    + '<aside class="side"><div class="panel film" id="g-film"></div><div class="panel feed" id="g-feed"></div></aside></div></div>';
   document.body.appendChild(host);
   const $ = id => root.getElementById(id);
   const old = id => document.getElementById(id);
@@ -211,7 +216,7 @@
 
   // one action row: title, cost, what it gives or needs, and the reason when it cannot be done
   function act(a, title, sub, opts) {
-    const r = can(state, socket.id, a), o = opts || {};
+    const o = opts || {}, r = o.r || can(state, socket.id, a);
     // a cost is only worth showing when the action can be done, or when the cost itself is what stops it
     const cost = (r.ok || r.why === 'ap') ? (r.cost === 0 ? T().free : `${r.cost} ${T().ap}`) : '';
     const line = r.ok ? sub : reason(r);
@@ -220,17 +225,36 @@
       ${line ? `<span class="sub">${esc(line)}</span>` : ''}</button>`;
   }
 
+  // A place's list of actions. When two or more cannot be done for the same reason, they are named on one
+  // quiet line and the reason is said once, instead of once per row.
+  function group(defs) {
+    const rows = defs.map(([a, title, sub, o]) => ({ a, title, sub, o, r: can(state, socket.id, a) }));
+    const same = {};
+    rows.forEach(x => { if (!x.r.ok) (same[reason(x.r)] = same[reason(x.r)] || []).push(x); });
+    const said = new Set();
+    return rows.map(x => {
+      const why = x.r.ok ? '' : reason(x.r);
+      if (x.r.ok || !why || same[why].length < 2) return act(x.a, x.title, x.sub, Object.assign({}, x.o, { r: x.r }));
+      if (said.has(why)) return '';
+      said.add(why);
+      return `<div class="later"><span class="names">${same[why].map(y => esc(y.title)).join('、')}</span><span class="sub">${esc(why)}</span></div>`;
+    }).join('');
+  }
+
   // what changed between two states, so the screen can show it happening and not just the result
   function changes(a, b) {
     const x = a && a.players && a.players[socket.id], y = b && b.players && b.players[socket.id];
     if (!x || !y || a.room_code !== b.room_code || !a.started) return { at: 0 };
     return { at: Date.now(), month: b.month !== a.month ? a.month : 0, tied: y.progress > x.progress ? y.progress - 1 : -1, from: x.progress,
-      ap: x.ap, kp: y.kp !== x.kp, mat: y.materials !== x.materials, score: y.score !== x.score, up: y.score > x.score, moved: y.location !== x.location };
+      ap: x.ap, kp: y.kp !== x.kp, mat: y.materials !== x.materials, score: y.score !== x.score, up: y.score > x.score, moved: y.location !== x.location,
+      d: { ap: y.ap - x.ap, kp: y.kp - x.kp, mat: y.materials - x.materials, score: y.score - x.score } };
   }
 
   function render() {
     if (!state || !state.players[socket.id]) return;
     const live = Date.now() - fx.at < 900, bump = k => (live && fx[k] ? ' class="bump"' : '');
+    // "+2" or "−3" rising beside a number that just changed
+    const delta = k => (live && fx.d && fx.d[k] ? `<em class="delta ${fx.d[k] > 0 ? 'up' : 'down'}" aria-hidden="true">${fx.d[k] > 0 ? '+' : '−'}${Math.abs(fx.d[k])}</em>` : '');
     const t = T(), me = state.players[socket.id], month = state.month, L = lang();
     const players = Object.values(state.players), others = players.filter(p => p.id !== me.id);
     const rule = (typeof GAME_RULES !== 'undefined' && GAME_RULES[month - 1]) || { name: '', desc_zh: '', desc_en: '' };
@@ -285,10 +309,10 @@
         <div class="who"><b>${esc(me.name)}</b><span>${esc(t.role[me.role])}</span></div>
         <ol class="rope${ropeFrom !== ropeTo ? ' grow' : ''}" style="--to:${ropeTo}%;--from:${ropeFrom}%">${rope}</ol>
         <div class="stats">
-          <div class="stat"><span class="label">${esc(t.apName)}</span><b${bump('apDiff')}>${me.ap}<small>/${me.max_ap}</small></b><div class="pips">${pips}</div></div>
-          <div class="stat"><span class="label">${esc(t.kpName)}</span><b${bump('kp')}>${me.kp}</b></div>
-          <div class="stat"><span class="label">${esc(t.mat)}</span><b${bump('mat')}>${me.materials}</b></div>
-          <details class="stat score"><summary><span class="label">${esc(t.score)}${badges ? ` · ${esc(t.badges)} ${badges}` : ''}</span><b${bump('score')}>${me.score}</b></summary><div class="why"><b>${esc(t.scoreWhy)}</b><br>${esc(why)}</div></details>
+          <div class="stat"><span class="label">${esc(t.apName)}</span><b${bump('apDiff')}>${me.ap}<small>/${me.max_ap}</small></b>${delta('ap')}<div class="pips">${pips}</div></div>
+          <div class="stat"><span class="label">${esc(t.kpName)}</span><b${bump('kp')}>${me.kp}</b>${delta('kp')}</div>
+          <div class="stat"><span class="label">${esc(t.mat)}</span><b${bump('mat')}>${me.materials}</b>${delta('mat')}</div>
+          <details class="stat score"><summary><span class="label">${esc(t.score)}${badges ? ` · ${esc(t.badges)} ${badges}` : ''}</span><b${bump('score')}>${me.score}</b>${delta('score')}</summary><div class="why"><b>${esc(t.scoreWhy)}</b><br>${esc(why)}</div></details>
         </div>
         <button type="button" class="go${me.ready ? ' waiting' : ''}" data-old="next-month-btn">${esc(me.ready ? t.unready : t.ready)}<small>${esc(t.readyCount(readyN, players.length))}</small></button>
         <div class="strip">${mission}${forest}${boat}${fin}</div>
@@ -311,20 +335,28 @@
 
     // the three places
     const chopN = (month === 1 || month === 7 ? 2 : 1) + ((me.plant_bonus_from || 0) > 0 && me.plant_bonus_from <= month ? 1 : 0);
-    const stepRow = (step, kp, mat) => act({ type: 'craft', step }, t.steps[STEPS.indexOf(step)],
-      step === 'chop' ? t.chopSub(chopN) : `${t.needLabel} ${t.needs(kp, mat)}`, { next: STEPS.indexOf(step) === nextIdx });
-    const placeActs = {
-      [FOREST]: act({ type: 'plant' }, t.plant, t.plantSub) + act({ type: 'patrol' }, t.patrol, t.patrolSub) + stepRow('chop') + stepRow('rub', 0, 1) + stepRow('strip', 0, 1),
-      [SHORE]: stepRow('dry', 0, 1) + stepRow('twine', 3, 1) + stepRow('caulk', 8, 1) + act({ type: 'tribe' }, t.tribe, t.tribeSub(tb, tg)),
-      [SHOP]: act({ type: 'buy', item: 'machine' }, t.machine, `${t.needLabel} ${t.needs(5, 2)}；${t.machineSub}`) + act({ type: 'buy', item: 'resin' }, t.resin, `${t.needLabel} ${t.needs(0, 2)}；${t.resinSub}`)
+    const stepDef = (step, kp, mat) => [{ type: 'craft', step }, t.steps[STEPS.indexOf(step)],
+      step === 'chop' ? t.chopSub(chopN) : `${t.needLabel} ${t.needs(kp, mat)}`, { next: STEPS.indexOf(step) === nextIdx }];
+    const placeDefs = {
+      [FOREST]: [[{ type: 'plant' }, t.plant, t.plantSub], [{ type: 'patrol' }, t.patrol, t.patrolSub], stepDef('chop'), stepDef('rub', 0, 1), stepDef('strip', 0, 1)],
+      [SHORE]: [stepDef('dry', 0, 1), stepDef('twine', 3, 1), stepDef('caulk', 8, 1), [{ type: 'tribe' }, t.tribe, t.tribeSub(tb, tg)]],
+      [SHOP]: [[{ type: 'buy', item: 'machine' }, t.machine, `${t.needLabel} ${t.needs(5, 2)}；${t.machineSub}`], [{ type: 'buy', item: 'resin' }, t.resin, `${t.needLabel} ${t.needs(0, 2)}；${t.resinSub}`]]
     };
-    const places = [FOREST, SHORE, SHOP].map(loc => {
+    // a place you are not at shows one row: walk there, and what would be open to you once you arrive
+    const awayRow = loc => {
+      const there = Object.assign({}, state, { players: Object.assign({}, state.players, { [me.id]: Object.assign({}, me, { location: loc }) }) });
+      const open = placeDefs[loc].filter(d => can(there, me.id, d[0]).ok), nextHere = open.find(d => d[3] && d[3].next);
+      const sub = nextHere ? t.thereNext(nextHere[1]) : open.length ? t.thereCan(open.map(d => d[1]).join('、')) : t.thereNone;
+      return act({ type: 'move', target: loc }, t.move, sub, { next: !!nextHere });
+    };
+    const LOCS = [FOREST, SHORE, SHOP];
+    const places = LOCS.map(loc => {
       const here = players.filter(p => p.location === loc);
       const mine = me.location === loc;
-      return `<section class="panel place${mine ? ' here' : ''}${mine && live && fx.moved ? ' arrived' : ''}">
+      return `<section class="panel place${mine ? ' here' : ' away'}${mine && live && fx.moved ? ' arrived' : ''}">
         <header>${ART[loc]}<h2>${esc(t.place[loc][0])}${mine ? `<span class="you">${esc(t.here)}</span>` : ''}</h2><p class="desc">${esc(t.place[loc][1])}</p>
           <div class="people">${here.length ? here.map(p => `<span class="tag${p.id === me.id ? ' me' : ''}">${esc(p.name)}</span>`).join('') : `<span class="none">${esc(t.nobody)}</span>`}</div></header>
-        <div class="acts-list">${mine ? '' : act({ type: 'move', target: loc }, t.move, '')}${placeActs[loc]}</div>
+        <div class="acts-list">${mine ? group(placeDefs[loc]) : awayRow(loc)}</div>
       </section>`;
     }).join('');
 
@@ -358,44 +390,123 @@
     // keep what the person is in the middle of: the chat they are typing, where they have scrolled to
     const typing = $('chat-in') ? $('chat-in').value : '', hadFocus = root.activeElement && root.activeElement.id === 'chat-in';
     const scrolled = host.scrollTop, sel = hadFocus ? $('chat-in').selectionStart : 0;
-    $('g').innerHTML = top + `
-      <div class="work">
-        <aside class="panel col"><h3>${esc(t.mates)}</h3><ul>${mates || `<li class="mate"><span class="role">${esc(t.nobody)}</span></li>`}</ul></aside>
-        <div>
-          <div class="places">${places}</div>
-          <section class="panel col social"><h3>${esc(t.social)}</h3><div class="acts-list">${social}</div></section>
-        </div>
-        <aside class="side">
-          <div class="panel film"><video id="film" muted playsinline preload="metadata" aria-label="${esc(t.film)}"></video></div>
-          <div class="panel feed">
-            <div class="tabs" role="tablist">
-              <button type="button" class="tab" role="tab" data-tab="log" aria-selected="${tab === 'log'}">${esc(t.log)}</button>
-              <button type="button" class="tab" role="tab" data-tab="chat" aria-selected="${tab === 'chat'}">${esc(t.chat)}${unread ? '<span class="dot"></span>' : ''}</button>
-            </div>
-            <ul class="pane log" ${tab === 'log' ? '' : 'hidden'}>${logHtml}</ul>
-            <div class="pane chat" ${tab === 'chat' ? '' : 'hidden'}>
-              ${chatLines.length ? `<ul id="chat-list">${chatLines.map(c => `<li><b>${esc(c.name)}</b>${esc(c.msg)}</li>`).join('')}</ul>` : `<p class="empty">${esc(t.chatEmpty)}</p>`}
-              <form class="say" id="say"><input id="chat-in" type="text" autocomplete="off" maxlength="200" placeholder="${esc(t.chatPh)}" aria-label="${esc(t.chat)}"><button type="submit">${esc(t.send)}</button></form>
-            </div>
-          </div>
-        </aside>
+    $('g-head').innerHTML = top;
+    $('g-mates').innerHTML = `<h3>${esc(t.mates)}</h3><ul>${mates || `<li class="mate"><span class="role">${esc(t.nobody)}</span></li>`}</ul>`;
+    $('g-centre').innerHTML = `<div class="places" data-here="${LOCS.indexOf(me.location)}">${places}</div>
+      <section class="panel col social"><h3>${esc(t.social)}</h3><div class="acts-list">${social}</div></section>`;
+    $('g-feed').innerHTML = `
+      <div class="tabs" role="tablist">
+        <button type="button" class="tab" role="tab" data-tab="log" aria-selected="${tab === 'log'}">${esc(t.log)}</button>
+        <button type="button" class="tab" role="tab" data-tab="chat" aria-selected="${tab === 'chat'}">${esc(t.chat)}${unread ? '<span class="dot"></span>' : ''}</button>
+      </div>
+      <ul class="pane log" ${tab === 'log' ? '' : 'hidden'}>${logHtml}</ul>
+      <div class="pane chat" ${tab === 'chat' ? '' : 'hidden'}>
+        ${chatLines.length ? `<ul id="chat-list">${chatLines.map(c => `<li><b>${esc(c.name)}</b>${esc(c.msg)}</li>`).join('')}</ul>` : `<p class="empty">${esc(t.chatEmpty)}</p>`}
+        <form class="say" id="say"><input id="chat-in" type="text" autocomplete="off" maxlength="200" placeholder="${esc(t.chatPh)}" aria-label="${esc(t.chat)}"><button type="submit">${esc(t.send)}</button></form>
       </div>`;
     host.scrollTop = scrolled;
     if ($('chat-in')) { $('chat-in').value = typing; if (hadFocus) { $('chat-in').focus(); try { $('chat-in').setSelectionRange(sel, sel); } catch (e) { /* not a text field any more */ } } }
     const list = $('chat-list'); if (list) list.scrollTop = list.scrollHeight;
-    mountFilm();
+    mountIsland();
   }
 
-  // ───────── the film keeps playing across redraws ─────────
+  // ───────── the island, live, beside the work ─────────
+  // The 3D island page runs here in its embed mode (/island?embed=1): no controls, low detail, a third of the
+  // frames. It is told the month and where this player stands, so the sky, the sea and the camera follow the
+  // game. It is created once, a moment after the screen is up, and never rebuilt by a redraw. Where WebGL is
+  // missing the two films play instead.
+  const ISLE = { [FOREST]: 'forest', [SHORE]: 'beach', [SHOP]: 'shop' };
+  const canGL = (() => { try { return !!document.createElement('canvas').getContext('webgl2'); } catch (e) { return false; } })();
+  let isleFrame = null, isleTimer = null, isleCap = null, isleLink = null, isleSeen = !('IntersectionObserver' in window);
+  let isleReady = false, sweeping = false;
+  // A device with very little memory only loads the island once its panel scrolls into view; everywhere else it
+  // is loaded soon after the game starts (and stays paused while out of sight), so the month sweep is ready.
+  const frugal = typeof navigator.deviceMemory === 'number' && navigator.deviceMemory <= 2;
+  // what the island is told: the month, where this player stands, and everyone in the room (place, role, steps done)
+  const isleState = () => {
+    const me = state && state.players[socket.id];
+    if (!me) return null;
+    const players = Object.values(state.players).map(p => ({ name: p.name, role: p.role, loc: ISLE[p.location] || '', progress: p.progress || 0, finished: !!p.finished, me: p.id === me.id }));
+    return { avaka: 'island', month: state.month, focus: ISLE[me.location] || '', lang: lang(), paused: !isleSeen && !sweeping, players };
+  };
+  // On a phone the panel is far down the page: the island is not loaded until it scrolls into view, and stops drawing when it scrolls away.
+  const isleWatch = isleSeen ? null : new IntersectionObserver(es => { isleSeen = es[es.length - 1].isIntersecting; if (isleSeen && visible) mountIsland(); else tellIsle(); });
+  const tellIsle = extra => { const m = isleState(); if (m && isleFrame && isleFrame.contentWindow) isleFrame.contentWindow.postMessage(Object.assign(m, extra), location.origin); };
+  addEventListener('message', e => { if (e.origin === location.origin && e.data && e.data.avaka === 'island-ready') { isleReady = true; tellIsle(); } });
+
+  // ───────── a new month: the island fills the screen for a moment ─────────
+  // The camera pulls back over the whole island while its sky turns to the new month, the month's name
+  // stands over it, then everything goes back and the month's card opens as before. It only happens when the
+  // island is already running on screen; otherwise (a phone that has not scrolled to it, reduced motion, no
+  // WebGL) the card simply opens at once.
+  const SWEEP_MS = 3000;
+  const calm = window.matchMedia ? matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
+  function monthSweep(month) {
+    const shell = $('isle');
+    if (!visible || !shell || !isleFrame || !isleReady || calm.matches || month < 2 || month > 12) return 0;
+    sweeping = true;      // the island draws through the sweep even if its panel is out of sight
+    const rule = (typeof GAME_RULES !== 'undefined' && GAME_RULES[month - 1]) || { name: '' };
+    const veil = document.createElement('div');
+    veil.className = 'cine'; veil.setAttribute('aria-hidden', 'true');
+    const n = document.createElement('p'), name = document.createElement('h2');
+    n.textContent = T().month(month); name.textContent = rule.name;
+    veil.append(n, name);
+    root.append(veil);
+    // Some months also open an event card, a quiz or a result at the same moment. Those are drawn over the
+    // whole page and would hide the sweep, so they wait (css/newui.css, body.sweep-on) until it is over.
+    document.body.classList.add('sweep-on');
+    setTimeout(() => document.body.classList.remove('sweep-on'), SWEEP_MS - 120);
+    setTimeout(() => { shell.classList.add('full'); veil.classList.add('open'); tellIsle({ sweep: SWEEP_MS - 900 }); sfx('month'); }, 280);
+    setTimeout(() => veil.classList.remove('open'), SWEEP_MS - 520);
+    setTimeout(() => { shell.classList.remove('full'); veil.classList.add('out'); sweeping = false; tellIsle(); }, SWEEP_MS - 220);
+    setTimeout(() => veil.remove(), SWEEP_MS + 160);
+    return SWEEP_MS;
+  }
+  // the game opens the month's card itself; it is held back until the sweep is over
+  if (typeof window.showMonthEventModal === 'function') {
+    const openCard = window.showMonthEventModal;
+    window.showMonthEventModal = function (month) {
+      const self = this, args = arguments, wait = monthSweep(month);
+      if (wait) setTimeout(() => openCard.apply(self, args), wait); else openCard.apply(self, args);
+    };
+  }
+  function mountIsland() {
+    const box = $('g-film'), m = isleState();
+    if (!box || !m) return;
+    if (!canGL) return mountFilm(box);
+    if (!isleCap) {
+      isleCap = document.createElement('p'); isleCap.className = 'isle-cap';
+      isleLink = document.createElement('a'); isleLink.className = 'isle-link'; isleLink.target = '_blank'; isleLink.rel = 'noopener';
+      const shell = document.createElement('div'); shell.className = 'isle'; shell.id = 'isle';
+      box.append(shell, isleCap);
+      if (isleWatch) isleWatch.observe(shell);
+    }
+    isleCap.textContent = T().island;
+    isleLink.textContent = T().islandOpen;
+    isleLink.href = `/island?month=${m.month}${m.focus ? '&focus=' + m.focus : ''}&lang=${m.lang}`;
+    isleCap.append(isleLink);
+    if (isleFrame) return tellIsle();
+    if (isleTimer || !visible || (frugal && !isleSeen)) return;
+    isleTimer = setTimeout(() => {
+      isleTimer = null;
+      const now = isleState();
+      if (!visible || !now || isleFrame || (frugal && !isleSeen)) return;
+      isleFrame = document.createElement('iframe');
+      isleFrame.title = T().island; isleFrame.tabIndex = -1; isleFrame.setAttribute('aria-hidden', 'true');
+      isleFrame.src = `/island?embed=1&month=${now.month}${now.focus ? '&focus=' + now.focus : ''}&lang=${now.lang}`;
+      $('isle').append(isleFrame);
+    }, 1200);
+  }
+  function dropIsland() { clearTimeout(isleTimer); isleTimer = null; isleReady = false; if (isleFrame) { isleFrame.remove(); isleFrame = null; } }
+
+  // the films, kept for devices without WebGL
   const filmEl = document.createElement('video');
   const CLIPS = ['assets/lanyu_1.mp4', 'assets/lanyu_2.mp4']; let clip = 0;
   filmEl.muted = true; filmEl.playsInline = true; filmEl.preload = 'metadata';
   filmEl.addEventListener('ended', () => { clip = (clip + 1) % CLIPS.length; filmEl.src = CLIPS[clip]; filmEl.play().catch(() => {}); });
-  function mountFilm() {
-    const slot = $('film');
-    if (!slot) return;
-    filmEl.setAttribute('aria-label', slot.getAttribute('aria-label'));
-    slot.replaceWith(filmEl);
+  function mountFilm(box) {
+    filmEl.setAttribute('aria-label', T().film);
+    if (filmEl.parentNode !== box) box.append(filmEl);
     if (!filmEl.src) filmEl.src = CLIPS[clip];
     if (visible && filmEl.paused) filmEl.play().catch(() => {});
   }
@@ -514,6 +625,54 @@
     musicOn = on;
     if (fileTrack) { if (on) fileTrack.play().catch(() => {}); else fileTrack.pause(); }
     else if (on) startSynth(); else stopSynth();
+    try { setAmbience(on); } catch (e) { /* no audio on this device */ }
+  }
+
+  // ───────── the island's own sounds, under the music ─────────
+  // Surf, wind, rain and insects, all shaped out of one loop of noise (nothing is downloaded). Which is heard
+  // follows the game: surf at the shore, insects in the forest, the monsoon in the windy months, rain in the
+  // rainy ones. A mood, like the island's twelve skies, not a weather record. It goes on and off with the music.
+  let amb = null;
+  const WIND = { 1: 1, 2: 0.9, 3: 0.6, 4: 0.3, 5: 0.3, 6: 0.35, 7: 0.35, 8: 0.35, 9: 0.15, 10: 0.6, 11: 0.9, 12: 1 }, RAIN = { 2: 0.25, 5: 1 };
+  function buildAmbience() {
+    const n = ac.sampleRate * 2, buf = ac.createBuffer(1, n, ac.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+    const out = ac.createGain(); out.gain.value = 0; out.connect(ac.destination);
+    const layer = (type, freq, q) => {
+      const src = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
+      src.buffer = buf; src.loop = true; f.type = type; f.frequency.value = freq; if (q) f.Q.value = q; g.gain.value = 0;
+      src.connect(f); f.connect(g); src.start();
+      return { f, g };
+    };
+    const sway = (param, rate, depth) => { const o = ac.createOscillator(), g = ac.createGain(); o.frequency.value = rate; g.gain.value = depth; o.connect(g); g.connect(param); o.start(); };
+    // surf and wind are kept low and dull so they sit beneath the tune (which lives around 300-1000 Hz) instead of across it
+    const surf = layer('lowpass', 340), wind = layer('bandpass', 300, 0.6), rain = layer('highpass', 3200);
+    const swell = ac.createGain(); swell.gain.value = 0.6; sway(swell.gain, 0.11, 0.4);        // waves come in and draw back
+    surf.g.connect(swell); swell.connect(out); wind.g.connect(out); rain.g.connect(out);
+    sway(wind.f.frequency, 0.07, 90);                                                          // gusts
+    const ins = ac.createGain(), tone = ac.createOscillator(), trem = ac.createGain();          // a thin, pulsing chirr
+    ins.gain.value = 0; tone.frequency.value = 4300; trem.gain.value = 0.5; sway(trem.gain, 19, 0.5);
+    tone.connect(trem); trem.connect(ins); ins.connect(out); tone.start();
+    return { out, surf: surf.g.gain, wind: wind.g.gain, rain: rain.g.gain, ins: ins.gain };
+  }
+  function tuneAmbience() {
+    const me = state && state.players[socket.id];
+    if (!amb || !me) return;
+    const m = state.month, loc = me.location, to = (p, v) => p.setTargetAtTime(v, ac.currentTime, 1.2);
+    to(amb.surf, loc === SHORE ? 0.5 : loc === SHOP ? 0.22 : 0.08);
+    to(amb.wind, (WIND[m] || 0.3) * (loc === FOREST ? 0.1 : 0.15));
+    to(amb.rain, (RAIN[m] || 0) * 0.09);
+    to(amb.ins, loc === FOREST && !RAIN[m] && m >= 4 && m <= 10 ? 0.012 : 0);
+  }
+  function setAmbience(on) {
+    if (!on && !amb) return;
+    audio();
+    if (!amb) amb = buildAmbience();
+    amb.out.gain.cancelScheduledValues(ac.currentTime); amb.out.gain.setValueAtTime(amb.out.gain.value, ac.currentTime);
+    // Kept well under the music (about a quarter of the first try, which drowned it): it should be noticed
+    // when you listen for it, not while you play.
+    amb.out.gain.linearRampToValueAtTime(on ? 0.2 : 0, ac.currentTime + (on ? 3 : 0.8));
+    if (on) tuneAmbience();
   }
 
   // ───────── pop-ups and the year-end screen: drop the pictographs the old look used as icons ─────────
@@ -556,7 +715,7 @@
       setMusic(lobbyWasPlaying);
       render();
     } else {
-      setMusic(false); filmEl.pause();
+      setMusic(false); filmEl.pause(); dropIsland(); document.body.classList.remove('sweep-on'); sweeping = false;
       if (lobbyWasPlaying && bgm && old('lobby') && old('lobby').classList.contains('active')) bgm.play().catch(() => {});
     }
   }
@@ -569,9 +728,10 @@
     if (fx.at) {
       const y = s.players[socket.id];
       fx.apDiff = y.ap !== fx.ap;
-      sfx(y.finished && !state.players[socket.id].finished ? 'fin' : fx.month ? 'month' : fx.tied >= 0 ? 'knot' : fx.up ? 'gain' : '');
+      sfx(y.finished && !state.players[socket.id].finished ? 'fin' : fx.month ? (root.querySelector('.cine') ? '' : 'month') : fx.tied >= 0 ? 'knot' : fx.up ? 'gain' : '');
     }
     state = s; follow();
+    if (musicOn) try { tuneAmbience(); } catch (e) { /* no audio on this device */ }
   });
   if (typeof window.applyLanguage === 'function') {
     const inner = window.applyLanguage;

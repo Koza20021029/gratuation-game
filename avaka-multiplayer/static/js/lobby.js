@@ -602,7 +602,8 @@ const LOBBY_HTML = `
   socket.on('rejoin_failed', showJoin);
 
   // ───────── the form hands over to the game's own lobby code ─────────
-  const formMsg = text => { $('form-msg').textContent = text || ''; };
+  let wakingShown = false;
+  const formMsg = text => { $('form-msg').textContent = text || ''; wakingShown = false; };
   function submit(kind) {
     const name = $('p-name').value.trim(), picked = root.querySelector('.role input:checked'), code = $('room').value.trim().toUpperCase();
     if (!name) { formMsg(T('needName')); $('p-name').focus(); return; }
@@ -623,6 +624,8 @@ const LOBBY_HTML = `
     $('hint').textContent = T(next === 'name' ? 'nextName' : next === 'role' ? 'nextRole' : 'nextRoom');
   }
   $('p-name').addEventListener('input', guide);
+  // the avatar creator's 3D code is not loaded with the page; start fetching it once someone begins typing
+  $('p-name').addEventListener('input', () => { if (typeof window.loadAvatarLibs === 'function') window.loadAvatarLibs().catch(() => {}); }, { once: true });
   root.querySelectorAll('.role input').forEach(r => r.addEventListener('change', guide));
   // coming back from a room (leaving, or the year-end button): say so, so the form is not a surprise
   document.addEventListener('click', e => {
@@ -641,6 +644,12 @@ const LOBBY_HTML = `
   $('island-link').addEventListener('click', e => { e.currentTarget.href = '/island?lang=' + (typeof currentLang !== 'undefined' && currentLang === 'en' ? 'en' : 'zh'); });
   // A refusal from the server (say, a room code that does not exist) usually lands while the avatar
   // creator is still up, so it is kept and shown as soon as this screen is back.
+  // The host sleeps when nobody has visited for a while and can take a minute to wake. If the connection
+  // is still not up a moment after the page is, say so, so the buttons do not seem dead.
+  const showWaking = () => { if (!socket.connected && !$('form-msg').textContent) { formMsg(T('waking')); wakingShown = true; } };
+  setTimeout(showWaking, 2500);
+  socket.on('disconnect', () => setTimeout(showWaking, 2500));
+  socket.on('connect', () => { if (wakingShown) formMsg(''); });
   let heldError = '';
   socket.on('error', err => { if (!err || !err.msg) return; heldError = err.msg; if (visible) { formMsg(heldError); heldError = ''; } });
   addEventListener('resize', () => { if (!$('waiting').hidden) sizeRope(); });
@@ -667,6 +676,7 @@ const LOBBY_HTML = `
       waitH2: '等大家到齊', waitSub: '把這四個字告訴同組的人。每個人是一股纖維，到齊了才撚得成繩。', copy: '複製', copied: '已複製',
       start: '開始這一年', back: '離開這個房間',
       meMark: '（你）', alone: '你先到了。把房間代碼給同組的人。', together: '{n} 個人到了，纖維開始撚在一起。',
+      waking: '島正在醒來。伺服器久沒人來會睡著，最多要等一分鐘；連上後這行字會消失。',
       needName: '請先輸入名字。', needRole: '請先選一個角色。', needCode: '房間代碼是 4 個字。',
       plant: '<b>Avaka</b>（馬尼拉麻，<i>Musa textilis</i>）是芭蕉科的植物，長得像香蕉樹，高約 2.5 到 8 公尺。它叫「麻」，用的其實是葉鞘的纖維，強韌又耐海水。原產菲律賓，蘭嶼是它自然分布的北界之一。',
       plantLabel: '這株馬尼拉麻是什麼', tMusic: '背景音樂', tSfx: '音效', tTheme: '白天／夜晚',
@@ -684,6 +694,7 @@ const LOBBY_HTML = `
       waitH2: 'Waiting for everyone', waitSub: 'Give these four characters to your group. Each player is one strand; the rope is twisted when all are here.', copy: 'Copy', copied: 'Copied',
       start: 'Begin the year', back: 'Leave this room',
       meMark: ' (you)', alone: 'You are the first one here. Share the room code with your group.', together: '{n} players are here. The strands begin to twist together.',
+      waking: 'The island is waking up. The server sleeps when nobody visits and can take up to a minute; this line goes away once it is connected.',
       needName: 'Please enter your name first.', needRole: 'Please choose a role first.', needCode: 'A room code has 4 characters.',
       plant: '<b>Avaka</b> (Manila hemp, <i>Musa textilis</i>) belongs to the banana family and looks like a banana plant, 2.5 to 8 m tall. It is called hemp, but the fibre comes from its leaf sheaths: strong, and it stands up to seawater. It is native to the Philippines, and Lanyu is one of the northern limits of its natural range.',
       plantLabel: 'What is this plant', tMusic: 'Music', tSfx: 'Sound effects', tTheme: 'Day / night',
@@ -779,37 +790,21 @@ const LOBBY_HTML = `
   if (!store.get('seen')) setTimeout(() => { if (visible && !$('join').hidden) { realMoves = 0; runDemo(); } }, 2600);
 
   // ───────── the avatar creator, dressed for the same world ─────────
-  // Its markup and behaviour stay in app.js; here the pictographs are dropped from its labels and the
-  // 3D stage is relit, each time the game rewrites or rebuilds them.
+  // Its markup and behaviour stay in app.js; here the pictographs are dropped from its labels each time
+  // the game rewrites them. (The 3D stage has these colours itself now, in avatar3d.js.)
   const noPicto = s => s.replace(/^[\s\p{Extended_Pictographic}️‍]+/u, '');
   function dressAvatar() {
     document.querySelectorAll('#avatar-screen h2, #avatar-screen p, #avatar-screen .avatar-ctrl-label, #avatar-confirm-btn').forEach(el => {
       if (!el.children.length && el.textContent !== noPicto(el.textContent)) el.textContent = noPicto(el.textContent);
     });
   }
-  function dressStage() {
-    if (typeof THREE === 'undefined' || typeof avatarScene === 'undefined' || !avatarScene) return;
-    avatarScene.background = new THREE.Color('#0c1610');
-    if (avatarScene.fog) avatarScene.fog.color.set('#0c1610');
-    avatarScene.children.forEach(o => {
-      if (o.isPointLight) o.color.set('#d2a45c');                              // the rim light: rope gold instead of screen blue
-      if (o.isMesh && o.geometry && o.geometry.type === 'CircleGeometry') o.material.color.set('#13221a');
-    });
-    if (typeof avatarParticles !== 'undefined' && avatarParticles) {           // drifting motes in fibre and leaf tones
-      const tones = ['#efe6cf', '#d2a45c', '#b6e268', '#d9cba6', '#8fae6a'].map(c => new THREE.Color(c));
-      const col = avatarParticles.geo.getAttribute('color');
-      for (let i = 0; i < col.count; i++) { const c = tones[i % tones.length]; col.setXYZ(i, c.r, c.g, c.b); }
-      col.needsUpdate = true;
-      avatarParticles.points.material.opacity = 0.5;
-    }
-  }
   if (typeof window.applyLanguage === 'function') {
     const gameApplyLanguage = window.applyLanguage;
     window.applyLanguage = function () { const r = gameApplyLanguage.apply(this, arguments); dressAvatar(); return r; };
   }
-  if (typeof window.initAvatar3D === 'function') {
-    const gameInitAvatar = window.initAvatar3D;
-    window.initAvatar3D = function () { const r = gameInitAvatar.apply(this, arguments); dressStage(); dressAvatar(); return r; };
+  if (typeof window.openAvatarCreator === 'function') {
+    const gameOpenAvatar = window.openAvatarCreator;
+    window.openAvatarCreator = function () { const r = gameOpenAvatar.apply(this, arguments); dressAvatar(); return r; };
   }
   dressAvatar();
 

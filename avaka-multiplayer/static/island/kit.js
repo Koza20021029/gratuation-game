@@ -41,6 +41,7 @@ export function createKit(THREE, { lite = false } = {}) {
     cone: new THREE.ConeGeometry(0.5, 1, 8),
     gable: gableGeometry(THREE),
     blob: blobGeometry(THREE, lite ? 0 : 1), // phones get 20-face canopies instead of 80
+    blobFar: lite ? null : blobGeometry(THREE, 0), // seen from afar, the 80-face canopies are swapped for these (see lod below)
     stone: new THREE.DodecahedronGeometry(0.5, 0),
     ball: new THREE.SphereGeometry(0.5, 10, 8),
   };
@@ -68,6 +69,8 @@ export function createKit(THREE, { lite = false } = {}) {
       at,
     };
   }
+  // pairs of { near, far }: the same instances drawn with a detailed or a plain shape; the page shows one of each pair
+  const lod = [];
   function build(scene, material) {
     const meshes = [];
     for (const [shape, items] of lists) {
@@ -77,6 +80,14 @@ export function createKit(THREE, { lite = false } = {}) {
       mesh.receiveShadow = true;
       scene.add(mesh);
       meshes.push(mesh);
+      if (shape === 'blob' && shapes.blobFar) {
+        const far = new THREE.InstancedMesh(shapes.blobFar, material, items.length);
+        far.instanceMatrix = mesh.instanceMatrix; far.instanceColor = mesh.instanceColor;   // one set of positions and colours for both
+        far.castShadow = true; far.receiveShadow = true; far.visible = false;
+        scene.add(far);
+        meshes.push(far);
+        lod.push({ near: mesh, far });
+      }
     }
     if (aoList.length) {
       const c = document.createElement('canvas'); c.width = c.height = 64;
@@ -93,7 +104,7 @@ export function createKit(THREE, { lite = false } = {}) {
     }
     return meshes;
   }
-  return { part, frame, build, shapes, ao };
+  return { part, frame, build, shapes, ao, lod, lite };
 }
 
 // Moving things (people, vehicles, goats, boats at sea) are built as ordinary Object3D trees so they can be animated,
@@ -102,6 +113,7 @@ export function createKit(THREE, { lite = false } = {}) {
 export function createCrowd(THREE, { lite = false } = {}) {
   const geos = {
     box: new THREE.BoxGeometry(1, 1, 1),
+    blob: new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2),   // a soft dark patch on the ground under a figure (see shade below)
     cyl: new THREE.CylinderGeometry(0.5, 0.5, 1, lite ? 6 : 8),
     sphere: new THREE.SphereGeometry(0.5, lite ? 10 : 14, lite ? 8 : 10),
     cap: new THREE.SphereGeometry(0.5, lite ? 10 : 14, 8, 0, Math.PI * 2, 0, Math.PI * 0.62),
@@ -120,15 +132,26 @@ export function createCrowd(THREE, { lite = false } = {}) {
     slots.get(type).push(o);
     return o;
   }
+  // Figures do not cast real shadows: the shadow map is only redrawn when the scene changes (see island.js),
+  // so a moving figure's shadow would stay behind. Each one carries a soft patch on the ground instead.
+  const shade = (root, w, d = w) => slot(root, 'blob', 0x3a3020, [0, 0.006, 0], [w, 1, d]);
+  const blobMat = () => {
+    const c = document.createElement('canvas'); c.width = c.height = 64;
+    const g = c.getContext('2d'), grad = g.createRadialGradient(32, 32, 2, 32, 32, 31);
+    grad.addColorStop(0, 'rgba(255,255,255,1)'); grad.addColorStop(0.5, 'rgba(255,255,255,0.55)'); grad.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = grad; g.fillRect(0, 0, 64, 64);
+    return new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c), transparent: true, opacity: 0.4, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -4, polygonOffsetUnits: -4 });
+  };
   const meshes = [];
   const hidden = new THREE.Matrix4().makeScale(0, 0, 0);
   function build(scene, material) {
     for (const [type, list] of slots) {
-      const m = new THREE.InstancedMesh(geos[type], material, list.length);
+      const m = new THREE.InstancedMesh(geos[type], type === 'blob' ? blobMat() : material, list.length);
       m.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
       list.forEach((o, i) => m.setColorAt(i, tmpC.set(o.userData.color)));
-      m.castShadow = true;
+      m.castShadow = false;
       m.receiveShadow = false;
+      if (type === 'blob') m.renderOrder = 2;
       m.frustumCulled = false; // instances move all over the island
       m.userData.list = list;
       scene.add(m);
@@ -152,5 +175,5 @@ export function createCrowd(THREE, { lite = false } = {}) {
       m.instanceMatrix.needsUpdate = true;
     }
   }
-  return { slot, build, sync, track, recolor, meshes };
+  return { slot, shade, build, sync, track, recolor, meshes };
 }

@@ -1,20 +1,24 @@
 // Sky, sun, sea, clouds, mist and rain. Decorative only: the twelve looks below are a visual mood for each
 // month of the game, not weather records. setMonth() eases everything toward a month's look.
-import { mulberry } from './world.js?v=20261023_51';
+import { mulberry } from './world.js';   // no version here: the import map in index.html adds it
 
 // per month: sky top, horizon, sun colour and strength, sky light strength, fog near/far, shallow/deep sea,
 // mist on the mountains (0–1), rain (0–1), cloud tint, how high the sun stands
+// Most months are softened toward the page's cream paper (see setMonth). Four are left bold, so a year on the
+// island has moments to remember: 2 the mountains shut in mist, 3 dusk with torches out at sea (the night
+// calendar on this page has torch fishing begin in month 2), 5 the plum rains, 10 a low amber sun and long shadows.
+// bold: 0 soft … 1 as written here. amb: the colour of the light from the sky. dusk: 0–1, stars and torches.
 const LOOKS = {
   1: { top: 0x8db7d4, hor: 0xe3e8e4, sun: 0xfff2e0, sunI: 2.4, hemi: 1.1, fog: [60, 240], shallow: 0x5cc0c2, deep: 0x2b759c, mist: 0.15, rain: 0, cloud: 0xffffff, sunY: 0.5 },
-  2: { top: 0x9aa8b2, hor: 0xd3d8d7, sun: 0xe8ecf0, sunI: 1.4, hemi: 1.0, fog: [32, 170], shallow: 0x6aa7a8, deep: 0x335f78, mist: 0.9, rain: 0.12, cloud: 0xd6dadb, sunY: 0.45 },
-  3: { top: 0x76b4e0, hor: 0xeef0e8, sun: 0xfff0d6, sunI: 2.7, hemi: 1.15, fog: [70, 260], shallow: 0x5cc6c6, deep: 0x2b7aa2, mist: 0.1, rain: 0, cloud: 0xffffff, sunY: 0.62 },
+  2: { top: 0x8e9ca6, hor: 0xcfd5d4, sun: 0xe8ecf0, sunI: 1.25, hemi: 1.0, fog: [22, 120], shallow: 0x6aa7a8, deep: 0x335f78, mist: 1.0, rain: 0.1, cloud: 0xd6dadb, sunY: 0.45, bold: 0.8, amb: 0xe6ecee },
+  3: { top: 0x2f4478, hor: 0xf2a877, sun: 0xffa868, sunI: 1.8, hemi: 0.95, fog: [70, 260], shallow: 0x58a4ae, deep: 0x346a98, mist: 0.1, rain: 0, cloud: 0xe9a58c, sunY: 0.14, bold: 1, amb: 0x93a6dc, dusk: 1 },
   4: { top: 0x72b2e2, hor: 0xeff0e6, sun: 0xfff0d6, sunI: 2.8, hemi: 1.15, fog: [70, 260], shallow: 0x58c8c6, deep: 0x2a7ca6, mist: 0.08, rain: 0, cloud: 0xffffff, sunY: 0.68 },
-  5: { top: 0x8c9aa0, hor: 0xc9d0cc, sun: 0xe2e8e6, sunI: 1.2, hemi: 0.95, fog: [28, 150], shallow: 0x6aa3a0, deep: 0x356272, mist: 0.55, rain: 0.95, cloud: 0xc9cfd0, sunY: 0.6 },
+  5: { top: 0x6c7a82, hor: 0xb3bcba, sun: 0xdfe6e6, sunI: 0.85, hemi: 0.85, fog: [22, 115], shallow: 0x5f9896, deep: 0x30586a, mist: 0.6, rain: 1, cloud: 0xaab2b4, sunY: 0.6, bold: 0.85, amb: 0xdfe7ea },
   6: { top: 0x6fb2e6, hor: 0xf1f0e6, sun: 0xfff4dc, sunI: 3.0, hemi: 1.2, fog: [80, 280], shallow: 0x52cac8, deep: 0x2580ac, mist: 0.05, rain: 0, cloud: 0xffffff, sunY: 0.75 },
   7: { top: 0x68acdf, hor: 0xf3efe2, sun: 0xfff2d4, sunI: 3.0, hemi: 1.2, fog: [80, 280], shallow: 0x50c8c6, deep: 0x2480ae, mist: 0.05, rain: 0, cloud: 0xffffff, sunY: 0.78 },
   8: { top: 0x7eb4d8, hor: 0xf3e6cf, sun: 0xffe2b8, sunI: 2.7, hemi: 1.1, fog: [70, 260], shallow: 0x58c2c0, deep: 0x2a789e, mist: 0.08, rain: 0, cloud: 0xfff8ee, sunY: 0.66 },
   9: { top: 0x86b2d2, hor: 0xf0e2cc, sun: 0xffdcb0, sunI: 2.5, hemi: 1.05, fog: [65, 250], shallow: 0x5cbcbc, deep: 0x2c7298, mist: 0.12, rain: 0, cloud: 0xfff4e6, sunY: 0.58 },
-  10: { top: 0x6c7c96, hor: 0xcbbfb4, sun: 0xffc89a, sunI: 1.5, hemi: 0.82, fog: [45, 190], shallow: 0x5c9ea4, deep: 0x2f5876, mist: 0.35, rain: 0.05, cloud: 0xd8d0cc, sunY: 0.36 },
+  10: { top: 0x55668c, hor: 0xdcb596, sun: 0xffb074, sunI: 2.2, hemi: 0.82, fog: [45, 190], shallow: 0x5a98a0, deep: 0x2b5274, mist: 0.3, rain: 0, cloud: 0xe2c2ae, sunY: 0.2, bold: 0.85, amb: 0xd9cfd6 },
   11: { top: 0x7fa6c8, hor: 0xeedac4, sun: 0xffd2a0, sunI: 2.2, hemi: 1.0, fog: [60, 240], shallow: 0x5cb6b8, deep: 0x2c6e92, mist: 0.2, rain: 0, cloud: 0xfff0e2, sunY: 0.44 },
   12: { top: 0x8aa9c4, hor: 0xf1d9bd, sun: 0xffcf9c, sunI: 2.0, hemi: 1.0, fog: [60, 240], shallow: 0x5cb2b6, deep: 0x2c6a8e, mist: 0.18, rain: 0, cloud: 0xfff0e0, sunY: 0.4 },
 };
@@ -23,21 +27,27 @@ export function createEnv(THREE, scene, { quality, shore, peaks = [] }) {
   const env = { uniforms: { uTime: { value: 0 } } };
   const C = (h) => new THREE.Color(h);
   // what is on screen now, and what it is easing toward
-  const cur = { top: C(0x8db7d4), hor: C(0xe3e8e4), sun: C(0xfff2e0), sunI: 2.4, hemi: 1.1, near: 60, far: 240, shallow: C(0x5cc6c6), deep: C(0x2b7aa2), mist: 0.1, rain: 0, cloud: C(0xffffff), sunY: 0.6 };
+  const cur = { top: C(0x8db7d4), hor: C(0xe3e8e4), sun: C(0xfff2e0), sunI: 2.4, hemi: 1.1, near: 60, far: 240, shallow: C(0x5cc6c6), deep: C(0x2b7aa2), mist: 0.1, rain: 0, cloud: C(0xffffff), sunY: 0.6, amb: C(0xfdf7ea), dusk: 0 };
   let goal = null;
 
   // sky dome: horizon haze to clear blue, with a soft glow around the sun
   const sunDir = new THREE.Vector3(-0.55, 0.62, 0.56).normalize();
   const skyMat = new THREE.ShaderMaterial({
     side: THREE.BackSide, depthWrite: false, fog: false,
-    uniforms: { uTop: { value: cur.top }, uHorizon: { value: cur.hor }, uSun: { value: sunDir }, uSunCol: { value: cur.sun } },
+    uniforms: { uTop: { value: cur.top }, uHorizon: { value: cur.hor }, uSun: { value: sunDir }, uSunCol: { value: cur.sun }, uDusk: { value: 0 } },
     vertexShader: 'varying vec3 vDir; void main(){ vDir = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
-    fragmentShader: `uniform vec3 uTop, uHorizon, uSun, uSunCol; varying vec3 vDir;
+    fragmentShader: `uniform vec3 uTop, uHorizon, uSun, uSunCol; uniform float uDusk; varying vec3 vDir;
       void main(){
         float h = clamp(vDir.y, 0.0, 1.0);
         vec3 col = mix(uHorizon, uTop, pow(smoothstep(0.0, 0.6, h), 0.8));
         float s = max(dot(vDir, uSun), 0.0);
         col += uSunCol * (pow(s, 24.0) * 0.35 + pow(s, 4.0) * 0.06);
+        if (uDusk > 0.01) {   // the first stars, high in the sky
+          vec2 g = vec2(atan(vDir.z, vDir.x) * 38.0, vDir.y * 60.0), c = floor(g);
+          float r = fract(sin(dot(c, vec2(127.1, 311.7))) * 43758.5453);
+          float star = step(0.955, r) * smoothstep(0.32, 0.0, length(fract(g) - 0.5));
+          col += vec3(1.0, 0.96, 0.88) * star * uDusk * smoothstep(0.18, 0.6, h) * 0.8;
+        }
         gl_FragColor = vec4(col, 1.0);
       }`,
   });
@@ -73,7 +83,9 @@ export function createEnv(THREE, scene, { quality, shore, peaks = [] }) {
       uTime: { value: 0 }, uShore: { value: null }, uBox: { value: new THREE.Vector4(shore.box.x, shore.box.z, shore.box.w, shore.box.d) },
       uShallow: { value: cur.shallow.clone() }, uDeep: { value: cur.deep.clone() }, uFar: { value: C(0x3d86a8) }, uRain: { value: 0 },
       uWind: { value: new THREE.Vector2(0, 0) }, uChop: { value: 0 },
+      uSunDir: { value: sunDir }, uSunCol: { value: cur.sun }, uSkyHor: { value: cur.hor }, uSkyTop: { value: cur.top },
     }]),
+    defines: quality === 'low' ? {} : { SHINE: 1 },   // the lowest setting keeps the plain sea
     vertexShader: `#include <fog_pars_vertex>
       varying vec3 vW;
       void main(){ vec4 w = modelMatrix * vec4(position, 1.0); vW = w.xyz; vec4 mvPosition = viewMatrix * w; gl_Position = projectionMatrix * mvPosition;
@@ -81,6 +93,16 @@ export function createEnv(THREE, scene, { quality, shore, peaks = [] }) {
       }`,
     fragmentShader: `#include <fog_pars_fragment>
       uniform float uTime, uRain, uChop; uniform vec2 uWind; uniform sampler2D uShore; uniform vec4 uBox; uniform vec3 uShallow, uDeep, uFar; varying vec3 vW;
+      uniform vec3 uSunDir, uSunCol, uSkyHor, uSkyTop;
+      // slope of a few crossing swells (their heights are never drawn; only how they tilt the surface matters)
+      vec2 swell(vec2 p, float t){
+        vec2 g = vec2(0.0);
+        g += 0.050 * vec2( 0.9,  0.4) * cos(p.x *  0.9 + p.y *  0.4 + t * 0.9);
+        g += 0.045 * vec2(-0.5,  1.1) * cos(p.x * -0.5 + p.y *  1.1 + t * 0.7);
+        g += 0.016 * vec2( 2.3, -1.7) * cos(p.x *  2.3 + p.y * -1.7 + t * 1.6);
+        g += 0.010 * vec2(-3.1, -2.2) * cos(p.x * -3.1 + p.y * -2.2 + t * 2.1);
+        return g;
+      }
       void main(){
         vec2 uv = (vW.xz - uBox.xy) / uBox.zw;
         float inBox = step(0.0, uv.x) * step(uv.x, 1.0) * step(0.0, uv.y) * step(uv.y, 1.0);
@@ -99,6 +121,31 @@ export function createEnv(THREE, scene, { quality, shore, peaks = [] }) {
         float patchy = sin(vW.x * 0.37 + uTime * 0.2 + sin(vW.z * 0.5) * 2.0) * sin(vW.z * 0.29 - uTime * 0.15 + sin(vW.x * 0.41) * 1.7) * 0.5 + 0.5;
         float caps = smoothstep(0.86, 0.98, w3) * smoothstep(0.45, 0.85, patchy) * clamp(1.0 - fwidth(w3) * 2.0, 0.0, 1.0);   // patchy, not a grid
         col = mix(col, vec3(0.97, 0.98, 0.95), caps * uChop * windward * smoothstep(6.0, 10.0, r) * (1.0 - smoothstep(26.0, 44.0, r)) * 0.85);
+        #ifdef SHINE
+        {
+          vec3 V = normalize(cameraPosition - vW);
+          float distV = length(cameraPosition - vW);
+          vec2 sl = swell(vW.xz, uTime) * (1.0 - smoothstep(60.0, 160.0, distV));   // far water goes flat, so it does not shimmer
+          vec3 N = normalize(vec3(-sl.x, 1.0, -sl.y));
+          // the sea mirrors the sky more the flatter you look at it
+          float fres = 0.02 + 0.98 * pow(1.0 - max(dot(N, V), 0.0), 5.0);
+          vec3 R = reflect(-V, N);
+          vec3 skyCol = mix(uSkyHor, uSkyTop, pow(smoothstep(0.0, 0.6, clamp(R.y, 0.0, 1.0)), 0.8));
+          col = mix(col, skyCol, clamp(fres, 0.0, 1.0) * 0.75 * off);
+          // the sun's path on the water, broken into sparks that come and go
+          vec3 H = normalize(V + uSunDir);
+          float path = pow(max(dot(N, H), 0.0), 90.0);
+          vec2 cell = floor(vW.xz * 7.0);
+          float tw = fract(sin(dot(cell, vec2(127.1, 311.7))) * 43758.5453 + uTime * 0.6);
+          float fine = clamp(1.0 - fwidth(vW.x) * 7.0, 0.0, 1.0);          // cells smaller than a pixel become an even glow
+          float spark = mix(0.5, 0.25 + 1.6 * smoothstep(0.8, 1.0, tw), fine);
+          col += uSunCol * path * spark * 0.6 * (1.0 - uRain) * off;
+          // light dancing on the bottom of the shallows
+          float sh = smoothstep(-1.8, -0.25, d) * (1.0 - smoothstep(-0.25, -0.05, d));
+          float ca = sin(vW.x * 6.1 + uTime * 1.2 + sin(vW.z * 4.3 + uTime * 0.7) * 1.4) * sin(vW.z * 5.7 - uTime * 1.0 + sin(vW.x * 3.9) * 1.3);
+          col += smoothstep(0.55, 1.0, ca) * 0.09 * sh * (1.0 - uRain) * clamp(1.0 - fwidth(ca) * 2.0, 0.0, 1.0);
+        }
+        #endif
         float band = sin(d * 9.0 + uTime * 1.6) * 0.5 + 0.5;
         float foam = smoothstep(-0.45, -0.08, d) * (1.0 - smoothstep(-0.08, 0.05, d)) * (0.45 + 0.55 * band);
         foam += smoothstep(-0.1, -0.01, d) * 0.6;
@@ -177,26 +224,35 @@ export function createEnv(THREE, scene, { quality, shore, peaks = [] }) {
   // and the sky light stronger (low contrast, soft shadows), and weather effects stay mild
   const PAPER = C(0xf6f1e4), soft = (hex, k) => C(hex).lerp(PAPER, k);
   env.setMonth = (n, instant = false) => {
-    const L = LOOKS[n] || LOOKS[1];
-    goal = { top: soft(L.top, 0.28), hor: soft(L.hor, 0.35), sun: soft(L.sun, 0.15), sunI: L.sunI * 0.8, hemi: L.hemi * 1.35, near: L.fog[0] * 1.15, far: L.fog[1], shallow: soft(L.shallow, 0.18), deep: C(L.deep).lerp(C(0x86cbd6), 0.5), mist: L.mist * 0.6, rain: L.rain * 0.7, cloud: soft(L.cloud, 0.1), sunY: L.sunY };
+    const L = LOOKS[n] || LOOKS[1], b = L.bold || 0, s = 1 - b;   // s: how much of the softening this month gets
+    goal = { top: soft(L.top, 0.28 * s), hor: soft(L.hor, 0.35 * s), sun: soft(L.sun, 0.15 * s), sunI: L.sunI * (0.8 + 0.2 * b), hemi: L.hemi * (1.35 - 0.35 * b),
+      near: L.fog[0] * (1.15 - 0.15 * b), far: L.fog[1], shallow: soft(L.shallow, 0.18 * s), deep: C(L.deep).lerp(C(0x86cbd6), 0.5 * s),
+      mist: L.mist * (0.6 + 0.4 * b), rain: L.rain * (0.7 + 0.3 * b), cloud: soft(L.cloud, 0.1 * s), sunY: L.sunY, amb: C(L.amb || 0xfdf7ea), dusk: L.dusk || 0 };
     if (instant) step(1);
   };
+  env.dusk = () => cur.dusk;
   function step(k) {
     if (!goal) return false;
-    for (const key of ['top', 'hor', 'sun', 'shallow', 'deep', 'cloud']) cur[key].lerp(goal[key], k);
-    for (const key of ['sunI', 'hemi', 'near', 'far', 'mist', 'rain', 'sunY']) cur[key] += (goal[key] - cur[key]) * k;
-    sun.color.copy(cur.sun); sun.intensity = cur.sunI; hemi.intensity = cur.hemi;
+    for (const key of ['top', 'hor', 'sun', 'shallow', 'deep', 'cloud', 'amb']) cur[key].lerp(goal[key], k);
+    for (const key of ['sunI', 'hemi', 'near', 'far', 'mist', 'rain', 'sunY', 'dusk']) cur[key] += (goal[key] - cur[key]) * k;
+    sun.color.copy(cur.sun); sun.intensity = cur.sunI; hemi.intensity = cur.hemi; hemi.color.copy(cur.amb);
+    skyMat.uniforms.uDusk.value = cur.dusk;
+    fill.intensity = 0.45 * (1 - 0.7 * cur.dusk);
     scene.fog.color.copy(cur.hor); scene.fog.near = cur.near; scene.fog.far = cur.far;
     seaMat.uniforms.uShallow.value.copy(cur.shallow); seaMat.uniforms.uDeep.value.copy(cur.deep);
     seaMat.uniforms.uFar.value.copy(cur.deep).lerp(cur.hor, 0.4); // open sea fades toward the paler horizon
     seaMat.uniforms.uRain.value = cur.rain;
     cloudMat.color.copy(cur.cloud); cloudMat.emissive.copy(cur.cloud).multiplyScalar(0.95);
-    mistMat.opacity = cur.mist * 0.5;
+    mistMat.opacity = Math.min(0.75, cur.mist * 0.7);
     mist.visible = cur.mist > 0.02;
     rainMat.opacity = cur.rain * 0.7;
     rain.visible = cur.rain > 0.02;
     placeSun();
-    const done = Math.abs(goal.sunI - cur.sunI) < 0.005 && Math.abs(goal.mist - cur.mist) < 0.003 && Math.abs(goal.rain - cur.rain) < 0.003;
+    // the sea's copy of the sun and the sky (merged uniforms are copies, so they are refreshed here)
+    const U = seaMat.uniforms;
+    U.uSunDir.value.copy(sunDir); U.uSunCol.value.copy(cur.sun).multiplyScalar(Math.min(1.1, cur.sunI / 2.2));
+    U.uSkyHor.value.copy(cur.hor); U.uSkyTop.value.copy(cur.top);
+    const done = Math.abs(goal.sunI - cur.sunI) < 0.005 && Math.abs(goal.mist - cur.mist) < 0.003 && Math.abs(goal.rain - cur.rain) < 0.003 && Math.abs(goal.sunY - cur.sunY) < 0.003 && Math.abs(goal.dusk - cur.dusk) < 0.005;
     if (done) goal = null;
     return true;
   }

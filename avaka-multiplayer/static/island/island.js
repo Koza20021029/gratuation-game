@@ -14,16 +14,16 @@ const withLang = (href) => (lang === 'en' && href.startsWith('/') ? `${href}${hr
 const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
 try {
-  const V = '?v=20261023_78';
+  const V = new URL(import.meta.url).search;   // this file's own ?v= stamp, for island.json; the modules get theirs from the import map
   const [THREE, { OrbitControls }, { CSS2DRenderer, CSS2DObject }, W, E, K, M, S, D] = await Promise.all([
     import('three'),
     import('three/addons/OrbitControls.js'),
     import('three/addons/CSS2DRenderer.js'),
-    import('./world.js' + V),
-    import('./env.js' + V),
-    import('./kit.js' + V),
-    import('./models.js' + V),
-    import('./sea.js' + V),
+    import('./world.js'),
+    import('./env.js'),
+    import('./kit.js'),
+    import('./models.js'),
+    import('./sea.js'),
     fetch('/island/island.json' + V).then((r) => { if (!r.ok) throw new Error('island.json ' + r.status); return r.json(); }),
   ]);
   M.useThree(THREE);
@@ -38,7 +38,9 @@ try {
   const weather = new Map(D.weather.months.map((w) => [w.n, w]));
 
   const mobile = innerWidth <= 800 || /Mobi|Android/i.test(navigator.userAgent);
-  const quality = ['low', 'medium', 'high'].includes(params.get('quality')) ? params.get('quality') : mobile ? 'medium' : 'high';
+  // embed: shown small inside the game screen, which sends the month and the player's place by postMessage
+  const embed = params.has('embed');
+  const quality = ['low', 'medium', 'high'].includes(params.get('quality')) ? params.get('quality') : embed ? 'low' : mobile ? 'medium' : 'high';
 
   // ---------- renderer, camera, controls ----------
   const stage = $('#stage');
@@ -49,10 +51,21 @@ try {
   renderer.toneMappingExposure = 1.02;
   renderer.shadowMap.enabled = quality !== 'low';
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  // The shadow map is a second drawing of the whole island from the sun. Almost nothing on the island moves, so it
+  // is redrawn only when asked (a new month, the other era, a change of detail), not every frame. On the high
+  // setting it is also refreshed a few times a second, so the clouds' shadows still drift over the hills.
+  renderer.shadowMap.autoUpdate = false;
+  let shadowDirty = true;
+  const SHADOW_EVERY = quality === 'high' ? 6 : 300;
   renderer.domElement.tabIndex = 0;
   stage.appendChild(renderer.domElement);
   const labels = new CSS2DRenderer();
   labels.domElement.className = 'labels';
+  // High setting only: the far and the near edge of the picture go softly out of focus and the corners darken a
+  // little, like a photograph of a small model (see .lens in island.css). The page's compositor does it over the
+  // finished picture, so the 3D drawing and its colours are untouched; it is dropped as soon as the page runs slowly.
+  const lens = quality === 'high' && !embed ? document.createElement('div') : null;
+  if (lens) { lens.className = 'lens'; stage.appendChild(lens); }
   stage.appendChild(labels.domElement);
 
   const scene = new THREE.Scene();
@@ -148,13 +161,12 @@ try {
   focus.forest = M.forestPlot(THREE, kit, plants, shape, spots.forest, rnd).focus;
   focus.shop = M.shop(THREE, scene, kit, spots.shop, groundAt(spots.shop)).focus;
   for (const s of D.steps) focus[s.id] = M.stepScene(THREE, kit, shape, s.id, spots[s.id].x, spots[s.id].z, spots[s.id].seaward, rnd, boatGeo, scene);
-  // boats drawn up on the workshop beach
+  // the hero boat, drawn up on the workshop beach (models.js heroBoat: the same paint as the fleet, in full detail)
   {
-    const b = spots.beach, cs = Math.cos(b.seaward), sn = Math.sin(b.seaward);
-    for (const [lx, lz, len] of [[0.7, 0.9, 0.95], [1.2, 1.05, 0.75]]) {
-      const x = b.x + lx * cs + lz * sn, z = b.z - lx * sn + lz * cs;
-      M.boat(THREE, scene, boatGeo, x, shape.height(x, z) + 0.02, z, b.seaward + Math.PI / 2 + (rnd() - 0.5) * 0.3, len);
-    }
+    const b = spots.beach, cs = Math.cos(b.seaward), sn = Math.sin(b.seaward), lx = 0.95, lz = 0.95;
+    const x = b.x + lx * cs + lz * sn, z = b.z - lx * sn + lz * cs;
+    M.heroBoat(THREE, scene, x, shape.height(x, z) + 0.05, z, b.seaward + Math.PI / 2 + 0.08, 1.35);
+    rnd(); rnd();   // the two random draws the old pair of boats used, so everything placed after stays where it was
   }
   // the Avaka plot at 東清
   {
@@ -287,7 +299,7 @@ try {
   }
   const solid = K.addRim(new THREE.MeshStandardMaterial({ roughness: 0.82, metalness: 0, flatShading: true }), 0.18);
   const kitMeshes = kit.build(scene, solid);
-  const blockers = [terrain, ...kitMeshes.filter((m) => m.isInstancedMesh && !m.material.transparent && m.geometry !== kit.shapes.blob && m.geometry !== kit.shapes.trunk)];
+  const blockers = [terrain, ...kitMeshes.filter((m) => m.isInstancedMesh && !m.material.transparent && m.geometry !== kit.shapes.blob && m.geometry !== kit.shapes.blobFar && m.geometry !== kit.shapes.trunk)];
   const fishMeshes = fishKit.build(scene, solid);
   // shell-lime burning in the month for it (night-calendar notes): small fires with rising smoke near two villages
   // everything that moves is drawn through one batch per shape (see createCrowd in kit.js)
@@ -361,6 +373,40 @@ try {
     return { m: M.boat(THREE, scene, boatGeo, cx, -0.04, cz, 0, 0.7), cx, cz, r: 0.6 + (i % 4) * 0.14, ph: i * 1.7, sp: 0.05 + (i % 4) * 0.01 };
   });
   const BOATS_OUT = { 1: 3, 2: 1, 3: 8, 4: 8, 5: 1, 6: 4, 7: 4, 8: 4, 9: 3, 10: 2, 11: 3, 12: 3 };
+  // A torch on each boat when the month's look is dusk (env.js). The night calendar on this page has torch
+  // fishing for flying fish begin in month 2; the picture is a mood, not a record of who fished where.
+  const torch = (() => {
+    const c = document.createElement('canvas'); c.width = c.height = 64;
+    const g = c.getContext('2d'), grad = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+    grad.addColorStop(0, 'rgba(255,255,255,1)'); grad.addColorStop(0.25, 'rgba(255,255,255,0.5)'); grad.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = grad; g.fillRect(0, 0, 64, 64);
+    const map = new THREE.CanvasTexture(c), geo = new THREE.BufferGeometry();
+    const pos = new Float32Array(fleet.length * 3), col = new Float32Array(fleet.length * 3);
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    // size is in world units; minPx keeps a torch from shrinking to nothing in the overview
+    const points = (size, opacity, minPx) => {
+      const mat = new THREE.PointsMaterial({ map, size, vertexColors: true, transparent: true, opacity, depthWrite: false, fog: false, toneMapped: false });   // not additive: over a blue sea that washes out to white
+      mat.onBeforeCompile = (sh) => { sh.vertexShader = sh.vertexShader.replace('#include <fog_vertex>', `gl_PointSize = max(gl_PointSize, ${(minPx * renderer.getPixelRatio()).toFixed(1)});\n#include <fog_vertex>`); };
+      const p = new THREE.Points(geo, mat);
+      p.frustumCulled = false; p.visible = false; p.renderOrder = 3;
+      scene.add(p);
+      return p;
+    };
+    const glow = points(2.2, 0.5, 40), flame = points(0.36, 1, 7);   // a bright core, and its light on the water around the boat
+    return (t) => {
+      const k = env.dusk();
+      flame.visible = glow.visible = k > 0.03;
+      if (!flame.visible) return;
+      flame.material.opacity = k; glow.material.opacity = 0.5 * k;
+      fleet.forEach((b, i) => {
+        const on = 0.8 + 0.2 * Math.sin(t * 9 + i * 2.1) * Math.sin(t * 5.3 + i);
+        pos.set([b.m.position.x, b.m.visible ? b.m.position.y + 0.17 : -50, b.m.position.z], i * 3);   // a boat that stayed home: its torch goes out of sight
+        col.set([on, on * 0.3, on * 0.05], i * 3);   // linear values: a deep orange once shown
+      });
+      geo.attributes.position.needsUpdate = geo.attributes.color.needsUpdate = true;
+    };
+  })();
 
   // ---------- the walking youth ----------
   // walks between the beach workshop and the step that the fastest schedule reaches this month, carrying that month's material
@@ -599,6 +645,66 @@ try {
     return { set, centre, seaward: s.seaward };
   })();
 
+  // ---------- the players of a game room (only when embedded in the game screen) ----------
+  // Up to six figures stand in front of the place each player is at, in their role's colour, with a name tag
+  // that also shows how many of the six steps they have done. A boat is drawn up on the workshop beach for
+  // each player who has finished. The game sends the list; nothing here knows the rules.
+  const ROLE_BODY = { elder: 0xd2a45c, youth: 0x8fbf6a, middle: 0x6fa6c4 };
+  const guests = !embed ? [] : Array.from({ length: 6 }, () => {
+    const c = M.chibi(crowd, { pack: false });
+    c.g.visible = false; c.g.scale.setScalar(1.6);
+    scene.add(c.g);
+    const el = document.createElement('span'); el.className = 'pin k-guest';
+    const tag = new CSS2DObject(el); tag.position.set(0, 0.2, 0); tag.visible = false; tag.userData = { id: 'guest', kind: 'road' };
+    c.g.add(tag);
+    return Object.assign(c, { el, tag, to: new THREE.Vector3(), placed: false, ph: Math.random() * 6 });
+  });
+  const guestBoats = !embed ? [] : [[-0.75, 0.95], [-1.3, 1.1], [-1.85, 1.2]].map(([lx, lz]) => {
+    const b = spots.beach, cs = Math.cos(b.seaward), sn = Math.sin(b.seaward), x = b.x + lx * cs + lz * sn, z = b.z - lx * sn + lz * cs;
+    const m = M.boat(THREE, scene, boatGeo, x, shape.height(x, z) + 0.02, z, b.seaward + Math.PI / 2 + 0.12, 0.85);
+    m.visible = false;
+    return m;
+  });
+  function setGuests(list) {
+    guests.forEach((g, i) => {
+      const p = list[i], sp = p && spots[p.loc];
+      g.g.visible = g.tag.visible = !!sp;
+      if (!sp) { g.placed = false; return; }
+      const same = list.filter((q) => q.loc === p.loc), k = same.indexOf(p);
+      const lx = (k - (same.length - 1) / 2) * 0.22, lz = 0.55, cs = Math.cos(sp.seaward), sn = Math.sin(sp.seaward);   // a row in front of the place, facing the sea
+      const x = sp.x + lx * cs + lz * sn, z = sp.z - lx * sn + lz * cs;
+      g.to.set(x, shape.height(x, z) + 0.01, z);
+      if (!g.placed || reduced.matches) { g.g.position.copy(g.to); g.placed = true; }
+      g.g.rotation.y = sp.seaward;
+      crowd.recolor(g.torso, ROLE_BODY[p.role] || 0x8fbf6a);
+      const done = Math.max(0, Math.min(6, p.progress | 0));
+      g.el.textContent = '';
+      const name = document.createElement('b'); name.textContent = String(p.name || '').slice(0, 12);
+      const dots = document.createElement('i'); dots.textContent = '●'.repeat(done) + '○'.repeat(6 - done);
+      g.el.append(name, dots);
+      g.el.classList.toggle('me', !!p.me);
+    });
+    const finished = list.filter((p) => p.finished).length;
+    guestBoats.forEach((b, i) => (b.visible = i < finished));
+    crowd.sync(); M.syncBoats();
+    dirty = shadowDirty = true;
+  }
+  // a figure whose player moved walks over (quickly: it is the camera, not the walk, that tells the story)
+  function moveGuests(dt, now) {
+    for (const g of guests) {
+      if (!g.g.visible) continue;
+      const far = g.g.position.distanceTo(g.to), walking = far > 0.02;
+      if (walking) {
+        g.g.position.lerp(g.to, Math.min(1, dt * 2.2));
+        g.g.position.y = shape.height(g.g.position.x, g.g.position.z) + 0.01;
+      }
+      const sw = walking ? Math.sin(now * 14 + g.ph) * 0.7 : 0;
+      g.legs[0].rotation.x = sw; g.legs[1].rotation.x = -sw;
+      g.arms[0].rotation.x = -sw * 0.6; g.arms[1].rotation.x = sw * 0.6;
+      g.head.rotation.y = walking ? 0 : Math.sin(now * 0.6 + g.ph) * 0.35;   // looking about while standing
+    }
+  }
+
   const crowdMat = K.addRim(new THREE.MeshStandardMaterial({ roughness: 0.75, metalness: 0 }), 0.12);
   crowd.build(scene, crowdMat);
   M.buildBoats(THREE, scene, boatGeo);
@@ -634,6 +740,7 @@ try {
   }
   function setMonth(n, { instant = false } = {}) {
     month = n;
+    shadowDirty = true;
     const m = months.get(n);
     env.setMonth(n, instant || reduced.matches);
     fleet.forEach((b, i) => (b.m.visible = i < BOATS_OUT[n]));
@@ -662,6 +769,7 @@ try {
   }
   function stopPlay() { if (playing) clearInterval(playing); playing = null; renderMonths(); }
   function updateUrl() {
+    if (embed) return;
     const q = new URLSearchParams();
     if (selected) q.set('focus', selected);
     if (story >= 0) q.set('story', story + 1);
@@ -752,6 +860,7 @@ try {
   const shift = new THREE.Vector2(), shiftGoal = new THREE.Vector2();
   function cardShift() {
     const card = $('#card');
+    if (embed) return shiftGoal.set(0, 0);
     const wide = stage.clientWidth > 800;
     // with no card open, the list panel covers the left edge on wide screens, so nudge the island right
     if (card.hidden) return shiftGoal.set(wide ? -($('.side').offsetWidth + 16) / 2 : 0, 0);
@@ -1045,7 +1154,7 @@ try {
   }
   function setEra(e) {
     era = e;
-    market.set(era);
+    market.set(era); shadowDirty = true;
     crowd.sync();
     marketTag.o.position.copy(market.centre(era).add(new THREE.Vector3(0, 0.35, 0)));
     $('#t-era').setAttribute('aria-pressed', String(era === 'past'));
@@ -1223,6 +1332,7 @@ try {
       if (k === 'village') vis = dist > 4.5 || selected === id;
       if (k === 'site') vis = dist < 60 || selected === id;
       if (k === 'sea') vis = (sea.present(id) && dist < 80) || selected === id;
+      if (id === selected && (k === 'place' || k === 'village' || k === 'site') && dist < 12 && !fly) vis = false;   // up close its own label would sit on the thing itself; the card has the name
       o.visible = vis;
       labelEls.get(id).classList.remove('culled');
     }
@@ -1247,11 +1357,25 @@ try {
 
   // ---------- loop ----------
   const clock = new THREE.Clock();
-  let time = 0, frameNo = 0;
+  let time = 0, frameNo = 0, lodFar = null;
   // frame-rate watch: if the page stays under 30 fps, step the quality down (sharpness, then shadows, then fewer movers)
-  const perf = { fps: 0, frames: 0, since: performance.now(), slow: 0, level: 0 };
+  // and step back up when it runs well again. Thinning out the movers (level 3) is not undone: who is on the
+  // road also depends on the month and the era, so recovery from the lowest level stops there.
+  const perf = { fps: 0, frames: 0, since: performance.now(), last: performance.now(), slow: 0, fast: 0, level: 0, floor: 0, tried: 0 };
+  const fullRatio = renderer.getPixelRatio();
+  function restore() {
+    if (perf.level <= 0 || perf.level === 3) return;
+    if (perf.level === 4 || perf.level === 1) renderer.setPixelRatio(perf.level === 4 ? Math.max(1, fullRatio * 0.7) : fullRatio);
+    else if (perf.level === 2) { env.sun.castShadow = true; renderer.shadowMap.enabled = true; scene.traverse((o) => { if (o.material) o.material.needsUpdate = true; }); }
+    perf.tried = perf.level;
+    perf.level--;
+    if (lens) lens.hidden = perf.level > 0;
+    shadowDirty = true;
+    resize();
+  }
   function degrade() {
     perf.level++;
+    if (perf.level === perf.tried) perf.floor = perf.level;   // it was given this step back and lost it again: stay here
     if (perf.level === 1) renderer.setPixelRatio(Math.max(1, renderer.getPixelRatio() * 0.7));
     else if (perf.level === 2) { env.sun.castShadow = false; renderer.shadowMap.enabled = false; scene.traverse((o) => { if (o.material) o.material.needsUpdate = true; }); }
     else if (perf.level === 3) {
@@ -1259,20 +1383,35 @@ try {
       crowd.sync();
       sea.lite(); env.setWind(0, 0, 0, true); windTag.o.visible = false;
     } else if (perf.level === 4) renderer.setPixelRatio(1);
+    if (lens) lens.hidden = true;
+    shadowDirty = true;
     resize();
   }
   function watchFps(now) {
+    const gap = now - perf.last;
+    perf.last = now;
+    // A gap this long means the page was held back (a covered window, a background pane, a tab coming back),
+    // not that drawing is slow. document.hidden does not always say so, so the count starts again.
+    if (gap > 400) { perf.frames = 0; perf.since = now; perf.slow = 0; perf.fast = 0; return; }
     perf.frames++;
     if (now - perf.since < 3000) return;
     perf.fps = Math.round((perf.frames * 1000) / (now - perf.since));
     perf.frames = 0; perf.since = now;
     if (document.hidden || reduced.matches) return;
     perf.slow = perf.fps < 30 ? perf.slow + 1 : 0;
-    if (perf.slow >= 2 && perf.level < 4) { perf.slow = 0; degrade(); }
+    perf.fast = perf.fps >= 50 ? perf.fast + 1 : 0;
+    if (perf.slow >= 2 && perf.level < 4) { perf.slow = 0; perf.fast = 0; degrade(); }
+    else if (perf.fast >= 4 && perf.level > perf.floor && perf.level !== 3) { perf.fast = 0; restore(); }   // about 12 s at 50 fps or better
   }
+  // embedSweep: the way back after a month-change sweep. It is timed here, in the drawing loop, and not with a
+  // timer: browsers hold timers in a background frame back by up to a minute, and the camera would stay out.
+  let embedSkip = 0, embedPaused = false, embedSweep = null;
   function frame() {
     requestAnimationFrame(frame);
+    if (embedPaused) return;
+    if (embedSweep && performance.now() > embedSweep.at) { const back = embedSweep.back; embedSweep = null; back(); }
     watchFps(performance.now());
+    if (embed && (embedSkip = (embedSkip + 1) % 3)) return;   // inside the game screen a third of the frames is plenty
     const dt = Math.min(0.05, clock.getDelta());
     if (fly) {
       const k = Math.min(1, (performance.now() - fly.t0) / 1100), e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
@@ -1287,26 +1426,32 @@ try {
       applyShift();
       dirty = true;
     }
-    if (reduced.matches && env.update(time, dt, false)) dirty = true;
+    if (reduced.matches && env.update(time, dt, false)) { dirty = shadowDirty = true; torch(time); }
     if (reduced.matches && peds.some((p) => p.act > 0)) { time += dt; movePeople(dt, time, false); crowd.sync(); dirty = true; }
     if (!reduced.matches && !document.hidden) {
       time += dt;
       env.uniforms.uTime.value = time;
-      env.update(time, dt);
+      if (env.update(time, dt)) shadowDirty = true;   // the sun is still moving to this month's height
       walker.update(dt, time);
       sea.update(time, dt);
       moveTraffic(dt, time);
       movePeople(dt, time, true);
+      moveGuests(dt, time);
       crowd.sync(); M.syncBoats();
       for (const b of fleet) {
         const a = b.ph + time * b.sp;
         b.m.position.set(b.cx + Math.cos(a) * b.r, -0.035 + Math.sin(time * 1.3 + b.ph) * 0.01, b.cz + Math.sin(a) * b.r * 0.6);
         b.m.rotation.y = Math.atan2(-Math.sin(a), Math.cos(a) * 0.6) + Math.PI / 2;
       }
+      torch(time);
       dirty = true;
     }
     controls.update();
     if (dirty) {
+      // detail follows the camera: plain canopies and leaves in the overview, the full ones once you are close
+      const far = camera.position.distanceTo(controls.target) > (lodFar ? 13 : 17);
+      if (far !== lodFar) { lodFar = far; for (const p of kit.lod) { p.near.visible = !far; p.far.visible = far; } shadowDirty = true; }
+      if (shadowDirty || frameNo % SHADOW_EVERY === 0) { renderer.shadowMap.needsUpdate = true; shadowDirty = false; }
       renderer.render(scene, camera);
       labels.render(scene, camera);
       if (frameNo++ % 6 === 0) updateLabels();
@@ -1328,12 +1473,37 @@ try {
   market.set(era); crowd.sync();
   const f = params.get('focus'), st = parseInt(params.get('story'), 10);
   if (era === 'past') setEra('past');
-  if (items.has(f)) select(f, { silent: true });
+  if (embed) {
+    // The game screen drives this view: { avaka: 'island', month, focus, lang }. No card opens; the camera goes
+    // to the player's place and drifts slowly round it.
+    let at = null;
+    const show = (id) => { at = id; labelEls.forEach((el, k) => el.classList.toggle('on', k === id)); moveTo(items.has(id) ? viewFor(id) : overview()); };
+    controls.enabled = false;
+    controls.autoRotate = !reduced.matches; controls.autoRotateSpeed = 0.3;
+    show(f);
+    addEventListener('message', (e) => {
+      const d = e.data;
+      if (e.origin !== location.origin || !d || d.avaka !== 'island') return;
+      const m = parseInt(d.month, 10);
+      if (m >= 1 && m <= 12 && m !== month) setMonth(m);
+      if (Array.isArray(d.players)) setGuests(d.players);
+      // a new month in the game: pull back to see the whole island under its new sky, then return to the player's place
+      if (d.sweep && !reduced.matches) { at = d.focus; moveTo(overview()); embedSweep = { at: performance.now() + d.sweep, back: () => show(at) }; }
+      else if (d.focus !== at) show(d.focus);
+      if (d.lang && d.lang !== lang && (d.lang === 'en' || d.lang === 'zh')) { lang = d.lang; applyLang(); }
+      embedPaused = !!d.paused;   // scrolled out of sight in the game: stop drawing until it is back
+      dirty = true;
+    });
+    if (parent !== window) parent.postMessage({ avaka: 'island-ready' }, location.origin);   // the game answers with the month and the place as they are now
+  } else if (items.has(f)) select(f, { silent: true });
   else if (st >= 1 && st <= D.story.length) openStory(st - 1);
   else if (params.get('view') === 'era') openEra();
   else if (!store.get('avaka_island_intro')) showIntro(0);
   // debugging hook for screenshots and tests
-  window.avakaIsland = { openStory, openEra, setEra, perf, degrade, select, setMonth, hello: (n = 6, dur = 3.6) => peds.slice(0, n).forEach((p) => sayHello(p, dur)), overview: () => moveTo(overview()), quality, stats: () => renderer.info.render, drawOnce: () => { renderer.render(scene, camera); return { ...renderer.info.render }; }, sea, tick: frame, closeCard, camera, leaves: plants.count() };
+  window.avakaIsland = { openStory, openEra, setEra, perf, degrade, restore, watchFps, scene, renderer,
+    // the heaviest things on screen: [triangles, instances, shape, casts a shadow]
+    tris: () => { const rows = []; scene.traverse((o) => { if (o.isMesh && o.visible) { const g = o.geometry, n = ((g.index ? g.index.count : g.attributes.position.count) / 3) * (o.isInstancedMesh ? o.count : 1); rows.push([Math.round(n), o.isInstancedMesh ? o.count : 1, g.type, o.castShadow]); } }); return rows.sort((a, b) => b[0] - a[0]).slice(0, 12); },
+    select, setMonth, hello: (n = 6, dur = 3.6) => peds.slice(0, n).forEach((p) => sayHello(p, dur)), overview: () => moveTo(overview()), quality, stats: () => renderer.info.render, drawOnce: () => { renderer.render(scene, camera); return { ...renderer.info.render }; }, sea, tick: frame, closeCard, camera, leaves: plants.count() };
 } catch (err) {
   console.error(err);
   const msg = lang === 'en' ? 'The island could not load. Please refresh the page.' : '島嶼載入失敗，請重新整理頁面。';

@@ -422,7 +422,7 @@ const translations = {
                     <li><strong>🌿 材料：</strong> 在山林執行「①砍伐剝皮」產出材料（每次 1 份，1 月與 7 月 2 份），工序②至⑥各消耗 1 份。</li>
                     <li><strong>🌳 森林狀態：</strong> 全房間共用，0 到 5，開局 3。這個月有人上山「①砍伐剝皮」、照顧林地，森林就 +1；整個月沒有人上山就 −1（2 月封山不計）。森林降到 1 以下時，砍伐多耗 1 AP；結算時森林在 4 以上，所有人 +2 分。因為需要材料，所以會去照顧山林；大家都不上山，森林就會老化。</li>
                     <li><strong>🎯 每月小組任務與徽章：</strong> 每個月系統會抽一個全組一起完成的任務（例如「本月有人送材料給耆老」），達成後所有人 <b>+1 分</b>，任務顯示在畫面上方。第一次做到某些事會得到徽章，年終會頒發稱號；徽章與稱號不加分。</li>
-                    <li><strong>🎲 更多可以做的事：</strong> <b>請益小問答</b>：請益後會出一題三選一，答對多得 1 KP，答錯沒有損失（答案都在知識庫裡）。<b>事件卡</b>：2、3、6、8、10、11 月每個人會收到一張二選一的事件卡。<b>講述</b>（耆老，2 AP，每月 1 次）：和耆老在同一個地點的文化復振青年與中生代各 +1 KP（2 月與 10 月 +2 KP），耆老 +1 分。<b>補種 Avaka</b>（山林，1 AP，每月 1 次）：算作有人照顧林地，下個月起第一次砍伐多得 1 份材料。<b>搭把手</b>（同地點，1 AP）：隊友本月下一道工序少 2 AP，自己 +1 分（每月計 1 次）。<b>工序小遊戲</b>：做完工序後抓準時機按下，成功退回 1 AP，可以跳過。</li>
+                    <li><strong>🎲 更多可以做的事：</strong> <b>請益小問答</b>：請益後會出一題三選一，答對多得 1 KP，答錯沒有損失（答案都在知識庫裡）。<b>事件卡</b>：2、3、6、8、10、11 月每個人會收到一張二選一的事件卡。<b>講述</b>（耆老，2 AP，每月 1 次）：和耆老在同一個地點的文化復振青年與中生代各 +1 KP（2 月與 10 月 +2 KP），耆老 +1 分。<b>補種 Avaka</b>（山林，1 AP，每月 1 次）：算作有人照顧林地，下個月起第一次砍伐多得 1 份材料。<b>搭把手</b>（同地點，1 AP）：隊友本月下一道工序少 2 AP，自己 +1 分（每月計 1 次）。<b>工序小遊戲</b>：做完工序後照著那道工序的手勢動手做一次，在時間內做完退回 1 AP，可以跳過。</li>
                     <li><strong>📅 曆法禁忌：</strong> 依循蘭嶼 12 個月的夜曆，例如 2 月封山不能進山林、4 月底要留 1 AP 準備梅雨、9 月不能在商店完工、10 月任何方式都不能完工。每個月的效果會顯示在畫面上方。</li>
                 </ul>
 
@@ -702,7 +702,7 @@ const translations = {
                     <li><strong>🌿 Materials:</strong> ① Chop &amp; Peel in the forest yields materials (1 each time, 2 in Months 1 and 7); steps ② to ⑥ each consume 1.</li>
                     <li><strong>🌳 Forest health:</strong> Shared by the whole room, from 0 to 5, starting at 3. If anyone goes up to do ① Chop &amp; Peel and tend the plots this month, the forest gains 1; if nobody goes all month, it loses 1 (Month 2, when the forest is closed, does not count). At 1 or below, chopping costs 1 more AP; at 4 or above at the end, everyone gets +2 points. People tend the forest because they need its material; when nobody goes, it ages.</li>
                     <li><strong>🎯 Monthly group mission &amp; badges:</strong> Each month the game draws one mission for the whole group (for example "someone gives a material to the Elder this month"). Completing it gives everyone <b>+1 point</b>; the mission is shown at the top of the screen. Doing certain things for the first time earns a badge, and titles are awarded at the end of the year; badges and titles carry no points.</li>
-                    <li><strong>🎲 More things to do:</strong> <b>Ask quiz</b>: after asking you get one three-choice question; a correct answer gives +1 KP and a wrong one costs nothing (the answers are in the Knowledge Base). <b>Event cards</b>: in Months 2, 3, 6, 8, 10 and 11 everyone gets a two-option card. <b>Storytelling</b> (Elder, 2 AP, once a month): every Youth and Middle Generation player at the Elder's location gains +1 KP (+2 KP in Months 2 and 10) and the Elder gets +1 point. <b>Replant Avaka</b> (Forest, 1 AP, once a month): counts as tending the plots, and your first chop from next month on yields 1 extra material. <b>Lend a hand</b> (same location, 1 AP): your teammate's next step this month costs 2 AP less and you get +1 point (once a month). <b>Step mini-game</b>: after a craft step, press at the right moment to get 1 AP back; you can skip it.</li>
+                    <li><strong>🎲 More things to do:</strong> <b>Ask quiz</b>: after asking you get one three-choice question; a correct answer gives +1 KP and a wrong one costs nothing (the answers are in the Knowledge Base). <b>Event cards</b>: in Months 2, 3, 6, 8, 10 and 11 everyone gets a two-option card. <b>Storytelling</b> (Elder, 2 AP, once a month): every Youth and Middle Generation player at the Elder's location gains +1 KP (+2 KP in Months 2 and 10) and the Elder gets +1 point. <b>Replant Avaka</b> (Forest, 1 AP, once a month): counts as tending the plots, and your first chop from next month on yields 1 extra material. <b>Lend a hand</b> (same location, 1 AP): your teammate's next step this month costs 2 AP less and you get +1 point (once a month). <b>Step mini-game</b>: after a craft step, do that step's hand movement once; finish in time to get 1 AP back. You can skip it.</li>
                     <li><strong>📅 Calendar Taboos:</strong> The game follows Lanyu's 12-month calendar, e.g. the forest is closed in Month 2, you should keep 1 AP at the end of Month 4 for the plum rain, the store cannot finish boats in Month 9, and nothing can be finished in Month 10. Each month's effect is shown at the top of the screen.</li>
                 </ul>
 
@@ -1682,10 +1682,62 @@ function openAvatarCreator(actionType, data) {
     }
     
     ensureRattanHelmetButton();
-    
-    // Give DOM time to render canvas, then init Three.js
-    setTimeout(() => { initAvatar3D(); }, 80);
+    startAvatarStage();
 }
+
+// three.js, its post-processing passes and the avatar builder are only used by the avatar creator and
+// the avatar preview, so they are fetched the first time one of those opens instead of with the page.
+const AVATAR_SCRIPTS = ['vendor/three.min.js', 'vendor/EffectComposer.js', 'vendor/RenderPass.js', 'vendor/ShaderPass.js',
+    'vendor/CopyShader.js', 'vendor/LuminosityHighPassShader.js', 'vendor/UnrealBloomPass.js', 'js/avatar3d.js?v=20261115_1'];
+const avatarScriptsDone = new Set();
+let avatarLibsPromise = null;
+function loadAvatarLibs() {
+    if (!avatarLibsPromise) {
+        // async = false: the files download together but run in this order. A file that already ran is
+        // never added twice (avatar3d.js declares its globals with let and would refuse to run again).
+        avatarLibsPromise = Promise.all(AVATAR_SCRIPTS.filter(src => !avatarScriptsDone.has(src)).map(src => new Promise((resolve, reject) => {
+            const s = document.createElement('script');
+            s.src = src; s.async = false;
+            s.onload = () => { avatarScriptsDone.add(src); resolve(); };
+            s.onerror = () => { s.remove(); reject(new Error('could not load ' + src)); };
+            document.head.appendChild(s);
+        }))).catch(err => { avatarLibsPromise = null; throw err; });
+    }
+    return avatarLibsPromise;
+}
+window.loadAvatarLibs = loadAvatarLibs;
+
+// What is picked in the creator, read from the buttons themselves (they exist before the 3D code does).
+function avatarChoices() {
+    const picked = {};
+    document.querySelectorAll('#avatar-controls [data-ctrl]').forEach(row => {
+        const on = row.querySelector('.selected[data-val]');
+        if (on) picked[row.dataset.ctrl] = on.dataset.val;
+    });
+    return picked;
+}
+function setAvatarStageNote(kind) {
+    const note = document.getElementById('avatar-stage-note');
+    if (!note) return;
+    const en = currentLang === 'en';
+    note.hidden = !kind;
+    note.dataset.kind = kind || '';
+    note.textContent = kind === 'loading' ? (en ? 'Preparing your character…' : '正在準備角色…')
+        : kind === 'failed' ? (en ? 'The 3D preview could not load. Tap here to try again.' : '3D 預覽載入失敗，點這裡再試一次。') : '';
+}
+function startAvatarStage() {
+    setAvatarStageNote('loading');
+    // the canvas also needs a moment to be laid out before three.js measures it
+    Promise.all([loadAvatarLibs(), new Promise(r => setTimeout(r, 80))]).then(() => {
+        if (!avatarScreen.classList.contains('active')) return;      // went back while it was loading
+        Object.assign(avatarState, avatarChoices());                  // anything picked before the 3D code arrived
+        initAvatar3D();
+        setAvatarStageNote('');
+    }).catch(() => setAvatarStageNote('failed'));
+}
+document.getElementById('avatar-stage-note')?.addEventListener('click', e => {
+    if (e.currentTarget.dataset.kind === 'failed' && avatarScreen.classList.contains('active')) startAvatarStage();
+});
 
 function ensureRattanHelmetButton() {
     const accessoryRow = document.querySelector('[data-ctrl="accessory"]');
@@ -1721,13 +1773,15 @@ if (avatarControlsEl) {
         row.querySelectorAll('.swatch, .avatar-opt').forEach(b => b.classList.remove('selected'));
         btn.classList.add('selected');
         
-        // Update 3D
-        updateAvatarPart(ctrl, val);
+        // Update 3D (if it is not there yet, startAvatarStage() picks the choice up from the buttons)
+        if (typeof updateAvatarPart === 'function' && avatarRenderer) updateAvatarPart(ctrl, val);
     });
 }
 
 avatarBackBtn.addEventListener('click', () => {
-    destroyAvatar3D();
+    if (enterWait) { endEnterWait(); socket.disconnect(); socket.connect(); }   // drop a request the server never answered
+    if (typeof destroyAvatar3D === 'function') destroyAvatar3D();
+    setAvatarStageNote('');
     avatarScreen.classList.remove('active');
     lobbyScreen.classList.add('active');
     if (typeof initLobbyWidgets === 'function') {
@@ -1736,10 +1790,58 @@ avatarBackBtn.addEventListener('click', () => {
     pendingRoomAction = null;
 });
 
+// After "confirm" the creator stays up until the server answers (a room state or a refusal). If nothing
+// comes back it says so and offers another try, instead of closing onto an empty screen.
+let enterWait = null;
+const ENTER_SLOW_MS = 4000;
+function setEnterNote(text) {
+    const note = document.getElementById('avatar-enter-note');
+    if (note) { note.textContent = text || ''; note.hidden = !text; }
+}
+function sendRoomAction() {
+    reviveConnection();      // what is sent while it reconnects is kept and goes out once it is up
+    socket.emit(pendingRoomAction.type === 'join' ? 'join_game' : 'create_room', pendingRoomAction.data);
+}
+function beginEnterWait() {
+    const en = currentLang === 'en';
+    if (!enterWait) enterWait = { label: avatarConfirmBtn.textContent };
+    clearTimeout(enterWait.timer);
+    enterWait.slow = false;
+    avatarConfirmBtn.disabled = true;
+    avatarConfirmBtn.textContent = en ? 'Entering the room…' : '正在進入房間…';
+    setEnterNote('');
+    enterWait.timer = setTimeout(() => {
+        if (!enterWait) return;
+        enterWait.slow = true;
+        avatarConfirmBtn.disabled = false;
+        avatarConfirmBtn.textContent = en ? 'Try again' : '再試一次';
+        setEnterNote(en ? 'The server has not answered yet. The network may be slow, or the server is just waking up. You can wait a little longer or try again.'
+                        : '伺服器還沒有回應。可能是網路比較慢，或伺服器剛醒來。可以再等一下，或按「再試一次」。');
+    }, ENTER_SLOW_MS);
+}
+function endEnterWait() {
+    if (!enterWait) return;
+    clearTimeout(enterWait.timer);
+    avatarConfirmBtn.disabled = false;
+    avatarConfirmBtn.textContent = enterWait.label;
+    setEnterNote('');
+    enterWait = null;
+}
+
 avatarConfirmBtn.addEventListener('click', () => {
     if (!pendingRoomAction) return;
+    if (enterWait) {
+        if (!enterWait.slow) return;
+        // Try again on a fresh connection: the server tidies up whatever the old one left half-done,
+        // so a slow first answer cannot leave this player in two rooms.
+        socket.disconnect(); socket.connect();
+        sendRoomAction();
+        beginEnterWait();
+        return;
+    }
     
-    const snapshot = captureAvatarSnapshot();
+    const snapshot = typeof captureAvatarSnapshot === 'function' ? captureAvatarSnapshot() : null;
+    const avatarState = avatarChoices();
     const faceLabels  = currentLang === 'en' ? {round:'Round', square:'Square', slim:'Slim'} : {round:'圓潤臉', square:'寬顎臉', slim:'清秀臉'};
     const hairLabels  = currentLang === 'en' ? {short:'Short', long:'Long', bun:'Bun', bald:'Bald'} : {short:'短直髮', long:'長直髮', bun:'束髻', bald:'光頭'};
     const accLabels   = currentLang === 'en' ? {none:'', silver_helmet:'Silver Helmet', rattan_helmet:'Rattan Helmet', chest_ornament:'Chest Ornament'} : {none:'', silver_helmet:'銀盔', rattan_helmet:'藤盔', chest_ornament:'胸飾'};
@@ -1760,15 +1862,15 @@ avatarConfirmBtn.addEventListener('click', () => {
     pendingRoomAction.data.avatar = avatarData;
     pendingRoomAction.data.token = sessionToken();
     
-    if (pendingRoomAction.type === 'join') {
-        socket.emit('join_game', pendingRoomAction.data);
-    } else {
-        socket.emit('create_room', pendingRoomAction.data);
-    }
-    
-    destroyAvatar3D();
-    avatarScreen.classList.remove('active');
+    sendRoomAction();
+    beginEnterWait();
 });
+// The server answered: the creator can go.
+function closeAvatarCreator() {
+    endEnterWait();
+    if (avatarScreen.classList.contains('active') && typeof destroyAvatar3D === 'function') destroyAvatar3D();
+    avatarScreen.classList.remove('active');
+}
 
 leaveLobbyBtn.addEventListener('click', () => {
     socket.emit('leave_game');
@@ -1782,16 +1884,16 @@ leaveGameBtn.addEventListener('click', () => {
     
     // Use custom confirm modal instead of browser confirm() which can be blocked
     const overlay = document.createElement('div');
-    overlay.style.cssText = 'position:fixed;inset:0;z-index:9900;background:rgba(2,6,23,0.80);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;animation:modal-fade-in 0.25s ease;cursor:none;';
-    
+    overlay.className = 'leave-dialog';            // styled in css/newui.css
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
     overlay.innerHTML = `
-        <div style="background:rgba(10,20,40,0.95);border:1px solid rgba(239,68,68,0.4);border-radius:16px;padding:2rem;max-width:320px;width:90%;text-align:center;box-shadow:0 0 40px rgba(239,68,68,0.2);">
-            <div style="font-size:2rem;margin-bottom:0.5rem;">🚪</div>
-            <h3 style="color:#f87171;margin-bottom:0.8rem;font-size:1.1rem;">${isEn ? 'Leave the Game?' : '確定要退出遊戲嗎？'}</h3>
-            <p style="color:#94a3b8;font-size:0.85rem;margin-bottom:1.5rem;">${isEn ? 'Your progress in this session will be lost.' : '退出後，你在本局的行動記錄將無法恢復。'}</p>
-            <div style="display:flex;gap:0.8rem;justify-content:center;">
-                <button id="leave-cancel-btn" style="padding:0.6rem 1.4rem;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.07);color:#94a3b8;cursor:pointer;font-size:0.9rem;transition:all 0.2s;">${isEn ? 'Cancel' : '取消'}</button>
-                <button id="leave-confirm-btn" style="padding:0.6rem 1.4rem;border-radius:8px;border:1px solid rgba(239,68,68,0.5);background:rgba(239,68,68,0.2);color:#f87171;cursor:pointer;font-size:0.9rem;font-weight:600;transition:all 0.2s;">${isEn ? 'Leave Game' : '退出遊戲'}</button>
+        <div class="leave-dialog-card">
+            <h3>${isEn ? 'Leave the game?' : '確定要退出遊戲嗎？'}</h3>
+            <p>${isEn ? 'Your progress in this session will be lost.' : '退出後，你在本局的行動記錄將無法恢復。'}</p>
+            <div class="leave-dialog-actions">
+                <button id="leave-cancel-btn" type="button">${isEn ? 'Cancel' : '取消'}</button>
+                <button id="leave-confirm-btn" type="button">${isEn ? 'Leave Game' : '退出遊戲'}</button>
             </div>
         </div>
     `;
@@ -1886,11 +1988,23 @@ document.addEventListener('visibilitychange', () => {
 });
 window.addEventListener('online', () => { if (!socket.connected) socket.connect(); });
 
+// The connection underneath can be closed while the socket still says it is connected: nothing sent then
+// arrives and nothing comes back, with no error (seen twice in an embedded browser pane; what closes it is
+// not known). Look every few seconds, and before joining a room, and connect again when that has happened.
+// The 'connect' handler above then takes the player back into their room.
+function reviveConnection() {
+    const engine = socket.io && socket.io.engine;
+    if (!socket.connected || (engine && engine.readyState !== 'closed')) return false;
+    socket.disconnect(); socket.connect();
+    return true;
+}
+setInterval(reviveConnection, 4000);
+
 socket.on('error', (err) => {
     showToast(err.msg);
     if (gameScreen.classList.contains('active')) return;
     // Ensure we go back to the login screen if an error occurs (e.g. wrong room code)
-    avatarScreen.classList.remove('active');
+    closeAvatarCreator();
     gameScreen.classList.remove('active');
     lobbyScreen.classList.add('active');
     waitingSection.style.display = 'none';
@@ -1899,6 +2013,7 @@ socket.on('error', (err) => {
 
 socket.on('state_update', (state) => {
     lastGameState = state;
+    if (state.players[socket.id]) closeAvatarCreator();
     if (state.players[myId] && (!mySession || mySession.room_code !== state.room_code)) {
         mySession = { token: sessionToken(), room_code: state.room_code };
         saveSession(mySession);
@@ -2830,6 +2945,7 @@ function renderGameOver(state) {
         <div class="screen active" style="align-items:center; justify-content:center; overflow-y:auto; padding:2rem 0; min-height:100vh;">
             <div class="glass" style="padding: 2rem; text-align:center; max-width: 860px; width: 92%; position:relative; z-index:10; margin: auto;">
                 <h1 style="font-family: 'Noto Serif TC', serif; font-weight: 900; font-size: 2.5rem; color:var(--primary); margin-bottom: 2rem; letter-spacing:0.15em; text-shadow: 0 0 20px rgba(139, 195, 74, 0.4);">${finalTitle}</h1>
+                <section id="year-end" class="ye"></section>
                 
                 <!-- Player Score Cards -->
                 <div style="text-align:left; margin-bottom: 2rem; display:flex; flex-direction:column; gap:1.5rem;">
@@ -2865,19 +2981,19 @@ function renderGameOver(state) {
 
                 <!-- KP Development Curve Chart -->
                 <div style="background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 16px; padding: 1.5rem; text-align: left; margin: 2rem 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(12px);">
-                    <div style="display:flex; align-items:center; gap:0.6rem; margin-bottom: 1rem; border-bottom: 1px solid rgba(56,189,248,0.2); padding-bottom:0.6rem;">
+                    <div style="display:flex; align-items:center; gap:0.6rem; margin-bottom: 1rem; border-bottom: 1px solid var(--glass-border); padding-bottom:0.6rem;">
                         <span style="font-size: 1.5rem;">📊</span>
                         <div>
-                            <h2 style="font-family: 'Noto Serif TC', serif; font-size: 1.3rem; color: #7dd3fc; margin: 0; font-weight: 700;">
+                            <h2 style="font-family: 'Noto Serif TC', serif; font-size: 1.3rem; color: var(--text-main); margin: 0; font-weight: 700;">
                                 ${isEn ? 'KP Development Curves & Path Selection' : '各角色 KP 演進與路徑選擇曲線圖'}
                             </h2>
-                            <p style="font-size: 0.8rem; color: #94a3b8; margin: 0.2rem 0 0 0;">
+                            <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0.2rem 0 0 0;">
                                 ${isEn ? 'Tracks technical knowledge growth (KP) and deskilling triggers across 12 months.' : '記錄 12 個月間技術點數 (KP) 累積與去技能化點位，作為機制層對話依據。'}
                             </p>
                         </div>
                     </div>
                     <canvas id="kp-chart-canvas" style="width:100%; height:300px; display:block; border-radius:10px; border:1px solid rgba(255,255,255,0.08); background:rgba(6,16,32,0.8);"></canvas>
-                    <div style="display:flex; gap:1.2rem; flex-wrap:wrap; margin-top:0.8rem; font-size:0.8rem; color:#94a3b8;">
+                    <div style="display:flex; gap:1.2rem; flex-wrap:wrap; margin-top:0.8rem; font-size:0.8rem; color:var(--text-muted);">
                         ${playersSorted.map(p => {
                             const ROLE_COLORS = { elder: '#d4af37', youth: '#4ade80', middle: '#a78bfa' };
                             const c = ROLE_COLORS[p.role] || '#38bdf8';
@@ -2891,13 +3007,13 @@ function renderGameOver(state) {
 
                 <!-- Mechanism Layer Discussion Panel -->
                 <div style="background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 16px; padding: 1.8rem; text-align: left; margin: 2rem 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(12px);">
-                    <div style="display:flex; align-items:center; gap:0.6rem; border-bottom: 1px solid rgba(56,189,248,0.2); padding-bottom: 0.8rem; margin-bottom: 1.5rem;">
+                    <div style="display:flex; align-items:center; gap:0.6rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.8rem; margin-bottom: 1.5rem;">
                         <span style="font-size: 1.8rem;">💬</span>
                         <div>
-                            <h2 style="font-family: 'Noto Serif TC', serif; font-size: 1.4rem; color: #7dd3fc; margin: 0; font-weight: 700;">
+                            <h2 style="font-family: 'Noto Serif TC', serif; font-size: 1.4rem; color: var(--text-main); margin: 0; font-weight: 700;">
                                 ${isEn ? 'Mechanism Discussion & Reflection' : '機制層討論與反思 (Mechanism Discussion)'}
                             </h2>
-                            <p style="font-size: 0.85rem; color: #94a3b8; margin: 0.2rem 0 0 0;">
+                            <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0.2rem 0 0 0;">
                                 ${isEn ? 'Please guide team members to reflect on choice paths, technical deskilling, and cultural preservation:' : '請引導成員針對造船選擇與文化知識演變進行對話與討論：'}
                             </p>
                         </div>
@@ -2952,12 +3068,12 @@ function renderGameOver(state) {
                             <span style="background: #0284c7; color: #fff; font-size: 0.75rem; font-weight: bold; padding: 0.2rem 0.6rem; border-radius: 20px; text-transform: uppercase;">
                                 ${isEn ? 'Extended Reflection' : '延伸提問'}
                             </span>
-                            <h3 style="font-size: 1.1rem; color: #7dd3fc; margin: 0; font-weight: 700; line-height: 1.5;">
+                            <h3 style="font-size: 1.1rem; color: var(--text-main); margin: 0; font-weight: 700; line-height: 1.5;">
                                 ${isEn ? '“In real-life Lanyu, or in your own daily life, are there similar examples? What skills or knowledge have slowly vanished because they were replaced by convenient alternatives?”' : '「在真實的蘭嶼，或是你自己的生活圈裡，有沒有類似的例子？有什麼技術或知識，因為被更方便的東西取代，而慢慢消失了？」'}
                             </h3>
                         </div>
                         <div style="background: rgba(0, 0, 0, 0.25); border-left: 4px solid #0284c7; padding: 0.9rem; border-radius: 6px; color: #e2e8f0; font-size: 0.92rem; line-height: 1.6;">
-                            <strong style="color: #38bdf8; display: block; margin-bottom: 0.4rem;">
+                            <strong style="color: var(--secondary); display: block; margin-bottom: 0.4rem;">
                                 ${isEn ? '🌏 Real-world Connections & Critical Thinking:' : '🌏 生活連結與思辨：'}
                             </strong>
                             <p style="margin: 0;">
@@ -3011,6 +3127,8 @@ function renderGameOver(state) {
         if (kpCanvas) {
             drawKPChart(kpCanvas, state.players);
         }
+        // the year again on the island, and the rope of knowledge (js/year-end.js)
+        if (window.AvakaYear) window.AvakaYear.render(document.getElementById('year-end'), state, currentLang);
     }, 50);
 }
 
@@ -3081,10 +3199,13 @@ function openAvatarPreview(playerName, role) {
     if (previewCanvas) {
         const originalId = 'avatar-canvas';
         // Temporarily rename so initAvatar3D() finds it
-        previewCanvas.id = originalId;
-        if (typeof initAvatar3D === 'function') initAvatar3D();
-        // Rename back after init so the original creator page isn't confused
-        requestAnimationFrame(() => { previewCanvas.id = 'avatar-preview-canvas'; });
+        loadAvatarLibs().then(() => {
+            if (!modal.classList.contains('open')) return;
+            previewCanvas.id = originalId;
+            initAvatar3D();
+            // Rename back after init so the original creator page isn't confused
+            requestAnimationFrame(() => { previewCanvas.id = 'avatar-preview-canvas'; });
+        }).catch(() => {});
     }
 }
 
@@ -3924,16 +4045,18 @@ const B4_TEXT = {
         plant: '🌱 補種 Avaka (1 AP | 每月 1 次 · 下次砍伐 +1 材料)', plantDone: '🌱 本月已補種',
         assist: '🙌 搭把手 (1 AP)', assisted: '🙌 下一道工序 −2 AP',
         tell: (kp) => `🗣️ 講述 <span style="font-size:0.8rem;opacity:0.7;font-weight:normal;">(2 AP → 身邊的人各 +${kp} KP · +1 分)</span>`, tellDone: '🗣️ 本月已講述',
-        mgTitle: '🎯 抓準時機', mgHint: '指針走到綠色區域時按下。成功退回 1 AP，失敗沒有損失。', mgGo: '就是現在！', mgSkip: '跳過',
-        mgWin: '抓得剛好！退回 1 AP。', mgLose: '差了一點，沒有損失。',
+        mgTitle: '動手做一次', mgHint: '在時間內做完退回 1 AP，沒做完沒有損失。也可以用空白鍵。', mgGo: '就是現在！', mgSkip: '跳過',
+        mgWin: '做得好！退回 1 AP。', mgLose: '差了一點，沒有損失。', mgEarly: '還沒乾，再曬一下。', mgOver: '曬過頭了，再來一次。', mgOff: '偏掉了，從頭再拉一次。',
+        mgDo: { chop: '在假莖靠近地面的地方，橫著劃一刀。', rub: '抓著兩端，左右來回拉。', strip: '順著纖維，從這一頭拉到那一頭，不要偏掉。', dry: '按住讓它曬，乾了就放手，不要曬過頭。', twine: '在腿上前後來回搓撚。', caulk: '照 S 形繞過每一根木釘。' },
         mgStep: { chop: '下刀的位置', rub: '摩擦的力道', strip: '撕絲的力道', dry: '收起來的時間', twine: '搓撚的鬆緊', caulk: '塞進縫裡的深淺' }
     },
     en: {
         plant: '🌱 Replant Avaka (1 AP | once a month · next chop +1 material)', plantDone: '🌱 Replanted this month',
         assist: '🙌 Lend a hand (1 AP)', assisted: '🙌 Next step −2 AP',
         tell: (kp) => `🗣️ Tell stories <span style="font-size:0.8rem;opacity:0.7;font-weight:normal;">(2 AP → +${kp} KP for everyone nearby · +1 pt)</span>`, tellDone: '🗣️ Told this month',
-        mgTitle: '🎯 Right moment', mgHint: 'Press when the pointer is in the green zone. Success returns 1 AP; a miss costs nothing.', mgGo: 'Now!', mgSkip: 'Skip',
-        mgWin: 'Spot on! 1 AP returned.', mgLose: 'Just missed. Nothing lost.',
+        mgTitle: 'Hands on', mgHint: 'Finish in time and 1 AP comes back; nothing is lost otherwise. The space bar works too.', mgGo: 'Now!', mgSkip: 'Skip',
+        mgWin: 'Well done! 1 AP returned.', mgLose: 'Just missed. Nothing lost.', mgEarly: 'Not dry yet. A little longer.', mgOver: 'Too long in the sun. Try again.', mgOff: 'It strayed. Pull again from the start.',
+        mgDo: { chop: 'Slash across the stem, close to the ground.', rub: 'Hold both ends and pull left and right.', strip: 'Pull along the grain from one end to the other, without straying.', dry: 'Hold to let it dry; let go when it is dry, not after.', twine: 'Roll it back and forth on the thigh.', caulk: 'Wind an S past every peg.' },
         mgStep: { chop: 'Where to cut', rub: 'How hard to rub', strip: 'How hard to pull', dry: 'When to take it in', twine: 'How tight to twist', caulk: 'How deep to press' }
     }
 };
@@ -3991,7 +4114,7 @@ function b4Modal(id, innerHtml) {
         modal = document.createElement('div');
         modal.id = id;
         // below the month-opening card (z-index 3000) so that one is read first
-        modal.style.cssText = 'position:fixed; inset:0; z-index:2500; display:flex; align-items:center; justify-content:center; background:rgba(2,6,23,0.72); backdrop-filter:blur(4px); padding:1rem;';
+        modal.style.cssText = 'position:fixed; inset:0; z-index:2500; display:flex; align-items:center; justify-content:center; background:rgba(5,10,7,0.8); padding:1rem;';
         document.body.appendChild(modal);
     }
     modal.innerHTML = `<div style="width:min(520px, 100%); max-height:88vh; overflow-y:auto; padding:1.4rem 1.5rem; border-radius:16px; background:linear-gradient(160deg, rgba(15,23,42,0.98), rgba(10,15,30,0.98)); border:1px solid rgba(212,175,55,0.45); box-shadow:0 20px 60px rgba(0,0,0,0.6); color:#e2e8f0;">${innerHtml}</div>`;
@@ -4063,7 +4186,7 @@ function showQuiz(quiz) {
     const buttons = quiz.order.map(i => `<button class="quiz-opt" data-choice="${i}" style="${B4_BTN}">${item.o[i]}</button>`).join('');
     const modal = b4Modal('quiz-modal', `
         <h3 style="margin:0 0 0.3rem; color:#fde68a;">${qt.title}</h3>
-        <p style="margin:0 0 0.9rem; font-size:0.8rem; color:#94a3b8;">${qt.hint}</p>
+        <p style="margin:0 0 0.9rem; font-size:0.8rem; color:var(--text-muted);">${qt.hint}</p>
         <p style="margin:0 0 0.4rem; font-size:1.05rem; line-height:1.6;">${item.q}</p>
         ${buttons}`);
     modal.querySelectorAll('.quiz-opt').forEach(btn => {
@@ -4104,43 +4227,120 @@ function showEventCard(eventId) {
     });
 }
 
-// Timing game: the pointer sweeps back and forth; its position is computed from the clock, not from frames.
-const MG_PERIOD = 1300, MG_ZONE = [0.40, 0.62], MG_LIMIT = 6000;
+// A hands-on moment after each step. The movement echoes what the hand does in that step: a slash at the base
+// of the stem, pulling the sheath to and fro over a branch, one long pull along the grain, waiting for the sun
+// (and not too long), rolling strands on the thigh, winding an S past the pegs. Done in time, 1 AP comes back;
+// nothing is lost otherwise. The server hears only { success }, as it did with the timing game this replaces.
+const MG_LIMIT = 9000, MG_HOLD = 2600, MG_ZONE = [0.6, 0.86];
+const MG_PEGS = [[60, 42], [120, 108], [180, 42], [240, 108]];
+const MG_KEYS = { chop: 1, strip: 3, caulk: 4, rub: 6, twine: 6 };
+const MG_ART = {
+    chop: '<path d="M30 132H270" stroke="#7c5a30" stroke-width="3"/><path d="M150 14V130" stroke="#5f9a45" stroke-width="24" stroke-linecap="round"/><path d="M150 30C138 12 122 10 112 18M150 30C162 12 178 10 188 18" fill="none" stroke="#5f9a45" stroke-width="5" stroke-linecap="round"/><path d="M92 110H208" stroke="#d2a45c" stroke-width="2" stroke-dasharray="7 5"/><path d="M200 104l10 6-10 6" fill="none" stroke="#d2a45c" stroke-width="2"/>',
+    rub: '<path d="M36 40H264" stroke="#7c5a30" stroke-width="9" stroke-linecap="round"/><path d="M112 124V56a38 38 0 0176 0v68" fill="none" stroke="#b9c46a" stroke-width="11" stroke-linecap="round"/><path d="M62 92H34m0 0l9-7m-9 7l9 7M238 92h28m0 0l-9-7m9 7l-9 7" fill="none" stroke="#d2a45c" stroke-width="2" stroke-linecap="round"/>',
+    strip: '<rect x="40" y="56" width="220" height="38" rx="8" fill="#2e4737"/><path d="M56 75H238" stroke="#d2a45c" stroke-width="2" stroke-dasharray="7 5"/><circle cx="56" cy="75" r="6" fill="#d2a45c"/><path d="M236 67l12 8-12 8" fill="none" stroke="#d2a45c" stroke-width="2"/>',
+    dry: '<circle cx="246" cy="36" r="13" fill="none" stroke="#d2a45c" stroke-width="2"/><path d="M246 12v7M246 53v7M222 36h7M263 36h7M229 19l5 5M258 48l5 5M263 19l-5 5M234 48l-5 5" stroke="#d2a45c" stroke-width="2" stroke-linecap="round"/><path d="M36 52H206" stroke="#7c5a30" stroke-width="6" stroke-linecap="round"/><path d="M62 52V122M84 52V116M106 52V126M128 52V118M150 52V124M172 52V114" stroke="#efe6cf" stroke-width="3" stroke-linecap="round"/>',
+    twine: '<rect x="86" y="24" width="128" height="102" rx="46" fill="#2e4737"/><path d="M132 38V112M150 34V116M168 38V112" stroke="#efe6cf" stroke-width="3" stroke-linecap="round"/><path d="M244 62V36m0 0l-7 9m7-9l7 9M244 88v26m0 0l-7-9m7 9l7-9" fill="none" stroke="#d2a45c" stroke-width="2" stroke-linecap="round"/>',
+    caulk: '<path d="M20 75H280" stroke="#7c5a30" stroke-width="4"/><path d="M30 75C45 30 75 30 90 75S135 120 150 75 195 30 210 75 255 120 270 75" fill="none" stroke="#d2a45c" stroke-width="2" stroke-dasharray="7 5"/>'
+        + [60, 120, 180, 240].map((x, i) => `<circle class="mg-peg" data-i="${i}" cx="${x}" cy="75" r="8" fill="#13221a" stroke="#efe6cf" stroke-width="2"/>`).join('')
+};
 function showMiniGame(mg) {
-    const t = B4_TEXT[currentLang] || B4_TEXT.zh;
+    const t = B4_TEXT[currentLang] || B4_TEXT.zh, step = mg.step;
     clearTimeout(promptState.mgTimer);
-    const start = performance.now();
     const modal = b4Modal('minigame-modal', `
-        <h3 style="margin:0 0 0.3rem; color:#fde68a;">${t.mgTitle}：${t.mgStep[mg.step] || ''}</h3>
-        <p style="margin:0 0 1rem; font-size:0.82rem; color:#94a3b8;">${t.mgHint}</p>
-        <div style="position:relative; height:26px; border-radius:13px; background:rgba(148,163,184,0.2); overflow:hidden;">
-            <div style="position:absolute; top:0; bottom:0; left:${MG_ZONE[0] * 100}%; width:${(MG_ZONE[1] - MG_ZONE[0]) * 100}%; background:rgba(34,197,94,0.55);"></div>
-            <div id="mg-pointer" style="position:absolute; top:-2px; bottom:-2px; width:6px; margin-left:-3px; border-radius:3px; background:#fde68a; box-shadow:0 0 8px #fde68a; left:0; animation:mg-sweep ${MG_PERIOD}ms linear infinite alternate;"></div>
+        <h3 style="margin:0 0 0.3rem; color:var(--secondary);">${t.mgTitle}：${t.mgStep[step] || ''}</h3>
+        <p style="margin:0 0 0.8rem; font-size:0.86rem; line-height:1.6; color:var(--text-muted);"><b style="color:var(--text-main);">${t.mgDo[step] || ''}</b> ${t.mgHint}</p>
+        <div id="mg-pad" tabindex="0" role="application" aria-label="${t.mgDo[step] || ''}" style="position:relative; height:150px; border:1px solid var(--glass-border); border-radius:8px; background:#0c1610; touch-action:none; overflow:hidden; cursor:crosshair; user-select:none; -webkit-user-select:none;">
+            <svg viewBox="0 0 300 150" preserveAspectRatio="none" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none;" aria-hidden="true">${MG_ART[step] || ''}<circle id="mg-dot" r="6" fill="#b6e268" opacity="0"/></svg>
         </div>
-        <style>@keyframes mg-sweep { from { left: 0%; } to { left: 100%; } }</style>
-        <p id="mg-msg" style="margin:0.8rem 0 0; min-height:1.4rem; font-size:1rem;"></p>
-        <div style="display:flex; gap:0.6rem;">
-            <button id="mg-go" style="${B4_BTN} text-align:center; flex:2; font-weight:bold;">${t.mgGo}</button>
-            <button id="mg-skip" style="${B4_BTN} text-align:center; flex:1; border-color:rgba(148,163,184,0.4); background:rgba(148,163,184,0.08); color:#cbd5e1;">${t.mgSkip}</button>
-        </div>`);
-    let settled = false;
+        <div style="position:relative; height:8px; margin-top:0.6rem; border-radius:4px; background:rgba(239,230,207,0.12); overflow:hidden;">
+            ${step === 'dry' ? `<div style="position:absolute; top:0; bottom:0; left:${MG_ZONE[0] * 100}%; width:${(MG_ZONE[1] - MG_ZONE[0]) * 100}%; background:rgba(182,226,104,0.35);"></div>` : ''}
+            <div id="mg-bar" style="position:absolute; top:0; bottom:0; left:0; width:0%; background:var(--primary);"></div>
+        </div>
+        <p id="mg-msg" role="status" style="margin:0.6rem 0 0; min-height:1.4rem; font-size:0.95rem;"></p>
+        <button id="mg-skip" style="${B4_BTN} text-align:center;">${t.mgSkip}</button>`);
+    const pad = modal.querySelector('#mg-pad'), bar = modal.querySelector('#mg-bar'), dot = modal.querySelector('#mg-dot'), msg = modal.querySelector('#mg-msg');
+    let settled = false, down = false, start = null, crossed = false, anchor = 0, way = 0, strokes = 0, hits = 0, keys = 0, holdAt = 0, holdRaf = 0;
+    const say = (text, good) => { msg.textContent = text || ''; msg.style.color = good ? 'var(--primary)' : 'var(--text-muted)'; };
     const finish = (success, showMsg) => {
         if (settled) return;
         settled = true;
-        clearTimeout(promptState.mgTimer);
+        clearTimeout(promptState.mgTimer); cancelAnimationFrame(holdRaf);
         socket.emit('action', { type: 'minigame_result', success });
         if (!showMsg) { b4Close('minigame-modal'); return; }
-        const pointer = modal.querySelector('#mg-pointer');
-        if (pointer) pointer.style.animationPlayState = 'paused';
-        const msg = modal.querySelector('#mg-msg');
-        if (msg) { msg.textContent = success ? t.mgWin : t.mgLose; msg.style.color = success ? '#86efac' : '#fca5a5'; }
+        say(success ? t.mgWin : t.mgLose, success);
         setTimeout(() => b4Close('minigame-modal'), 900);
     };
-    modal.querySelector('#mg-go').addEventListener('click', () => {
-        const phase = ((performance.now() - start) % (MG_PERIOD * 2)) / MG_PERIOD;   // 0..2
-        const pos = phase <= 1 ? phase : 2 - phase;                                    // triangle wave 0..1
-        finish(pos >= MG_ZONE[0] && pos <= MG_ZONE[1], true);
+    const set = p => { const v = Math.max(0, Math.min(1, p)); bar.style.width = v * 100 + '%'; if (v >= 1) finish(true, true); };
+    const at = e => { const r = pad.getBoundingClientRect(); return { x: (e.clientX - r.left) / r.width * 300, y: (e.clientY - r.top) / r.height * 150 }; };
+    // the sun: the bar fills while held; letting go inside the marked stretch is "dry"
+    const holdStart = () => {
+        holdAt = performance.now(); say('');
+        const tick = () => {
+            if (settled || !holdAt) return;
+            const k = (performance.now() - holdAt) / MG_HOLD;
+            bar.style.width = Math.min(1, k) * 100 + '%';
+            if (k >= 1) { holdAt = 0; bar.style.width = '0%'; say(t.mgOver); return; }
+            holdRaf = requestAnimationFrame(tick);
+        };
+        tick();
+    };
+    const holdEnd = () => {
+        if (!holdAt) return;
+        const k = (performance.now() - holdAt) / MG_HOLD;
+        holdAt = 0; cancelAnimationFrame(holdRaf);
+        if (k >= MG_ZONE[0] && k <= MG_ZONE[1]) { bar.style.width = k * 100 + '%'; finish(true, true); }
+        else { bar.style.width = '0%'; say(k < MG_ZONE[0] ? t.mgEarly : t.mgOver); }
+    };
+    const move = p => {
+        if (step === 'rub' || step === 'twine') {
+            // to and fro: a stroke counts once the hand has travelled far enough the other way
+            const v = step === 'rub' ? p.x : p.y, span = step === 'rub' ? 60 : 34, d = v - anchor, sgn = Math.sign(d);
+            if (way !== 0 && sgn === way) anchor = v;
+            else if (Math.abs(d) >= span) { strokes++; way = sgn; anchor = v; set(strokes / 6); }
+        } else if (step === 'chop') {
+            if (p.x > 128 && p.x < 172 && p.y > 86 && p.y < 130) crossed = true;
+            if (crossed && start && Math.abs(p.x - start.x) > 70) set(1);
+        } else if (step === 'strip') {
+            if (!start || start.x > 80) return;
+            if (p.y < 48 || p.y > 102) { start = null; set(0); say(t.mgOff); return; }
+            set((p.x - 56) / 185);
+        } else if (step === 'caulk') {
+            const peg = MG_PEGS[hits];
+            if (peg && Math.hypot(p.x - peg[0], p.y - peg[1]) < 26) {
+                const mark = modal.querySelector(`.mg-peg[data-i="${hits}"]`); if (mark) mark.setAttribute('fill', '#b6e268');
+                hits++; set(hits / MG_PEGS.length);
+            }
+        }
+    };
+    pad.addEventListener('pointerdown', e => {
+        if (settled) return;
+        e.preventDefault(); down = true; start = at(e); crossed = false; way = 0; say('');
+        anchor = step === 'rub' ? start.x : start.y;
+        try { pad.setPointerCapture(e.pointerId); } catch (err) { /* older browsers */ }
+        if (step === 'dry') holdStart(); else move(start);
     });
+    pad.addEventListener('pointermove', e => {
+        if (!down || settled) return;
+        const p = at(e);
+        dot.setAttribute('cx', p.x); dot.setAttribute('cy', p.y); dot.setAttribute('opacity', '0.9');
+        move(p);
+    });
+    const lift = () => {
+        if (!down) return;
+        down = false; dot.setAttribute('opacity', '0');
+        if (step === 'dry') holdEnd();
+        else if (step === 'strip' && !settled) { start = null; set(0); }
+    };
+    pad.addEventListener('pointerup', lift);
+    pad.addEventListener('pointercancel', lift);
+    // the same with the keyboard: hold the space bar for the sun, press it a few times for the rest
+    pad.addEventListener('keydown', e => {
+        if (e.key !== ' ' && e.key !== 'Enter') return;
+        e.preventDefault();
+        if (settled || e.repeat) return;
+        if (step === 'dry') holdStart(); else set(++keys / (MG_KEYS[step] || 3));
+    });
+    pad.addEventListener('keyup', e => { if ((e.key === ' ' || e.key === 'Enter') && step === 'dry') holdEnd(); });
     modal.querySelector('#mg-skip').addEventListener('click', () => finish(false, false));
     promptState.mgTimer = setTimeout(() => finish(false, false), MG_LIMIT);
 }

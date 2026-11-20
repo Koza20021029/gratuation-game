@@ -241,7 +241,10 @@ def create_initial_state(room_code):
         'tribe_boat_goal': TRIBE_BOAT_PER_PLAYER,
         'mission': None,               # this month's group mission
         'players': {}, # socket_id -> player_data
-        'logs': []
+        'logs': [],
+        # For the year-end screen only; nothing in the rules reads these.
+        'ties': [],    # [from name, to name, kind, month]: who asked, taught, told, gave, helped or lent a hand to whom
+        'year': []     # one snapshot per month as it ends: where everyone was and how far they had got
     }
 
 def generate_room_code():
@@ -301,6 +304,20 @@ def add_log(room_code, msg):
         if len(rooms[room_code]['logs']) > 50:
             rooms[room_code]['logs'].pop(0)
 
+TIES_MAX = 300
+def tie(state, giver, takers, kind, month):
+    """Note that knowledge or help went from one person to others (read only by the year-end screen)."""
+    ties = state.setdefault('ties', [])
+    for t in takers:
+        if t is not giver and len(ties) < TIES_MAX:
+            ties.append([giver['name'], t['name'], kind, month])
+
+def snapshot_month(state):
+    """Where everyone stood as a month ended, for the year-end replay."""
+    state.setdefault('year', []).append({'month': state['month'], 'players': [
+        {'name': p['name'], 'role': p['role'], 'loc': p['location'], 'progress': p.get('progress', 0), 'finished': bool(p.get('finished'))}
+        for p in state['players'].values()]})
+
 def record_player_kp(player, month):
     history = player.setdefault('kp_history', [])
     if history and history[-1]['month'] == month:
@@ -311,6 +328,12 @@ def record_player_kp(player, month):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+# A tiny address for an uptime monitor to call. The free host puts the game to sleep after 15 quiet minutes
+# and takes most of a minute to wake; a call here every 10 minutes keeps it up without drawing the whole page.
+@app.route('/healthz')
+def healthz():
+    return 'ok', 200, {'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store'}
 
 # the rules site lives inside the game: /rules opens the player rules, /rules/class.html the classroom guide
 @app.route('/rules')
@@ -350,6 +373,23 @@ def gzip_island_files(response):
 @app.route('/<path:path>')
 def serve_static(path):
     return send_from_directory('static', path)
+
+# How long a browser may keep a static file without asking again.
+#   - requested with a ?v= stamp: the address changes whenever the file does, so a year, never rechecked
+#   - third-party libraries under /vendor/: 30 days; pictures, sound and video: one day
+#   - everything else (pages, unstamped scripts): rechecked every time, answered with a 304 when unchanged
+@app.after_request
+def cache_static_files(response):
+    if request.endpoint != 'serve_static' or request.method != 'GET' or response.status_code not in (200, 206, 304):
+        return response
+    kind = response.mimetype or ''
+    if request.args.get('v') and kind != 'text/html':
+        response.headers['Cache-Control'] = 'public, max-age=31536000, immutable'
+    elif request.path.startswith('/vendor/'):
+        response.headers['Cache-Control'] = 'public, max-age=2592000'
+    elif kind.startswith(('image/', 'audio/', 'video/', 'font/')):
+        response.headers['Cache-Control'] = 'public, max-age=86400'
+    return response
 
 @socketio.on('connect')
 def handle_connect():
@@ -591,6 +631,8 @@ def handle_start():
         state['forest_tended'] = False
         state['tribe_boat'] = 0
         state['tribe_boat_goal'] = TRIBE_BOAT_PER_PLAYER * len(state['players'])
+        state['ties'] = []
+        state['year'] = []
         for p in state['players'].values():
             role_info = ROLES[p['role']]
             p['ap'] = role_info['max_ap']
@@ -909,6 +951,7 @@ def handle_action(data):
                     award_badge(player, 'ask', room_code)
                     mission_progress(state, room_code, 'ask')
                     give_quiz(player)
+                    tie(state, mentor, [player], 'ask', month)
                     action_done = True
 
             else:
@@ -939,6 +982,9 @@ def handle_action(data):
                     award_badge(player, 'ask', room_code)
                     mission_progress(state, room_code, 'ask')
                     give_quiz(player)
+                    for p in state['players'].values():
+                        if p['role'] == 'elder' and p['id'] != player['id']:
+                            tie(state, p, [player], 'ask', month)
                     action_done = True
 
         elif action == 'teach':
@@ -959,6 +1005,7 @@ def handle_action(data):
                 player.setdefault('stats', new_stats())['teach'] += 1
                 award_badge(player, 'teach', room_code)
                 mission_progress(state, room_code, 'teach')
+                tie(state, player, [target_p], 'teach', month)
                 action_done = True
 
         elif action == 'tell':
@@ -983,6 +1030,7 @@ def handle_action(data):
                 player.setdefault('stats', new_stats())['tell'] += 1
                 award_badge(player, 'teach', room_code)
                 mission_progress(state, room_code, 'teach')
+                tie(state, player, listeners, 'tell', month)
                 names = '、'.join(p['name'] for p in listeners)
                 add_log(room_code, f"🗣️ {player['name']} 對身邊的人講述：{names} 各獲得 {gain} KP，{player['name']} 獲得 1 分")
                 action_done = True
@@ -1001,6 +1049,7 @@ def handle_action(data):
                 player['materials'] -= 1
                 target_p['materials'] += 1
                 add_log(room_code, f"🤝 {player['name']} 將 1 份材料送給了 {target_p['name']}！")
+                tie(state, player, [target_p], 'give', month)
                 if target_p['role'] == 'elder' and player['role'] != 'elder':
                     player.setdefault('stats', new_stats())['gift'] += 1
                     award_badge(player, 'gift', room_code)
@@ -1031,6 +1080,7 @@ def handle_action(data):
             if consume_ap(1):
                 elder['ap'] = min(elder['max_ap'], elder['ap'] + 2)
                 player['help_month'] = month
+                tie(state, player, [elder], 'help', month)
                 player.setdefault('stats', new_stats())['help'] += 1
                 award_badge(player, 'help', room_code)
                 mission_progress(state, room_code, 'help')
@@ -1180,6 +1230,7 @@ def handle_action(data):
             if consume_ap(1):
                 target_p['assist_month'] = month
                 player.setdefault('stats', new_stats())['assist'] += 1
+                tie(state, player, [target_p], 'assist', month)
                 if player.get('assist_score_month', 0) != month:
                     player['assist_score_month'] = month
                     player['score'] += 1
@@ -1244,6 +1295,7 @@ def handle_toggle_ready():
             for p in state['players'].values():
                 p['ready'] = False
             
+            snapshot_month(state)
             settle_forest_month(state, room_code)
             clear_month_prompts(state)
             state['month'] += 1

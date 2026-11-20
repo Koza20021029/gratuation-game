@@ -225,7 +225,7 @@ export function roadTexture(THREE, { centre = true, kind = 'road' } = {}) {
     // plain strips: a concrete village lane, a dirt trail, or the runway (white edges and a dashed white centre)
     const c = document.createElement('canvas'); c.width = 64; c.height = 128;
     const g = c.getContext('2d');
-    g.fillStyle = { lane: '#d9d3c4', trail: '#c9b48c', runway: '#6b6c6f' }[kind]; g.fillRect(0, 0, 64, 128);
+    g.fillStyle = { lane: '#d9d3c4', trail: '#c9b48c', runway: '#8b8a86' }[kind]; g.fillRect(0, 0, 64, 128);
     if (kind === 'runway') { g.fillStyle = '#f2efe6'; g.fillRect(4, 0, 3, 128); g.fillRect(57, 0, 3, 128); g.fillRect(30, 0, 4, 60); }
     if (kind === 'trail') { g.fillStyle = 'rgba(120,100,70,0.25)'; for (let i = 0; i < 40; i++) g.fillRect(Math.random() * 64, Math.random() * 128, 3, 3); }
     const tex = new THREE.CanvasTexture(c);
@@ -235,10 +235,12 @@ export function roadTexture(THREE, { centre = true, kind = 'road' } = {}) {
   const c = document.createElement('canvas');
   c.width = 64; c.height = 128;
   const g = c.getContext('2d');
-  g.fillStyle = '#cfc6b2'; g.fillRect(0, 0, 64, 128);          // shoulder
-  g.fillStyle = '#4b4c4f'; g.fillRect(7, 0, 50, 128);          // asphalt
-  g.fillStyle = '#f2efe6'; g.fillRect(10, 0, 3, 128); g.fillRect(51, 0, 3, 128); // edge lines
-  if (centre) { g.fillStyle = '#f0c63a'; g.fillRect(30, 0, 4, 70); }            // dashed centre line
+  // A road should read as a road without being the strongest thing on the island: sun-bleached warm grey, no
+  // edge lines, and a thin cream centre dash that the texture's own mip levels fade out from a distance.
+  g.fillStyle = '#d3cab6'; g.fillRect(0, 0, 64, 128);          // shoulder
+  g.fillStyle = '#948d80'; g.fillRect(7, 0, 50, 128);          // asphalt
+  g.fillStyle = 'rgba(60, 54, 46, 0.10)'; for (let i = 0; i < 26; i++) g.fillRect(8 + ((i * 37) % 46), (i * 53) % 128, 3, 2);   // a little wear
+  if (centre) { g.fillStyle = 'rgba(240, 233, 214, 0.8)'; g.fillRect(31, 0, 2, 56); }   // dashed centre line
   const tex = new THREE.CanvasTexture(c);
   tex.wrapS = THREE.ClampToEdgeWrapping; tex.wrapT = THREE.RepeatWrapping;
   tex.colorSpace = THREE.SRGBColorSpace;

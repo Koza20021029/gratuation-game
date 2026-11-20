@@ -1634,7 +1634,7 @@ header {
     font-size: 1.1rem;
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
 }
-.widget-header h4 {
+.widget-header h3, .widget-header h4 {
     margin: 0;
     font-size: 0.95rem;
     font-weight: 800;

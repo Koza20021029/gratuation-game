@@ -33,8 +33,8 @@ function initAvatar3D() {
     const W = measured ? canvas.offsetWidth : 320, H = measured ? canvas.offsetHeight : 427;
 
     avatarScene = new THREE.Scene();
-    avatarScene.background = new THREE.Color('#060d1a');
-    avatarScene.fog = new THREE.Fog('#060d1a', 12, 30);
+    avatarScene.background = new THREE.Color('#0c1610');
+    avatarScene.fog = new THREE.Fog('#0c1610', 12, 30);
 
     avatarCamera = new THREE.PerspectiveCamera(44, W/H, 0.1, 100);
     avatarCamera.position.set(0, 0.8, 6.2);
@@ -59,8 +59,8 @@ function initAvatar3D() {
     const fill = new THREE.DirectionalLight(0x8899cc, 0.45);
     fill.position.set(-4, 2, -3); avatarScene.add(fill);
     
-    // Vivid blue rim light from the rear
-    const rim = new THREE.PointLight(0x38bdf8, 0.7, 18);
+    // Rim light from the rear, in rope gold
+    const rim = new THREE.PointLight(0xd2a45c, 0.7, 18);
     rim.position.set(0, 4, -4); avatarScene.add(rim);
     
     // Warm accent key for rich glowing skin tones
@@ -70,7 +70,7 @@ function initAvatar3D() {
     // Ground
     const gnd = new THREE.Mesh(
         new THREE.CircleGeometry(3.5, 40),
-        new THREE.MeshStandardMaterial({color:0x0a1520, roughness:0.9, metalness:0.1})
+        new THREE.MeshStandardMaterial({color:0x13221a, roughness:0.9, metalness:0.1})
     );
     gnd.rotation.x = -Math.PI/2; 
     gnd.position.y = -1.98; // Positioned exactly beneath lowest foot boundary
@@ -137,15 +137,8 @@ function buildParticleAura() {
     const colors    = new Float32Array(COUNT * 3);
     const meta = []; // per-particle lifecycle data
 
-    // Ocean palette: deep navy, cyan, teal, ice-blue
-    const palette = [
-        new THREE.Color('#00d4ff'), // cyan
-        new THREE.Color('#0ea5e9'), // sky-blue
-        new THREE.Color('#06b6d4'), // teal
-        new THREE.Color('#38bdf8'), // light sky
-        new THREE.Color('#7dd3fc'), // ice blue
-        new THREE.Color('#bae6fd'), // pale mist
-    ];
+    // Drifting motes in fibre and leaf tones
+    const palette = ['#efe6cf', '#d2a45c', '#b6e268', '#d9cba6', '#8fae6a'].map(c => new THREE.Color(c));
 
     for (let i = 0; i < COUNT; i++) {
         const angle  = Math.random() * Math.PI * 2;
@@ -179,7 +172,7 @@ function buildParticleAura() {
         size: 0.045,
         vertexColors: true,
         transparent: true,
-        opacity: 0.75,
+        opacity: 0.5,
         depthWrite: false,
         blending: THREE.AdditiveBlending, // additive blend for glowing aura look
         sizeAttenuation: true,
