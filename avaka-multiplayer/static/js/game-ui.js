@@ -150,7 +150,7 @@
       social: '和人有關的事', askElder: '向耆老請益', askElderSub: kp => `得到 ${kp} KP，雙方各 +1 分`, askMiddle: '向中生代請益', askMiddleSub: '得到 2 KP，雙方各 +1 分',
       help: '幫忙長者', helpSub: s => `耆老回復 2 AP，你 +${s} 分`, helpMore: '耆老回復 2 AP；這個月的分數已經拿過', patrol: '巡山', patrolSub: '看過每一區的 Avaka；算作照顧林地，你 +1 分', tribe: '為部落的船出力', tribeSub: (a, b) => `全組一起造的船 ${a}/${b}；年底全員加分`, tribeBoat: '部落的船', tribeNote: '完工的人可以到灘頭出力', tribeDone: '完成了，年底全員 +3 分', tell: '講述', tellSub: kp => `身邊的人各得 ${kp} KP，你 +1 分`, teach: '遠程指導', teachSub: '對方得 1 KP，你 +1 分', translate: '科學轉譯', translateSub: '用掉 2 KP；成功 +4 分、+2 材料', translateDone: '用掉 2 KP；成功得 2 份材料，可以送人（完工後不加分）',
       nextStep: '下一步', log: '部落記事', chat: '聊天', chatEmpty: '還沒有人說話。', chatPh: '跟同組的人說…', send: '送出', film: '蘭嶼影像',
-      island: '島上現在的樣子', islandOpen: '看整座島', thereNext: s => `你的下一道工序在這裡：${s}`, thereCan: list => `到了可以做：${list}`, thereNone: '現在到這裡還沒有能做的事',
+      island: '島上現在的樣子', islandOpen: '看整座島', toFilm: '看實景影片', toIsle: '回到島上', filmCap: '蘭嶼實景', thereNext: s => `你的下一道工序在這裡：${s}`, thereCan: list => `到了可以做：${list}`, thereNone: '現在到這裡還沒有能做的事',
       why: {
         ap: n => `體力不夠，要 ${n} AP`, kp: n => `技術還不夠，要 KP ${n}`, mat: n => `材料不夠，要 ${n} 份`, here: '你已經在這裡', closed: '2 月封山，不能上山', goForest: '要先走到山林', goShore: '要先走到灘頭工作室', goShop: '要先走到商店',
         doneStep: '這道已經做完了', earlier: '要先做完前一道', wait: '剛做完一道，要等下個月', taboo: '10 月不能完工', feast: '9 月商店不能完工', three: '要先做完山林的三道工序', once: '這個月做過了',
@@ -173,7 +173,7 @@
       social: 'With other people', askElder: 'Ask the Elder', askElderSub: kp => `+${kp} KP; +1 point each`, askMiddle: 'Ask the Middle Gen.', askMiddleSub: '+2 KP; +1 point each',
       help: 'Help the Elder', helpSub: s => `Elder recovers 2 AP; you +${s}`, helpMore: 'Elder recovers 2 AP; this month\'s point is already yours', patrol: 'Walk the hill', patrolSub: 'Check every Avaka plot; counts as tending, you +1', tribe: 'Work on the community boat', tribeSub: (a, b) => `The boat everyone builds ${a}/${b}; points for all at year end`, tribeBoat: 'Community boat', tribeNote: 'those who have finished can work on it at the Shore', tribeDone: 'finished: +3 for everyone at year end', tell: 'Tell stories', tellSub: kp => `+${kp} KP for those nearby; you +1`, teach: 'Guide from afar', teachSub: 'They gain 1 KP; you +1', translate: 'Scientific translation', translateSub: 'Uses 2 KP; success +4 points, +2 materials', translateDone: 'Uses 2 KP; success gives 2 materials to pass on (no points once finished)',
       nextStep: 'Next', log: 'Record', chat: 'Chat', chatEmpty: 'Nobody has said anything yet.', chatPh: 'Say something to your group…', send: 'Send', film: 'Lanyu on film',
-      island: 'The island right now', islandOpen: 'See the whole island', thereNext: s => `Your next step is here: ${s}`, thereCan: list => `There you can: ${list}`, thereNone: 'Nothing you can do there yet',
+      island: 'The island right now', islandOpen: 'See the whole island', toFilm: 'Real footage', toIsle: 'Back to the island', filmCap: 'Lanyu on film', thereNext: s => `Your next step is here: ${s}`, thereCan: list => `There you can: ${list}`, thereNone: 'Nothing you can do there yet',
       why: {
         ap: n => `Not enough stamina (${n} AP needed)`, kp: n => `Not enough skill (KP ${n} needed)`, mat: n => `Not enough material (${n} needed)`, here: 'You are already here', closed: 'The forest is closed in Month 2', goForest: 'Walk to the Forest first', goShore: 'Walk to the Shore workshop first', goShop: 'Walk to the Store first',
         doneStep: 'Already done', earlier: 'Finish the step before it first', wait: 'A step was just done; wait for next month', taboo: 'No boat may be finished in Month 10', feast: 'The Store cannot finish boats in Month 9', three: 'Do the three forest steps first', once: 'Already done this month',
@@ -193,7 +193,7 @@
   host.id = 'game2'; host.hidden = true;
   const root = host.attachShadow({ mode: 'open' });
   // fixed markup, no user input. The four parts are redrawn separately, so the island panel (#g-film) is never rebuilt.
-  root.innerHTML = '<link rel="stylesheet" href="css/game-ui.css?v=20261117_1"><div class="g" id="g"><div id="g-head"></div><div class="work">'
+  root.innerHTML = '<link rel="stylesheet" href="css/game-ui.css?v=20261120_2"><div class="g" id="g"><div id="g-head"></div><div class="work">'
     + '<aside class="panel col" id="g-mates"></aside><div id="g-centre"></div>'
     + '<aside class="side"><div class="panel film" id="g-film"></div><div class="panel feed" id="g-feed"></div></aside></div></div>';
   document.body.appendChild(host);
@@ -417,7 +417,7 @@
   // missing the two films play instead.
   const ISLE = { [FOREST]: 'forest', [SHORE]: 'beach', [SHOP]: 'shop' };
   const canGL = (() => { try { return !!document.createElement('canvas').getContext('webgl2'); } catch (e) { return false; } })();
-  let isleFrame = null, isleTimer = null, isleCap = null, isleLink = null, isleSeen = !('IntersectionObserver' in window);
+  let isleFrame = null, isleTimer = null, isleCap = null, isleLink = null, isleSeen = !('IntersectionObserver' in window), filmOn = false, filmBtn = null;
   let isleReady = false, sweeping = false;
   // A device with very little memory only loads the island once its panel scrolls into view; everywhere else it
   // is loaded soon after the game starts (and stays paused while out of sight), so the month sweep is ready.
@@ -427,7 +427,7 @@
     const me = state && state.players[socket.id];
     if (!me) return null;
     const players = Object.values(state.players).map(p => ({ name: p.name, role: p.role, loc: ISLE[p.location] || '', progress: p.progress || 0, finished: !!p.finished, me: p.id === me.id }));
-    return { avaka: 'island', month: state.month, focus: ISLE[me.location] || '', lang: lang(), paused: !isleSeen && !sweeping, players };
+    return { avaka: 'island', month: state.month, focus: ISLE[me.location] || '', lang: lang(), paused: (!isleSeen || filmOn) && !sweeping, players };
   };
   // On a phone the panel is far down the page: the island is not loaded until it scrolls into view, and stops drawing when it scrolls away.
   const isleWatch = isleSeen ? null : new IntersectionObserver(es => { isleSeen = es[es.length - 1].isIntersecting; if (isleSeen && visible) mountIsland(); else tellIsle(); });
@@ -477,14 +477,23 @@
     if (!isleCap) {
       isleCap = document.createElement('p'); isleCap.className = 'isle-cap';
       isleLink = document.createElement('a'); isleLink.className = 'isle-link'; isleLink.target = '_blank'; isleLink.rel = 'noopener';
+      // the same panel can show the real island instead: two short clips, fetched only when asked for
+      filmBtn = document.createElement('button'); filmBtn.type = 'button'; filmBtn.className = 'isle-link isle-film';
+      filmBtn.addEventListener('click', () => { filmOn = !filmOn; if (!filmOn) filmEl.pause(); mountIsland(); tellIsle(); });
       const shell = document.createElement('div'); shell.className = 'isle'; shell.id = 'isle';
       box.append(shell, isleCap);
       if (isleWatch) isleWatch.observe(shell);
     }
-    isleCap.textContent = T().island;
+    $('isle').hidden = filmOn;
+    isleCap.textContent = filmOn ? T().filmCap : T().island;
     isleLink.textContent = T().islandOpen;
     isleLink.href = `/island?month=${m.month}${m.focus ? '&focus=' + m.focus : ''}&lang=${m.lang}`;
-    isleCap.append(isleLink);
+    filmBtn.textContent = filmOn ? T().toIsle : T().toFilm;
+    const links = document.createElement('span'); links.className = 'isle-links';
+    links.append(filmBtn, isleLink);
+    isleCap.append(links);
+    if (filmOn) { mountFilm(box); box.insertBefore(filmEl, isleCap); filmEl.hidden = false; }
+    else filmEl.hidden = true;
     if (isleFrame) return tellIsle();
     if (isleTimer || !visible || (frugal && !isleSeen)) return;
     isleTimer = setTimeout(() => {
@@ -501,9 +510,10 @@
 
   // the films, kept for devices without WebGL
   const filmEl = document.createElement('video');
-  const CLIPS = ['assets/lanyu_1.mp4', 'assets/lanyu_2.mp4']; let clip = 0;
-  filmEl.muted = true; filmEl.playsInline = true; filmEl.preload = 'metadata';
-  filmEl.addEventListener('ended', () => { clip = (clip + 1) % CLIPS.length; filmEl.src = CLIPS[clip]; filmEl.play().catch(() => {}); });
+  // the compressed copies (640×360): the originals are 38 MB together
+  const CLIPS = ['assets/lanyu_1_640.mp4', 'assets/lanyu_2_640.mp4'], POSTERS = ['assets/lanyu_1.jpg', 'assets/lanyu_2.jpg']; let clip = 0;
+  filmEl.muted = true; filmEl.playsInline = true; filmEl.preload = 'none'; filmEl.className = 'isle-video'; filmEl.poster = POSTERS[0];
+  filmEl.addEventListener('ended', () => { clip = (clip + 1) % CLIPS.length; filmEl.src = CLIPS[clip]; filmEl.poster = POSTERS[clip]; filmEl.play().catch(() => {}); });
   function mountFilm(box) {
     filmEl.setAttribute('aria-label', T().film);
     if (filmEl.parentNode !== box) box.append(filmEl);

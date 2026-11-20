@@ -19,6 +19,9 @@
       rope: '知識的繩', ropeNote: '兩個人之間的繩越粗，知識和幫忙在他們之間來回越多次（請益、指導、講述、送材料、幫忙長者、搭把手）。',
       gave: '給出', got: '收到', times: '次', nothing: '這一年沒有人和別人請益或互相幫忙，所以沒有繩。',
       ask: '請益', teach: '指導', tell: '講述', give: '送材料', help: '幫忙長者', assist: '搭把手',
+      tag: { ask: '請益', teach: '指導', tell: '講述', give: '送材料', help: '幫忙', assist: '搭把手' },
+      said: { ask: (a, b) => `${b} 向 ${a} 請益`, teach: (a, b) => `${a} 遠程指導 ${b}`, tell: (a, b) => `${a} 對 ${b} 講述`, give: (a, b) => `${a} 送材料給 ${b}`, help: (a, b) => `${a} 幫忙長者 ${b}`, assist: (a, b) => `${a} 幫 ${b} 搭把手` },
+      quiet: '這個月沒有人互相請益或幫忙。', events: '這個月發生的事',
       talk: '可以一起想：誰最常被問？誰沒有人問？繩最粗的兩個人，是怎麼一直有交集的？',
       role: { elder: '耆老', youth: '文化復振青年', middle: '中生代' }
     },
@@ -27,6 +30,9 @@
       rope: 'The rope of knowledge', ropeNote: 'The thicker the cord between two people, the more often knowledge and help passed between them (asking, guiding, telling, giving material, helping the Elder, lending a hand).',
       gave: 'gave', got: 'received', times: '', nothing: 'Nobody asked or helped anyone else this year, so there is no rope.',
       ask: 'asked', teach: 'guided', tell: 'told', give: 'gave material', help: 'helped the Elder', assist: 'lent a hand',
+      tag: { ask: 'asked', teach: 'guided', tell: 'told', give: 'gave', help: 'helped', assist: 'a hand' },
+      said: { ask: (a, b) => `${b} asked ${a}`, teach: (a, b) => `${a} guided ${b} from afar`, tell: (a, b) => `${a} told ${b} stories`, give: (a, b) => `${a} gave ${b} material`, help: (a, b) => `${a} helped the Elder, ${b}`, assist: (a, b) => `${a} lent ${b} a hand` },
+      quiet: 'Nobody asked or helped anyone else this month.', events: 'This month',
       talk: 'To talk about: who was asked most? Who was never asked? How did the two with the thickest cord keep meeting?',
       role: { elder: 'Elder', youth: 'Youth', middle: 'Middle Gen.' }
     }
@@ -44,39 +50,55 @@
     sec.append(el('h2', null, t.replay));
     const stage = el('div', { class: 'ye-isle' });
     const frame = el('iframe', { title: t.replay, tabindex: '-1', 'aria-hidden': 'true', src: `/island?embed=1&month=1&lang=${lang}` });
-    const label = el('p', { class: 'ye-month', 'aria-live': 'polite' });
+    const label = el('p', { class: 'ye-month' });
+    const said = el('div', { class: 'ye-events', 'aria-live': 'polite' });
     const bar = el('div', { class: 'ye-bar' }), btn = el('button', { type: 'button', class: 'ye-btn' });
     for (let i = 0; i < year.length; i++) bar.append(el('i'));
     stage.append(frame, label);
-    sec.append(stage, el('div', { class: 'ye-controls' }));
-    sec.lastChild.append(btn, bar);
+    sec.append(stage, el('div', { class: 'ye-controls' }), said);
+    sec.children[2].append(btn, bar);
     box.append(sec);
 
     let at = -1, timer = 0, ready = false, playing = false;
-    const STEP = 1700;
+    // a month where people helped each other is held long enough to read; a quiet one goes by quickly
+    const BUSY = 3800, QUIET = 1500;
+    const tiesIn = m => (state.ties || []).filter(x => x[3] === m);
+    const wait = i => (tiesIn(year[i].month).length ? BUSY : QUIET);
     const say = () => { btn.textContent = playing ? t.pause : at >= year.length - 1 ? t.again : t.play; };
     const show = i => {
       at = i;
       const snap = year[i], last = i === year.length - 1;
       const players = snap.players.map(p => ({ name: p.name, role: p.role, loc: ISLE[p.loc] || '', progress: p.progress, finished: p.finished, me: false }));
-      if (frame.contentWindow) frame.contentWindow.postMessage({ avaka: 'island', month: snap.month, focus: last ? 'beach' : '', lang, players }, location.origin);
+      const who = n => snap.players.findIndex(p => p.name === n), ties = tiesIn(snap.month);
+      const byPair = new Map();
+      ties.forEach(([a, b, k]) => { const key = a + '\u0000' + b; if (!byPair.has(key)) byPair.set(key, [who(a), who(b), []]); const l = byPair.get(key); if (!l[2].includes(t.tag[k] || k)) l[2].push(t.tag[k] || k); });
+      const links = [...byPair.values()].filter(l => l[0] >= 0 && l[1] >= 0).map(([i, j, kinds]) => [i, j, kinds.join('・')]);
+      if (frame.contentWindow) frame.contentWindow.postMessage({ avaka: 'island', month: snap.month, focus: last ? 'beach' : 'people', lang, players, links: last ? [] : links }, location.origin);
       label.textContent = t.month(snap.month);
+      said.textContent = '';
+      said.append(el('p', { class: 'ye-events-h' }, `${t.month(snap.month)}・${t.events}`));
+      if (ties.length) { const ul = el('ul'); ties.forEach(([a, b, k]) => ul.append(el('li', null, t.said[k] ? t.said[k](a, b) : `${a} → ${b}`))); said.append(ul); }
+      else said.append(el('p', { class: 'ye-events-none' }, t.quiet));
       [...bar.children].forEach((d, k) => d.classList.toggle('on', k <= i));
     };
     const tick = () => {
       if (!playing) return;
       if (at >= year.length - 1) { playing = false; say(); return; }
       show(at + 1);
-      timer = setTimeout(tick, STEP);
+      timer = setTimeout(tick, wait(at));
     };
     const play = () => { if (!ready) return; if (at >= year.length - 1) at = -1; playing = true; say(); clearTimeout(timer); tick(); };
     const pause = () => { playing = false; clearTimeout(timer); say(); };
     btn.addEventListener('click', () => (playing ? pause() : play()));
+    // clicking a month on the bar goes straight to it (and pauses)
+    [...bar.children].forEach((d, k) => { d.setAttribute('role', 'button'); d.tabIndex = 0; d.title = t.month(year[k].month);
+      const go = () => { if (!ready) return; pause(); show(k); say(); };
+      d.addEventListener('click', go); d.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } }); });
     addEventListener('message', e => {
       if (e.origin !== location.origin || !e.data || e.data.avaka !== 'island-ready' || e.source !== frame.contentWindow || ready) return;
       ready = true;
       show(0);
-      if (calm()) say(); else { playing = true; say(); timer = setTimeout(tick, STEP); }
+      if (calm()) say(); else { playing = true; say(); timer = setTimeout(tick, wait(0)); }
     });
     say();
   }
@@ -102,7 +124,10 @@
     const sec = el('section', { class: 'ye-block' });
     sec.append(el('h2', null, t.rope), el('p', { class: 'ye-note' }, t.ropeNote));
     box.append(sec);
-    const people = Object.values(state.players).map(p => ({ name: p.name, role: p.role }));
+    const seen = new Map();
+    (state.year || []).forEach(m => m.players.forEach(p => seen.set(p.name, { name: p.name, role: p.role })));
+    Object.values(state.players).forEach(p => seen.set(p.name, { name: p.name, role: p.role }));
+    const people = [...seen.values()];
     const ties = state.ties || [];
     if (!ties.length || people.length < 2) { sec.append(el('p', { class: 'ye-note' }, t.nothing)); return; }
 

@@ -14,7 +14,7 @@
       // keep the page dark until the new screens are built, so the old ones never flash; never longer than 4 s
       if (new URLSearchParams(location.search).get('ui') !== 'old') { document.documentElement.classList.add('nu-boot'); setTimeout(function () { document.documentElement.classList.remove('nu-boot'); }, 4000); }
     </script>
-    <link rel="stylesheet" href="css/newui.css?v=20261120_1">
+    <link rel="stylesheet" href="css/newui.css?v=20261120_3">
 </head>
 <body>
     <div id="toast-container" style="position:fixed; top:20px; right:20px; z-index:9999; display:flex; flex-direction:column; gap:10px;"></div>
@@ -741,9 +741,9 @@
                         border: 1px solid rgba(56,189,248,0.15);
                         box-shadow: 0 0 20px rgba(6,180,212,0.12);
                     ">
-                        <video id="title-video" src="assets/lanyu_1.mp4"
-                            data-playlist="assets/lanyu_1.mp4,assets/lanyu_2.mp4"
-                            autoplay muted playsinline preload="metadata"
+                        <video id="title-video" src="assets/lanyu_1_640.mp4"
+                            data-playlist="assets/lanyu_1_640.mp4,assets/lanyu_2_640.mp4"
+                            autoplay muted playsinline preload="none"
                             style="width:100%; height:100%; object-fit:cover; display:block; border-radius:14px;">
                         </video>
                         <!-- Subtle overlay gradient to blend with game theme -->
@@ -794,10 +794,10 @@
     <script src="js/light-rays.js?v=20261013_1"></script>
     <script src="js/prismatic-burst.js?v=20261013_1"></script>
     <script src="js/pixel-card.js?v=20261013_1"></script>
-    <script src="js/app.js?v=20261120_1"></script>
+    <script src="js/app.js?v=20261120_3"></script>
     <script src="js/lobby.js?v=20261116_1"></script>
-    <script src="js/game-ui.js?v=20261117_3"></script>
-    <script src="js/year-end.js?v=20261120_1"></script>
+    <script src="js/game-ui.js?v=20261120_2"></script>
+    <script src="js/year-end.js?v=20261120_3"></script>
     <script>
     // ── Avaka BGM Controller ──────────────────────────────────────────────────
     (function () {

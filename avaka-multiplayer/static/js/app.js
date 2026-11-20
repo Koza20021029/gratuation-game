@@ -2790,42 +2790,27 @@ function drawKPChart(canvas, players) {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const width = 760;
-    const height = 300;
+    const height = 280;
     canvas.width = width * window.devicePixelRatio;
     canvas.height = height * window.devicePixelRatio;
     ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
 
     ctx.clearRect(0, 0, width, height);
 
-    const padL = 55, padR = 45, padT = 45, padB = 45;
+    const padL = 52, padR = 28, padT = 18, padB = 36;
     const chartW = width - padL - padR;
     const chartH = height - padT - padB;
 
     const maxMonth = 12;
     const maxKp = 15;
 
-    // Background
-    const bgGrad = ctx.createLinearGradient(0, 0, 0, height);
-    bgGrad.addColorStop(0, 'rgba(6, 16, 32, 0.95)');
-    bgGrad.addColorStop(1, 'rgba(11, 25, 46, 0.98)');
-    ctx.fillStyle = bgGrad;
-    ctx.beginPath();
-    ctx.roundRect(0, 0, width, height, 12);
-    ctx.fill();
-
-    // Chart Header
     const isEn = currentLang === 'en';
-    ctx.fillStyle = '#7dd3fc';
-    ctx.font = 'bold 14px "Noto Serif TC", sans-serif';
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'top';
-    ctx.fillText(isEn ? '📈 Knowledge Point (KP) Development Curves (Months 1–12)' : '📈 12 個月角色技術點數 (KP) 發展曲線圖', padL, 14);
 
     // Y-axis grid & labels
     ctx.lineWidth = 1;
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
-    ctx.fillStyle = 'rgba(148, 163, 184, 0.85)';
-    ctx.font = '11px Outfit, sans-serif';
+    ctx.strokeStyle = 'rgba(239, 230, 207, 0.1)';
+    ctx.fillStyle = '#8f957f';
+    ctx.font = '11px Newsreader, "Noto Sans TC", sans-serif';
     ctx.textAlign = 'right';
     ctx.textBaseline = 'middle';
 
@@ -2847,20 +2832,16 @@ function drawKPChart(canvas, players) {
         ctx.beginPath();
         ctx.moveTo(x, padT);
         ctx.lineTo(x, height - padB);
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+        ctx.strokeStyle = 'rgba(239, 230, 207, 0.05)';
         ctx.stroke();
         ctx.fillText(`M${m}`, x, height - padB + 8);
     }
 
-    const ROLE_COLORS = {
-        elder: '#d4af37',   // Gold
-        youth: '#4ade80',   // Emerald Green
-        middle: '#a78bfa'   // Purple
-    };
+    const ROLE_COLORS = { elder: '#d2a45c', youth: '#b6e268', middle: '#8cc0dc' };   // the same as the year-end page
 
     const playerList = Object.values(players);
     playerList.forEach((p) => {
-        const color = ROLE_COLORS[p.role] || '#38bdf8';
+        const color = ROLE_COLORS[p.role] || '#efe6cf';
         const history = p.kp_history || [{ month: 1, kp: p.kp || 0 }];
         
         const points = [];
@@ -2875,41 +2856,38 @@ function drawKPChart(canvas, players) {
 
         // Line
         ctx.beginPath();
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 2.5;
         ctx.strokeStyle = color;
-        ctx.shadowColor = color;
-        ctx.shadowBlur = 10;
         points.forEach((pt, idx) => {
             if (idx === 0) ctx.moveTo(pt.x, pt.y);
             else ctx.lineTo(pt.x, pt.y);
         });
         ctx.stroke();
-        ctx.shadowBlur = 0;
 
         // Dots
         points.forEach(pt => {
             ctx.beginPath();
-            ctx.arc(pt.x, pt.y, 4.5, 0, Math.PI * 2);
+            ctx.arc(pt.x, pt.y, 3.5, 0, Math.PI * 2);
             ctx.fillStyle = color;
             ctx.fill();
             ctx.lineWidth = 2;
-            ctx.strokeStyle = '#061020';
+            ctx.strokeStyle = '#0c1610';
             ctx.stroke();
         });
 
         // Industrial path badge
         if (p.industrial || p.path_choice === 'industrial') {
             const lastPt = points[points.length - 1];
-            ctx.font = 'bold 11px sans-serif';
-            ctx.fillStyle = '#ef4444';
+            ctx.font = '700 11px "Noto Sans TC", sans-serif';
+            ctx.fillStyle = '#e59a78';
             ctx.textAlign = 'center';
-            ctx.fillText(isEn ? '⚠️ Deskilled (Resin)' : '⚠️ 去技能化 (樹脂)', lastPt.x, Math.max(padT + 12, lastPt.y - 14));
+            ctx.fillText(isEn ? 'Deskilled (resin)' : '去技能化（樹脂）', lastPt.x, Math.max(padT + 12, lastPt.y - 14));
         } else if (p.path_choice === 'hybrid') {
             const lastPt = points[points.length - 1];
-            ctx.font = 'bold 11px sans-serif';
-            ctx.fillStyle = '#fbbf24';
+            ctx.font = '700 11px "Noto Sans TC", sans-serif';
+            ctx.fillStyle = '#d2a45c';
             ctx.textAlign = 'center';
-            ctx.fillText(isEn ? '⚙️ Machine-processed' : '⚙️ 機器加工', lastPt.x, Math.max(padT + 12, lastPt.y - 14));
+            ctx.fillText(isEn ? 'Machine-processed' : '機器加工', lastPt.x, Math.max(padT + 12, lastPt.y - 14));
         }
     });
 }
@@ -2917,6 +2895,14 @@ function drawKPChart(canvas, players) {
 function renderGameOver(state) {
     const appEl = document.getElementById('app');
     if (!appEl) return;
+    // The year as it ended stays on the page: when classmates close their tabs afterwards, the room state
+    // loses them, but their results, the replay and the rope should not disappear (or restart) for the rest.
+    const kept = renderGameOver.kept;
+    if (kept && kept.room_code === state.room_code && Object.keys(state.players).length < Object.keys(kept.players).length) state = kept;
+    renderGameOver.kept = state;
+    const shownKey = state.room_code + '|' + currentLang + '|' + Object.values(state.players).map(p => p.name + ':' + p.score).join(',');
+    if (renderGameOver.key === shownKey && document.querySelector('.yr')) return;   // nothing new to show
+    renderGameOver.key = shownKey;
 
     if (lightRaysInstance) {
         lightRaysInstance.destroy();
@@ -2939,173 +2925,103 @@ function renderGameOver(state) {
     const scoreSrc = isEn ? 'Score Sources: ' : '得分來源: ';
 
     const playersSorted = Object.values(state.players).sort((a,b)=>b.score-a.score);
+    // The year-end page: one column of plain sections divided by thin rules, no boxes inside boxes.
+    // Styled in css/newui.css (.yr-*); the texts are the same as before.
+    const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+    const plainText = v => String(v || '').replace(/[\p{Extended_Pictographic}️‍]+\s*/gu, '').trim();
+    const ROLE_TONE = { elder: '#d2a45c', youth: '#b6e268', middle: '#8cc0dc' };
+    const pathKind = p => (p.industrial || p.path_choice === 'industrial') ? 'resin' : p.path_choice === 'hybrid' ? 'machine' : p.finished ? 'avaka' : 'none';
+    const bt = BADGE_TEXT[currentLang] || BADGE_TEXT.zh, tt = TITLE_TEXT[currentLang] || TITLE_TEXT.zh;
+    const ft = FOREST_TEXT[currentLang] || FOREST_TEXT.zh;
+    const forestValue = typeof state.forest === 'number' ? state.forest : 3, forestLv = state.forest_level || forestLevel(forestValue);
+    const person = p => {
+        const ending = p.ending ? (isEn && endingTranslations[p.ending.title] ? endingTranslations[p.ending.title] : p.ending) : null;
+        const title = ending ? ending.title : (p.finished ? (isEn ? 'Heritage Succeeded' : '傳承成功') : (isEn ? 'Cultural Disruption' : '文化斷裂'));
+        const honours = [...(p.titles || []).map(t => `<li class="is-title">${esc(tt.names[t] || t)}</li>`), ...(p.badges || []).map(b => `<li>${esc(bt.names[b] || b)}</li>`)].join('');
+        const sources = translateScoreBreakdown(p.score_breakdown).map(x => `<li>${esc(plainText(x))}</li>`).join('');
+        return `
+            <li class="yr-person" style="--tone:${ROLE_TONE[p.role] || '#efe6cf'}">
+                <div class="yr-score"><b>${p.score}</b><span>${isEn ? 'points' : '分'}</span></div>
+                <div class="yr-body">
+                    <p class="yr-who"><b>${esc(p.name)}</b><span class="yr-role">${esc(getRoleName(p.role))}</span><span class="yr-path is-${pathKind(p)}">${esc(plainText(getPathBadge(p).label))}</span></p>
+                    <h3 class="yr-ending${p.finished ? '' : ' is-broken'}">${esc(plainText(title))}</h3>
+                    ${ending && ending.text ? `<div class="yr-story">${ending.text}</div>` : ''}
+                    ${sources ? `<div class="yr-sources"><p>${isEn ? 'Where the points came from' : '分數從哪裡來'}</p><ul>${sources}</ul></div>` : ''}
+                    ${honours ? `<ul class="yr-honours">${honours}</ul>` : ''}
+                </div>
+            </li>`;
+    };
 
     appEl.innerHTML = `
-        <canvas id="prismatic-burst-canvas" class="prismatic-burst-container"></canvas>
-        <div class="screen active" style="align-items:center; justify-content:center; overflow-y:auto; padding:2rem 0; min-height:100vh;">
-            <div class="glass" style="padding: 2rem; text-align:center; max-width: 860px; width: 92%; position:relative; z-index:10; margin: auto;">
-                <h1 style="font-family: 'Noto Serif TC', serif; font-weight: 900; font-size: 2.5rem; color:var(--primary); margin-bottom: 2rem; letter-spacing:0.15em; text-shadow: 0 0 20px rgba(139, 195, 74, 0.4);">${finalTitle}</h1>
+        <div class="screen active yr-screen">
+            <article class="yr">
+                <header class="yr-head">
+                    <p class="yr-eyebrow">${isEn ? 'Twelve months later' : '十二個月之後'}</p>
+                    <h1>${finalTitle}</h1>
+                </header>
+
                 <section id="year-end" class="ye"></section>
-                
-                <!-- Player Score Cards -->
-                <div style="text-align:left; margin-bottom: 2rem; display:flex; flex-direction:column; gap:1.5rem;">
-                    ${playersSorted.map((p, i) => `
-                        <div style="background:rgba(0,0,0,0.4); padding:1.5rem; border-radius:12px; border-left: 5px solid ${i===0?'var(--secondary)':'var(--text-muted)'};">
-                            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.5rem; flex-wrap:wrap; gap:0.5rem;">
-                                <h3 style="font-size:1.3rem; color:var(--primary); margin:0;">
-                                    ${i===0?'👑 ':''}${p.avatar ? p.avatar.icon : ''} ${p.name} 
-                                    <span style="font-size:0.9rem; color:var(--text-muted); font-weight:normal;">- ${getRoleName(p.role)}</span>
-                                </h3>
-                                <span style="font-size:0.82rem; padding:0.2rem 0.6rem; border-radius:12px; border:1px solid ${getPathBadge(p).border}; background:${getPathBadge(p).bg}; color:${getPathBadge(p).color};">
-                                    ${getPathBadge(p).label}
-                                </span>
-                            </div>
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.8rem;">
-                                <p style="color:var(--secondary); font-size:1.6rem; font-weight:800; font-family:'Outfit', sans-serif; margin:0;">⭐ ${p.score}</p>
-                                <p style="font-size:1.1rem; font-weight:bold; margin:0; color: ${p.finished ? 'var(--primary)' : 'var(--danger)'};">
-                                    ${p.ending ? (isEn && endingTranslations[p.ending.title] ? endingTranslations[p.ending.title].title : p.ending.title) : (p.finished ? (isEn ? '✅ Heritage Succeeded' : '✅ 傳承成功') : (isEn ? '❌ Cultural Disruption' : '❌ 文化斷裂'))}
-                                </p>
-                            </div>
-                            ${p.ending ? `
-                            <div style="color:var(--text-main); font-size:0.95rem; line-height:1.7; background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; margin-bottom: 0.8rem; font-family: 'Noto Serif TC', serif;">
-                                ${isEn && endingTranslations[p.ending.title] ? endingTranslations[p.ending.title].text : p.ending.text}
-                            </div>
-                            ` : ''}
-                            <p style="color:var(--text-muted); font-size:0.8rem; margin:0;">${scoreSrc}${translateScoreBreakdown(p.score_breakdown).join(', ')}</p>
-                            ${playerHonoursHtml(p)}
-                        </div>
-                    `).join('')}
-                </div>
 
-                ${forestSummaryHtml(state)}
+                <section class="yr-sec">
+                    <h2 class="yr-h">${isEn ? 'How each of you ended the year' : '每個人的這一年'}</h2>
+                    <ol class="yr-people">${playersSorted.map(person).join('')}</ol>
+                </section>
 
-                <!-- KP Development Curve Chart -->
-                <div style="background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 16px; padding: 1.5rem; text-align: left; margin: 2rem 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(12px);">
-                    <div style="display:flex; align-items:center; gap:0.6rem; margin-bottom: 1rem; border-bottom: 1px solid var(--glass-border); padding-bottom:0.6rem;">
-                        <span style="font-size: 1.5rem;">📊</span>
-                        <div>
-                            <h2 style="font-family: 'Noto Serif TC', serif; font-size: 1.3rem; color: var(--text-main); margin: 0; font-weight: 700;">
-                                ${isEn ? 'KP Development Curves & Path Selection' : '各角色 KP 演進與路徑選擇曲線圖'}
-                            </h2>
-                            <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0.2rem 0 0 0;">
-                                ${isEn ? 'Tracks technical knowledge growth (KP) and deskilling triggers across 12 months.' : '記錄 12 個月間技術點數 (KP) 累積與去技能化點位，作為機制層對話依據。'}
-                            </p>
-                        </div>
+                <section class="yr-sec yr-forest">
+                    <h2 class="yr-h">${esc(ft.summaryTitle)}</h2>
+                    <p class="yr-forest-line"><span class="yr-dots" aria-hidden="true">${'<i class="on"></i>'.repeat(forestValue)}${'<i></i>'.repeat(FOREST_MAX - forestValue)}</span><b>${forestValue}/${FOREST_MAX}</b>${esc(ft.levels[forestLv])}</p>
+                    <p class="yr-text">${ft.summary[forestLv]}</p>
+                </section>
+
+                <section class="yr-sec">
+                    <h2 class="yr-h">${(isEn ? 'KP Development Curves & Path Selection' : '各角色 KP 演進與路徑選擇曲線圖')}</h2>
+                    <p class="yr-note">${(isEn ? 'Tracks technical knowledge growth (KP) and deskilling triggers across 12 months.' : '記錄 12 個月間技術點數 (KP) 累積與去技能化點位，作為機制層對話依據。')}</p>
+                    <canvas id="kp-chart-canvas" class="yr-chart"></canvas>
+                    <ul class="yr-legend">
+                        ${playersSorted.map(p => `<li style="--tone:${ROLE_TONE[p.role] || '#efe6cf'}"><b>${esc(p.name)}</b>${esc(getRoleName(p.role))}・${p.kp} KP</li>`).join('')}
+                    </ul>
+                </section>
+
+                <section class="yr-sec yr-real">
+                    <h2 class="yr-h">${isEn ? 'Back to the real Lanyu' : '回到真實的蘭嶼'}</h2>
+                    <p class="yr-note">${isEn ? 'The island in the game is a model. This is Lanyu as it is today. Watch it before the questions below.' : '遊戲裡的島是模型。這是今天的蘭嶼。看完再一起想下面的問題。'}</p>
+                    <div class="yr-films">
+                        <figure><video src="assets/lanyu_1_640.mp4" poster="assets/lanyu_1.jpg" controls muted playsinline preload="none"></video><figcaption>${isEn ? 'A village by the harbour, under the mountains' : '山腳下、港邊的部落'}</figcaption></figure>
+                        <figure><video src="assets/lanyu_2_640.mp4" poster="assets/lanyu_2.jpg" controls muted playsinline preload="none"></video><figcaption>${isEn ? 'The round-island road along the cliffs' : '沿著海崖的環島公路'}</figcaption></figure>
                     </div>
-                    <canvas id="kp-chart-canvas" style="width:100%; height:300px; display:block; border-radius:10px; border:1px solid rgba(255,255,255,0.08); background:rgba(6,16,32,0.8);"></canvas>
-                    <div style="display:flex; gap:1.2rem; flex-wrap:wrap; margin-top:0.8rem; font-size:0.8rem; color:var(--text-muted);">
-                        ${playersSorted.map(p => {
-                            const ROLE_COLORS = { elder: '#d4af37', youth: '#4ade80', middle: '#a78bfa' };
-                            const c = ROLE_COLORS[p.role] || '#38bdf8';
-                            return `<span style="display:inline-flex; align-items:center; gap:0.4rem;">
-                                <span style="width:10px; height:10px; border-radius:50%; background:${c}; display:inline-block;"></span>
-                                <strong style="color:#e2e8f0;">${p.name}</strong> (${getRoleName(p.role)}: ${p.kp} KP)
-                            </span>`;
-                        }).join('')}
-                    </div>
-                </div>
+                </section>
 
-                <!-- Mechanism Layer Discussion Panel -->
-                <div style="background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 16px; padding: 1.8rem; text-align: left; margin: 2rem 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(12px);">
-                    <div style="display:flex; align-items:center; gap:0.6rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.8rem; margin-bottom: 1.5rem;">
-                        <span style="font-size: 1.8rem;">💬</span>
-                        <div>
-                            <h2 style="font-family: 'Noto Serif TC', serif; font-size: 1.4rem; color: var(--text-main); margin: 0; font-weight: 700;">
-                                ${isEn ? 'Mechanism Discussion & Reflection' : '機制層討論與反思 (Mechanism Discussion)'}
-                            </h2>
-                            <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0.2rem 0 0 0;">
-                                ${isEn ? 'Please guide team members to reflect on choice paths, technical deskilling, and cultural preservation:' : '請引導成員針對造船選擇與文化知識演變進行對話與討論：'}
-                            </p>
-                        </div>
-                    </div>
+                <section class="yr-sec yr-talk">
+                    <h2 class="yr-h">${(isEn ? 'Mechanism Discussion & Reflection' : '機制層討論與反思 (Mechanism Discussion)')}</h2>
+                    <p class="yr-note">${(isEn ? 'Please guide team members to reflect on choice paths, technical deskilling, and cultural preservation:' : '請引導成員針對造船選擇與文化知識演變進行對話與討論：')}</p>
+                    <ol class="yr-qs">
+                        <li>
+                            <p class="yr-q-label">${(isEn ? 'Core Discussion' : '核心提問')}</p>
+                            <p class="yr-q">${(isEn ? '“There were three ways to finish the boat. What did each one keep, and what did each one give up? How does ‘deskilling’ happen in the game?”' : '「這次有三種完工的方式。每一種各留下了什麼、又放掉了什麼？在遊戲裡，『去技能化』是怎麼發生的？」')}</p>
+                            <p class="yr-guide-h">${plainText((isEn ? '💡 Guidance Direction & Key Insights:' : '💡 引導方向與機制意涵：'))}</p>
+                            <dl class="yr-guide">
+                                <dt>${(isEn ? 'Meaning of “Irreparable” tag: ' : '「不可修復」標記的意涵：')}</dt><dd>${(isEn ? 'Industrial resin seals seam cracks permanently and cannot be disassembled for repair. Traditional planked boats can be taken apart, replaced piece-by-piece, and launched again, whereas resin boats are discarded once damaged.' : '讓學生說出「不可修復」標記的意涵：現代工業樹脂填縫雖然快速，但木塊接縫被永久黏死，無法像傳統拼板舟一樣拆解換木維修。船壞了只能棄置，失去了與木材與海洋長久互動與維修的能力。')}</dd>
+                                <dt>${(isEn ? 'Knowledge Loss (Deskilling): ' : '跳過工序與技術知識的消失：')}</dt><dd>${(isEn ? 'Buying industrial resin skips essential traditional steps (gathering, peeling, scraping, twining fiber), halting Knowledge Point (KP) growth. Without practice and intergenerational learning, living craft knowledge silently breaks.' : '選擇買樹脂等同跳過了「剝麻、刮絲、撚線」等重要工序，技術點數 (KP) 停止累積。少了實作體驗與長輩請益傳承，傳統身體記憶與工藝技術知識便悄然消失與斷裂。')}</dd>
+                                <dt>${(isEn ? 'The path in between: ' : '中間的那條路：')}</dt><dd>${(isEn ? 'Machine-processing the natural fibre still uses Avaka and keeps the boat repairable, but skips the hands-on drying and twining. Ask: is this “losing culture” or “culture changing”? Change is normal; the point is to know what the core value is, why you chose this, and what you accept in return.' : '用機器加工天然纖維，仍然使用 Avaka、船也還能拆修，但少了手工曝曬與撚繩的經驗。請學生想一想：這是「文化流失」還是「文化在變」？文化變遷是正常的，重點是知道核心價值是什麼、自己為什麼這樣選、選了之後要承擔什麼。')}</dd>
+                                <dt>${(isEn ? 'Why did you score what you scored: ' : '你的分數是怎麼來的：')}</dt><dd>${(isEn ? 'Look at each player’s “Score Sources”. Asking, bringing a gift to the Elder and helping the Elder all earned points. Why would a community reward these acts?' : '請看每個人的「得分來源」。請益、帶禮物回饋耆老、幫忙長者都會加分。為什麼部落會看重這些事？')}</dd>
+                            </dl>
+                        </li>
+                        <li>
+                            <p class="yr-q-label">${(isEn ? 'Extended Reflection' : '延伸提問')}</p>
+                            <p class="yr-q">${(isEn ? '“In real-life Lanyu, or in your own daily life, are there similar examples? What skills or knowledge have slowly vanished because they were replaced by convenient alternatives?”' : '「在真實的蘭嶼，或是你自己的生活圈裡，有沒有類似的例子？有什麼技術或知識，因為被更方便的東西取代，而慢慢消失了？」')}</p>
+                            <p class="yr-guide-h">${plainText((isEn ? '🌏 Real-world Connections & Critical Thinking:' : '🌏 生活連結與思辨：'))}</p>
+                            <p class="yr-text">${(isEn ? 'Encourage participants to connect with traditional handicrafts, local ecological knowledge, architecture, or modern conveniences (food delivery, disposable tableware, digital navigation) — reflecting on convenience vs. loss of self-reliance skills.' : '引導學員嘗試聯想：傳統手工藝、在地生態知識、傳統建築工法，或是現代便利科技（如外送、免洗餐具、電子導航）所帶來的便利，以及背後隱含的傳統技能與自給能力慢慢消失的代價。')}</p>
+                        </li>
+                        <li>
+                            <p class="yr-q-label">${(isEn ? 'Who can I talk to' : '可以跟誰討論')}</p>
+                            <p class="yr-q">${(isEn ? '“In the game you could learn from the Elder and from the Middle Generation. If you wanted to think about your own culture, who around you could you go to, and what would each of them tell you?”' : '「遊戲裡你可以向耆老學，也可以向中生代學。如果你想思考自己的文化，身邊可以找誰？他們各自會告訴你什麼？」')}</p>
+                            <p class="yr-text">${(isEn ? 'Elders can say what has been lost and why it mattered. The middle generation has lived in two cultures, so they can also say what it could be turned into. Invite students to name real people they could ask.' : '老人家能說出什麼東西不見了、它為什麼重要；中生代有兩種文化的生活經驗，還能進一步說出「可以轉化成什麼」。請學生說出身邊真的可以去請教的人。')}</p>
+                        </li>
+                    </ol>
+                </section>
 
-                    <!-- Core Discussion Question -->
-                    <div style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 1.2rem; margin-bottom: 1.2rem;">
-                        <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom: 0.6rem;">
-                            <span style="background: #ef4444; color: #fff; font-size: 0.75rem; font-weight: bold; padding: 0.2rem 0.6rem; border-radius: 20px; text-transform: uppercase;">
-                                ${isEn ? 'Core Discussion' : '核心提問'}
-                            </span>
-                            <h3 style="font-size: 1.1rem; color: #fca5a5; margin: 0; font-weight: 700; line-height: 1.5;">
-                                ${isEn ? '“There were three ways to finish the boat. What did each one keep, and what did each one give up? How does ‘deskilling’ happen in the game?”' : '「這次有三種完工的方式。每一種各留下了什麼、又放掉了什麼？在遊戲裡，『去技能化』是怎麼發生的？」'}
-                            </h3>
-                        </div>
-                        <div style="background: rgba(0, 0, 0, 0.25); border-left: 4px solid #ef4444; padding: 0.9rem; border-radius: 6px; color: #e2e8f0; font-size: 0.92rem; line-height: 1.6;">
-                            <strong style="color: #f87171; display: block; margin-bottom: 0.4rem;">
-                                ${isEn ? '💡 Guidance Direction & Key Insights:' : '💡 引導方向與機制意涵：'}
-                            </strong>
-                            <ul style="margin: 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.4rem;">
-                                <li>
-                                    <strong>${isEn ? 'Meaning of “Irreparable” tag: ' : '「不可修復」標記的意涵：'}</strong>
-                                    ${isEn 
-                                        ? 'Industrial resin seals seam cracks permanently and cannot be disassembled for repair. Traditional planked boats can be taken apart, replaced piece-by-piece, and launched again, whereas resin boats are discarded once damaged.'
-                                        : '讓學生說出「不可修復」標記的意涵：現代工業樹脂填縫雖然快速，但木塊接縫被永久黏死，無法像傳統拼板舟一樣拆解換木維修。船壞了只能棄置，失去了與木材與海洋長久互動與維修的能力。'}
-                                </li>
-                                <li>
-                                    <strong>${isEn ? 'Knowledge Loss (Deskilling): ' : '跳過工序與技術知識的消失：'}</strong>
-                                    ${isEn 
-                                        ? 'Buying industrial resin skips essential traditional steps (gathering, peeling, scraping, twining fiber), halting Knowledge Point (KP) growth. Without practice and intergenerational learning, living craft knowledge silently breaks.'
-                                        : '選擇買樹脂等同跳過了「剝麻、刮絲、撚線」等重要工序，技術點數 (KP) 停止累積。少了實作體驗與長輩請益傳承，傳統身體記憶與工藝技術知識便悄然消失與斷裂。'}
-                                </li>
-                                <li>
-                                    <strong>${isEn ? 'The path in between: ' : '中間的那條路：'}</strong>
-                                    ${isEn
-                                        ? 'Machine-processing the natural fibre still uses Avaka and keeps the boat repairable, but skips the hands-on drying and twining. Ask: is this “losing culture” or “culture changing”? Change is normal; the point is to know what the core value is, why you chose this, and what you accept in return.'
-                                        : '用機器加工天然纖維，仍然使用 Avaka、船也還能拆修，但少了手工曝曬與撚繩的經驗。請學生想一想：這是「文化流失」還是「文化在變」？文化變遷是正常的，重點是知道核心價值是什麼、自己為什麼這樣選、選了之後要承擔什麼。'}
-                                </li>
-                                <li>
-                                    <strong>${isEn ? 'Why did you score what you scored: ' : '你的分數是怎麼來的：'}</strong>
-                                    ${isEn
-                                        ? 'Look at each player’s “Score Sources”. Asking, bringing a gift to the Elder and helping the Elder all earned points. Why would a community reward these acts?'
-                                        : '請看每個人的「得分來源」。請益、帶禮物回饋耆老、幫忙長者都會加分。為什麼部落會看重這些事？'}
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- Extended Reflection Question -->
-                    <div style="background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 12px; padding: 1.2rem;">
-                        <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom: 0.6rem;">
-                            <span style="background: #0284c7; color: #fff; font-size: 0.75rem; font-weight: bold; padding: 0.2rem 0.6rem; border-radius: 20px; text-transform: uppercase;">
-                                ${isEn ? 'Extended Reflection' : '延伸提問'}
-                            </span>
-                            <h3 style="font-size: 1.1rem; color: var(--text-main); margin: 0; font-weight: 700; line-height: 1.5;">
-                                ${isEn ? '“In real-life Lanyu, or in your own daily life, are there similar examples? What skills or knowledge have slowly vanished because they were replaced by convenient alternatives?”' : '「在真實的蘭嶼，或是你自己的生活圈裡，有沒有類似的例子？有什麼技術或知識，因為被更方便的東西取代，而慢慢消失了？」'}
-                            </h3>
-                        </div>
-                        <div style="background: rgba(0, 0, 0, 0.25); border-left: 4px solid #0284c7; padding: 0.9rem; border-radius: 6px; color: #e2e8f0; font-size: 0.92rem; line-height: 1.6;">
-                            <strong style="color: var(--secondary); display: block; margin-bottom: 0.4rem;">
-                                ${isEn ? '🌏 Real-world Connections & Critical Thinking:' : '🌏 生活連結與思辨：'}
-                            </strong>
-                            <p style="margin: 0;">
-                                ${isEn 
-                                    ? 'Encourage participants to connect with traditional handicrafts, local ecological knowledge, architecture, or modern conveniences (food delivery, disposable tableware, digital navigation) — reflecting on convenience vs. loss of self-reliance skills.'
-                                    : '引導學員嘗試聯想：傳統手工藝、在地生態知識、傳統建築工法，或是現代便利科技（如外送、免洗餐具、電子導航）所帶來的便利，以及背後隱含的傳統技能與自給能力慢慢消失的代價。'}
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Who can I talk to -->
-                    <div style="background: rgba(167, 139, 250, 0.08); border: 1px solid rgba(167, 139, 250, 0.3); border-radius: 12px; padding: 1.2rem; margin-top: 1.2rem;">
-                        <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom: 0.6rem;">
-                            <span style="background: #7c3aed; color: #fff; font-size: 0.75rem; font-weight: bold; padding: 0.2rem 0.6rem; border-radius: 20px; text-transform: uppercase;">
-                                ${isEn ? 'Who can I talk to' : '可以跟誰討論'}
-                            </span>
-                            <h3 style="font-size: 1.1rem; color: #c4b5fd; margin: 0; font-weight: 700; line-height: 1.5;">
-                                ${isEn ? '“In the game you could learn from the Elder and from the Middle Generation. If you wanted to think about your own culture, who around you could you go to, and what would each of them tell you?”' : '「遊戲裡你可以向耆老學，也可以向中生代學。如果你想思考自己的文化，身邊可以找誰？他們各自會告訴你什麼？」'}
-                            </h3>
-                        </div>
-                        <div style="background: rgba(0, 0, 0, 0.25); border-left: 4px solid #7c3aed; padding: 0.9rem; border-radius: 6px; color: #e2e8f0; font-size: 0.92rem; line-height: 1.6;">
-                            <p style="margin: 0;">
-                                ${isEn
-                                    ? 'Elders can say what has been lost and why it mattered. The middle generation has lived in two cultures, so they can also say what it could be turned into. Invite students to name real people they could ask.'
-                                    : '老人家能說出什麼東西不見了、它為什麼重要；中生代有兩種文化的生活經驗，還能進一步說出「可以轉化成什麼」。請學生說出身邊真的可以去請教的人。'}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="btn primary" style="width:100%" onclick="location.reload()">${restartBtnText}</button>
-            </div>
+                <button class="btn primary yr-again" onclick="location.reload()">${restartBtnText}</button>
+            </article>
         </div>
     `;
 

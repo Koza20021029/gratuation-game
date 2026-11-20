@@ -267,6 +267,12 @@ select { font: inherit; font-size: 0.85rem; color: var(--fibre); background: var
 .isle-cap { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; padding: 0.45rem 0.8rem 0.5rem; font-size: 0.78rem; color: var(--fibre-dim); }
 .isle-link { color: var(--leaf); text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
 .isle-link:hover { color: var(--fibre); }
+.isle-links { display: inline-flex; gap: 0.9rem; }
+button.isle-link { all: unset; cursor: pointer; color: var(--leaf); text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
+button.isle-link:focus-visible { outline: 2px solid var(--leaf); outline-offset: 2px; }
+.isle[hidden] { display: none; }
+.isle-video { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: #000; }
+.isle-video[hidden] { display: none; }
 
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 

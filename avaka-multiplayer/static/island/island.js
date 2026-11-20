@@ -652,7 +652,7 @@ try {
   const ROLE_BODY = { elder: 0xd2a45c, youth: 0x8fbf6a, middle: 0x6fa6c4 };
   const guests = !embed ? [] : Array.from({ length: 6 }, () => {
     const c = M.chibi(crowd, { pack: false });
-    c.g.visible = false; c.g.scale.setScalar(1.6);
+    c.g.visible = false; c.g.scale.setScalar(2.2);   // larger than the island's own people, so the players stand out
     scene.add(c.g);
     const el = document.createElement('span'); el.className = 'pin k-guest';
     const tag = new CSS2DObject(el); tag.position.set(0, 0.2, 0); tag.visible = false; tag.userData = { id: 'guest', kind: 'road' };
@@ -671,7 +671,7 @@ try {
       g.g.visible = g.tag.visible = !!sp;
       if (!sp) { g.placed = false; return; }
       const same = list.filter((q) => q.loc === p.loc), k = same.indexOf(p);
-      const lx = (k - (same.length - 1) / 2) * 0.22, lz = 0.55, cs = Math.cos(sp.seaward), sn = Math.sin(sp.seaward);   // a row in front of the place, facing the sea
+      const lx = (k - (same.length - 1) / 2) * 0.62, lz = 0.65, cs = Math.cos(sp.seaward), sn = Math.sin(sp.seaward);   // a row in front of the place, facing the sea
       const x = sp.x + lx * cs + lz * sn, z = sp.z - lx * sn + lz * cs;
       g.to.set(x, shape.height(x, z) + 0.01, z);
       if (!g.placed || reduced.matches) { g.g.position.copy(g.to); g.placed = true; }
@@ -689,6 +689,48 @@ try {
     crowd.sync(); M.syncBoats();
     dirty = shadowDirty = true;
   }
+  // ---------- who helped whom (the year-end replay): a cord from one figure to the other ----------
+  // An arc in rope colour from the one who gave to the one who received, a bead running along it to show which
+  // way it went, and a small tag saying what it was (asked, guided, told...). Rebuilt for each month.
+  const linkGroup = new THREE.Group(); scene.add(linkGroup);
+  const linkMat = new THREE.MeshBasicMaterial({ color: 0xb3342a }), beadMat = new THREE.MeshBasicMaterial({ color: 0xfbf8f0 });
+  const beadGeo = new THREE.SphereGeometry(0.05, 10, 8);
+  let links = [];
+  function setLinks(list) {
+    for (const l of links) { l.tube.geometry.dispose(); linkGroup.remove(l.tube, l.bead, l.tag); }
+    links = [];
+    for (const [i, j, label] of list || []) {
+      const a = guests[i], b = guests[j];
+      if (!a || !b || !a.g.visible || !b.g.visible || a === b) continue;
+      const p0 = a.to.clone().add(new THREE.Vector3(0, 0.2, 0)), p1 = b.to.clone().add(new THREE.Vector3(0, 0.2, 0));
+      const span = p0.distanceTo(p1), mid = p0.clone().lerp(p1, 0.5).add(new THREE.Vector3(0, 0.75 + span * 0.35, 0));
+      // several cords between the same two people are fanned out so each can be seen
+      const twin = links.filter((l) => (l.i === i && l.j === j) || (l.i === j && l.j === i)).length;
+      if (twin) { const side = new THREE.Vector3().subVectors(p1, p0).cross(new THREE.Vector3(0, 1, 0)).normalize(); mid.addScaledVector(side, (twin % 2 ? 1 : -1) * Math.ceil(twin / 2) * 0.16); mid.y += twin * 0.1; }
+      const curve = new THREE.QuadraticBezierCurve3(p0, mid, p1);
+      const tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 32, 0.02, 6, false), linkMat);
+      const bead = new THREE.Mesh(beadGeo, beadMat);
+      const el = document.createElement('span'); el.className = 'pin k-link'; el.textContent = String(label || '').slice(0, 16);
+      const tag = new CSS2DObject(el); tag.position.copy(curve.getPoint(0.5)).add(new THREE.Vector3(0, 0.06, 0)); tag.userData = { id: 'link', kind: 'road' };
+      linkGroup.add(tube, bead, tag);
+      links.push({ i, j, curve, tube, bead, tag, ph: links.length * 0.37 });
+    }
+    dirty = true;
+  }
+  function moveLinks(now) {
+    for (const l of links) l.bead.position.copy(l.curve.getPoint(reduced.matches ? 0.85 : ((now * 0.45 + l.ph) % 1)));
+  }
+  // frame the places where the people are (used by the replay, where the whole island would be too far away)
+  function framePeople() {
+    const on = guests.filter((g) => g.g.visible);
+    if (!on.length) return overview();
+    const c = new THREE.Vector3();
+    on.forEach((g) => c.add(g.to)); c.divideScalar(on.length);
+    const r = Math.max(...on.map((g) => g.to.distanceTo(c)));
+    const dist = Math.min(26, Math.max(5.2, r * 2.4 + 4)) * (stage.clientWidth / stage.clientHeight < 0.8 ? 1.45 : 1);
+    return { pos: c.clone().add(new THREE.Vector3(-0.25, 0.5, 0.82).normalize().multiplyScalar(dist)), target: c.clone().add(new THREE.Vector3(0, 0.4, 0)) };   // lower, so the cords arc against the sky and the sea
+  }
+
   // a figure whose player moved walks over (quickly: it is the camera, not the walk, that tells the story)
   function moveGuests(dt, now) {
     for (const g of guests) {
@@ -1436,7 +1478,7 @@ try {
       sea.update(time, dt);
       moveTraffic(dt, time);
       movePeople(dt, time, true);
-      moveGuests(dt, time);
+      moveGuests(dt, time); moveLinks(time);
       crowd.sync(); M.syncBoats();
       for (const b of fleet) {
         const a = b.ph + time * b.sp;
@@ -1477,7 +1519,8 @@ try {
     // The game screen drives this view: { avaka: 'island', month, focus, lang }. No card opens; the camera goes
     // to the player's place and drifts slowly round it.
     let at = null;
-    const show = (id) => { at = id; labelEls.forEach((el, k) => el.classList.toggle('on', k === id)); moveTo(items.has(id) ? viewFor(id) : overview()); };
+    const show = (id) => {
+      if (id === 'people') { at = id; labelEls.forEach((el) => el.classList.remove('on')); moveTo(framePeople()); return; } at = id; labelEls.forEach((el, k) => el.classList.toggle('on', k === id)); moveTo(items.has(id) ? viewFor(id) : overview()); };
     controls.enabled = false;
     controls.autoRotate = !reduced.matches; controls.autoRotateSpeed = 0.3;
     show(f);
@@ -1487,9 +1530,10 @@ try {
       const m = parseInt(d.month, 10);
       if (m >= 1 && m <= 12 && m !== month) setMonth(m);
       if (Array.isArray(d.players)) setGuests(d.players);
+      if (Array.isArray(d.links)) setLinks(d.links);
       // a new month in the game: pull back to see the whole island under its new sky, then return to the player's place
       if (d.sweep && !reduced.matches) { at = d.focus; moveTo(overview()); embedSweep = { at: performance.now() + d.sweep, back: () => show(at) }; }
-      else if (d.focus !== at) show(d.focus);
+      else if (d.focus !== at || d.focus === 'people') show(d.focus);   // 'people' follows them every time
       if (d.lang && d.lang !== lang && (d.lang === 'en' || d.lang === 'zh')) { lang = d.lang; applyLang(); }
       embedPaused = !!d.paused;   // scrolled out of sight in the game: stop drawing until it is back
       dirty = true;
