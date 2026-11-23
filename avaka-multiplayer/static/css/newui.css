@@ -285,7 +285,7 @@ body.newui .ye-bar { flex: 1; display: grid; grid-template-columns: repeat(12, 1
 body.newui .ye-bar i { height: 5px; border-radius: 2px; background: #2e4737; transition: background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
 body.newui .ye-bar i.on { background: #b6e268; }
 body.newui .ye-note, body.newui .ye-talk { color: #b9b196; font-size: 0.86rem; line-height: 1.65; margin: 0 0 0.6rem; }
-body.newui .ye-talk { color: #efe6cf; border-left: 3px solid #d2a45c; padding-left: 0.8rem; margin-top: 0.8rem; }
+body.newui .ye-talk { color: #efe6cf; border-top: 1px solid #7c5a30; padding-top: 0.7rem; margin-top: 1rem; }
 body.newui .ye-rope-wrap { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 1rem; align-items: center; }
 body.newui .ye-rope { width: 100%; height: auto; display: block; }
 body.newui .ye-name { fill: #efe6cf; font: 700 13px 'Noto Sans TC', 'PingFang TC', sans-serif; }

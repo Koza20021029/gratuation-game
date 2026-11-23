@@ -73,7 +73,9 @@ body.projector *, body.projector *::before { box-sizing: border-box; }
 .pj-group b { font: 500 1.7rem/1 var(--latin); color: var(--fibre); font-variant-numeric: tabular-nums; }
 .pj-group .yr-dots { margin-top: 0.4rem; }
 .pj-people, .pj-ties, .pj-log { list-style: none; margin: 0; padding: 0; }
-.pj-people li { padding: 0.7rem 0 0.7rem 0.8rem; border-top: 1px solid var(--line-2); border-left: 3px solid var(--tone); }
+.pj-people li { padding: 0.7rem 0; border-top: 1px solid var(--line-2); }
+/* the role's colour: a short strand before the name, as in the lobby's waiting room */
+.pj-who b::before { content: ''; display: inline-block; width: 1.1rem; height: 3px; margin-right: 0.5rem; border-radius: 2px; background: var(--tone); vertical-align: 0.3em; }
 .pj-people li:first-child { border-top: 0; }
 .pj-who { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.1rem 0.6rem; }
 .pj-who b { font: 700 1.1rem/1.3 var(--serif-tc); }
@@ -92,7 +94,7 @@ body.projector *, body.projector *::before { box-sizing: border-box; }
 .pj-end { max-width: 64rem; margin: 0 auto; padding: 4rem clamp(1rem, 4vw, 3rem) 5rem; }
 .pj-end .yr-head h1 { font-size: clamp(2.4rem, 5vw, 3.6rem); }
 .pj-scores { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); gap: 1.4rem 2rem; }
-.pj-scores li { display: grid; grid-template-columns: auto 1fr; column-gap: 0.9rem; align-items: baseline; padding-left: 0.8rem; border-left: 3px solid var(--tone); }
+.pj-scores li { display: grid; grid-template-columns: auto 1fr; column-gap: 0.9rem; align-items: baseline; }
 .pj-scores b { grid-row: span 2; font: 500 3rem/1 var(--latin); color: var(--tone); font-variant-numeric: tabular-nums; }
 .pj-scores span { font: 700 1.15rem/1.3 var(--serif-tc); }
 .pj-scores small { color: var(--fibre-dim); font-size: 0.8rem; }

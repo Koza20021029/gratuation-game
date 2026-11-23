@@ -1596,6 +1596,7 @@ try {
     // to the player's place and drifts slowly round it.
     let at = null;
     const show = (id) => {
+      document.documentElement.toggleAttribute('data-people', id === 'people');   // framing the players: their name tags, not the place names (island.css)
       if (id === 'people') { at = id; labelEls.forEach((el) => el.classList.remove('on')); moveTo(framePeople()); return; } at = id; labelEls.forEach((el, k) => el.classList.toggle('on', k === id)); moveTo(items.has(id) ? viewFor(id) : overview()); };
     controls.enabled = false;
     controls.autoRotate = !reduced.matches; controls.autoRotateSpeed = 0.3;
