@@ -383,3 +383,7 @@ body.newui .ye-events-none { margin: 0; font-size: 0.92rem; color: #8f957f; }
 .yr-films video { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 4px; background: #000; }
 .yr-films figcaption { margin-top: 0.5rem; font-size: 0.84rem; color: #8f957f; }
 @media (max-width: 640px) { .yr-films { grid-template-columns: minmax(0, 1fr); } }
+
+/* The old player cards (app.js) still render inside the hidden old game screen, and their pixel-art step pictures
+   (css/pixel-anim.css) would be downloaded for nobody to see. The new screen never shows them. */
+body.newui .px-icon { background-image: none !important; animation: none !important; }

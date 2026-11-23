@@ -36,17 +36,19 @@ export function createLeaves(THREE, kit) {
     tmp.updateMatrix();
     leaves.push({ m: tmp.matrix.clone(), c: new THREE.Color(color) });
   }
-  // Avaka: a slender pseudo-stem with dried old sheaths at its foot and a crown of narrow leaves
+  // Avaka: a slender pseudo-stem with dried old sheaths at its foot and a crown of broad, paddle-shaped leaves.
+  // It is the island's main character, so it is told apart from afar: wider blades than the palms and ferns
+  // around it, and a lighter yellow-green (the lobby's leaf colour) against the darker forest.
   function avaka(x, y, z, s, rnd, young = false) {
-    const h = (young ? 0.12 : 0.22) * s;
-    kit.part('trunk', x, y + h / 2, z, 0.04 * s, h, 0.04 * s, rnd() < 0.5 ? 0x6f8a46 : 0x7d7a48, rnd() * 6);
-    if (!young) kit.part('cone', x, y + 0.03 * s, z, 0.07 * s, 0.07 * s, 0.07 * s, 0x9a8a5a, rnd() * 6);
+    const h = (young ? 0.13 : 0.25) * s;
+    kit.part('trunk', x, y + h / 2, z, 0.045 * s, h, 0.045 * s, rnd() < 0.5 ? 0x7a9548 : 0x86834c, rnd() * 6);
+    if (!young) kit.part('cone', x, y + 0.03 * s, z, 0.075 * s, 0.07 * s, 0.075 * s, 0xa8955e, rnd() * 6);
     const n = young ? 4 : 6 + Math.floor(rnd() * 3), base = rnd() * Math.PI * 2;
     for (let i = 0; i < n; i++) {
       const upright = i === 0 || (i === 1 && rnd() < 0.6); // the newest leaves still stand up
-      const c = new THREE.Color(upright ? 0x9fd06c : rnd() < 0.15 ? 0xc2c27a : 0x6aab58).offsetHSL(0, 0, (rnd() - 0.5) * 0.06);
+      const c = new THREE.Color(upright ? 0xc3e47e : rnd() < 0.15 ? 0xcfc681 : rnd() < 0.5 ? 0x9fcf62 : 0x8cc358).offsetHSL(0, 0, (rnd() - 0.5) * 0.05);
       leaf(x, y + h * (upright ? 1.02 : 0.95), z, base + (i / n) * Math.PI * 2 + rnd() * 0.5,
-        upright ? -0.9 - rnd() * 0.3 : -0.15 - rnd() * 0.35, (upright ? 0.17 : 0.22 + rnd() * 0.06) * s, 0.9, c);
+        upright ? -0.9 - rnd() * 0.3 : -0.12 - rnd() * 0.3, (upright ? 0.19 : 0.25 + rnd() * 0.06) * s, upright ? 1.0 : 1.45, c);
     }
   }
   // coconut-type palm: a leaning trunk and a crown of long drooping fronds

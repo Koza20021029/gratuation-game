@@ -1210,8 +1210,8 @@
    "en": "Tao name and position from the Council of Indigenous Peoples community data (reference point: {pt})"
   },
   "hint": {
-   "zh": "拖曳旋轉・滾輪或雙指縮放・點地名看說明",
-   "en": "Drag to turn · scroll or pinch to zoom · tap a name"
+   "zh": "拖曳旋轉・右鍵或 Shift 拖曳平移・滾輪縮放・點地名、房子或船看說明",
+   "en": "Drag to turn · right-drag or Shift-drag to slide · scroll to zoom · click a name, a house or a boat"
   },
   "loading": {
    "zh": "正在把島嶼拼起來…",
@@ -1222,8 +1222,8 @@
    "en": "The island could not load. Please refresh the page."
   },
   "canvas": {
-   "zh": "3D 蘭嶼島，可以拖曳旋轉；完整文字內容請用左邊的清單",
-   "en": "3D island of Lanyu. Drag to turn; the list has all the text."
+   "zh": "3D 蘭嶼島，可以拖曳旋轉、平移；完整文字內容請用左邊的清單",
+   "en": "3D island of Lanyu. Drag to turn or slide; the list has all the text."
   },
   "taoName": {
    "zh": "族語名稱",
@@ -1316,8 +1316,12 @@
      "en": "This is Lanyu"
     },
     "body": {
-     "zh": "拖曳可以旋轉，滾輪或雙指可以縮放。海岸線、山頭與六個部落的位置，都照真實的蘭嶼。",
-     "en": "Drag to turn, scroll or pinch to zoom. The coastline, the peaks and the six villages follow the real Lanyu."
+     "zh": "拖曳可以旋轉，滾輪縮放，按住右鍵或 Shift 拖曳可以沿著島平移。海岸線、山頭與六個部落的位置，都照真實的蘭嶼。",
+     "en": "Drag to turn, scroll to zoom, and right-drag or Shift-drag to slide along the island. The coastline, the peaks and the six villages follow the real Lanyu."
+    },
+    "bodyTouch": {
+     "zh": "一根手指可以旋轉，兩根手指可以縮放和平移。海岸線、山頭與六個部落的位置，都照真實的蘭嶼。",
+     "en": "One finger turns the island; two fingers zoom and slide. The coastline, the peaks and the six villages follow the real Lanyu."
     }
    },
    {
@@ -1326,8 +1330,8 @@
      "en": "Tap a name"
     },
     "body": {
-     "zh": "點地圖上的地名或左邊的清單，鏡頭會飛過去並打開說明卡。卡片有族語、田野照片和出處。",
-     "en": "Tap a name on the map or in the list: the camera flies there and a card opens, with Tao words, field photos and sources."
+     "zh": "點地圖上的地名、房子、船或曬架，或左邊的清單，鏡頭會飛過去並打開說明卡。卡片有族語、田野照片和出處。",
+     "en": "Tap a name, a house, a boat or a drying rack on the map, or a line in the list: the camera flies there and a card opens, with Tao words, field photos and sources."
     }
    },
    {
@@ -1486,6 +1490,10 @@
   "seaKind": {
    "zh": "海與季節",
    "en": "Sea and seasons"
+  },
+  "hintTouch": {
+   "zh": "單指旋轉・雙指縮放或平移・點地名、房子或船看說明",
+   "en": "One finger to turn · two to zoom or slide · tap a name, a house or a boat"
   }
  },
  "months": [

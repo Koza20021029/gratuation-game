@@ -1,0 +1,108 @@
+/* The classroom projector (/projector). The game's night palette, sized to be read from the back of a room. */
+:root {
+  --night: #0c1610; --night-2: #13221a; --night-3: #1c3023; --line: #2e4737; --line-2: #223628;
+  --fibre: #efe6cf; --fibre-dim: #b9b196; --quiet: #8f957f; --leaf: #b6e268; --leaf-deep: #5f9a45; --rope: #d2a45c;
+  --serif-tc: 'Noto Serif TC', 'Songti TC', serif; --sans-tc: 'Noto Sans TC', 'PingFang TC', sans-serif;
+  --latin: 'Newsreader', 'Noto Serif TC', serif; --display: 'Gloock', 'Noto Serif TC', serif;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  color-scheme: dark;
+}
+html, body { margin: 0; height: 100%; }
+body.projector { background: var(--night); color: var(--fibre); font-family: var(--sans-tc); font-size: clamp(15px, 1.05vw, 22px); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+body.projector *, body.projector *::before { box-sizing: border-box; }
+.pj { min-height: 100vh; }
+:focus-visible { outline: 2px solid var(--leaf); outline-offset: 3px; }
+
+/* the bar along the top */
+.pj-bar { position: fixed; z-index: 5; top: 0; left: 0; right: 0; display: flex; align-items: center; gap: 1.2rem; padding: 0.7rem 1.2rem; font-size: 0.8rem; color: var(--fibre-dim); pointer-events: none; }
+.pj-bar > * { pointer-events: auto; }
+.pj-sp { flex: 1; pointer-events: none; }
+.pj-room { font-family: var(--latin); letter-spacing: 0.14em; color: var(--fibre); }
+.pj-bar a, .pj-bar button { all: unset; cursor: pointer; color: var(--fibre-dim); padding: 0.25rem 0.7rem; border: 1px solid var(--line); border-radius: 4px; background: rgba(12, 22, 16, 0.72); transition: color 0.2s var(--ease), border-color 0.2s var(--ease); }
+.pj-bar a:hover, .pj-bar button:hover { color: var(--fibre); border-color: var(--fibre-dim); }
+.pj-bar a:focus-visible, .pj-bar button:focus-visible { outline: 2px solid var(--leaf); outline-offset: 2px; }
+/* on the projected screen the bar keeps out of the way until a hand is on the mouse */
+.pj-live .pj-bar, .pj-gather .pj-bar { opacity: 0.25; transition: opacity 0.3s var(--ease); }
+.pj-live .pj-bar:hover, .pj-gather .pj-bar:hover, .pj-bar:focus-within { opacity: 1; }
+.pj-net { position: fixed; z-index: 6; left: 50%; bottom: 1.2rem; transform: translateX(-50%); margin: 0; padding: 0.5rem 1rem; border-radius: 4px; border: 1px solid var(--rope); background: var(--night-2); color: var(--fibre); font-size: 0.9rem; }
+
+/* asking for the room code */
+.pj-ask { display: grid; place-items: center; padding: 4rem 1rem; }
+.pj-form { width: min(30rem, 100%); }
+.pj-form h1 { margin: 0 0 0.6rem; font: 900 clamp(1.8rem, 3vw, 2.4rem)/1.25 var(--serif-tc); letter-spacing: 0.05em; }
+.pj-lede { margin: 0 0 1.4rem; color: var(--fibre-dim); }
+.pj-form input { display: block; width: 100%; padding: 0.8rem 1rem; font: 500 1.6rem/1.2 var(--latin); letter-spacing: 0.3em; text-transform: uppercase; color: var(--fibre); background: var(--night-2); border: 1px solid var(--line); border-radius: 4px; }
+.pj-form input::placeholder { font: 400 1rem/1.2 var(--sans-tc); letter-spacing: 0.02em; text-transform: none; color: var(--quiet); }
+.pj-form input:focus-visible { outline: none; border-color: var(--leaf); box-shadow: 0 0 0 3px rgba(182, 226, 104, 0.18); }
+.pj-go { margin-top: 0.8rem; width: 100%; padding: 0.8rem 1.2rem; font: 700 1rem/1 var(--sans-tc); letter-spacing: 0.08em; color: var(--night); background: var(--leaf); border: 1px solid var(--leaf); border-radius: 4px; cursor: pointer; }
+.pj-go:hover { background: #cdf08a; }
+.pj-msg { margin: 0.9rem 0 0; color: var(--rope); }
+.pj-wait { margin: 0; max-width: 30em; color: var(--fibre-dim); text-align: center; }
+
+/* 1. gathering: the QR code and the code, as large as the screen allows */
+.pj-gather { min-height: 100vh; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: clamp(2rem, 5vw, 6rem); align-items: center; padding: clamp(3rem, 6vh, 5rem) clamp(2rem, 6vw, 7rem); }
+.pj-qr { width: min(62vh, 42vw); aspect-ratio: 1; border-radius: 8px; overflow: hidden; background: #efe6cf; }
+.pj-qr svg { display: block; width: 100%; height: 100%; }
+.pj-join .yr-eyebrow { font-size: 1.15rem; }
+.pj-code { margin: 0.2rem 0 0; font: 400 clamp(5rem, 11vw, 10rem)/0.95 var(--display); letter-spacing: 0.1em; color: var(--leaf); font-variant-numeric: tabular-nums; }
+.pj-url { margin: 0.8rem 0 0; font: 400 1.25rem/1.4 var(--latin); color: var(--fibre); word-break: break-all; }
+.pj-or { margin: 0.2rem 0 0; color: var(--quiet); font-size: 0.95rem; }
+.pj-join h2 { margin: 2.4rem 0 0.8rem; padding-top: 1.4rem; border-top: 1px solid var(--line); font: 700 1.2rem/1.4 var(--serif-tc); letter-spacing: 0.05em; }
+.pj-names { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.6rem 1.6rem; }
+.pj-names li { display: flex; align-items: baseline; gap: 0.5rem; font-size: 1.15rem; animation: pj-in 0.6s var(--ease) both; }
+.pj-names li::before { content: ''; width: 1.4rem; height: 3px; border-radius: 2px; background: var(--tone); align-self: center; }
+.pj-names b { font-family: var(--serif-tc); }
+.pj-names span { font-size: 0.85rem; color: var(--fibre-dim); }
+.pj-note { margin: 1.4rem 0 0; color: var(--fibre-dim); }
+@keyframes pj-in { from { opacity: 0; transform: translateX(-8px); } }
+
+/* 2. the year: the island on the left, the people on the right */
+.pj-live { height: 100vh; display: grid; grid-template-columns: minmax(0, 1fr) clamp(19rem, 27vw, 32rem); }
+.pj-stage { position: relative; overflow: hidden; background: #dfe7e2; }
+.pj-stage iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; pointer-events: none; }
+.pj-stage.no-gl { background: var(--night-2); }
+.pj-month { position: absolute; left: 0; right: 0; bottom: 0; padding: 5rem clamp(1.4rem, 3vw, 3rem) clamp(1.2rem, 3vh, 2.4rem); background: linear-gradient(180deg, transparent, rgba(12, 22, 16, 0.78) 45%, rgba(12, 22, 16, 0.9)); pointer-events: none; }
+.pj-month .yr-eyebrow { font-size: 1.1rem; margin-bottom: 0.2rem; }
+.pj-month h1 { margin: 0; font: 400 clamp(2.6rem, 4.6vw, 4.6rem)/1 var(--display); letter-spacing: 0.01em; color: var(--fibre); }
+.pj-month p:last-child { margin: 0.7rem 0 0; max-width: 40em; font-size: 1.05rem; line-height: 1.7; color: var(--fibre); text-wrap: pretty; }
+.pj-side { overflow-y: auto; padding: 3rem clamp(1rem, 1.6vw, 1.8rem) 2rem; border-left: 1px solid var(--line); background: var(--night); scrollbar-color: var(--leaf-deep) var(--night-2); }
+.pj-side h2 { margin: 1.6rem 0 0.6rem; font: 700 0.78rem/1.4 var(--sans-tc); letter-spacing: 0.14em; color: var(--rope); }
+.pj-side h2[hidden], .pj-side ul[hidden] { display: none; }
+.pj-group { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; padding-bottom: 1.2rem; border-bottom: 1px solid var(--line); }
+.pj-group p { margin: 0; display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.82rem; color: var(--fibre-dim); }
+.pj-group b { font: 500 1.7rem/1 var(--latin); color: var(--fibre); font-variant-numeric: tabular-nums; }
+.pj-group .yr-dots { margin-top: 0.4rem; }
+.pj-people, .pj-ties, .pj-log { list-style: none; margin: 0; padding: 0; }
+.pj-people li { padding: 0.7rem 0 0.7rem 0.8rem; border-top: 1px solid var(--line-2); border-left: 3px solid var(--tone); }
+.pj-people li:first-child { border-top: 0; }
+.pj-who { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.1rem 0.6rem; }
+.pj-who b { font: 700 1.1rem/1.3 var(--serif-tc); }
+.pj-role { font-size: 0.78rem; color: var(--tone); }
+.pj-where { margin-left: auto; font-size: 0.82rem; color: var(--fibre-dim); }
+.pj-knots { display: flex; align-items: center; gap: 5px; margin-top: 0.4rem; }
+.pj-knots i { width: 0.8rem; height: 0.8rem; border-radius: 50%; border: 1.5px solid var(--line); }
+.pj-knots i.on { background: var(--leaf); border-color: var(--leaf); }
+.pj-tag { margin-left: 0.4rem; padding: 0 0.45rem; border: 1px solid var(--line); border-radius: 3px; font-size: 0.72rem; line-height: 1.6; color: var(--fibre-dim); }
+.pj-tag.fin { border-color: var(--rope); color: var(--rope); }
+.pj-ties li { padding: 0.35rem 0; font-size: 0.95rem; border-bottom: 1px solid var(--line-2); animation: pj-in 0.6s var(--ease) both; }
+.pj-ties li.none { color: var(--quiet); font-size: 0.85rem; border: 0; }
+.pj-log li { padding: 0.3rem 0; font-size: 0.82rem; line-height: 1.55; color: var(--fibre-dim); }
+
+/* 3. the year is over */
+.pj-end { max-width: 64rem; margin: 0 auto; padding: 4rem clamp(1rem, 4vw, 3rem) 5rem; }
+.pj-end .yr-head h1 { font-size: clamp(2.4rem, 5vw, 3.6rem); }
+.pj-scores { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); gap: 1.4rem 2rem; }
+.pj-scores li { display: grid; grid-template-columns: auto 1fr; column-gap: 0.9rem; align-items: baseline; padding-left: 0.8rem; border-left: 3px solid var(--tone); }
+.pj-scores b { grid-row: span 2; font: 500 3rem/1 var(--latin); color: var(--tone); font-variant-numeric: tabular-nums; }
+.pj-scores span { font: 700 1.15rem/1.3 var(--serif-tc); }
+.pj-scores small { color: var(--fibre-dim); font-size: 0.8rem; }
+
+@media (prefers-reduced-motion: reduce) { .pj-names li, .pj-ties li { animation: none; } }
+/* a laptop screen or a tablet held upright */
+@media (max-width: 900px) {
+  .pj-gather { grid-template-columns: 1fr; justify-items: start; }
+  .pj-qr { width: min(70vw, 22rem); }
+  .pj-live { height: auto; grid-template-columns: 1fr; }
+  .pj-stage { height: 62vh; }
+  .pj-side { border-left: 0; border-top: 1px solid var(--line); padding-top: 1rem; }
+}

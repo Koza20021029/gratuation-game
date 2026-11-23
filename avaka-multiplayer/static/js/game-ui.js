@@ -149,7 +149,7 @@
       machine: '機器加工完工', machineSub: '+12 分，船仍可拆修', resin: '工業樹脂完工', resinSub: '+5 分，船無法拆修',
       social: '和人有關的事', askElder: '向耆老請益', askElderSub: kp => `得到 ${kp} KP，雙方各 +1 分`, askMiddle: '向中生代請益', askMiddleSub: '得到 2 KP，雙方各 +1 分',
       help: '幫忙長者', helpSub: s => `耆老回復 2 AP，你 +${s} 分`, helpMore: '耆老回復 2 AP；這個月的分數已經拿過', patrol: '巡山', patrolSub: '看過每一區的 Avaka；算作照顧林地，你 +1 分', tribe: '為部落的船出力', tribeSub: (a, b) => `全組一起造的船 ${a}/${b}；年底全員加分`, tribeBoat: '部落的船', tribeNote: '完工的人可以到灘頭出力', tribeDone: '完成了，年底全員 +3 分', tell: '講述', tellSub: kp => `身邊的人各得 ${kp} KP，你 +1 分`, teach: '遠程指導', teachSub: '對方得 1 KP，你 +1 分', translate: '科學轉譯', translateSub: '用掉 2 KP；成功 +4 分、+2 材料', translateDone: '用掉 2 KP；成功得 2 份材料，可以送人（完工後不加分）',
-      nextStep: '下一步', log: '部落記事', chat: '聊天', chatEmpty: '還沒有人說話。', chatPh: '跟同組的人說…', send: '送出', film: '蘭嶼影像',
+      nextStep: '下一步', walkTo: p => `走到${p}`, allDone: '六道工序都完成了', log: '部落記事', chat: '聊天', chatEmpty: '還沒有人說話。', chatPh: '跟同組的人說…', send: '送出', film: '蘭嶼影像',
       island: '島上現在的樣子', islandOpen: '看整座島', toFilm: '看實景影片', toIsle: '回到島上', filmCap: '蘭嶼實景', thereNext: s => `你的下一道工序在這裡：${s}`, thereCan: list => `到了可以做：${list}`, thereNone: '現在到這裡還沒有能做的事',
       why: {
         ap: n => `體力不夠，要 ${n} AP`, kp: n => `技術還不夠，要 KP ${n}`, mat: n => `材料不夠，要 ${n} 份`, here: '你已經在這裡', closed: '2 月封山，不能上山', goForest: '要先走到山林', goShore: '要先走到灘頭工作室', goShop: '要先走到商店',
@@ -172,7 +172,7 @@
       machine: 'Finish by machine', machineSub: '+12 points; the boat can still be repaired', resin: 'Finish with resin', resinSub: '+5 points; the boat cannot be repaired',
       social: 'With other people', askElder: 'Ask the Elder', askElderSub: kp => `+${kp} KP; +1 point each`, askMiddle: 'Ask the Middle Gen.', askMiddleSub: '+2 KP; +1 point each',
       help: 'Help the Elder', helpSub: s => `Elder recovers 2 AP; you +${s}`, helpMore: 'Elder recovers 2 AP; this month\'s point is already yours', patrol: 'Walk the hill', patrolSub: 'Check every Avaka plot; counts as tending, you +1', tribe: 'Work on the community boat', tribeSub: (a, b) => `The boat everyone builds ${a}/${b}; points for all at year end`, tribeBoat: 'Community boat', tribeNote: 'those who have finished can work on it at the Shore', tribeDone: 'finished: +3 for everyone at year end', tell: 'Tell stories', tellSub: kp => `+${kp} KP for those nearby; you +1`, teach: 'Guide from afar', teachSub: 'They gain 1 KP; you +1', translate: 'Scientific translation', translateSub: 'Uses 2 KP; success +4 points, +2 materials', translateDone: 'Uses 2 KP; success gives 2 materials to pass on (no points once finished)',
-      nextStep: 'Next', log: 'Record', chat: 'Chat', chatEmpty: 'Nobody has said anything yet.', chatPh: 'Say something to your group…', send: 'Send', film: 'Lanyu on film',
+      nextStep: 'Next', walkTo: p => `Walk to the ${p}`, allDone: 'All six steps are done', log: 'Record', chat: 'Chat', chatEmpty: 'Nobody has said anything yet.', chatPh: 'Say something to your group…', send: 'Send', film: 'Lanyu on film',
       island: 'The island right now', islandOpen: 'See the whole island', toFilm: 'Real footage', toIsle: 'Back to the island', filmCap: 'Lanyu on film', thereNext: s => `Your next step is here: ${s}`, thereCan: list => `There you can: ${list}`, thereNone: 'Nothing you can do there yet',
       why: {
         ap: n => `Not enough stamina (${n} AP needed)`, kp: n => `Not enough skill (KP ${n} needed)`, mat: n => `Not enough material (${n} needed)`, here: 'You are already here', closed: 'The forest is closed in Month 2', goForest: 'Walk to the Forest first', goShore: 'Walk to the Shore workshop first', goShop: 'Walk to the Store first',
@@ -185,7 +185,7 @@
   const lang = () => (typeof currentLang !== 'undefined' && currentLang === 'en') ? 'en' : 'zh';
   const T = () => TEXT[lang()];
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const noPicto = s => String(s).replace(/[\p{Extended_Pictographic}️‍]+\s*/gu, '');
+  const noPicto = s => String(s).replace(/[\p{Extended_Pictographic}\uFE0F\u200D]+\s*/gu, '');
   const reason = r => { const w = T().why[r.why]; return typeof w === 'function' ? w(r.n) : (w || ''); };
 
   // ───────── the surface ─────────
@@ -193,9 +193,9 @@
   host.id = 'game2'; host.hidden = true;
   const root = host.attachShadow({ mode: 'open' });
   // fixed markup, no user input. The four parts are redrawn separately, so the island panel (#g-film) is never rebuilt.
-  root.innerHTML = '<link rel="stylesheet" href="css/game-ui.css?v=20261120_2"><div class="g" id="g"><div id="g-head"></div><div class="work">'
+  root.innerHTML = '<link rel="stylesheet" href="css/game-ui.css?v=20261121_1"><div class="g" id="g"><div id="g-head"></div><div class="work">'
     + '<aside class="panel col" id="g-mates"></aside><div id="g-centre"></div>'
-    + '<aside class="side"><div class="panel film" id="g-film"></div><div class="panel feed" id="g-feed"></div></aside></div></div>';
+    + '<aside class="side"><div class="panel film" id="g-film"></div><div class="panel feed" id="g-feed"></div></aside></div><div class="dock" id="g-dock"></div></div>';
   document.body.appendChild(host);
   const $ = id => root.getElementById(id);
   const old = id => document.getElementById(id);
@@ -308,6 +308,7 @@
       <section class="panel me">
         <div class="who"><b>${esc(me.name)}</b><span>${esc(t.role[me.role])}</span></div>
         <ol class="rope${ropeFrom !== ropeTo ? ' grow' : ''}" style="--to:${ropeTo}%;--from:${ropeFrom}%">${rope}</ol>
+        <p class="rope-next">${nextIdx >= 0 ? `${esc(t.nextStep)}：<b>${esc(t.steps[nextIdx])}</b>（${esc(t.stepWhere[nextIdx])}）` : esc(t.allDone)}</p>
         <div class="stats">
           <div class="stat"><span class="label">${esc(t.apName)}</span><b${bump('apDiff')}>${me.ap}<small>/${me.max_ap}</small></b>${delta('ap')}<div class="pips">${pips}</div></div>
           <div class="stat"><span class="label">${esc(t.kpName)}</span><b${bump('kp')}>${me.kp}</b>${delta('kp')}</div>
@@ -390,7 +391,17 @@
     // keep what the person is in the middle of: the chat they are typing, where they have scrolled to
     const typing = $('chat-in') ? $('chat-in').value : '', hadFocus = root.activeElement && root.activeElement.id === 'chat-in';
     const scrolled = host.scrollTop, sel = hadFocus ? $('chat-in').selectionStart : 0;
+    // on a phone: the next thing to do and the ready button stay at the bottom of the screen (css: .dock)
+    let dockAct = '';
+    if (nextIdx >= 0) {
+      const loc = nextIdx < 3 ? FOREST : SHORE, there = me.location === loc;
+      const a = there ? { type: 'craft', step: STEPS[nextIdx] } : { type: 'move', target: loc }, r = can(state, me.id, a);
+      const sub = r.ok ? (r.cost === 0 ? t.free : `${r.cost} ${t.ap}`) : reason(r);
+      dockAct = `<button type="button" class="dock-act" data-act="${esc(JSON.stringify(a))}" aria-disabled="${!r.ok}"><small>${esc(t.nextStep)}</small>${esc(there ? t.steps[nextIdx] : t.walkTo(t.place[loc][0]))}<small>${esc(sub)}</small></button>`;
+    }
+    const dock = `${dockAct}<button type="button" class="go${me.ready ? ' waiting' : ''}" data-old="next-month-btn">${esc(me.ready ? t.unready : t.ready)}<small>${esc(t.readyCount(readyN, players.length))}</small></button>`;
     $('g-head').innerHTML = top;
+    $('g-dock').innerHTML = dock;
     $('g-mates').innerHTML = `<h3>${esc(t.mates)}</h3><ul>${mates || `<li class="mate"><span class="role">${esc(t.nobody)}</span></li>`}</ul>`;
     $('g-centre').innerHTML = `<div class="places" data-here="${LOCS.indexOf(me.location)}">${places}</div>
       <section class="panel col social"><h3>${esc(t.social)}</h3><div class="acts-list">${social}</div></section>`;
@@ -687,7 +698,7 @@
 
   // ───────── pop-ups and the year-end screen: drop the pictographs the old look used as icons ─────────
   const POPUPS = '.modal-overlay, #quiz-modal, #event-choice-modal, #minigame-modal, #toast-container';
-  const PICTO = /[\p{Extended_Pictographic}️‍⚜✦]+[  ]?/gu;
+  const PICTO = /[\p{Extended_Pictographic}\uFE0F\u200D⚜✦]+[  ]?/gu;
   function plain(el) {
     const walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
     const hits = [];

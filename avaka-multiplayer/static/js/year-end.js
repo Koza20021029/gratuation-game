@@ -43,13 +43,13 @@
   const canGL = (() => { try { return !!document.createElement('canvas').getContext('webgl2'); } catch (e) { return false; } })();
 
   // ── 1. the year on the island ──
-  function replay(box, state, t, lang) {
+  function replay(box, state, t, lang, big) {
     const year = (state.year || []).slice().sort((a, b) => a.month - b.month);
     if (!canGL || !year.length) return;
     const sec = el('section', { class: 'ye-block' });
     sec.append(el('h2', null, t.replay));
     const stage = el('div', { class: 'ye-isle' });
-    const frame = el('iframe', { title: t.replay, tabindex: '-1', 'aria-hidden': 'true', src: `/island?embed=1&month=1&lang=${lang}` });
+    const frame = el('iframe', { title: t.replay, tabindex: '-1', 'aria-hidden': 'true', src: `/island?embed=1${big ? '&big=1&quality=medium' : ''}&month=1&lang=${lang}` });
     const label = el('p', { class: 'ye-month' });
     const said = el('div', { class: 'ye-events', 'aria-live': 'polite' });
     const bar = el('div', { class: 'ye-bar' }), btn = el('button', { type: 'button', class: 'ye-btn' });
@@ -175,13 +175,13 @@
   }
 
   window.AvakaYear = {
-    // box: an empty element on the year-end screen
-    render(box, state, lang) {
+    // box: an empty element on the year-end screen; opts.big: the classroom projector (larger island, every frame)
+    render(box, state, lang, opts) {
       if (!box || !state) return;
       const t = TEXT[lang === 'en' ? 'en' : 'zh'];
       box.textContent = '';
       box.append(el('h2', { class: 'ye-title' }, t.title));
-      replay(box, state, t, lang === 'en' ? 'en' : 'zh');
+      replay(box, state, t, lang === 'en' ? 'en' : 'zh', !!(opts && opts.big));
       rope(box, state, t);
     }
   };

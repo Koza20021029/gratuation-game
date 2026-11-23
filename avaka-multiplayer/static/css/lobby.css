@@ -253,3 +253,34 @@ button.btn:active { transform: translate(var(--tx, 0px), calc(var(--ty, 0px) + 1
   .foot a:hover { border-color: var(--fibre); }
   .foot .lang { grid-column: 1 / -1; margin: 0.2rem 0 0; text-align: center; }
 }
+
+/* ── the join link: a QR code for phones, the link itself, and the projector view ── */
+.share { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: 1rem; align-items: center; margin: 1.1rem 0 0; padding: 0.9rem 0 0; border-top: 1px solid var(--line); }
+.share .qr { width: 7.5rem; aspect-ratio: 1; border-radius: 4px; overflow: hidden; background: #efe6cf; }
+.share .qr svg { display: block; width: 100%; height: 100%; }
+.share-txt p { margin: 0; font-size: 0.86rem; line-height: 1.6; color: var(--fibre-dim); }
+.share-acts { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; margin-top: 0.6rem !important; }
+.share .proj { color: var(--leaf); font-size: 0.86rem; text-underline-offset: 0.3em; text-decoration-thickness: 1px; }
+.share .proj::after { content: ' ↗'; }
+.share .proj:hover { color: var(--fibre); }
+.share-local { margin-top: 0.5rem !important; color: var(--rope) !important; }
+.share-local[hidden] { display: none; }
+#join[data-linked] .room input { border-color: var(--rope); }
+
+/* Phones and narrow tablets: the form comes right after the name, so it is on the first screen; the plant and the
+   six steps follow below it for whoever scrolls on. */
+@media (max-width: 980px) {
+  .hero { display: contents; }
+  .hero > div:first-child { order: 1; }
+  .enter { order: 2; }
+  .hero > div:last-child { order: 3; margin-top: 1.5rem; }
+  .hero > .mid { order: 4; }
+  .hero .hint { display: none; }
+}
+@media (max-width: 520px) {
+  h1 { font-size: 3.6rem; }
+  .title-tc { margin-top: 0.8rem; }
+  .lede { margin-top: 0.6rem; font-size: 0.98rem; }
+  .share { grid-template-columns: 6rem minmax(0, 1fr); }
+  .share .qr { width: 6rem; }
+}

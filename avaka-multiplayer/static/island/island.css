@@ -199,6 +199,15 @@ ol, ul { padding: 0; list-style: none; }
   .month-info .mwalk, .month-info .mextra, .month-note { display: none; }
   .has-card .calendar { display: none; }
 }
+/* phones: the month is one line (number, Tao name, what kind of month) until it is tapped; the island gets the screen */
+@media (max-width: 800px) {
+  .month-info { cursor: pointer; }
+  .month-info .mname { margin-bottom: 0; }
+  .month-info .mname::after { content: '▾'; margin-left: auto; color: var(--fibre-dim); font-size: 0.8rem; transition: transform 0.2s ease; }
+  .month-info.open .mname::after { transform: rotate(180deg); }
+  .month-info:not(.open) > :not(.mname) { display: none; }
+  .month-info.open .mname { margin-bottom: 4px; }
+}
 .month-info .mcal span { display: inline-block; margin-right: 8px; padding: 0 7px; border-radius: 999px; background: rgba(210, 164, 92, 0.18); color: var(--rope); font-size: 0.72rem; }
 .month-info .mcal { margin-top: 3px; }
 .month-info .mvar { margin-top: 2px; font-size: 0.68rem; color: var(--fibre-dim); opacity: 0.8; }
@@ -340,5 +349,10 @@ html[data-embed] .pin:not(.k-place):not(.k-guest):not(.k-link) { display: none !
 /* what passed between two people this month (the year-end replay) */
 .pin.k-link { pointer-events: none; padding: 1px 7px; border-radius: 3px; font-family: var(--sans-tc); font-size: 0.68rem; font-weight: 700; background: #b3342a; color: #fbf8f0; border: 0; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25); }
 .pin.k-link::after { display: none; }
+/* the classroom projector (/projector, big=1): names and cords read from the back of the room */
+html[data-embed=big] .pin.k-guest { font-size: 1.05rem; padding: 3px 10px 4px; }
+html[data-embed=big] .pin.k-guest i { font-size: 0.62rem; }
+html[data-embed=big] .pin.k-link { font-size: 0.95rem; padding: 2px 9px; }
+html[data-embed=big] .pin.k-place { font-size: 1rem; }
 html[data-embed], html[data-embed] body { pointer-events: none; overflow: hidden; }
 html[data-embed] .pin.k-place { font-size: 0.72rem; padding: 0.15rem 0.5rem 0.15rem 0.2rem; }

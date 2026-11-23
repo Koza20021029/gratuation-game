@@ -391,9 +391,36 @@ def cache_static_files(response):
         response.headers['Cache-Control'] = 'public, max-age=86400'
     return response
 
+# the classroom projector: a page that only watches one room (no player, no buttons)
+@app.route('/projector')
+@app.route('/projector/')
+def projector_index():
+    return send_from_directory('static/projector', 'index.html')
+
 @socketio.on('connect')
 def handle_connect():
     print(f"Client connected: {request.sid}")
+
+# A projector watches a room: it joins the room's broadcast and gets every state_update, but it is not a
+# player, so it is kept out of player_rooms and nothing in the rules ever counts it.
+watchers = {}  # sid -> room_code
+
+@socketio.on('watch_room')
+def handle_watch_room(data):
+    room_code = ((data or {}).get('room_code') or '').strip().upper()
+    sid = request.sid
+    with state_lock:
+        state = rooms.get(room_code)
+        before = watchers.get(sid)
+    if before and before != room_code:
+        leave_room(before)
+    if not state:
+        watchers.pop(sid, None)
+        emit('watch_failed', {'room_code': room_code})
+        return
+    join_room(room_code)
+    watchers[sid] = room_code
+    emit('state_update', state)
 
 @socketio.on('get_state')
 def handle_get_state():
@@ -417,6 +444,7 @@ def handle_chat(data):
 def handle_disconnect():
     sid = request.sid
     print(f"Client disconnected: {sid}")
+    watchers.pop(sid, None)
     with state_lock:
         if sid in player_rooms:
             room_code = player_rooms[sid]

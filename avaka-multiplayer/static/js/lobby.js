@@ -121,6 +121,15 @@ const LOBBY_HTML = `
     <h2>等大家到齊</h2>
     <div class="code-row"><span class="code" id="w-code">K7QM</span><button type="button" class="copy" id="b-copy">複製</button></div>
     <p class="sub">把這四個字告訴同組的人。每個人是一股纖維，到齊了才撚得成繩。</p>
+    <div class="share">
+      <div class="qr" id="w-qr" aria-hidden="true"></div>
+      <div class="share-txt">
+        <p id="share-say">同組的人用手機相機掃這個，就會帶著房號進來，不用自己打。</p>
+        <p class="share-acts"><button type="button" class="copy" id="b-link">複製加入連結</button>
+          <a id="w-proj" class="proj" target="_blank" rel="noopener">在投影幕上顯示這一組</a></p>
+        <p class="share-local" id="share-local" hidden>這是本機的網址，其他電腦和手機連不到。上課時請用正式網站開房。</p>
+      </div>
+    </div>
     <canvas id="rope" aria-hidden="true"></canvas>
     <ul class="members" id="members"></ul>
     <p class="together" id="together" aria-live="polite"></p>
@@ -145,7 +154,7 @@ const LOBBY_HTML = `
   const host = document.createElement('div');
   host.id = 'lobby2';
   const root = host.attachShadow({ mode: 'open' });
-  root.innerHTML = '<link rel="stylesheet" href="css/lobby.css?v=20261023_2">' + LOBBY_HTML;   // fixed markup defined below, no user input
+  root.innerHTML = '<link rel="stylesheet" href="css/lobby.css?v=20261121_1">' + LOBBY_HTML;   // fixed markup defined below, no user input
   document.body.appendChild(host);
   const old = id => document.getElementById(id);
 
@@ -360,7 +369,7 @@ const LOBBY_HTML = `
   const ORDER = ['cut', 'rub', 'strip', 'dry', 'twist', 'caulk'];
   const says = $('step-says'), stepBtns = [...root.querySelectorAll('#steps button')];
   let pinned = null, showing = false, progress = 0;
-  const setMode = m => { if (mode !== m) { mode = m; modeT = 0; } says.textContent = m === 'hang' ? T('idle') : (lang === 'en' ? SAYS_EN : SAYS)[m]; };
+  const setMode = m => { if (mode !== m) { mode = m; modeT = 0; } says.textContent = m === 'hang' ? T(fine ? 'idle' : 'idleTouch') : (lang === 'en' ? SAYS_EN : SAYS)[m]; };
   const mark = m => stepBtns.forEach(o => o.setAttribute('aria-pressed', String(o.dataset.mode === m)));
 
   // Done in order, one to six, the fibres play the whole journey from plant to rope
@@ -576,8 +585,19 @@ const LOBBY_HTML = `
       rg.strokeStyle = m.tone[theme === 'light' ? 1 : 0]; rg.lineWidth = 2.6 + joined * 1.2; rg.lineCap = 'round'; rg.stroke();
     });
   }
+  // The join link: /?room=K7QM opens this lobby with the code already filled in. The waiting room shows it as a
+  // QR code (js/qr.js) for phones, and links to the classroom projector view of the same room.
+  const joinLink = code => location.origin + '/?room=' + encodeURIComponent(code);
+  const localHost = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+  function share(code) {
+    const link = joinLink(code);
+    $('w-qr').innerHTML = window.AvakaQR ? AvakaQR.svg(link, { dark: '#0c1610', light: '#efe6cf', label: link }) : '';   // drawn from the link alone
+    $('w-proj').href = '/projector?room=' + encodeURIComponent(code) + '&lang=' + lang;
+    $('share-local').hidden = !localHost;
+  }
   function showRoom(state) {
     const players = Object.values(state.players), firstTime = $('waiting').hidden;
+    if ($('w-code').textContent !== state.room_code || firstTime) share(state.room_code);
     $('w-code').textContent = state.room_code; $('join').hidden = true; $('waiting').hidden = false;
     if (firstTime) { here = []; joined = 0; sizeRope(); }
     // keep each strand's colour and how far it has been drawn while people come and go
@@ -621,9 +641,15 @@ const LOBBY_HTML = `
     const join = $('join'); if (!join) return;
     const next = !$('p-name').value.trim() ? 'name' : !root.querySelector('.role input:checked') ? 'role' : 'room';
     join.dataset.next = next;
-    $('hint').textContent = T(next === 'name' ? 'nextName' : next === 'role' ? 'nextRole' : 'nextRoom');
+    const isLinked = join.dataset.linked && $('room').value.trim().toUpperCase() === linked;
+    $('hint').textContent = T(next === 'name' ? 'nextName' : next === 'role' ? 'nextRole' : isLinked ? 'nextLinked' : 'nextRoom');
+    $('step3').textContent = isLinked ? T('step3linked').replace('{code}', linked) : T('step3');
   }
+  // arrived by a join link or a QR code: the room is filled in, so all that is left is a name and a role
+  const linked = (new URLSearchParams(location.search).get('room') || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 4);
+  if (linked.length === 4) { $('room').value = linked; $('join').dataset.linked = '1'; }
   $('p-name').addEventListener('input', guide);
+  $('room').addEventListener('input', guide);
   // the avatar creator's 3D code is not loaded with the page; start fetching it once someone begins typing
   $('p-name').addEventListener('input', () => { if (typeof window.loadAvatarLibs === 'function') window.loadAvatarLibs().catch(() => {}); }, { once: true });
   root.querySelectorAll('.role input').forEach(r => r.addEventListener('change', guide));
@@ -674,6 +700,8 @@ const LOBBY_HTML = `
       name_middle: '中生代', aka_middle: '中生代工匠', does_middle: '小時候看過老人家怎麼做，學得快，也傳得快。',
       roomPh: '房間代碼（4 碼）', join: '加入房間', create: '自己開一間新的', rules: '先看遊戲規則與流程', island: '探索 Avaka 島',
       waitH2: '等大家到齊', waitSub: '把這四個字告訴同組的人。每個人是一股纖維，到齊了才撚得成繩。', copy: '複製', copied: '已複製',
+      copyLink: '複製加入連結', shareSay: '同組的人用手機相機掃這個，就會帶著房號進來，不用自己打。', proj: '在投影幕上顯示這一組', shareLocal: '這是本機的網址，其他電腦和手機連不到。上課時請用正式網站開房。',
+      step3linked: '③ 房號 {code} 已經幫你填好了。輸入名字、選好角色，按「加入房間」。', nextLinked: '最後：按「加入房間」', idleTouch: '點任何一道工序，看纖維怎麼變。', hintTouch: '用手指撥撥看這些纖維；按住畫一圈，可以把它們撚成繩',
       start: '開始這一年', back: '離開這個房間',
       meMark: '（你）', alone: '你先到了。把房間代碼給同組的人。', together: '{n} 個人到了，纖維開始撚在一起。',
       waking: '島正在醒來。伺服器久沒人來會睡著，最多要等一分鐘；連上後這行字會消失。',
@@ -692,6 +720,8 @@ const LOBBY_HTML = `
       name_middle: 'Middle', aka_middle: 'Middle generation', does_middle: 'Watched the elders as a child. Learns fast, teaches fast.',
       roomPh: 'Room code (4 characters)', join: 'Join room', create: 'Open a new room', rules: 'Read the rules first', island: 'Explore Avaka Island',
       waitH2: 'Waiting for everyone', waitSub: 'Give these four characters to your group. Each player is one strand; the rope is twisted when all are here.', copy: 'Copy', copied: 'Copied',
+      copyLink: 'Copy join link', shareSay: 'Your group can scan this with a phone camera and arrive with the code already filled in.', proj: 'Show this group on the projector', shareLocal: 'This is a local address that other computers and phones cannot reach. In class, open the room on the public site.',
+      step3linked: '3 Room {code} is already filled in. Type your name, pick a role and press Join room.', nextLinked: 'Last: press Join room', idleTouch: 'Tap any step to see what the fibres do.', hintTouch: 'Brush the fibres with a finger; press and circle to twist them into rope',
       start: 'Begin the year', back: 'Leave this room',
       meMark: ' (you)', alone: 'You are the first one here. Share the room code with your group.', together: '{n} players are here. The strands begin to twist together.',
       waking: 'The island is waking up. The server sleeps when nobody visits and can take up to a minute; this line goes away once it is connected.',
@@ -708,6 +738,9 @@ const LOBBY_HTML = `
     set('.binomial', 'binomial'); set('.title-tc', 'titleTc'); set('.lede', 'lede'); set('#hint-text', 'hint'); set('#show-me', 'showMe');
     set('#join h2', 'h2'); set('label[for=p-name]', 'nameLabel'); set('legend', 'roleLegend'); set('#b-join', 'join'); set('#b-create', 'create'); set('#rules-link', 'rules'); set('#island-link', 'island'); set('#step3', 'step3'); guide();
     set('#waiting h2', 'waitH2'); set('#waiting .sub', 'waitSub'); set('#b-copy', 'copy'); set('#b-start', 'start'); set('#b-back', 'back');
+    set('#b-link', 'copyLink'); set('#share-say', 'shareSay'); set('#w-proj', 'proj'); set('#share-local', 'shareLocal');
+    if (!fine) set('#hint-text', 'hintTouch');
+    if ($('w-code').textContent && !$('waiting').hidden) share($('w-code').textContent.trim());
     $('p-name').placeholder = T('namePh'); $('room').placeholder = T('roomPh'); $('room').setAttribute('aria-label', T('roomPh'));
     stepBtns.forEach((b, i) => { b.lastChild.textContent = T('steps')[i]; });
     root.querySelectorAll('.role').forEach(card => {
@@ -720,7 +753,7 @@ const LOBBY_HTML = `
     grow.setAttribute('aria-label', T('plantLabel'));
     [['t-music', 'tMusic'], ['t-sfx', 'tSfx'], ['t-theme', 'tTheme']].forEach(([id, k]) => { $(id).title = T(k); $(id).setAttribute('aria-label', T(k)); });
     root.querySelectorAll('.lang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
-    says.textContent = mode === 'hang' ? T('idle') : (lang === 'en' ? SAYS_EN : SAYS)[mode];
+    says.textContent = mode === 'hang' ? T(fine ? 'idle' : 'idleTouch') : (lang === 'en' ? SAYS_EN : SAYS)[mode];
     root.querySelector('.title-tc').style.letterSpacing = lang === 'en' ? '0.02em' : '';
     if (typeof fitPlant === 'function') { fitPlant(); placeClearing(); }
   }
@@ -737,14 +770,15 @@ const LOBBY_HTML = `
     if (document.readyState === 'loading') addEventListener('DOMContentLoaded', toEn); else toEn();
   }
 
-  // ───────── copy the room code ─────────
-  $('b-copy').addEventListener('click', () => {
-    const code = $('w-code').textContent.trim(), btn = $('b-copy');
-    const done = () => { btn.textContent = T('copied'); btn.classList.add('done'); pluck(440, 0.09); setTimeout(() => { btn.textContent = T('copy'); btn.classList.remove('done'); }, 1600); };
-    const oldWay = () => { const ta = document.createElement('textarea'); ta.value = code; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); try { if (document.execCommand('copy')) done(); } catch (e) { /* leave it */ } ta.remove(); };
-    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(code).then(done).catch(oldWay);
+  // ───────── copy the room code, or the whole join link ─────────
+  function copy(text, btn, key) {
+    const done = () => { btn.textContent = T('copied'); btn.classList.add('done'); pluck(440, 0.09); setTimeout(() => { btn.textContent = T(key); btn.classList.remove('done'); }, 1600); };
+    const oldWay = () => { const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); try { if (document.execCommand('copy')) done(); } catch (e) { /* leave it */ } ta.remove(); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done).catch(oldWay);
     else oldWay();
-  });
+  }
+  $('b-copy').addEventListener('click', () => copy($('w-code').textContent.trim(), $('b-copy'), 'copy'));
+  $('b-link').addEventListener('click', () => copy(joinLink($('w-code').textContent.trim()), $('b-link'), 'copyLink'));
 
   // ───────── a hand that shows how ─────────
   // The first time someone arrives, a ghost pointer sweeps the fibres, twists a few, and points at the
@@ -756,7 +790,7 @@ const LOBBY_HTML = `
     demoOn = false; demoTimers.forEach(clearTimeout); demoTimers = [];
     ghost.classList.remove('on', 'down'); ghostSays.classList.remove('on');
     twist.on = false; ptr.on = false;
-    if (!pinned) { mode = 'hang'; modeT = 0; mark(null); says.textContent = T('idle'); }
+    if (!pinned) { mode = 'hang'; modeT = 0; mark(null); says.textContent = T(fine ? 'idle' : 'idleTouch'); }
   }
   function runDemo() {
     if (reduce || demoOn) return;
@@ -792,7 +826,7 @@ const LOBBY_HTML = `
   // ───────── the avatar creator, dressed for the same world ─────────
   // Its markup and behaviour stay in app.js; here the pictographs are dropped from its labels each time
   // the game rewrites them. (The 3D stage has these colours itself now, in avatar3d.js.)
-  const noPicto = s => s.replace(/^[\s\p{Extended_Pictographic}️‍]+/u, '');
+  const noPicto = s => s.replace(/^[\s\p{Extended_Pictographic}\uFE0F\u200D]+/u, '');
   function dressAvatar() {
     document.querySelectorAll('#avatar-screen h2, #avatar-screen p, #avatar-screen .avatar-ctrl-label, #avatar-confirm-btn').forEach(el => {
       if (!el.children.length && el.textContent !== noPicto(el.textContent)) el.textContent = noPicto(el.textContent);

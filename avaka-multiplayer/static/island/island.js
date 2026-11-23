@@ -40,6 +40,8 @@ try {
   const mobile = innerWidth <= 800 || /Mobi|Android/i.test(navigator.userAgent);
   // embed: shown small inside the game screen, which sends the month and the player's place by postMessage
   const embed = params.has('embed');
+  const fineHand = matchMedia('(hover: hover) and (pointer: fine)').matches;   // a mouse: the hints name the mouse; otherwise fingers
+  const bigEmbed = embed && params.has('big');   // the classroom projector (/projector): the whole screen, every frame
   const quality = ['low', 'medium', 'high'].includes(params.get('quality')) ? params.get('quality') : embed ? 'low' : mobile ? 'medium' : 'high';
 
   // ---------- renderer, camera, controls ----------
@@ -73,7 +75,11 @@ try {
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = !reduced.matches;
   controls.dampingFactor = 0.08;
-  controls.enablePan = false;
+  // close up you can slide along the island (right-drag or Shift-drag, two fingers on a phone) instead of backing
+  // out to the overview to see the next place; the 'change' handler further down keeps the view over the island
+  controls.enablePan = true;
+  controls.screenSpacePanning = false;
+  controls.panSpeed = 0.8;
   controls.minDistance = 2.2;
   controls.maxDistance = 130;
   controls.minPolarAngle = THREE.MathUtils.degToRad(14);
@@ -139,7 +145,32 @@ try {
     }
     return e < 0.2 ? 0.03 * (1 - W.smooth(0.08, 0.2, e)) : 0;
   });
-  const terrain = W.buildTerrain(THREE, shape, { seg: quality === 'high' ? 300 : quality === 'medium' ? 170 : 120 });
+  // The ground under the Avaka (the forest plot and the 東清 field) is a lighter yellow-green, so the plant the game is
+  // about can be found from the overview, where single plants are too small to see.
+  const GROVE = new THREE.Color(0xbfdc84), groves = [[spots.forest, 1.7], [spots['avaka-field'], 0.95]];
+  const terrain = W.buildTerrain(THREE, shape, { seg: quality === 'high' ? 300 : quality === 'medium' ? 170 : 120, tint: (x, z, y, c) => {
+    if (y < 0.05) return;
+    for (const [g, r] of groves) { const d = Math.hypot(x - g.x, z - g.z); if (d < r) c.lerp(GROVE, 0.6 * (1 - W.smooth(r * 0.55, r, d))); }
+  } });
+  // Up close the facets are large and each is one colour. A fine mottle in world space (two octaves of value noise)
+  // breaks them up; it fades out with distance, where it would only shimmer, and stays off the sea floor.
+  terrain.material.onBeforeCompile = (sh) => {
+    sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vGround;')
+      .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvGround = (modelMatrix * vec4(transformed, 1.0)).xyz;');
+    sh.fragmentShader = sh.fragmentShader.replace('#include <common>', `#include <common>
+      varying vec3 vGround;
+      float gHash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+      float gNoise(vec2 p) { vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
+        return mix(mix(gHash(i), gHash(i + vec2(1.0, 0.0)), f.x), mix(gHash(i + vec2(0.0, 1.0)), gHash(i + vec2(1.0, 1.0)), f.x), f.y); }`)
+      .replace('#include <color_fragment>', `#include <color_fragment>
+      {
+        float near = 1.0 - smoothstep(5.0, 16.0, distance(vGround, cameraPosition));
+        float land = smoothstep(0.0, 0.06, vGround.y);
+        float m = gNoise(vGround.xz * 9.0) * 0.65 + gNoise(vGround.xz * 31.0) * 0.35 - 0.5;
+        diffuseColor.rgb *= 1.0 + m * 0.24 * near * land;
+        diffuseColor.rgb = mix(diffuseColor.rgb, diffuseColor.rgb * vec3(1.07, 1.04, 0.86), gNoise(vGround.xz * 3.3 + 17.0) * 0.6 * near * land);   // drier, warmer patches
+      }`);
+  };
   scene.add(terrain);
   const roadMap = W.roadTexture(THREE);
   const ringRoad = W.buildRibbon(THREE, shape, shape.roadLoop(ROAD_D), { width: 0.22, samples: 2200, map: roadMap, lift: 0.018 });
@@ -774,6 +805,12 @@ try {
       <p class="mvar">${esc(t(D.ui.variants))}：${esc(m.variants)}・${esc(t(sources.get('nightcal').title))}</p>
       ${m.extra ? `<p class="mextra">${esc(t(m.extra))}</p>` : ''}`;
   }
+  // on a phone the month panel folds to its first line; a tap opens the rest (island.css)
+  $('#month-info').addEventListener('click', () => {
+    if (innerWidth > 800) return;
+    const open = $('#month-info').classList.toggle('open');
+    $('#month-info').setAttribute('aria-expanded', String(open));
+  });
   // one line of climate averages under the month (CWA Lanyu station 1991–2020; the page's month axis is the night calendar)
   function weatherLine() {
     const w = weather.get(month), f = (v) => (lang === 'en' ? String(v) : String(v));
@@ -1232,7 +1269,7 @@ try {
     $('#t-help').setAttribute('aria-label', t(D.ui.help));
     if (!$('#intro').hidden) showIntro(introStep);
     $('#card-close').setAttribute('aria-label', t(D.ui.close));
-    $('#hint').textContent = t(D.ui.hint);
+    $('#hint').textContent = t(fineHand ? D.ui.hint : D.ui.hintTouch || D.ui.hint);
     renderer.domElement.setAttribute('aria-label', t(D.ui.canvas));
     labelEls.forEach((el, id) => {
       const it = items.get(id), span = el.querySelector('span');
@@ -1286,7 +1323,7 @@ try {
     const s = D.ui.intro[step];
     $('#intro-count').textContent = `${step + 1} / ${D.ui.intro.length}`;
     $('#intro-title').textContent = t(s.title);
-    $('#intro-body').textContent = t(s.body);
+    $('#intro-body').textContent = t(!fineHand && s.bodyTouch ? s.bodyTouch : s.body);
     $('#intro-next').textContent = t(step === D.ui.intro.length - 1 ? D.ui.introDone : D.ui.introNext);
     $('#intro-skip').textContent = t(D.ui.introSkip);
     $('#intro').hidden = false;
@@ -1309,6 +1346,33 @@ try {
   const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
   let down = null, touched = false;
   const toNdc = (e) => { const r = renderer.domElement.getBoundingClientRect(); ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1); };
+  // Where the ray meets the ground (marched over the height field, which is a cheap grid read), and the labelled
+  // place nearest to that spot. This is what makes the island's own things clickable: a house opens its village,
+  // a boat or a drying rack the workshop beach, a plant the forest.
+  const groundHit = () => {
+    const o = ray.ray.origin, d = ray.ray.direction;
+    if (d.y >= 0) return null;
+    let tt = Math.max(0, (o.y - 7) / -d.y);            // skip the air above the highest peak
+    for (let i = 0; i < 600; i++) {
+      const x = o.x + d.x * tt, y = o.y + d.y * tt, z = o.z + d.z * tt;
+      if (y <= Math.max(0, shape.height(x, z))) return new THREE.Vector3(x, y, z);
+      tt += Math.max(0.05, tt * 0.004);
+    }
+    return null;
+  };
+  const NEAR = { place: 2.4, village: 2.0, site: 1.3, step: 0.9, sea: 1.6 };
+  const nearPlace = () => {
+    const g = groundHit();
+    if (!g) return null;
+    let best = null, bestD = Infinity;
+    for (const [id, it] of items) {
+      const o = labelObjs.get(id), f = focus[id];
+      if (!o || !o.visible || !f || !NEAR[it.kind]) continue;
+      const dd = Math.hypot(f.x - g.x, f.z - g.z) / NEAR[it.kind];
+      if (dd < 1 && dd < bestD) { best = id; bestD = dd; }
+    }
+    return best;
+  };
   const pick = () => {
     ray.setFromCamera(ndc, camera);
     const hits = ray.intersectObjects(pickables, false).filter((h) => labelObjs.get(h.object.userData.id).visible);
@@ -1324,6 +1388,7 @@ try {
     if (ph) { sayHello(ph.object.userData.ped); dirty = true; return; }
     const hit = pick();
     if (hit) select(hit.object.userData.id);
+    else { const near = nearPlace(); if (near) select(near); }   // a house, a boat, a drying rack: the place it belongs to
   });
   if (matchMedia('(hover: hover)').matches)
     renderer.domElement.addEventListener('pointermove', (e) => {
@@ -1331,8 +1396,10 @@ try {
       toNdc(e);
       ray.setFromCamera(ndc, camera);
       const ph = ray.intersectObjects(pedHits, false)[0];
-      renderer.domElement.style.cursor = ph || pick() ? 'pointer' : '';
-      renderer.domElement.title = ph ? t(D.ui.pedHint) : '';
+      const hit = ph ? null : pick(), near = ph || hit ? null : nearPlace();
+      renderer.domElement.style.cursor = ph || hit || near ? 'pointer' : '';
+      const id = hit ? hit.object.userData.id : near, it = id && items.get(id);
+      renderer.domElement.title = ph ? t(D.ui.pedHint) : it ? (it.kind === 'village' ? (lang === 'en' ? it.en : it.zh) : t(it.name)) : '';
     });
   renderer.domElement.addEventListener('keydown', (e) => {
     const k = { ArrowLeft: [0.12, 0], ArrowRight: [-0.12, 0], ArrowUp: [0, -0.08], ArrowDown: [0, 0.08] }[e.key];
@@ -1344,7 +1411,12 @@ try {
     camera.position.copy(controls.target).add(new THREE.Vector3().setFromSpherical(s));
     controls.update();
   });
-  controls.addEventListener('change', () => (dirty = true));
+  controls.addEventListener('change', () => {
+    dirty = true;
+    // panning stops at the edge of the island's waters: the point looked at stays within 13 units of the centre
+    const tx = controls.target.x - center.x, tz = controls.target.z - center.z, r = Math.hypot(tx, tz);
+    if (r > 13) { const k = 13 / r, dx = tx * (k - 1), dz = tz * (k - 1); controls.target.x += dx; controls.target.z += dz; camera.position.x += dx; camera.position.z += dz; }
+  });
 
   function resize() {
     const w = stage.clientWidth, h = stage.clientHeight;
@@ -1357,9 +1429,13 @@ try {
     applyShift();
     dirty = true;
   }
+  // embedded, the page that holds the island decides what it shows; a new size (say, the projector going full
+  // screen) frames that same view again instead of falling back to the overview
+  let embedReframe = null;
   new ResizeObserver(() => {
     resize();
-    if (!touched && !selected && !fly) { const v = overview(); camera.position.copy(v.pos); controls.target.copy(v.target); controls.update(); }
+    if (embedReframe) embedReframe();
+    else if (!touched && !selected && !fly) { const v = overview(); camera.position.copy(v.pos); controls.target.copy(v.target); controls.update(); }
   }).observe(stage);
 
   // which labels show: villages from afar, steps only up close, and nothing that overlaps a more important label
@@ -1453,7 +1529,7 @@ try {
     if (embedPaused) return;
     if (embedSweep && performance.now() > embedSweep.at) { const back = embedSweep.back; embedSweep = null; back(); }
     watchFps(performance.now());
-    if (embed && (embedSkip = (embedSkip + 1) % 3)) return;   // inside the game screen a third of the frames is plenty
+    if (embed && !bigEmbed && (embedSkip = (embedSkip + 1) % 3)) return;   // inside the game screen a third of the frames is plenty (the classroom projector, big=1, draws them all)
     const dt = Math.min(0.05, clock.getDelta());
     if (fly) {
       const k = Math.min(1, (performance.now() - fly.t0) / 1100), e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
@@ -1524,6 +1600,7 @@ try {
     controls.enabled = false;
     controls.autoRotate = !reduced.matches; controls.autoRotateSpeed = 0.3;
     show(f);
+    embedReframe = () => (embedSweep ? moveTo(overview()) : show(at));
     addEventListener('message', (e) => {
       const d = e.data;
       if (e.origin !== location.origin || !d || d.avaka !== 'island') return;
