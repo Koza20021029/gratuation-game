@@ -725,7 +725,8 @@ try {
       g.g.visible = g.tag.visible = !!sp;
       if (!sp) { g.placed = false; return; }
       const same = list.filter((q) => q.loc === p.loc), k = same.indexOf(p);
-      const lx = (k - (same.length - 1) / 2) * 0.62, lz = 0.65, cs = Math.cos(sp.seaward), sn = Math.sin(sp.seaward);   // a row in front of the place, facing the sea
+      const lx = (k - (same.length - 1) / 2) * 0.9, lz = 0.65, cs = Math.cos(sp.seaward), sn = Math.sin(sp.seaward);   // a row in front of the place, facing the sea
+      g.tag.position.y = 0.2 + (k % 2) * 0.16;   // neighbours' name tags one high, one low, so they do not cover each other
       const x = sp.x + lx * cs + lz * sn, z = sp.z - lx * sn + lz * cs;
       g.to.set(x, shape.height(x, z) + 0.01, z);
       if (!g.placed || reduced.matches) { g.g.position.copy(g.to); g.placed = true; }
@@ -782,7 +783,22 @@ try {
     on.forEach((g) => c.add(g.to)); c.divideScalar(on.length);
     const r = Math.max(...on.map((g) => g.to.distanceTo(c)));
     const dist = Math.min(26, Math.max(5.2, r * 2.4 + 4)) * (stage.clientWidth / stage.clientHeight < 0.8 ? 1.45 : 1);
-    return { pos: c.clone().add(new THREE.Vector3(-0.25, 0.5, 0.82).normalize().multiplyScalar(dist)), target: c.clone().add(new THREE.Vector3(0, 0.4, 0)) };   // lower, so the cords arc against the sky and the sea
+    const target = c.clone().add(new THREE.Vector3(0, bigEmbed ? -0.5 : 0.4, 0));   // the projector's month text covers the lower third: the people sit higher
+    // The figures stand facing the sea, so the camera comes from the sea, in front of them (not from a fixed side,
+    // which showed their backs), and turns a little either way if a house or the trees are in the way. Low, so
+    // the cords arc against the sky and the sea.
+    let sx = 0, sz = 0;
+    on.forEach((g) => { sx += Math.sin(g.g.rotation.y); sz += Math.cos(g.g.rotation.y); });
+    const face = Math.hypot(sx, sz) > 0.3 ? Math.atan2(sx, sz) : Math.atan2(-0.25, 0.82), elev = 0.5;
+    let best = null, bestClear = -1;
+    for (const turn of [0, 0.35, -0.35, 0.7, -0.7, 1.1, -1.1]) {
+      const a = face + turn, dir = new THREE.Vector3(Math.sin(a) * Math.cos(elev), Math.sin(elev), Math.cos(a) * Math.cos(elev));
+      sight.set(target, dir); sight.far = dist;
+      const hit = sight.intersectObjects(blockers, false)[0], clear = hit ? hit.distance : dist;
+      if (clear > bestClear) { bestClear = clear; best = dir; }
+      if (!hit) break;
+    }
+    return { pos: target.clone().add(best.multiplyScalar(dist)), target };
   }
 
   // a figure whose player moved walks over (quickly: it is the camera, not the walk, that tells the story)
