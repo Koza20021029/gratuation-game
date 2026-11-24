@@ -193,7 +193,7 @@
   host.id = 'game2'; host.hidden = true;
   const root = host.attachShadow({ mode: 'open' });
   // fixed markup, no user input. The four parts are redrawn separately, so the island panel (#g-film) is never rebuilt.
-  root.innerHTML = '<link rel="stylesheet" href="css/game-ui.css?v=20261121_1"><div class="g" id="g"><div id="g-head"></div><div class="work">'
+  root.innerHTML = '<link rel="stylesheet" href="css/game-ui.css?v=20261124_2"><div class="g" id="g"><div id="g-head"></div><div class="work">'
     + '<aside class="panel col" id="g-mates"></aside><div id="g-centre"></div>'
     + '<aside class="side"><div class="panel film" id="g-film"></div><div class="panel feed" id="g-feed"></div></aside></div><div class="dock" id="g-dock"></div></div>';
   document.body.appendChild(host);
