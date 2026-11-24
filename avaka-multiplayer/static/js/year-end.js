@@ -39,6 +39,7 @@
   };
   const el = (tag, attrs, text) => { const e = document.createElement(tag); if (attrs) for (const k in attrs) e.setAttribute(k, attrs[k]); if (text != null) e.textContent = text; return e; };
   const sv = (tag, attrs) => { const e = document.createElementNS(SVG, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+  const nm = (n, lang) => (typeof avakaName === 'function' ? avakaName(n, lang) : n);
   const calm = () => window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   const canGL = (() => { try { return !!document.createElement('canvas').getContext('webgl2'); } catch (e) { return false; } })();
 
@@ -68,7 +69,7 @@
     const show = i => {
       at = i;
       const snap = year[i], last = i === year.length - 1;
-      const players = snap.players.map(p => ({ name: p.name, role: p.role, loc: ISLE[p.loc] || '', progress: p.progress, finished: p.finished, me: false }));
+      const players = snap.players.map(p => ({ name: nm(p.name, lang), role: p.role, loc: ISLE[p.loc] || '', progress: p.progress, finished: p.finished, me: false }));
       const who = n => snap.players.findIndex(p => p.name === n), ties = tiesIn(snap.month);
       const byPair = new Map();
       ties.forEach(([a, b, k]) => { const key = a + '\u0000' + b; if (!byPair.has(key)) byPair.set(key, [who(a), who(b), []]); const l = byPair.get(key); if (!l[2].includes(t.tag[k] || k)) l[2].push(t.tag[k] || k); });
@@ -77,7 +78,7 @@
       label.textContent = t.month(snap.month);
       said.textContent = '';
       said.append(el('p', { class: 'ye-events-h' }, `${t.month(snap.month)}・${t.events}`));
-      if (ties.length) { const ul = el('ul'); ties.forEach(([a, b, k]) => ul.append(el('li', null, t.said[k] ? t.said[k](a, b) : `${a} → ${b}`))); said.append(ul); }
+      if (ties.length) { const ul = el('ul'); ties.forEach(([a, b, k]) => ul.append(el('li', null, t.said[k] ? t.said[k](nm(a, lang), nm(b, lang)) : `${a} → ${b}`))); said.append(ul); }
       else said.append(el('p', { class: 'ye-events-none' }, t.quiet));
       [...bar.children].forEach((d, k) => d.classList.toggle('on', k <= i));
     };
@@ -120,7 +121,7 @@
       g.append(sv('path', { d, fill: 'none', stroke: side ? '#b8873f' : '#e2c48a', 'stroke-width': (w * 0.62).toFixed(2), 'stroke-linecap': 'round', opacity: '0.95' }));
     }
   }
-  function rope(box, state, t) {
+  function rope(box, state, t, lang) {
     const sec = el('section', { class: 'ye-block' });
     sec.append(el('h2', null, t.rope), el('p', { class: 'ye-note' }, t.ropeNote));
     box.append(sec);
@@ -159,14 +160,14 @@
       svg.append(sv('circle', { cx: x, cy: y, r: 9, fill: '#0c1610', stroke: ROLE_COLOUR[p.role] || '#efe6cf', 'stroke-width': 3 }));
       const tx = x + Math.cos(a) * 22, ty = y + Math.sin(a) * 22 + 4;
       const name = sv('text', { x: tx, y: ty, 'text-anchor': Math.abs(Math.cos(a)) < 0.3 ? 'middle' : Math.cos(a) > 0 ? 'start' : 'end', class: 'ye-name' });
-      name.textContent = p.name;
+      name.textContent = nm(p.name, lang);
       svg.append(name);
     }
     const wrap = el('div', { class: 'ye-rope-wrap' });
     const list = el('ul', { class: 'ye-tally' });
     for (const p of people) {
       const li = el('li');
-      li.append(el('b', null, p.name), el('span', { class: 'ye-role' }, t.role[p.role] || ''),
+      li.append(el('b', null, nm(p.name, lang)), el('span', { class: 'ye-role' }, t.role[p.role] || ''),
         el('span', null, `${t.gave} ${gave[p.name] || 0}${t.times}・${t.got} ${got[p.name] || 0}${t.times}`));
       list.append(li);
     }
@@ -182,7 +183,7 @@
       box.textContent = '';
       box.append(el('h2', { class: 'ye-title' }, t.title));
       replay(box, state, t, lang === 'en' ? 'en' : 'zh', !!(opts && opts.big));
-      rope(box, state, t);
+      rope(box, state, t, lang === 'en' ? 'en' : 'zh');
     }
   };
 })();

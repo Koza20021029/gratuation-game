@@ -15,3 +15,10 @@ const GAME_RULES = [
     {name: "Kapitowan", desc_zh: "祭神月：回合開始時，若文化復振青年／中生代與耆老處於同一個地點，可自動獲得 2 點 KP。", desc_en: "Sacred Month: Youth and Middle Generation in the same place as the Elder automatically gain +2 KP."},
     {name: "Kaowan", desc_zh: "手工藝月（最終衝刺）：「⑤理線撚繩」消耗 0 AP，而且⑤與⑥不必跨月等待，可以在本月接連完成。", desc_en: "Handicraft Month (final sprint): ⑤ Twining costs 0 AP, and steps ⑤ and ⑥ need no cross-month wait, so they can be done back to back this month."}
 ];
+
+/* A bot's name is made by the server in Chinese (機器人耆老, 機器人青年 2…). On an English screen it is shown by its
+ * role instead. Only for display: the room's records (ties, snapshots) keep the name as it is. */
+function avakaName(name, lang) {
+    if (lang !== 'en' || !/^機器人/.test(name)) return name;
+    return name.replace('機器人耆老', 'Bot Elder').replace('機器人中生代', 'Bot Middle').replace('機器人青年', 'Bot Youth');
+}

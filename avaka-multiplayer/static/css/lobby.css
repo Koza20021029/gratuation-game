@@ -284,3 +284,16 @@ button.btn:active { transform: translate(var(--tx, 0px), calc(var(--ty, 0px) + 1
   .share { grid-template-columns: 6rem minmax(0, 1fr); }
   .share .qr { width: 6rem; }
 }
+
+/* ── bot classmates, for a group short of people ── */
+.bots { margin: 1rem 0 0; padding: 0.9rem 0 0; border-top: 1px solid var(--line); }
+.bots p { margin: 0 0 0.6rem; font-size: 0.86rem; color: var(--fibre-dim); line-height: 1.6; }
+.bot-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.bot-add { all: unset; box-sizing: border-box; cursor: pointer; padding: 0.45rem 0.85rem; border-radius: 4px; border: 1px solid var(--line); font-size: 0.88rem; color: var(--fibre-dim); transition: color 0.2s var(--ease), border-color 0.2s var(--ease); }
+.bot-add.need { border-color: var(--leaf-deep); color: var(--fibre); }
+.bot-add:hover { border-color: var(--leaf); color: var(--leaf); }
+.bot-add:disabled { opacity: 0.4; cursor: not-allowed; }
+.bot-add:focus-visible, .bot-out:focus-visible { outline: 2px solid var(--leaf); outline-offset: 3px; }
+.members li.bot > span:nth-child(2)::after { content: ''; display: inline-block; width: 0.5em; height: 0.5em; margin-left: 0.4em; border: 1px solid var(--fibre-dim); border-radius: 2px; vertical-align: 0.1em; }
+.bot-out { all: unset; cursor: pointer; margin-left: auto; font-size: 0.8rem; color: var(--fibre-dim); text-decoration: underline; text-underline-offset: 0.25em; }
+.bot-out:hover { color: var(--warn, #e59a78); }

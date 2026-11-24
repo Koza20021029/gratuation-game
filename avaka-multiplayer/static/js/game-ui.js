@@ -142,7 +142,7 @@
       ap: 'AP', kp: 'KP', apName: '體力 AP', kpName: '技術 KP', mat: '材料', score: '得分', scoreWhy: '分數從哪裡來', badges: '徽章',
       ready: '準備進入下個月', unready: '取消準備', readyCount: (a, b) => `${a}/${b} 人已準備`,
       finished: { traditional: '傳統 Avaka 完工', hybrid: '機器加工完工', industrial: '工業樹脂完工' }, finishedNote: '船完工了。你還可以為部落的船出力、幫耆老趕工、巡山、補種、送材料。',
-      mates: '同伴', you: '你', readyTag: '已準備', doneTag: '已完工', give: '送 1 份材料', assist: '搭把手', helped: '這個月已有人幫他', free: '0 AP',
+      mates: '同伴', you: '你', readyTag: '已準備', doneTag: '已完工', botTag: '機器人', give: '送 1 份材料', assist: '搭把手', helped: '這個月已有人幫他', free: '0 AP',
       place: { [FOREST]: ['山林', '前三道工序在這裡做'], [SHORE]: ['灘頭工作室', '後三道工序在這裡做'], [SHOP]: ['商店', '機器加工，或用工業樹脂完工'] },
       here: '你在這裡', nobody: '沒有人在這裡', move: '走到這裡', plant: '補種 Avaka', plantSub: '算作照顧林地；下次砍伐多 1 份材料', chopSub: n => `得到 ${n} 份材料，可以重複做`,
       needs: (kp, mat) => [kp ? `KP ${kp}` : '', mat ? `${mat} 份材料` : ''].filter(Boolean).join('、'), needLabel: '需要',
@@ -165,7 +165,7 @@
       ap: 'AP', kp: 'KP', apName: 'Stamina AP', kpName: 'Skill KP', mat: 'Material', score: 'Score', scoreWhy: 'Where the points came from', badges: 'Badges',
       ready: 'Ready for next month', unready: 'Not ready yet', readyCount: (a, b) => `${a}/${b} ready`,
       finished: { traditional: 'Finished: traditional Avaka', hybrid: 'Finished: machine-processed', industrial: 'Finished: industrial resin' }, finishedNote: 'Your boat is done. You can work on the community boat, keep helping the Elder, walk the hill, replant and give.',
-      mates: 'Teammates', you: 'you', readyTag: 'ready', doneTag: 'finished', give: 'Give 1 material', assist: 'Lend a hand', helped: 'Already helped this month', free: '0 AP',
+      mates: 'Teammates', you: 'you', readyTag: 'ready', doneTag: 'finished', botTag: 'bot', give: 'Give 1 material', assist: 'Lend a hand', helped: 'Already helped this month', free: '0 AP',
       place: { [FOREST]: ['Forest', 'The first three steps are done here'], [SHORE]: ['Shore workshop', 'The last three steps are done here'], [SHOP]: ['Store', 'Machine processing, or finishing with resin'] },
       here: 'You are here', nobody: 'Nobody here', move: 'Walk here', plant: 'Replant Avaka', plantSub: 'Counts as tending the plots; next chop +1 material', chopSub: n => `Yields ${n} material${n > 1 ? 's' : ''}; repeatable`,
       needs: (kp, mat) => [kp ? `KP ${kp}` : '', mat ? `${mat} material${mat > 1 ? 's' : ''}` : ''].filter(Boolean).join(', '), needLabel: 'Needs',
@@ -186,6 +186,7 @@
   const T = () => TEXT[lang()];
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const noPicto = s => String(s).replace(/[\p{Extended_Pictographic}\uFE0F\u200D]+\s*/gu, '');
+  const nm = p => (typeof avakaName === 'function' ? avakaName(p.name, lang()) : p.name);   // bots are named by role in English (months.js)
   const reason = r => { const w = T().why[r.why]; return typeof w === 'function' ? w(r.n) : (w || ''); };
 
   // ───────── the surface ─────────
@@ -193,7 +194,7 @@
   host.id = 'game2'; host.hidden = true;
   const root = host.attachShadow({ mode: 'open' });
   // fixed markup, no user input. The four parts are redrawn separately, so the island panel (#g-film) is never rebuilt.
-  root.innerHTML = '<link rel="stylesheet" href="css/game-ui.css?v=20261124_2"><div class="g" id="g"><div id="g-head"></div><div class="work">'
+  root.innerHTML = '<link rel="stylesheet" href="css/game-ui.css?v=20261124_3"><div class="g" id="g"><div id="g-head"></div><div class="work">'
     + '<aside class="panel col" id="g-mates"></aside><div id="g-centre"></div>'
     + '<aside class="side"><div class="panel film" id="g-film"></div><div class="panel feed" id="g-feed"></div></aside></div><div class="dock" id="g-dock"></div></div>';
   document.body.appendChild(host);
@@ -324,10 +325,10 @@
       const g = can(state, me.id, { type: 'give', target_id: p.id }), h = can(state, me.id, { type: 'assist', target_id: p.id });
       const near = p.location === me.location;
       return `<li class="mate">
-        <div class="row"><span><b>${esc(p.name)}</b> <span class="role">${esc(t.role[p.role])}</span></span><span class="where">${esc(t.place[p.location] ? t.place[p.location][0] : p.location)}</span></div>
+        <div class="row"><span><b>${esc(nm(p))}</b> <span class="role">${esc(t.role[p.role])}</span></span><span class="where">${esc(t.place[p.location] ? t.place[p.location][0] : p.location)}</span></div>
         <div class="nums"><span>${esc(t.ap)} <b>${p.ap}</b></span><span>${esc(t.kp)} <b>${p.kp}</b></span><span>${esc(t.mat)} <b>${p.materials}</b></span><span>${esc(t.score)} <b>${p.score}</b></span></div>
         <div class="knots" aria-label="${p.progress}/6">${STEPS.map((_, i) => `<i class="${i < p.progress ? 'on' : ''}"></i>`).join('')}</div>
-        ${(p.ready || p.finished || (p.assist_month || 0) === month) ? `<div class="tags">${p.finished ? `<span class="tag fin">${esc(t.doneTag)}</span>` : ''}${p.ready ? `<span class="tag ready">${esc(t.readyTag)}</span>` : ''}${(p.assist_month || 0) === month ? `<span class="tag">${esc(t.helped)}</span>` : ''}</div>` : ''}
+        ${(p.bot || p.ready || p.finished || (p.assist_month || 0) === month) ? `<div class="tags">${p.bot ? `<span class="tag bot">${esc(t.botTag)}</span>` : ''}${p.finished ? `<span class="tag fin">${esc(t.doneTag)}</span>` : ''}${p.ready ? `<span class="tag ready">${esc(t.readyTag)}</span>` : ''}${(p.assist_month || 0) === month ? `<span class="tag">${esc(t.helped)}</span>` : ''}</div>` : ''}
         ${near ? `<div class="acts">
           <button type="button" class="mini" data-act="${esc(JSON.stringify({ type: 'give', target_id: p.id }))}" aria-disabled="${!g.ok}">${esc(t.give)}${g.ok ? '' : `<small>${esc(reason(g))}</small>`}</button>
           <button type="button" class="mini" data-act="${esc(JSON.stringify({ type: 'assist', target_id: p.id }))}" aria-disabled="${!h.ok}">${esc(t.assist)}<small>${esc(h.ok ? `1 ${t.ap}` : reason(h))}</small></button></div>` : ''}
@@ -356,7 +357,7 @@
       const mine = me.location === loc;
       return `<section class="panel place${mine ? ' here' : ' away'}${mine && live && fx.moved ? ' arrived' : ''}">
         <header>${ART[loc]}<h2>${esc(t.place[loc][0])}${mine ? `<span class="you">${esc(t.here)}</span>` : ''}</h2><p class="desc">${esc(t.place[loc][1])}</p>
-          <div class="people">${here.length ? here.map(p => `<span class="tag${p.id === me.id ? ' me' : ''}">${esc(p.name)}</span>`).join('') : `<span class="none">${esc(t.nobody)}</span>`}</div></header>
+          <div class="people">${here.length ? here.map(p => `<span class="tag${p.id === me.id ? ' me' : ''}">${esc(nm(p))}</span>`).join('') : `<span class="none">${esc(t.nobody)}</span>`}</div></header>
         <div class="acts-list">${mine ? group(placeDefs[loc]) : awayRow(loc)}</div>
       </section>`;
     }).join('');
@@ -373,7 +374,7 @@
       const learners = others.filter(p => p.role !== 'elder');
       if (learners.length) {
         if (!learners.some(p => p.id === teachTarget)) teachTarget = learners[0].id;
-        social += `<div class="teach"><select id="teach-who" aria-label="${esc(t.teach)}">${learners.map(p => `<option value="${esc(p.id)}"${p.id === teachTarget ? ' selected' : ''}>${esc(p.name)}（${esc(t.role[p.role])}）</option>`).join('')}</select>${act({ type: 'teach', target_id: teachTarget }, t.teach, t.teachSub)}</div>`;
+        social += `<div class="teach"><select id="teach-who" aria-label="${esc(t.teach)}">${learners.map(p => `<option value="${esc(p.id)}"${p.id === teachTarget ? ' selected' : ''}>${esc(nm(p))}（${esc(t.role[p.role])}）</option>`).join('')}</select>${act({ type: 'teach', target_id: teachTarget }, t.teach, t.teachSub)}</div>`;
       }
     }
     social += act({ type: 'translate' }, t.translate, me.finished ? t.translateDone : t.translateSub);
@@ -437,7 +438,7 @@
   const isleState = () => {
     const me = state && state.players[socket.id];
     if (!me) return null;
-    const players = Object.values(state.players).map(p => ({ name: p.name, role: p.role, loc: ISLE[p.location] || '', progress: p.progress || 0, finished: !!p.finished, me: p.id === me.id }));
+    const players = Object.values(state.players).map(p => ({ name: nm(p), role: p.role, loc: ISLE[p.location] || '', progress: p.progress || 0, finished: !!p.finished, me: p.id === me.id }));
     return { avaka: 'island', month: state.month, focus: ISLE[me.location] || '', lang: lang(), paused: (!isleSeen || filmOn) && !sweeping, players };
   };
   // On a phone the panel is far down the page: the island is not loaded until it scrolls into view, and stops drawing when it scrolls away.

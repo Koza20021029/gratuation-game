@@ -133,6 +133,10 @@ const LOBBY_HTML = `
     <canvas id="rope" aria-hidden="true"></canvas>
     <ul class="members" id="members"></ul>
     <p class="together" id="together" aria-live="polite"></p>
+    <div class="bots" id="bots">
+      <p id="bots-say">人不到三個？可以補一位機器人同學，它會照規則自己玩：</p>
+      <div class="bot-btns" id="bot-btns"></div>
+    </div>
     <button class="btn primary" type="button" id="b-start">開始這一年</button>
     <button class="back" type="button" id="b-back">回到上一步</button>
    </div>
@@ -154,7 +158,7 @@ const LOBBY_HTML = `
   const host = document.createElement('div');
   host.id = 'lobby2';
   const root = host.attachShadow({ mode: 'open' });
-  root.innerHTML = '<link rel="stylesheet" href="css/lobby.css?v=20261121_1">' + LOBBY_HTML;   // fixed markup defined below, no user input
+  root.innerHTML = '<link rel="stylesheet" href="css/lobby.css?v=20261124_1">' + LOBBY_HTML;   // fixed markup defined below, no user input
   document.body.appendChild(host);
   const old = id => document.getElementById(id);
 
@@ -608,11 +612,30 @@ const LOBBY_HTML = `
     players.forEach((p, i) => {
       const li = document.createElement('li'), dot = document.createElement('span'), name = document.createElement('span'), aka = document.createElement('small');
       dot.className = 'dot'; dot.style.background = here[i].tone[host.dataset.theme === 'light' ? 1 : 0];
-      name.textContent = p.name + (p.id === socket.id ? T('meMark') : ''); aka.textContent = T('aka_' + p.role);
-      li.append(dot, name, aka); li.className = 'in'; members.appendChild(li);
+      name.textContent = (p.bot ? botName(p) : p.name) + (p.id === socket.id ? T('meMark') : ''); aka.textContent = T('aka_' + p.role);
+      li.append(dot, name, aka); li.className = 'in' + (p.bot ? ' bot' : '');
+      if (p.bot) {
+        const x = document.createElement('button'); x.type = 'button'; x.className = 'bot-out'; x.textContent = T('botOut');
+        x.setAttribute('aria-label', T('botOut') + ' ' + botName(p));
+        x.addEventListener('click', () => { socket.emit('remove_bot', { id: p.id }); pluck(220, 0.08); });
+        li.append(x);
+      }
+      members.appendChild(li);
     });
     $('together').textContent = T(players.length >= 2 ? 'together' : 'alone').replace('{n}', players.length);
+    // a bot for each role, the missing roles first and lit: the game is built for one of each
+    const have = new Set(players.map(p => p.role)), full = players.length >= 6, box = $('bot-btns');
+    box.textContent = '';
+    ['elder', 'youth', 'middle'].sort((a, b) => have.has(a) - have.has(b)).forEach(role => {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'bot-add' + (have.has(role) ? '' : ' need');
+      b.textContent = '+ ' + T('name_' + role); b.disabled = full;
+      b.addEventListener('click', () => { socket.emit('add_bot', { role }); pluck(NOTE[role], 0.1); });
+      box.append(b);
+    });
+    $('bots-say').textContent = T(full ? 'botsFull' : 'botsSay');
   }
+  // a bot's name is made by the server in Chinese; in English it is shown by its role
+  const botName = p => lang === 'en' ? 'Bot ' + T('name_' + p.role) + (/\s(\d+)$/.test(p.name) ? ' ' + p.name.match(/\s(\d+)$/)[1] : '') : p.name;
   function showJoin() { $('waiting').hidden = true; $('join').hidden = false; room = null; }
   function syncRoom(state) {
     room = state;
@@ -701,6 +724,7 @@ const LOBBY_HTML = `
       roomPh: '房間代碼（4 碼）', join: '加入房間', create: '自己開一間新的', rules: '先看遊戲規則與流程', island: '探索 Avaka 島',
       waitH2: '等大家到齊', waitSub: '把這四個字告訴同組的人。每個人是一股纖維，到齊了才撚得成繩。', copy: '複製', copied: '已複製',
       copyLink: '複製加入連結', shareSay: '同組的人用手機相機掃這個，就會帶著房號進來，不用自己打。', proj: '在投影幕上顯示這一組', shareLocal: '這是本機的網址，其他電腦和手機連不到。上課時請用正式網站開房。',
+      botsSay: '人不到三個？可以補一位機器人同學，它會照規則自己玩：', botsFull: '房間已經 6 個人，不能再加了。', botOut: '移除',
       step3linked: '③ 房號 {code} 已經幫你填好了。輸入名字、選好角色，按「加入房間」。', nextLinked: '最後：按「加入房間」', idleTouch: '點任何一道工序，看纖維怎麼變。', hintTouch: '用手指撥撥看這些纖維；按住畫一圈，可以把它們撚成繩',
       start: '開始這一年', back: '離開這個房間',
       meMark: '（你）', alone: '你先到了。把房間代碼給同組的人。', together: '{n} 個人到了，纖維開始撚在一起。',
@@ -721,6 +745,7 @@ const LOBBY_HTML = `
       roomPh: 'Room code (4 characters)', join: 'Join room', create: 'Open a new room', rules: 'Read the rules first', island: 'Explore Avaka Island',
       waitH2: 'Waiting for everyone', waitSub: 'Give these four characters to your group. Each player is one strand; the rope is twisted when all are here.', copy: 'Copy', copied: 'Copied',
       copyLink: 'Copy join link', shareSay: 'Your group can scan this with a phone camera and arrive with the code already filled in.', proj: 'Show this group on the projector', shareLocal: 'This is a local address that other computers and phones cannot reach. In class, open the room on the public site.',
+      botsSay: 'Fewer than three of you? Add a bot classmate; it plays by the same rules on its own:', botsFull: 'The room has 6 players, the most it can hold.', botOut: 'Remove',
       step3linked: '3 Room {code} is already filled in. Type your name, pick a role and press Join room.', nextLinked: 'Last: press Join room', idleTouch: 'Tap any step to see what the fibres do.', hintTouch: 'Brush the fibres with a finger; press and circle to twist them into rope',
       start: 'Begin the year', back: 'Leave this room',
       meMark: ' (you)', alone: 'You are the first one here. Share the room code with your group.', together: '{n} players are here. The strands begin to twist together.',

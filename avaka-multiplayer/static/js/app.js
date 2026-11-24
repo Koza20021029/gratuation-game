@@ -2911,7 +2911,7 @@ function renderGameOver(state) {
     const restartBtnText = isEn ? 'Return to Tribe' : '重新回到部落';
     const scoreSrc = isEn ? 'Score Sources: ' : '得分來源: ';
 
-    const playersSorted = Object.values(state.players).sort((a,b)=>b.score-a.score);
+    const playersSorted = Object.values(state.players).sort((a,b)=>(!!a.bot - !!b.bot) || (b.score-a.score));   // the students first, then any bot classmates
     // The year-end page: one column of plain sections divided by thin rules, no boxes inside boxes.
     // Styled in css/newui.css (.yr-*); the texts are the same as before.
     const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);

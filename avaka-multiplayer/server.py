@@ -51,12 +51,22 @@ def has_waiting_players(room_code):
     return any(rc == room_code and now - entry['disconnect_time'] <= DISCONNECT_GRACE_SECONDS
                for (rc, _), entry in disconnected_players.items())
 
+def humans(state):
+    return [p for p in state['players'].values() if not p.get('bot')]
+
 def purge_stale_rooms():
     now = time.time()
     for key in [k for k, e in disconnected_players.items() if now - e['disconnect_time'] > DISCONNECT_GRACE_SECONDS]:
         del disconnected_players[key]
-    for code in [c for c, st in rooms.items() if not st['players'] and not has_waiting_players(c)]:
-        del rooms[code]
+    for code in [c for c, st in rooms.items() if not humans(st) and not has_waiting_players(c)]:
+        drop_room(code)
+
+def drop_room(code):
+    """Delete a room, with its bots' entries in player_rooms."""
+    st = rooms.pop(code, None)
+    if st:
+        for p in st['players'].values():
+            if p.get('bot'): player_rooms.pop(p['id'], None)
 
 # The forest is shared by the whole room: needing the material is what keeps people tending it.
 FOREST_START = 3
@@ -203,7 +213,7 @@ def mission_progress(state, room_code, mission_id, amount=1):
 
 def award_titles(state):
     titles = {}
-    players = list(state['players'].values())
+    players = [p for p in state['players'].values() if not p.get('bot')]   # the year's titles are for the students
     for tid, info in TITLES.items():
         totals = {p['id']: sum(p.get('stats', {}).get(k, 0) for k in info['stats']) for p in players}
         best = max(totals.values(), default=0)
@@ -463,7 +473,7 @@ def handle_disconnect():
                         }
                         del state['players'][sid]
                         add_log(room_code, f"{p_name} 斷線了（{DISCONNECT_GRACE_SECONDS // 60} 分鐘內可重連）")
-                        if len(state['players']) == 0:
+                        if not humans(state):
                             pass  # the room waits for its players to come back; purge_stale_rooms() clears it later
                         else:
                             socketio.emit('state_update', dict(state), to=room_code)
@@ -471,8 +481,8 @@ def handle_disconnect():
                         # Lobby phase: remove immediately
                         del state['players'][sid]
                         add_log(room_code, f"{p_name} 斷線了")
-                        if len(state['players']) == 0:
-                            del rooms[room_code]
+                        if not humans(state):
+                            drop_room(room_code)
                         else:
                             socketio.emit('state_update', dict(state), to=room_code)
             del player_rooms[sid]
@@ -573,9 +583,13 @@ def _join_player_to_room(sid, name, role, room_code, avatar=None):
     join_room(room_code)
     player_rooms[sid] = room_code
     state = rooms[room_code]
-    
+    state['players'][sid] = new_player(sid, name, role, avatar)
+    add_log(room_code, f"{name} 加入了房間，扮演 {ROLES[role]['name']}")
+    socketio.emit('state_update', state, to=room_code)
+
+def new_player(sid, name, role, avatar=None, bot=False):
     role_info = ROLES[role]
-    state['players'][sid] = {
+    return {
         'id': sid,
         'name': name,
         'role': role,
@@ -608,11 +622,9 @@ def _join_player_to_room(sid, name, role, room_code, avatar=None):
         'finished': False,
         'score': 0,
         'score_breakdown': [],
-        'ready': False
+        'ready': False,
+        'bot': bot
     }
-    
-    add_log(room_code, f"{name} 加入了房間，扮演 {ROLES[role]['name']}")
-    socketio.emit('state_update', state, to=room_code)
 
 @socketio.on('leave_game')
 def handle_leave():
@@ -629,10 +641,10 @@ def handle_leave():
                     p_name = state['players'][sid]['name']
                     del state['players'][sid]
                     add_log(room_code_to_leave, f"{p_name} 離開了房間")
-                    if len(state['players']) == 0 and has_waiting_players(room_code_to_leave):
+                    if not humans(state) and has_waiting_players(room_code_to_leave):
                         room_code_to_leave = None  # others may still reconnect
-                    elif len(state['players']) == 0:
-                        del rooms[room_code_to_leave]
+                    elif not humans(state):
+                        drop_room(room_code_to_leave)
                         room_code_to_leave = None  # No need to broadcast
                     else:
                         state_to_broadcast = dict(state)
@@ -688,6 +700,7 @@ def handle_start():
         if state.get('mission'):
             add_log(room_code, f"🎯 本月小組任務「{state['mission']['name']}」：{state['mission']['desc']}（達成全員 +1 分）")
         socketio.emit('state_update', state, to=room_code)
+    schedule_bots(room_code)
 
 def get_player(sid):
     room_code = player_rooms.get(sid)
@@ -697,7 +710,11 @@ def get_player(sid):
 
 @socketio.on('action')
 def handle_action(data):
-    sid = request.sid
+    run_action(request.sid, data, emit)
+
+def run_action(sid, data, emit=lambda *a, **k: None):
+    """Do one action for the player `sid` under the room's rules. A refusal is sent with `emit` (the
+    requesting connection's own emit; a bot passes nothing, so its refusals are silent)."""
     with state_lock:
         player, state, room_code = get_player(sid)
         if not player: return
@@ -1310,16 +1327,25 @@ def handle_action(data):
 
 @socketio.on('toggle_ready')
 def handle_toggle_ready():
-    sid = request.sid
+    run_ready(request.sid)
+
+def run_ready(sid, want=None):
+    """Turn the player's ready on or off (`want`, or the opposite of now). When everyone is ready the month
+    ends. Bots are always ready once they have had their turn, so it is the people who move the year on: a
+    room with only bots left never advances."""
+    new_month = False
     with state_lock:
         player, state, room_code = get_player(sid)
         if not state or not player: return
         
-        player['ready'] = not player.get('ready', False)
+        now = (not player.get('ready', False)) if want is None else bool(want)
+        if now == player.get('ready', False): return
+        player['ready'] = now
         add_log(room_code, f"⏳ {player['name']} {'已準備好' if player['ready'] else '取消了準備'}")
         
         all_ready = all(p.get('ready', False) for p in state['players'].values())
-        if all_ready and len(state['players']) > 0:
+        if all_ready and any(not p.get('bot') for p in state['players'].values()):
+            new_month = True
             for p in state['players'].values():
                 p['ready'] = False
             
@@ -1414,6 +1440,151 @@ def handle_toggle_ready():
                     record_player_kp(p, state['month'])
                                     
         socketio.emit('state_update', state, to=room_code)
+        started = state['started']
+    if new_month and started:
+        schedule_bots(room_code)
+
+# ───────── bots: classmates for a group that is short of people ─────────
+# A bot fills one of the three roles when a group has fewer than three students. It is a player like any other
+# (same record, same rules: every action goes through run_action), marked with 'bot': True. It plays a short
+# while after each month starts, answers its own prompts, then says it is ready. It never moves the year on by
+# itself: the month ends when the people are ready (run_ready).
+BOT_NAMES = {'elder': '機器人耆老', 'youth': '機器人青年', 'middle': '機器人中生代'}
+MAX_PLAYERS = 6        # the island draws six figures
+STEP_ORDER = ['chop', 'rub', 'strip', 'dry', 'twine', 'caulk']
+FOREST, SHORE = '山林', '灘頭工作室'
+
+@socketio.on('add_bot')
+def handle_add_bot(data):
+    role = (data or {}).get('role')
+    if role not in ROLES: return
+    with state_lock:
+        room_code = player_rooms.get(request.sid)
+        state = rooms.get(room_code)
+        if not state or request.sid not in state['players']: return
+        if state['started'] or state['month'] > 12:
+            emit('error', {'msg': '遊戲開始後就不能再加機器人了'})
+            return
+        if len(state['players']) >= MAX_PLAYERS:
+            emit('error', {'msg': f'一個房間最多 {MAX_PLAYERS} 人'})
+            return
+        same = [p for p in state['players'].values() if p.get('bot') and p['role'] == role]
+        name = BOT_NAMES[role] + (f' {len(same) + 1}' if same else '')
+        bid = 'bot-' + ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
+        state['players'][bid] = new_player(bid, name, role, bot=True)
+        player_rooms[bid] = room_code
+        add_log(room_code, f"🤖 {name} 加入了房間，扮演 {ROLES[role]['name']}")
+        socketio.emit('state_update', state, to=room_code)
+
+@socketio.on('remove_bot')
+def handle_remove_bot(data):
+    bid = (data or {}).get('id')
+    with state_lock:
+        room_code = player_rooms.get(request.sid)
+        state = rooms.get(room_code)
+        if not state or request.sid not in state['players'] or state['started']: return
+        p = state['players'].get(bid)
+        if not p or not p.get('bot'): return
+        del state['players'][bid]
+        player_rooms.pop(bid, None)
+        add_log(room_code, f"🤖 {p['name']} 離開了房間")
+        socketio.emit('state_update', state, to=room_code)
+
+def schedule_bots(room_code):
+    with state_lock:
+        state = rooms.get(room_code)
+        if not state or not any(p.get('bot') for p in state['players'].values()): return
+    socketio.start_background_task(bots_play_month, room_code)
+
+def bots_play_month(room_code):
+    socketio.sleep(1.6)        # after the month's sweep has begun, so the people see the bots move
+    with state_lock:
+        state = rooms.get(room_code)
+        if not state or not state['started']: return
+        month = state['month']
+        ids = [p['id'] for p in state['players'].values() if p.get('bot')]
+    for bid in ids:
+        bot_turn(room_code, bid, month)
+        socketio.sleep(0.7)
+
+def _bot_view(room_code, bid, month):
+    with state_lock:
+        st = rooms.get(room_code)
+        p = st and st['players'].get(bid)
+        if not p or not st['started'] or st['month'] != month: return None, None
+        return st, p
+
+def _bot_mark(p):
+    return (p['ap'], p['progress'], p['location'], p['kp'], p['materials'], p['score'], p.get('finished'))
+
+def bot_wishes(st, p, done):
+    """What a classmate in this role would try next, best first; the rules decide what works. A bot keeps to
+    its own boat first and does the social things a few times a month (done: what it has done this month),
+    so it plays alongside the students rather than out-scoring them."""
+    m = st['month']
+    keep = 1 if m == 4 and p['materials'] > 0 and p['progress'] < 4 else 0   # plum rain next month: keep 1 AP
+    if p['ap'] <= keep: return []
+    others = [q for q in st['players'].values() if q['id'] != p['id']]
+    near = [q for q in others if q['location'] == p['location']]
+    out = []
+    if not p['finished']:
+        i = p['progress']
+        if i < 6 and p.get('last_step_month', 0) != m:
+            step, loc = STEP_ORDER[i], (FOREST if i < 3 else SHORE)
+            need_kp = 3 if step == 'twine' else 8 if step == 'caulk' else 0
+            if p['role'] != 'elder' and p['kp'] < need_kp and done.get('ask', 0) < 2:
+                out.append({'type': 'ask', 'target': 'elder'})
+                if p['role'] == 'youth': out.append({'type': 'ask', 'target': 'middle'})
+            if i >= 1 and p['materials'] < 1 and m != 2:
+                if p['location'] != FOREST: out.append({'type': 'move', 'target': FOREST})
+                out.append({'type': 'craft', 'step': 'chop'})
+            if p['location'] != loc and (loc != FOREST or m != 2): out.append({'type': 'move', 'target': loc})
+            out.append({'type': 'craft', 'step': step})
+        if p['location'] == FOREST and p['materials'] < 2 and m != 2 and done.get('chop', 0) < 1:
+            out.append({'type': 'craft', 'step': 'chop'})
+    else:
+        for q in near:
+            if q['materials'] < 1 and not q['finished'] and p['materials'] > 0: out.append({'type': 'give', 'target_id': q['id']})
+        if p['location'] != SHORE: out.append({'type': 'move', 'target': SHORE})
+        out.append({'type': 'tribe'})
+    if p['role'] == 'elder':
+        if not done.get('tell') and any(q['role'] != 'elder' for q in near): out.append({'type': 'tell'})
+        learners = sorted((q for q in others if q['role'] != 'elder'), key=lambda q: q['kp'])
+        if learners and not done.get('teach'): out.append({'type': 'teach', 'target_id': learners[0]['id']})
+    else:
+        if not done.get('help'): out.append({'type': 'help'})
+        if p['kp'] < 8 and done.get('ask', 0) < 2: out.append({'type': 'ask', 'target': 'elder'})
+    if p['location'] == FOREST and m != 2:
+        out += [{'type': 'plant'}, {'type': 'patrol'}]
+    return out
+
+def bot_turn(room_code, bid, month):
+    done = {}
+    for _ in range(10):
+        st, p = _bot_view(room_code, bid, month)
+        if not p: return
+        before, moved = _bot_mark(p), False
+        for want in bot_wishes(st, p, done):
+            run_action(bid, want)
+            if _bot_mark(p) != before:
+                moved = True
+                kind = want.get('step') if want['type'] == 'craft' and want.get('step') == 'chop' else want['type']
+                done[kind] = done.get(kind, 0) + 1
+                break
+        # whatever the action asked back (the timing game, a question), answered at once
+        if p.get('minigame'):
+            run_action(bid, {'type': 'minigame_result', 'success': random.random() < 0.6})
+        if p.get('quiz'):
+            right = QUIZ_ANSWERS[p['quiz']['id']]
+            run_action(bid, {'type': 'quiz_answer', 'choice': right if random.random() < 0.7 else '?'})
+        if not moved: break
+        socketio.sleep(0.25)
+    st, p = _bot_view(room_code, bid, month)
+    if not p: return
+    if p.get('event'):
+        run_action(bid, {'type': 'event_choice', 'choice': 'b'})   # the quieter choice (if it costs AP the bot cannot spare, nothing happens)
+    run_ready(bid, True)
+
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
