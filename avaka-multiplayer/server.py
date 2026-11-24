@@ -572,6 +572,9 @@ def handle_join(data):
         if rooms[room_code]['started']:
             emit('error', {'msg': '該房間遊戲已經開始，無法中途加入'})
             return
+        if len(rooms[room_code]['players']) >= MAX_PLAYERS:
+            emit('error', {'msg': f'這個房間已經有 {MAX_PLAYERS} 個人了（島上一次只畫得出 {MAX_PLAYERS} 位），請另外開一間'})
+            return
             
         if role not in ROLES: return
         if not name or not name.strip(): return

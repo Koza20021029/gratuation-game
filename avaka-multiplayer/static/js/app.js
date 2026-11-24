@@ -409,7 +409,7 @@ const translations = {
             <h2>📜 遊戲規則介紹與流程</h2>
             <div class="rules-scroll-area custom-scrollbar">
                 <p><strong>《Avaka：島嶼的維度》</strong> 是一款關於蘭嶼傳統造船與文化選擇的多人合作與競合遊戲。您將扮演雅美／達悟族的工匠，必須在 12 個月（回合）內完成一艘拼板舟。完工的方式有三種，沒有標準答案，但每一種都有它的結果；未在期限內完工則視為失敗。</p>
-                <p class="rules-group"><strong>👥 建議 3 人一組：</strong>耆老、文化復振青年、中生代各一人。三種角色缺一，就少了一種傳承的方式（遊戲不會自動檢查，請自己確認）。</p>
+                <p class="rules-group"><strong>👥 建議 3 人一組：</strong>耆老、文化復振青年、中生代各一人。三種角色缺一，就少了一種傳承的方式（遊戲不會自動檢查，請自己確認）。人不夠時，可以在等待畫面補「機器人同學」：它照同樣的規則自己玩、每月自動準備，月份要等真人都準備好才前進。開房的人可以把等待畫面的 QR code 給組員掃，不用打房號；一房最多 6 人。</p>
 
                 <h3>🎯 體力、知識與得分</h3>
                 <ul>
@@ -689,7 +689,7 @@ const translations = {
             <h2>📜 Game Rules & Process</h2>
             <div class="rules-scroll-area custom-scrollbar">
                 <p><strong>"Avaka: Dimension of the Island"</strong> is a multiplayer cooperative & competitive game about traditional boat building and cultural choices on Lanyu (Orchid Island). You play a Yami/Tao artisan who must complete a plank boat within 12 months (rounds). There are three ways to finish. None is the "right answer", but each has its own consequences; not finishing in time counts as failure.</p>
-                <p class="rules-group"><strong>👥 Best in groups of 3:</strong> one Elder, one Youth and one Middle Generation. Each missing role is one way of passing on knowledge the group loses (the game does not check this for you).</p>
+                <p class="rules-group"><strong>👥 Best in groups of 3:</strong> one Elder, one Youth and one Middle Generation. Each missing role is one way of passing on knowledge the group loses (the game does not check this for you). If you are short of people, add a bot classmate in the waiting room: it plays by the same rules on its own and is ready each month; the month moves on only when the people are ready. Your group can join by scanning the QR code in the waiting room instead of typing the code; a room holds up to 6 players.</p>
 
                 <h3>🎯 Stamina, Knowledge & Scoring</h3>
                 <ul>
@@ -810,8 +810,9 @@ function translateLocationName(loc) {
 function translateLog(logText) {
     if (currentLang !== 'en') return logText;
     
-    // Replace names of locations
+    // Replace names of locations (bots first: their names contain a role's name)
     let translated = logText
+        .replace(/機器人耆老/g, 'Bot Elder').replace(/機器人中生代/g, 'Bot Middle').replace(/機器人青年/g, 'Bot Youth')
         .replace(/山林/g, 'Mountain Forest')
         .replace(/灘頭工作室/g, 'Beach Workshop')
         .replace(/商店/g, 'Modernized Store');
@@ -1398,82 +1399,45 @@ const scriptEvents = {
 
 // GAME_RULES (the twelve months) lives in js/months.js, shared with the classroom projector page.
 
+// The month's card: the month and its Tao name, the scene (who says what), and what the month changes in the
+// rules. One dialog style for every card in the game (css/newui.css, .dlg).
+const DLG_TONE = { elder: '#d2a45c', youth: '#b6e268', middle: '#8cc0dc' };
+const dlgEsc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+const dlgPlain = v => String(v || '').replace(/[\p{Extended_Pictographic}️‍]+\s*/gu, '').trim();
+// "【Label】rest" → a small label and the rest; every line of a rule text, pictographs dropped
+const dlgLead = v => { const m = /^【([^】]+)】\s*(.*)$/s.exec(dlgPlain(v)); return m ? [m[1], m[2]] : ['', dlgPlain(v)]; };
+const dlgParas = v => String(v || '').split('\n').map(l => dlgLead(l)).filter(([k, r]) => k || r)
+    .map(([k, r]) => `<p>${k ? `<b>${dlgEsc(k)}</b>` : ''}${dlgEsc(r)}</p>`).join('');
+function dlgRole(role) {
+    const r = String(role);
+    return /耆老|Elder/.test(r) ? 'elder' : /青年|Youth|Apprentice/.test(r) ? 'youth' : /中生代|Middle/.test(r) ? 'middle' : '';
+}
 function showMonthEventModal(month) {
     const ev = scriptEvents[month];
     const rule = GAME_RULES[month - 1];
     if (!rule) return;
-    
-    const modal = document.createElement('div');
-    modal.className = 'modal-overlay active event-card-container';
-    modal.style.zIndex = '3000';
-    
     const isEn = currentLang === 'en';
-    let title = ev 
-        ? (isEn ? ev.title_en : ev.title_zh) 
-        : (isEn ? `Month ${month}: ${rule.name}` : `第 ${month} 個月：${rule.name}`);
-    let desc = ev 
-        ? (isEn ? ev.desc_en : ev.desc_zh) 
-        : (isEn ? `【Monthly Rule】\n${rule.desc_en}` : `【本月規則】\n${rule.desc_zh}`);
-    
-    let html = `
-        <div class="modal-content event-card" style="position: relative; max-width: 600px; max-height: 90vh; display: flex; flex-direction: column; padding: 12px; text-align: left; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.9), 0 0 20px rgba(197,160,89,0.25); border: 2px solid #C5A059; border-radius: 2px; background: repeating-linear-gradient(45deg, rgba(197,160,89,0.035) 0px, rgba(197,160,89,0.035) 1px, transparent 1px, transparent 5px), repeating-linear-gradient(-45deg, rgba(197,160,89,0.035) 0px, rgba(197,160,89,0.035) 1px, transparent 1px, transparent 5px), linear-gradient(135deg, rgba(16,20,28,0.98), rgba(10,12,16,0.95)); ">
-            
-            <!-- Baroque Top Center Ornament -->
-            <div style="position:absolute; top: -16px; left: 50%; transform: translateX(-50%); color: #C5A059; font-size: 1.8rem; background: #11151c; padding: 0 15px; text-shadow: 0 0 15px rgba(197,160,89,0.8); z-index: 10;">⚜</div>
-            
-            <div style="position: relative; border: 1px solid rgba(197,160,89,0.4); display: flex; flex-direction: column; overflow: hidden; flex: 1;">
-                
-                <!-- Baroque Corner Ornaments (Scalloped cutouts with stars) -->
-                <div style="position:absolute; top: -1px; left: -1px; color: #C5A059; font-size: 0.9rem; background: #11151c; width: 22px; height: 22px; display:flex; align-items:center; justify-content:center; border-right: 1px solid rgba(197,160,89,0.4); border-bottom: 1px solid rgba(197,160,89,0.4); border-bottom-right-radius: 12px; z-index: 5;">✦</div>
-                <div style="position:absolute; top: -1px; right: -1px; color: #C5A059; font-size: 0.9rem; background: #11151c; width: 22px; height: 22px; display:flex; align-items:center; justify-content:center; border-left: 1px solid rgba(197,160,89,0.4); border-bottom: 1px solid rgba(197,160,89,0.4); border-bottom-left-radius: 12px; z-index: 5;">✦</div>
-                <div style="position:absolute; bottom: -1px; left: -1px; color: #C5A059; font-size: 0.9rem; background: #11151c; width: 22px; height: 22px; display:flex; align-items:center; justify-content:center; border-right: 1px solid rgba(197,160,89,0.4); border-top: 1px solid rgba(197,160,89,0.4); border-top-right-radius: 12px; z-index: 5;">✦</div>
-                <div style="position:absolute; bottom: -1px; right: -1px; color: #C5A059; font-size: 0.9rem; background: #11151c; width: 22px; height: 22px; display:flex; align-items:center; justify-content:center; border-left: 1px solid rgba(197,160,89,0.4); border-top: 1px solid rgba(197,160,89,0.4); border-top-left-radius: 12px; z-index: 5;">✦</div>
-                
-                <div style="padding: 1.8rem 2.2rem; background-image: radial-gradient(circle at top right, rgba(197,160,89,0.1), transparent 45%); overflow-y: auto; flex: 1; position: relative; z-index: 1;" class="custom-scrollbar">
-                    <div style="display:flex; justify-content: space-between; align-items:flex-start; border-bottom: 1px dashed rgba(197,160,89,0.3); padding-bottom: 1rem; margin-bottom: 1.2rem;">
-                    <h2 style="color:var(--secondary); font-size: 1.7rem; margin: 0; letter-spacing: 1px; text-shadow: 0 2px 10px rgba(212,175,55,0.3);">${title}</h2>
-                    <span style="background: rgba(212,175,55,0.15); color: var(--secondary); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; font-weight: bold; border: 1px solid rgba(212,175,55,0.4); text-transform: uppercase; letter-spacing: 2px; flex-shrink: 0; margin-left: 1rem;">EVENT</span>
-                </div>
-                <div style="display:flex; flex-direction:column; gap: 0.8rem; margin-bottom: 1.2rem;">
-    `;
-    
-    if (ev) {
-        const dialogues = isEn ? ev.dialogues_en : ev.dialogues_zh;
-        if (dialogues) {
-            dialogues.forEach(d => {
-                const isSys = d.role === '系統' || d.role === 'System';
-                let color = 'var(--text-muted)';
-                if (!isSys) {
-                    if (d.role.includes('文化復振青年') || d.role.includes('Apprentice')) color = '#4CAF50';
-                    else if (d.role.includes('耆老') || d.role.includes('Elder')) color = '#FFC107';
-                    else color = '#03A9F4';
-                }
-                html += `
-                    <div style="background: rgba(0,0,0,0.4); padding: 1rem 1.2rem; border-radius: 8px; border-left: 3px solid ${color}; transition: transform 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                        <strong style="color: ${color}; display: block; margin-bottom: 0.3rem; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px;">${d.role}</strong>
-                        <span style="line-height: 1.6; color: #f8fafc; font-size: 1.05rem;">${d.text}</span>
-                    </div>
-                `;
-            });
-        }
-    }
-    
-    const btnText = isEn ? 'I Understand' : '我明白了';
-    const ruleLabel = isEn ? 'Rule Update' : '規則更新';
-    
-    html += `
-                </div>
-                <div style="background: rgba(244, 67, 54, 0.05); border-left: 4px solid var(--danger); padding: 1.2rem; border-radius: 0 8px 8px 0; margin-bottom: 1.5rem; box-shadow: inset 0 0 20px rgba(244,67,54,0.02);">
-                    <h4 style="color: rgba(244, 67, 54, 0.8); margin: 0 0 0.6rem 0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px;">${ruleLabel}</h4>
-                    <p style="color: #f1f5f9; font-size: 0.95rem; line-height: 1.6; white-space: pre-line; margin: 0;">${desc}</p>
-                </div>
-                <button class="btn primary glow-btn" style="width: 100%; padding: 1rem; font-size: 1.1rem; letter-spacing: 2px; border-radius: 8px; transition: all 0.3s; text-transform: uppercase; margin-top: auto;" onclick="this.closest('.modal-overlay').remove()">${btnText}</button>
-                </div>
-            </div>
-        </div>
-    `;
-    modal.innerHTML = html;
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay active dlg-wrap';
+    modal.style.zIndex = '3000';
+    const [kicker, title] = ev ? dlgLead(isEn ? ev.title_en : ev.title_zh) : ['', rule.name];
+    const lines = ev ? (isEn ? ev.dialogues_en : ev.dialogues_zh) || [] : [];
+    const scene = lines.map(d => {
+        const sys = d.role === '系統' || d.role === 'System', who = dlgRole(d.role);
+        return `<li class="${sys ? 'sys' : ''}" style="--tone:${DLG_TONE[who] || '#b9b196'}"><b>${dlgEsc(sys ? '' : d.role)}</b><span>${dlgEsc(dlgPlain(d.text))}</span></li>`;
+    }).join('');
+    const ruleText = ev ? (isEn ? ev.desc_en : ev.desc_zh) : (isEn ? rule.desc_en : rule.desc_zh);
+    modal.innerHTML = `
+        <div class="dlg dlg-month" role="dialog" aria-modal="true" aria-labelledby="dlg-month-title">
+            <p class="dlg-eyebrow">${dlgEsc(isEn ? `Month ${month}` : `第 ${month} 個月`)}${ev ? `<i>${dlgEsc(rule.name)}</i>` : ''}${kicker ? `<span>${dlgEsc(kicker)}</span>` : ''}</p>
+            <h2 class="dlg-title${ev ? '' : ' display'}" id="dlg-month-title">${dlgEsc(title)}</h2>
+            ${scene ? `<ol class="dlg-scene">${scene}</ol>` : ''}
+            <section class="dlg-rule"><h3>${isEn ? 'What this month changes' : '這個月的規則'}</h3>${dlgParas(ruleText)}</section>
+            <button type="button" class="dlg-go">${isEn ? 'I understand' : '我明白了'}</button>
+        </div>`;   // the texts are the game's own tables, escaped above
+    modal.querySelector('.dlg-go').addEventListener('click', () => modal.remove());
     document.body.appendChild(modal);
+    modal.querySelector('.dlg-go').focus({ preventScroll: true });
 }
 
 // Rules Modal
@@ -2971,10 +2935,10 @@ function renderGameOver(state) {
 
                 <section class="yr-sec yr-real">
                     <h2 class="yr-h">${isEn ? 'Back to the real Lanyu' : '回到真實的蘭嶼'}</h2>
-                    <p class="yr-note">${isEn ? 'The island in the game is a model. This is Lanyu as it is today. Watch it before the questions below.' : '遊戲裡的島是模型。這是今天的蘭嶼。看完再一起想下面的問題。'}</p>
+                    <p class="yr-note">${isEn ? 'The island in the game is a model. This is Lanyu as it is today, filmed by the researcher at Iraraley (朗島). Watch it before the questions below.' : '遊戲裡的島是模型。這是今天的蘭嶼，研究者在朗島部落拍攝。看完再一起想下面的問題。'}</p>
                     <div class="yr-films">
-                        <figure><video src="assets/lanyu_1_640.mp4" poster="assets/lanyu_1.jpg" controls muted playsinline preload="none"></video><figcaption>${isEn ? 'A village by the harbour, under the mountains' : '山腳下、港邊的部落'}</figcaption></figure>
-                        <figure><video src="assets/lanyu_2_640.mp4" poster="assets/lanyu_2.jpg" controls muted playsinline preload="none"></video><figcaption>${isEn ? 'The round-island road along the cliffs' : '沿著海崖的環島公路'}</figcaption></figure>
+                        <figure><video src="assets/lanyu_1_640.mp4" poster="assets/lanyu_1.jpg" controls muted playsinline preload="none"></video><figcaption>${isEn ? 'Iraraley (朗島): the village by the harbour, under the mountains' : '朗島部落（Iraraley）：山腳下、港邊的部落'}</figcaption></figure>
+                        <figure><video src="assets/lanyu_2_640.mp4" poster="assets/lanyu_2.jpg" controls muted playsinline preload="none"></video><figcaption>${isEn ? 'Near Iraraley: the round-island road along the cliffs' : '朗島部落一帶：沿著海崖的環島公路'}</figcaption></figure>
                     </div>
                 </section>
 
@@ -4017,17 +3981,17 @@ function b4Modal(id, innerHtml) {
         modal = document.createElement('div');
         modal.id = id;
         // below the month-opening card (z-index 3000) so that one is read first
-        modal.style.cssText = 'position:fixed; inset:0; z-index:2500; display:flex; align-items:center; justify-content:center; background:rgba(5,10,7,0.8); padding:1rem;';
+        modal.className = 'dlg-wrap';
+        modal.style.zIndex = '2500';
         document.body.appendChild(modal);
     }
-    modal.innerHTML = `<div style="width:min(520px, 100%); max-height:88vh; overflow-y:auto; padding:1.4rem 1.5rem; border-radius:16px; background:linear-gradient(160deg, rgba(15,23,42,0.98), rgba(10,15,30,0.98)); border:1px solid rgba(212,175,55,0.45); box-shadow:0 20px 60px rgba(0,0,0,0.6); color:#e2e8f0;">${innerHtml}</div>`;
+    modal.innerHTML = `<div class="dlg" role="dialog" aria-modal="true">${innerHtml}</div>`;
     return modal;
 }
 function b4Close(id) {
     const modal = document.getElementById(id);
     if (modal) modal.remove();
 }
-const B4_BTN = 'display:block; width:100%; text-align:left; margin-top:0.6rem; padding:0.75rem 1rem; border-radius:10px; border:1px solid rgba(212,175,55,0.4); background:rgba(212,175,55,0.08); color:#fef3c7; font-size:0.95rem; cursor:pointer;';
 
 const promptState = { quizSeq: 0, quizResultSeq: 0, eventKey: '', mgSeq: 0, mgTimer: null };
 
@@ -4086,15 +4050,15 @@ function showQuiz(quiz) {
     const qt = QUIZ_TEXT[currentLang] || QUIZ_TEXT.zh;
     const item = qt[quiz.id];
     if (!item) return;
-    const buttons = quiz.order.map(i => `<button class="quiz-opt" data-choice="${i}" style="${B4_BTN}">${item.o[i]}</button>`).join('');
+    const buttons = quiz.order.map(i => `<button type="button" class="quiz-opt dlg-opt" data-choice="${i}"><b>${item.o[i]}</b></button>`).join('');
     const modal = b4Modal('quiz-modal', `
-        <h3 style="margin:0 0 0.3rem; color:#fde68a;">${qt.title}</h3>
-        <p style="margin:0 0 0.9rem; font-size:0.8rem; color:var(--text-muted);">${qt.hint}</p>
-        <p style="margin:0 0 0.4rem; font-size:1.05rem; line-height:1.6;">${item.q}</p>
-        ${buttons}`);
+        <p class="dlg-eyebrow">${qt.title}</p>
+        <h2 class="dlg-title">${item.q}</h2>
+        <p class="dlg-note">${qt.hint}</p>
+        <div class="dlg-opts">${buttons}</div>`);
     modal.querySelectorAll('.quiz-opt').forEach(btn => {
         btn.addEventListener('click', () => {
-            modal.querySelectorAll('.quiz-opt').forEach(b => { b.disabled = true; b.style.opacity = '0.5'; });
+            modal.querySelectorAll('.quiz-opt').forEach(b => { b.disabled = true; });
             socket.emit('action', { type: 'quiz_answer', choice: Number(btn.dataset.choice) });
         });
     });
@@ -4105,13 +4069,13 @@ function showQuizResult(result) {
     const item = qt[result.id];
     if (!item) return;
     const body = result.correct
-        ? `<p style="margin:0.4rem 0 0; font-size:1.05rem; color:#86efac;">✅ ${qt.right}</p>`
-        : `<p style="margin:0.4rem 0 0; font-size:1rem; color:#fca5a5;">${qt.wrong}</p><p style="margin:0.3rem 0 0; font-size:1.05rem; color:#fde68a;">${item.o[result.answer]}</p>`;
+        ? `<p class="dlg-verdict good">${dlgPlain(qt.right)}</p>`
+        : `<p class="dlg-verdict">${dlgPlain(qt.wrong)}</p><p class="dlg-answer">${item.o[result.answer]}</p>`;
     const modal = b4Modal('quiz-modal', `
-        <h3 style="margin:0 0 0.6rem; color:#fde68a;">${qt.title}</h3>
-        <p style="margin:0; font-size:0.95rem; color:#cbd5e1; line-height:1.6;">${item.q}</p>
+        <p class="dlg-eyebrow">${qt.title}</p>
+        <h2 class="dlg-title">${item.q}</h2>
         ${body}
-        <button id="quiz-close" style="${B4_BTN} text-align:center;">${qt.close}</button>`);
+        <button type="button" id="quiz-close" class="dlg-go">${qt.close}</button>`);
     modal.querySelector('#quiz-close').addEventListener('click', () => b4Close('quiz-modal'));
 }
 
@@ -4120,10 +4084,12 @@ function showEventCard(eventId) {
     const ev = et[eventId];
     if (!ev) return;
     const modal = b4Modal('event-choice-modal', `
-        <h3 style="margin:0 0 0.6rem; color:#fde68a;">${et.title}</h3>
-        <p style="margin:0 0 0.5rem; font-size:1.1rem; line-height:1.6;">${ev.t}</p>
-        <button class="event-opt" data-choice="a" style="${B4_BTN}"><strong>${ev.a}</strong><br><span style="font-size:0.82rem; color:#cbd5e1;">${ev.ad}</span></button>
-        <button class="event-opt" data-choice="b" style="${B4_BTN}"><strong>${ev.b}</strong><br><span style="font-size:0.82rem; color:#cbd5e1;">${ev.bd}</span></button>`);
+        <p class="dlg-eyebrow">${et.title}</p>
+        <h2 class="dlg-title">${ev.t}</h2>
+        <div class="dlg-opts">
+            <button type="button" class="event-opt dlg-opt" data-choice="a"><b>${ev.a}</b><small>${ev.ad}</small></button>
+            <button type="button" class="event-opt dlg-opt" data-choice="b"><b>${ev.b}</b><small>${ev.bd}</small></button>
+        </div>`);
     modal.querySelectorAll('.event-opt').forEach(btn => {
         // the card stays open if the server refuses (not enough AP / no material); it closes once the event is settled
         btn.addEventListener('click', () => socket.emit('action', { type: 'event_choice', choice: btn.dataset.choice }));
@@ -4150,8 +4116,9 @@ function showMiniGame(mg) {
     const t = B4_TEXT[currentLang] || B4_TEXT.zh, step = mg.step;
     clearTimeout(promptState.mgTimer);
     const modal = b4Modal('minigame-modal', `
-        <h3 style="margin:0 0 0.3rem; color:var(--secondary);">${t.mgTitle}：${t.mgStep[step] || ''}</h3>
-        <p style="margin:0 0 0.8rem; font-size:0.86rem; line-height:1.6; color:var(--text-muted);"><b style="color:var(--text-main);">${t.mgDo[step] || ''}</b> ${matchMedia('(hover: hover) and (pointer: fine)').matches ? t.mgHint : t.mgHintTouch}</p>
+        <p class="dlg-eyebrow">${t.mgTitle}</p>
+        <h2 class="dlg-title">${t.mgStep[step] || ''}</h2>
+        <p class="dlg-note"><b>${t.mgDo[step] || ''}</b> ${matchMedia('(hover: hover) and (pointer: fine)').matches ? t.mgHint : t.mgHintTouch}</p>
         <div id="mg-pad" tabindex="0" role="application" aria-label="${t.mgDo[step] || ''}" style="position:relative; height:150px; border:1px solid var(--glass-border); border-radius:8px; background:#0c1610; touch-action:none; overflow:hidden; cursor:crosshair; user-select:none; -webkit-user-select:none;">
             <svg viewBox="0 0 300 150" preserveAspectRatio="none" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none;" aria-hidden="true">${MG_ART[step] || ''}<circle id="mg-dot" r="6" fill="#b6e268" opacity="0"/></svg>
         </div>
@@ -4160,7 +4127,7 @@ function showMiniGame(mg) {
             <div id="mg-bar" style="position:absolute; top:0; bottom:0; left:0; width:0%; background:var(--primary);"></div>
         </div>
         <p id="mg-msg" role="status" style="margin:0.6rem 0 0; min-height:1.4rem; font-size:0.95rem;"></p>
-        <button id="mg-skip" style="${B4_BTN} text-align:center;">${t.mgSkip}</button>`);
+        <button type="button" id="mg-skip" class="dlg-ghost">${t.mgSkip}</button>`);
     const pad = modal.querySelector('#mg-pad'), bar = modal.querySelector('#mg-bar'), dot = modal.querySelector('#mg-dot'), msg = modal.querySelector('#mg-msg');
     let settled = false, down = false, start = null, crossed = false, anchor = 0, way = 0, strokes = 0, hits = 0, keys = 0, holdAt = 0, holdRaf = 0;
     const say = (text, good) => { msg.textContent = text || ''; msg.style.color = good ? 'var(--primary)' : 'var(--text-muted)'; };

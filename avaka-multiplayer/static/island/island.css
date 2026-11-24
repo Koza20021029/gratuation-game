@@ -358,3 +358,8 @@ html[data-embed=big] .pin.k-link { font-size: 0.95rem; padding: 2px 9px; }
 html[data-embed=big] .pin.k-place { font-size: 1rem; }
 html[data-embed], html[data-embed] body { pointer-events: none; overflow: hidden; }
 html[data-embed] .pin.k-place { font-size: 0.72rem; padding: 0.15rem 0.5rem 0.15rem 0.2rem; }
+
+/* the teachers' way to the classroom projector, at the foot of the list */
+.proj-link { color: var(--leaf); text-underline-offset: 0.25em; }
+.proj-link::after { content: ' ↗'; }
+.proj-link:hover { color: var(--fibre); }

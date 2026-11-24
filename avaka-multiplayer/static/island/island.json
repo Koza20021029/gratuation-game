@@ -271,6 +271,13 @@
     "en": "Ocean Conservation Administration press release on green turtle nesting (2025-02-17), accessed 2026-11-02"
    },
    "url": "https://www.oca.gov.tw/ch/home.jsp?id=14&parentpath=0%2C2&mcustomize=news_view.jsp&dataserno=202502140001"
+  },
+  {
+   "id": "confirm2026",
+   "title": {
+    "zh": "研究者確認（2026-11）：東清田區的植株是 Avaka",
+    "en": "Researcher's confirmation (Nov 2026): the plants in the Iranmeylek field are Avaka"
+   }
   }
  ],
  "places": [
@@ -852,13 +859,14 @@
      ]
     },
     {
-     "zh": "目前判斷最有可能是 Avaka 的植株，在東清耆老的田區。",
-     "en": "The plants judged most likely to be Avaka grow in the field of an Iranmeylek elder here.",
+     "zh": "東清耆老田區的植株，已經確認是 Avaka。",
+     "en": "The plants in the field of an Iranmeylek elder here are confirmed as Avaka.",
      "src": [
+      "confirm2026",
       "thesis"
      ],
      "ev": [
-      "infer"
+      "obs"
      ],
      "ref": {
       "zh": "文本 貳-四",
@@ -1020,18 +1028,19 @@
     "en": "The Avaka plot at Iranmeylek"
    },
    "short": {
-    "zh": "判斷最有可能是 Avaka 的植株",
-    "en": "Plants judged most likely to be Avaka"
+    "zh": "已確認是 Avaka 的植株",
+    "en": "Plants confirmed as Avaka"
    },
    "body": [
     {
-     "zh": "目前判斷最有可能是 Avaka 的植株，在東清耆老的田區；這位耆老確信它是 Avaka。本研究收集的 Avaka 纖維，只有取自這塊田、曬乾的纖維。",
-     "en": "The plants judged most likely to be Avaka grow in an Iranmeylek (東清) elder's field; the elder is sure they are Avaka. The only Avaka fibre the project collected came from here.",
+     "zh": "東清耆老田區裡的植株，已經確認是 Avaka；耆老原本就確信它是。本研究收集的 Avaka 纖維，只有取自這塊田、曬乾的纖維。",
+     "en": "The plants in an Iranmeylek (東清) elder's field are confirmed as Avaka; the elder was always sure they were. The only Avaka fibre the project collected came from here, dried.",
      "src": [
+      "confirm2026",
       "thesis"
      ],
      "ev": [
-      "infer",
+      "obs",
       "oral"
      ],
      "ref": {
@@ -1040,13 +1049,14 @@
      }
     },
     {
-     "zh": "這裡的植株要開花結果才能確認物種，可能需要一年以上。地圖上的位置是示意。",
-     "en": "Confirming the species needs the plants to flower and fruit, which may take more than a year. The position on this map is illustrative.",
+     "zh": "在確認之前，這裡的植株只能判斷「最有可能是 Avaka」：要等開花結果，或靠熟悉的人辨認。地圖上的位置是示意。",
+     "en": "Before it was confirmed, these plants could only be judged most likely to be Avaka: it takes flowers and fruit, or someone who knows the plant, to be sure. The position on this map is illustrative.",
      "src": [
+      "confirm2026",
       "thesis"
      ],
      "ev": [
-      "infer"
+      "obs"
      ],
      "ref": {
       "zh": "文本 陸-三",
@@ -1494,6 +1504,14 @@
   "hintTouch": {
    "zh": "單指旋轉・雙指縮放或平移・點地名、房子或船看說明",
    "en": "One finger to turn · two to zoom or slide · tap a name, a house or a boat"
+  },
+  "confirmed": {
+   "zh": "已確認是 Avaka",
+   "en": "Confirmed as Avaka"
+  },
+  "projLink": {
+   "zh": "老師：把一組的島投影給全班看",
+   "en": "Teachers: put a group's island on the projector"
   }
  },
  "months": [
@@ -2235,12 +2253,14 @@
      }
     },
     {
-     "zh": "目前判斷最有可能是 Avaka 的植株在東清耆老的田區，還沒等到開花結果，物種無法確認。Avaka 的斷裂，已經延伸到植物本身的辨認。",
-     "en": "The plants judged most likely to be Avaka grow in an Iranmeylek elder's field; they have not yet flowered or fruited, so the species is unconfirmed. The break in Avaka's story now reaches the plant's identity itself.",
+     "zh": "東清耆老田區的植株，直到 2026 年才確認是 Avaka；在那之前，連研究者也只能說它「最有可能是」。一種曾經做繩、做船的植物，要花這麼久才認得出來：Avaka 的斷裂，曾經延伸到植物本身的辨認。",
+     "en": "The plants in an Iranmeylek elder's field were confirmed as Avaka only in 2026; until then even the researcher could only call them the most likely candidate. That a plant once used for rope and boats took so long to recognise shows how far the break in Avaka's story reached: to the plant's identity itself.",
      "ev": [
+      "obs",
       "infer"
      ],
      "src": [
+      "confirm2026",
       "thesis"
      ],
      "ref": {

@@ -171,19 +171,17 @@ body.newui {
 /* the sea, the light rays, falling leaves and the burst behind the results belong to the old look */
 body.newui .bg-layer, body.newui #light-rays-canvas, body.newui .effects-container, body.newui #prismatic-burst-canvas { display: none !important; }
 
-body.newui .modal-overlay,
-body.newui #quiz-modal, body.newui #event-choice-modal, body.newui #minigame-modal {
+body.newui .modal-overlay:not(.dlg-wrap) {
     background: rgba(5, 10, 7, 0.8) !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
     font-family: 'Noto Sans TC', 'PingFang TC', sans-serif;
 }
 body.newui .modal-content.glass, body.newui #app > .screen > .glass,
-body.newui #quiz-modal > div, body.newui #event-choice-modal > div, body.newui #minigame-modal > div,
 body.newui .event-card {
     background: linear-gradient(180deg, #18281e, #0c1610 46%) !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
     border: 1px solid #2e4737 !important; border-radius: 10px !important; color: #efe6cf !important;
     box-shadow: inset 0 1px 0 rgba(239, 230, 207, 0.09), 0 18px 30px -12px rgba(0, 0, 0, 0.55), 0 50px 90px -40px rgba(0, 0, 0, 0.8) !important;
 }
-body.newui .modal-content h2, body.newui #quiz-modal h3, body.newui #event-choice-modal h3, body.newui #minigame-modal h3 {
+body.newui .modal-content h2 {
     font-family: 'Noto Serif TC', 'Songti TC', serif; font-weight: 700; letter-spacing: 0.04em; color: #efe6cf !important; text-shadow: none !important; border-bottom-color: #2e4737;
 }
 body.newui .modal-content .btn, body.newui #app .btn {
@@ -196,44 +194,6 @@ body.newui .modal-content .btn.secondary, body.newui .modal-content .btn.outline
 body.newui .modal-content .btn.secondary:hover, body.newui .modal-content .btn.outline:hover { background: rgba(239, 230, 207, 0.06); border-color: #efe6cf; transform: none; }
 body.newui .modal-overlay :focus-visible, body.newui #quiz-modal :focus-visible, body.newui #event-choice-modal :focus-visible, body.newui #minigame-modal :focus-visible, body.newui #app :focus-visible { outline: 2px solid #b6e268; outline-offset: 2px; }
 body.newui .rules-scroll-area, body.newui .custom-scrollbar { scrollbar-color: #5f9a45 transparent; }
-
-/* ── the card that opens each month: a plain sheet, no gilt frame ── */
-body.newui .event-card-container { perspective: none; }
-body.newui .event-card { animation: newui-rise 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important; padding: 0 !important; overflow: hidden; }
-@keyframes newui-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-body.newui .event-card > div[style*="top: -16px"],
-body.newui .event-card div[style*="width: 22px; height: 22px"],
-body.newui .event-card span[style*="letter-spacing: 2px"] { display: none !important; }
-body.newui .event-card > div[style*="border: 1px solid rgba(197,160,89"] { border: 0 !important; }
-body.newui .event-card div[style*="radial-gradient"] { background-image: none !important; padding: 1.6rem 1.8rem !important; }
-body.newui .event-card div[style*="border-bottom: 1px dashed"] { border-bottom: 1px solid #2e4737 !important; }
-body.newui .event-card h2 { font-family: 'Noto Serif TC', 'Songti TC', serif; font-size: 1.45rem !important; color: #efe6cf !important; text-shadow: none !important; letter-spacing: 0.04em !important; }
-body.newui .event-card div[style*="border-left: 3px solid"] { border: 1px solid #2e4737 !important; background: #13221a !important; border-radius: 6px !important; box-shadow: none !important; }
-body.newui .event-card div[style*="border-left: 3px solid"] strong { color: #d2a45c !important; text-transform: none !important; letter-spacing: 0.04em !important; font-size: 0.85rem !important; }
-body.newui .event-card div[style*="border-left: 3px solid"] span { color: #efe6cf !important; font-size: 1rem !important; }
-body.newui .event-card div[style*="border-left: 4px solid"] { border: 1px solid #7c5a30 !important; background: rgba(210, 164, 92, 0.08) !important; border-radius: 6px !important; box-shadow: none !important; }
-body.newui .event-card h4 { color: #d2a45c !important; text-transform: none !important; letter-spacing: 0.06em !important; }
-body.newui .event-card div[style*="border-left: 4px solid"] p { color: #efe6cf !important; }
-body.newui .event-card .btn { padding: 0.85rem !important; font-size: 1rem !important; }
-body.newui .modal-content .btn.primary, body.newui #app .btn.primary { color: #0c1610 !important; text-shadow: none !important; }
-
-/* ── quiz, event card, timing game ── */
-body.newui #quiz-modal p, body.newui #event-choice-modal p { color: #efe6cf !important; }
-body.newui #quiz-modal p[style*="#94a3b8"], body.newui #minigame-modal p[style*="#94a3b8"], body.newui #quiz-modal p[style*="#cbd5e1"] { color: #b9b196 !important; }
-body.newui #quiz-modal p[style*="#86efac"] { color: #b6e268 !important; }
-body.newui #quiz-modal p[style*="#fca5a5"] { color: #e59a78 !important; }
-body.newui #quiz-modal p[style*="#fde68a"] { color: #d2a45c !important; font-weight: 700; }
-body.newui #quiz-modal button, body.newui #event-choice-modal button, body.newui #minigame-modal button {
-    background: #1c3023 !important; border: 1px solid #2e4737 !important; border-radius: 6px !important; color: #efe6cf !important;
-    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-body.newui #quiz-modal button:hover, body.newui #event-choice-modal button:hover, body.newui #minigame-modal button:hover { border-color: #b6e268 !important; }
-body.newui #event-choice-modal button span { color: #b9b196 !important; }
-body.newui #minigame-modal #mg-go { background: #b6e268 !important; border-color: #b6e268 !important; color: #0c1610 !important; }
-body.newui #minigame-modal #mg-skip { background: transparent !important; color: #b9b196 !important; }
-body.newui #minigame-modal #mg-pointer { background: #efe6cf !important; box-shadow: none !important; }
-body.newui #minigame-modal #mg-msg[style*="rgb(134, 239, 172)"] { color: #b6e268 !important; }
-body.newui #minigame-modal #mg-msg[style*="rgb(252, 165, 165)"] { color: #e59a78 !important; }
 
 /* ── knowledge base, calendar note, the two voices before finishing at the store ── */
 body.newui #kb-content strong, body.newui #lore-content strong { color: #efe6cf; }
@@ -387,3 +347,57 @@ body.newui .ye-events-none { margin: 0; font-size: 0.92rem; color: #8f957f; }
 /* The old player cards (app.js) still render inside the hidden old game screen, and their pixel-art step pictures
    (css/pixel-anim.css) would be downloaded for nobody to see. The new screen never shows them. */
 body.newui .px-icon { background-image: none !important; animation: none !important; }
+
+/* ═════════════ Every card the game opens: the month, an event, a question, a hands-on step ═════════════
+   One sheet: the woven selvedge along the top (as on the month panel), a small label, a title, then plain text
+   and choices as rows. No boxes inside the sheet. Built by app.js (showMonthEventModal, b4Modal). */
+.dlg-wrap { position: fixed; inset: 0; display: flex !important; align-items: center; justify-content: center; padding: 1rem;
+    background: rgba(5, 10, 7, 0.78) !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+    font-family: 'Noto Sans TC', 'PingFang TC', sans-serif; animation: dlg-fade 0.25s ease both; }
+.dlg { position: relative; width: min(560px, 100%); max-height: 88vh; overflow-y: auto; padding: 1.9rem 2rem 1.6rem; border-radius: 12px;
+    background: linear-gradient(180deg, #1b2d22, #111d16 55%); border: 1px solid rgba(239, 230, 207, 0.1); color: #efe6cf; text-align: left;
+    box-shadow: inset 0 1px 0 rgba(239, 230, 207, 0.06), 0 30px 70px -30px rgba(0, 0, 0, 0.85); scrollbar-color: #5f9a45 transparent;
+    animation: dlg-rise 0.32s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.dlg::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 4px; border-radius: 12px 12px 0 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='4'%3E%3Crect width='14' height='4' fill='%237c5a30'/%3E%3Cpath d='M-1 5 5 -1M6 5 12 -1M13 5 19 -1' stroke='%23d9c08f' stroke-width='1' opacity='.5'/%3E%3C/svg%3E") repeat-x; }
+@keyframes dlg-fade { from { opacity: 0; } }
+@keyframes dlg-rise { from { opacity: 0; transform: translateY(12px); } }
+@media (prefers-reduced-motion: reduce) { .dlg-wrap, .dlg { animation: none; } }
+.dlg p, .dlg h2, .dlg h3, .dlg ol { margin: 0; padding: 0; }
+.dlg-eyebrow { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2rem 0.7rem; font-size: 0.8rem; letter-spacing: 0.12em; color: #d2a45c; }
+.dlg-eyebrow i { font: italic 400 1rem/1 'Newsreader', 'Noto Serif TC', serif; letter-spacing: 0.02em; color: #b9b196; }
+.dlg-eyebrow span { padding: 0.05rem 0.5rem; border: 1px solid #7c5a30; border-radius: 3px; font-size: 0.74rem; letter-spacing: 0.06em; }
+.dlg-title { margin-top: 0.5rem !important; font: 700 1.35rem/1.45 'Noto Serif TC', 'Songti TC', serif; letter-spacing: 0.03em; color: #efe6cf; text-wrap: pretty; }
+.dlg-title.display { font: 400 2.6rem/1.05 'Gloock', 'Noto Serif TC', serif; letter-spacing: 0.01em; }
+.dlg-note { margin-top: 0.6rem !important; font-size: 0.88rem; line-height: 1.65; color: #b9b196; }
+.dlg-note b { color: #efe6cf; font-weight: 700; }
+/* the scene: who says what, the speaker in their role's colour */
+.dlg-scene { list-style: none; margin-top: 1.2rem !important; display: grid; gap: 0.9rem; }
+.dlg-scene li { display: grid; gap: 0.2rem; }
+.dlg-scene b { font-size: 0.8rem; letter-spacing: 0.06em; color: var(--tone); }
+.dlg-scene span { font: 400 1.02rem/1.75 'Noto Serif TC', 'Songti TC', serif; color: #efe6cf; }
+.dlg-scene li.sys span { font-family: 'Noto Sans TC', 'PingFang TC', sans-serif; font-size: 0.92rem; color: #b9b196; }
+/* what the month changes: under a hairline, a label and the text; a 【label】 at the start of a line is set in bold */
+.dlg-rule { margin-top: 1.3rem; padding-top: 1rem; border-top: 1px solid #2e4737; }
+.dlg-rule h3 { font-size: 0.78rem; font-weight: 500; letter-spacing: 0.12em; color: #d2a45c; margin-bottom: 0.45rem !important; }
+.dlg-rule p { font-size: 0.95rem; line-height: 1.75; color: #efe6cf; }
+.dlg-rule p + p { margin-top: 0.4rem !important; color: #b9b196; font-size: 0.88rem; }
+.dlg-rule b { margin-right: 0.5rem; color: #d2a45c; }
+/* choices: rows divided by hairlines, the whole row is the button */
+.dlg-opts { margin-top: 1.1rem; border-top: 1px solid #2e4737; }
+.dlg .dlg-opt { all: unset; box-sizing: border-box; cursor: pointer; display: grid; gap: 0.15rem; width: 100%; padding: 0.8rem 0.7rem; border-bottom: 1px solid #2e4737; border-radius: 0; transition: background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.dlg .dlg-opt b { font-weight: 700; font-size: 1rem; color: #efe6cf; }
+.dlg .dlg-opt small { font-size: 0.82rem; color: #b9b196; }
+.dlg .dlg-opt:hover { background: rgba(182, 226, 104, 0.08); }
+.dlg .dlg-opt:hover b { color: #b6e268; }
+.dlg .dlg-opt:disabled { cursor: default; opacity: 0.5; background: none; }
+.dlg .dlg-opt:focus-visible, .dlg .dlg-go:focus-visible, .dlg .dlg-ghost:focus-visible { outline: 2px solid #b6e268; outline-offset: 2px; }
+.dlg-verdict { margin-top: 1rem !important; font-size: 1rem; color: #e59a78; }
+.dlg-verdict.good { color: #b6e268; }
+.dlg-answer { margin-top: 0.3rem !important; font: 700 1.05rem/1.6 'Noto Serif TC', 'Songti TC', serif; color: #d2a45c; }
+.dlg .dlg-go { all: unset; box-sizing: border-box; cursor: pointer; display: block; width: 100%; margin-top: 1.4rem; padding: 0.85rem 1rem; border-radius: 6px; text-align: center;
+    background: #b6e268; color: #0c1610; font-weight: 700; letter-spacing: 0.06em; transition: background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.dlg .dlg-go:hover { background: #cdf08a; }
+.dlg .dlg-ghost { all: unset; box-sizing: border-box; cursor: pointer; display: block; width: 100%; margin-top: 0.8rem; padding: 0.6rem; text-align: center; font-size: 0.9rem; color: #b9b196; text-decoration: underline; text-underline-offset: 0.3em; }
+.dlg .dlg-ghost:hover { color: #efe6cf; }
+@media (max-width: 520px) { .dlg { padding: 1.6rem 1.25rem 1.3rem; } .dlg-title.display { font-size: 2.2rem; } }

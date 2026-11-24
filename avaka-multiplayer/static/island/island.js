@@ -696,6 +696,29 @@ try {
     m.visible = false;
     return m;
   });
+  // A boat that has just been finished slides off the beach and floats (the game sends { launch } when the
+  // player's own boat is done). Once afloat it stays afloat, rocking a little.
+  const afloat = new Set();
+  let launching = null;
+  function launchBoat(i) {
+    const m = guestBoats[i];
+    if (!m || afloat.has(m)) return;
+    const b = spots.beach, sn = Math.sin(b.seaward), cs = Math.cos(b.seaward), from = m.position.clone(), to = from.clone();
+    for (let d = 0.4; d < 5; d += 0.2) { to.set(from.x + sn * d, 0, from.z + cs * d); if (shape.height(to.x, to.z) < -0.06) break; }
+    to.y = -0.035;
+    m.visible = true;
+    if (reduced.matches) { m.position.copy(to); afloat.add(m); M.syncBoats(); dirty = true; return; }
+    launching = { m, from, to, t0: performance.now() };
+  }
+  function moveBoats(now) {
+    if (launching) {
+      const k = Math.min(1, (performance.now() - launching.t0) / 2600), e = k * k * (3 - 2 * k);
+      launching.m.position.lerpVectors(launching.from, launching.to, e);
+      launching.m.position.y += Math.sin(Math.PI * k) * 0.04;          // over the lip of the beach
+      if (k === 1) { afloat.add(launching.m); launching = null; }
+    }
+    for (const m of afloat) { m.position.y = -0.035 + Math.sin(now * 1.4 + m.position.x) * 0.012; m.rotation.z = Math.sin(now * 1.1 + m.position.z) * 0.03; }
+  }
   function setGuests(list) {
     guests.forEach((g, i) => {
       const p = list[i], sp = p && spots[p.loc];
@@ -996,7 +1019,7 @@ try {
     } else {
       if (it.id === 'weather') c.push({ text: t(D.ui.heritage) });
       if (it.id === 'airport' || it.id === 'avaka-field') c.push({ text: t(D.ui.landmark) });
-      if (it.id === 'avaka-field') c.push({ text: t(D.ui.unconfirmed), tone: 'warn' });
+      if (it.id === 'avaka-field') c.push({ text: t(D.ui.confirmed) });
     }
     return chipRow(c);
   }
@@ -1257,6 +1280,7 @@ try {
     $('#title').textContent = t(D.meta.title);
     $('#subtitle').textContent = t(D.meta.subtitle);
     $('#map-note').textContent = t(D.meta.mapNote);
+    $('#proj-link').textContent = t(D.ui.projLink); $('#proj-link').href = '/projector' + (lang === 'en' ? '?lang=en' : '');
     $('#ev-note').innerHTML = `${['obs', 'oral', 'lit', 'infer'].map((k) => evTags([k])).join('')}<span>${esc(t(D.ui.evLegend))}</span>`;
     $('#list-title').textContent = t(D.ui.places);
     $('#vlist-title').textContent = t(D.ui.villages);
@@ -1554,7 +1578,7 @@ try {
       sea.update(time, dt);
       moveTraffic(dt, time);
       movePeople(dt, time, true);
-      moveGuests(dt, time); moveLinks(time);
+      moveGuests(dt, time); moveLinks(time); if (launching || afloat.size) moveBoats(time);
       crowd.sync(); M.syncBoats();
       for (const b of fleet) {
         const a = b.ph + time * b.sp;
@@ -1601,7 +1625,7 @@ try {
     controls.enabled = false;
     controls.autoRotate = !reduced.matches; controls.autoRotateSpeed = 0.3;
     show(f);
-    embedReframe = () => (embedSweep ? moveTo(overview()) : show(at));
+    embedReframe = () => (embedSweep ? moveTo(embedSweep.view ? embedSweep.view() : overview()) : show(at));
     addEventListener('message', (e) => {
       const d = e.data;
       if (e.origin !== location.origin || !d || d.avaka !== 'island') return;
@@ -1609,6 +1633,12 @@ try {
       if (m >= 1 && m <= 12 && m !== month) setMonth(m);
       if (Array.isArray(d.players)) setGuests(d.players);
       if (Array.isArray(d.links)) setLinks(d.links);
+      // the player's boat is done: to the workshop beach, where the newest boat goes into the water, then back
+      if (d.launch && Array.isArray(d.players)) {
+        launchBoat(Math.max(0, d.players.filter((p) => p.finished).length - 1));
+        at = d.focus; moveTo(viewFor('beach'));
+        embedSweep = { at: performance.now() + d.launch, back: () => show(at), view: () => viewFor('beach') };
+      } else
       // a new month in the game: pull back to see the whole island under its new sky, then return to the player's place
       if (d.sweep && !reduced.matches) { at = d.focus; moveTo(overview()); embedSweep = { at: performance.now() + d.sweep, back: () => show(at) }; }
       else if (d.focus !== at || d.focus === 'people') show(d.focus);   // 'people' follows them every time

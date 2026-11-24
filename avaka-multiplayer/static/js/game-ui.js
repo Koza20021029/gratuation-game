@@ -131,7 +131,7 @@
     }
     return no('notIn');
   }
-  window.AvakaGameUI = { can, debug: () => ({ ac, amb, musicOn, isleFrame }) };   // debug(): for tests
+  window.AvakaGameUI = { can, debug: () => ({ ac, amb, musicOn, isleFrame }), launch: () => boatLaunch(0) };   // debug() and launch(): for tests
 
   // ───────── words ─────────
   const TEXT = {
@@ -149,8 +149,8 @@
       machine: '機器加工完工', machineSub: '+12 分，船仍可拆修', resin: '工業樹脂完工', resinSub: '+5 分，船無法拆修',
       social: '和人有關的事', askElder: '向耆老請益', askElderSub: kp => `得到 ${kp} KP，雙方各 +1 分`, askMiddle: '向中生代請益', askMiddleSub: '得到 2 KP，雙方各 +1 分',
       help: '幫忙長者', helpSub: s => `耆老回復 2 AP，你 +${s} 分`, helpMore: '耆老回復 2 AP；這個月的分數已經拿過', patrol: '巡山', patrolSub: '看過每一區的 Avaka；算作照顧林地，你 +1 分', tribe: '為部落的船出力', tribeSub: (a, b) => `全組一起造的船 ${a}/${b}；年底全員加分`, tribeBoat: '部落的船', tribeNote: '完工的人可以到灘頭出力', tribeDone: '完成了，年底全員 +3 分', tell: '講述', tellSub: kp => `身邊的人各得 ${kp} KP，你 +1 分`, teach: '遠程指導', teachSub: '對方得 1 KP，你 +1 分', translate: '科學轉譯', translateSub: '用掉 2 KP；成功 +4 分、+2 材料', translateDone: '用掉 2 KP；成功得 2 份材料，可以送人（完工後不加分）',
-      nextStep: '下一步', walkTo: p => `走到${p}`, allDone: '六道工序都完成了', log: '部落記事', chat: '聊天', chatEmpty: '還沒有人說話。', chatPh: '跟同組的人說…', send: '送出', film: '蘭嶼影像',
-      island: '島上現在的樣子', islandOpen: '看整座島', toFilm: '看實景影片', toIsle: '回到島上', filmCap: '蘭嶼實景', thereNext: s => `你的下一道工序在這裡：${s}`, thereCan: list => `到了可以做：${list}`, thereNone: '現在到這裡還沒有能做的事',
+      launchKicker: '你的船下水了', coachH: '第一次玩？這個月照著做這三件事', coach: ['走到山林', '做第一道工序「砍伐剝皮」', '按「準備進入下個月」'], coachMore: '亮著綠點的那一列就是你的下一步。其他的事（請益、幫忙、講述）想做就做。', coachOk: '知道了', nextStep: '下一步', walkTo: p => `走到${p}`, allDone: '六道工序都完成了', log: '部落記事', chat: '聊天', chatEmpty: '還沒有人說話。', chatPh: '跟同組的人說…', send: '送出', film: '蘭嶼影像',
+      island: '島上現在的樣子', islandOpen: '看整座島', toFilm: '看實景影片', toIsle: '回到島上', filmCap: '蘭嶼實景・朗島部落（研究者拍攝）', thereNext: s => `你的下一道工序在這裡：${s}`, thereCan: list => `到了可以做：${list}`, thereNone: '現在到這裡還沒有能做的事',
       why: {
         ap: n => `體力不夠，要 ${n} AP`, kp: n => `技術還不夠，要 KP ${n}`, mat: n => `材料不夠，要 ${n} 份`, here: '你已經在這裡', closed: '2 月封山，不能上山', goForest: '要先走到山林', goShore: '要先走到灘頭工作室', goShop: '要先走到商店',
         doneStep: '這道已經做完了', earlier: '要先做完前一道', wait: '剛做完一道，要等下個月', taboo: '10 月不能完工', feast: '9 月商店不能完工', three: '要先做完山林的三道工序', once: '這個月做過了',
@@ -172,8 +172,8 @@
       machine: 'Finish by machine', machineSub: '+12 points; the boat can still be repaired', resin: 'Finish with resin', resinSub: '+5 points; the boat cannot be repaired',
       social: 'With other people', askElder: 'Ask the Elder', askElderSub: kp => `+${kp} KP; +1 point each`, askMiddle: 'Ask the Middle Gen.', askMiddleSub: '+2 KP; +1 point each',
       help: 'Help the Elder', helpSub: s => `Elder recovers 2 AP; you +${s}`, helpMore: 'Elder recovers 2 AP; this month\'s point is already yours', patrol: 'Walk the hill', patrolSub: 'Check every Avaka plot; counts as tending, you +1', tribe: 'Work on the community boat', tribeSub: (a, b) => `The boat everyone builds ${a}/${b}; points for all at year end`, tribeBoat: 'Community boat', tribeNote: 'those who have finished can work on it at the Shore', tribeDone: 'finished: +3 for everyone at year end', tell: 'Tell stories', tellSub: kp => `+${kp} KP for those nearby; you +1`, teach: 'Guide from afar', teachSub: 'They gain 1 KP; you +1', translate: 'Scientific translation', translateSub: 'Uses 2 KP; success +4 points, +2 materials', translateDone: 'Uses 2 KP; success gives 2 materials to pass on (no points once finished)',
-      nextStep: 'Next', walkTo: p => `Walk to the ${p}`, allDone: 'All six steps are done', log: 'Record', chat: 'Chat', chatEmpty: 'Nobody has said anything yet.', chatPh: 'Say something to your group…', send: 'Send', film: 'Lanyu on film',
-      island: 'The island right now', islandOpen: 'See the whole island', toFilm: 'Real footage', toIsle: 'Back to the island', filmCap: 'Lanyu on film', thereNext: s => `Your next step is here: ${s}`, thereCan: list => `There you can: ${list}`, thereNone: 'Nothing you can do there yet',
+      launchKicker: 'Your boat goes into the water', coachH: 'First time? This month, do these three things', coach: ['Walk to the Forest', 'Do the first step, Chop', 'Press “Ready for next month”'], coachMore: 'The row with the green dot is always your next step. The rest (asking, helping, telling) is yours to choose.', coachOk: 'Got it', nextStep: 'Next', walkTo: p => `Walk to the ${p}`, allDone: 'All six steps are done', log: 'Record', chat: 'Chat', chatEmpty: 'Nobody has said anything yet.', chatPh: 'Say something to your group…', send: 'Send', film: 'Lanyu on film',
+      island: 'The island right now', islandOpen: 'See the whole island', toFilm: 'Real footage', toIsle: 'Back to the island', filmCap: 'Lanyu on film · Iraraley (filmed by the researcher)', thereNext: s => `Your next step is here: ${s}`, thereCan: list => `There you can: ${list}`, thereNone: 'Nothing you can do there yet',
       why: {
         ap: n => `Not enough stamina (${n} AP needed)`, kp: n => `Not enough skill (KP ${n} needed)`, mat: n => `Not enough material (${n} needed)`, here: 'You are already here', closed: 'The forest is closed in Month 2', goForest: 'Walk to the Forest first', goShore: 'Walk to the Shore workshop first', goShop: 'Walk to the Store first',
         doneStep: 'Already done', earlier: 'Finish the step before it first', wait: 'A step was just done; wait for next month', taboo: 'No boat may be finished in Month 10', feast: 'The Store cannot finish boats in Month 9', three: 'Do the three forest steps first', once: 'Already done this month',
@@ -194,7 +194,7 @@
   host.id = 'game2'; host.hidden = true;
   const root = host.attachShadow({ mode: 'open' });
   // fixed markup, no user input. The four parts are redrawn separately, so the island panel (#g-film) is never rebuilt.
-  root.innerHTML = '<link rel="stylesheet" href="css/game-ui.css?v=20261124_3"><div class="g" id="g"><div id="g-head"></div><div class="work">'
+  root.innerHTML = '<link rel="stylesheet" href="css/game-ui.css?v=20261124_5"><div class="g" id="g"><div id="g-head"></div><div class="work">'
     + '<aside class="panel col" id="g-mates"></aside><div id="g-centre"></div>'
     + '<aside class="side"><div class="panel film" id="g-film"></div><div class="panel feed" id="g-feed"></div></aside></div><div class="dock" id="g-dock"></div></div>';
   document.body.appendChild(host);
@@ -210,6 +210,17 @@
     [FOREST]: '<svg class="art" viewBox="0 0 120 60" aria-hidden="true"><path d="M2 50Q30 24 58 40T118 32"/><path d="M2 55H118"/><path d="M40 55V31"/><path d="M40 34C32 20 22 17 15 23 24 23 32 27 40 35M40 32C46 16 58 12 65 18 56 19 48 25 40 33M40 31C38 18 40 9 44 4 46 13 44 23 40 31"/><path d="M90 55V40"/><path d="M90 42C85 33 78 31 73 35 79 35 85 38 90 43M90 41C94 31 102 28 107 32 101 33 95 37 90 42M90 40C89 32 90 26 93 22 94 28 93 35 90 40"/></svg>',
     [SHORE]: '<svg class="art" viewBox="0 0 120 60" aria-hidden="true"><path d="M27 12C30 27 34 38 44 44Q60 49 76 44C86 38 90 27 93 12 88 25 82 33 74 36Q60 39 46 36C38 33 32 25 27 12Z"/><circle cx="41" cy="33" r="2.6"/><circle cx="79" cy="33" r="2.6"/><path d="M52 41.5h16"/><path d="M2 54q7-4 14 0t14 0 14 0 14 0 14 0 14 0 14 0 14 0"/><path d="M96 20q5-3 10 0t10 0"/></svg>',
     [SHOP]: '<svg class="art" viewBox="0 0 120 60" aria-hidden="true"><path d="M2 55H118"/><path d="M22 55V27H98V55"/><path d="M17 27L26 13H94L103 27Z"/><path d="M38 13L34 27M52 13L50 27M68 13L70 27M82 13L86 27"/><path d="M50 55V37H66V55"/><rect x="30" y="35" width="13" height="10"/><path d="M76 40v13a6 2.2 0 0012 0V40"/><ellipse cx="82" cy="40" rx="6" ry="2.2"/><path d="M76 46.5a6 2.2 0 0012 0"/></svg>'
+  };
+  // the small drawings in the record (stroke icons, drawn in the line's colour)
+  const LOG_ICON = {
+    mission: '<svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="2.5"/></svg>',
+    honour: '<svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2l1.8 3.7 4 .6-2.9 2.8.7 4L8 11.2 4.4 13.1l.7-4L2.2 6.3l4-.6z"/></svg>',
+    forest: '<svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 14V7M8 9C5 9 3 7 3 3c3 0 5 2 5 6zM8 8c0-3 2-5 5-5 0 3-2 5-5 5z"/></svg>',
+    event: '<svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5h7l1.5 1.5V13.5H4zM6.5 6h4M6.5 8.5h4M6.5 11h2.5"/></svg>',
+    people: '<svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><circle cx="5.5" cy="5" r="2"/><circle cx="11" cy="5.5" r="1.7"/><path d="M2 13c0-2.5 1.6-4 3.5-4S9 10.5 9 13M9.5 9.6c.4-.2.9-.3 1.5-.3 1.7 0 3 1.3 3 3.7"/></svg>',
+    warn: '<svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.5C6 5.5 4.5 7.4 4.5 9.6a3.5 3.5 0 007 0C11.5 7.4 10 5.5 8 2.5z"/></svg>',
+    system: '<svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 2.5h7M4.5 13.5h7M5.5 2.5c0 3 5 3 5 5.5s-5 2.5-5 5.5M10.5 2.5c0 3-5 3-5 5.5"/></svg>',
+    dot: '<svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="2"/></svg>'
   };
   const store = { get: k => { try { return localStorage.getItem('avaka_lobby_' + k); } catch (e) { return null; } }, set: (k, v) => { try { localStorage.setItem('avaka_lobby_' + k, v); } catch (e) { /* private mode */ } } };
 
@@ -380,12 +391,22 @@
     social += act({ type: 'translate' }, t.translate, me.finished ? t.translateDone : t.translateSub);
 
     // the record
-    const logs = (state.logs || []).slice().reverse();
-    const fresh = Math.max(0, (state.logs || []).length - lastLogCount);
-    const logHtml = logs.map((l, i) => {
-      const cls = /^🎯/.test(l) ? 'mission' : /^🏅/.test(l) ? 'honour' : /^(🌳|🍂|🌱|🥾)/.test(l) ? 'forest' : /^(📜|📝|✨)/.test(l) ? 'event' : /^(🙌|🤝|🎁|💪|🗣|🛶)/.test(l) ? 'people' : /^(⚠|🌧)/.test(l) ? 'warn' : /^(⚡|⏳)/.test(l) ? 'system' : '';
-      const text = noPicto(typeof translateLog === 'function' ? translateLog(l) : l);
-      return `<li class="${cls}${i < fresh && lastLogCount ? ' fresh' : ''}">${esc(text)}</li>`;
+    // The record, newest month first, each month under its own heading; a small drawing says what kind of line
+    // it is (a mission, an honour, the forest, an event, people together, a warning, the clock).
+    const all = state.logs || [], fresh = Math.max(0, all.length - lastLogCount), months = [];
+    all.forEach((l, i) => {
+      const m = /第\s*(\d+)\s*個月/.exec(l);
+      if (!months.length || (m && (/^遊戲開始/.test(l) || /^進入第/.test(l)))) months.push({ n: m ? +m[1] : 0, lines: [] });
+      months[months.length - 1].lines.push([l, i]);
+    });
+    const kind = l => /^🎯/.test(l) ? 'mission' : /^🏅/.test(l) ? 'honour' : /^(🌳|🍂|🌱|🥾)/.test(l) ? 'forest' : /^(📜|📝|✨)/.test(l) ? 'event' : /^(🙌|🤝|🎁|💪|🗣|🛶)/.test(l) ? 'people' : /^(⚠|🌧)/.test(l) ? 'warn' : /^(⚡|⏳)/.test(l) ? 'system' : /^🤖/.test(l) ? 'people' : '';
+    const logHtml = months.slice().reverse().map(g => {
+      const rule = g.n && typeof GAME_RULES !== 'undefined' && GAME_RULES[g.n - 1];
+      const head = g.n ? `<li class="mhead"><b>${esc(t.month(g.n))}</b>${rule ? `<i>${esc(rule.name)}</i>` : ''}</li>` : '';
+      return head + g.lines.slice().reverse().map(([l, i]) => {
+        const k = kind(l), text = noPicto(typeof translateLog === 'function' ? translateLog(l) : l);
+        return `<li class="${k}${all.length - 1 - i < fresh && lastLogCount ? ' fresh' : ''}">${LOG_ICON[k] || LOG_ICON.dot}<span>${esc(text)}</span></li>`;
+      }).join('');
     }).join('');
     lastLogCount = (state.logs || []).length;
 
@@ -404,7 +425,14 @@
     $('g-head').innerHTML = top;
     $('g-dock').innerHTML = dock;
     $('g-mates').innerHTML = `<h3>${esc(t.mates)}</h3><ul>${mates || `<li class="mate"><span class="role">${esc(t.nobody)}</span></li>`}</ul>`;
-    $('g-centre').innerHTML = `<div class="places" data-here="${LOCS.indexOf(me.location)}">${places}</div>
+    // the first month: three things to do, each ticked off as it happens (game-ui.css .coach)
+    let coach = '';
+    if (month === 1 && !store.get('coached')) {
+      const done = [me.location === FOREST || me.progress >= 1, me.progress >= 1, !!me.ready];
+      coach = `<section class="coach" aria-label="${esc(t.coachH)}"><h3>${esc(t.coachH)}</h3><ol>${t.coach.map((c, i) => `<li class="${done[i] ? 'done' : (done.indexOf(false) === i ? 'now' : '')}">${esc(c)}</li>`).join('')}</ol>
+        <p>${esc(t.coachMore)}</p><button type="button" class="link" data-coach="ok">${esc(t.coachOk)}</button></section>`;
+    }
+    $('g-centre').innerHTML = `${coach}<div class="places" data-here="${LOCS.indexOf(me.location)}">${places}</div>
       <section class="panel col social"><h3>${esc(t.social)}</h3><div class="acts-list">${social}</div></section>`;
     $('g-feed').innerHTML = `
       <div class="tabs" role="tablist">
@@ -474,6 +502,26 @@
     setTimeout(() => veil.remove(), SWEEP_MS + 160);
     return SWEEP_MS;
   }
+  // ───────── the boat is finished: it goes into the water ─────────
+  // The same full-screen island as the month sweep, on the workshop beach, where the player's boat slides off the
+  // sand (island.js launchBoat). Waits for the hands-on step to close first; skipped where the sweep would be.
+  const LAUNCH_MS = 4200;
+  function boatLaunch(tries) {
+    const shell = $('isle'), me = state && state.players[socket.id];
+    if (!visible || !shell || !isleFrame || !isleReady || calm.matches || !me) return;
+    if (document.getElementById('minigame-modal') && (tries || 0) < 30) { setTimeout(() => boatLaunch((tries || 0) + 1), 500); return; }
+    sweeping = true;
+    const veil = document.createElement('div');
+    veil.className = 'cine'; veil.setAttribute('aria-hidden', 'true');
+    const n = document.createElement('p'), name = document.createElement('h2');
+    n.textContent = T().launchKicker; name.textContent = T().finished[me.path_choice] || T().finished.traditional;
+    veil.append(n, name); root.append(veil);
+    document.body.classList.add('sweep-on');
+    setTimeout(() => { shell.classList.add('full'); veil.classList.add('open'); tellIsle({ launch: LAUNCH_MS - 900 }); }, 280);   // the finishing sound already played with the step
+    setTimeout(() => veil.classList.remove('open'), LAUNCH_MS - 520);
+    setTimeout(() => { shell.classList.remove('full'); veil.classList.add('out'); sweeping = false; document.body.classList.remove('sweep-on'); tellIsle(); }, LAUNCH_MS - 220);
+    setTimeout(() => veil.remove(), LAUNCH_MS + 160);
+  }
   // the game opens the month's card itself; it is held back until the sweep is over
   if (typeof window.showMonthEventModal === 'function') {
     const openCard = window.showMonthEventModal;
@@ -535,8 +583,9 @@
 
   // ───────── doing things ─────────
   root.addEventListener('click', e => {
-    const el = e.target.closest ? e.target.closest('[data-act],[data-old],[data-tab],#t-music,#t-theme,#t-sfx') : null;
+    const el = e.target.closest ? e.target.closest('[data-act],[data-old],[data-tab],[data-coach],#t-music,#t-theme,#t-sfx') : null;
     if (!el) return;
+    if (el.dataset.coach) { store.set('coached', '1'); render(); return; }
     if (el.dataset.tab) { tab = el.dataset.tab; if (tab === 'chat') unread = false; render(); return; }
     if (el.id === 't-sfx') { sfxOn = !sfxOn; store.set('gsfx', sfxOn ? '1' : '0'); sfx('tap'); render(); return; }
     if (el.id === 't-music') { setMusic(!musicOn); render(); return; }
@@ -750,6 +799,7 @@
     if (fx.at) {
       const y = s.players[socket.id];
       fx.apDiff = y.ap !== fx.ap;
+      if (y.finished && !state.players[socket.id].finished) setTimeout(() => boatLaunch(0), 600);
       sfx(y.finished && !state.players[socket.id].finished ? 'fin' : fx.month ? (root.querySelector('.cine') ? '' : 'month') : fx.tied >= 0 ? 'knot' : fx.up ? 'gain' : '');
     }
     state = s; follow();

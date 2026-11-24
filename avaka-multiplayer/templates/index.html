@@ -14,7 +14,7 @@
       // keep the page dark until the new screens are built, so the old ones never flash; never longer than 4 s
       if (new URLSearchParams(location.search).get('ui') !== 'old') { document.documentElement.classList.add('nu-boot'); setTimeout(function () { document.documentElement.classList.remove('nu-boot'); }, 4000); }
     </script>
-    <link rel="stylesheet" href="css/newui.css?v=20261123_1">
+    <link rel="stylesheet" href="css/newui.css?v=20261124_1">
 </head>
 <body>
     <div id="toast-container" style="position:fixed; top:20px; right:20px; z-index:9999; display:flex; flex-direction:column; gap:10px;"></div>
@@ -181,8 +181,8 @@
             <div class="modal-content glass">
                 <h2>📜 遊戲規則介紹與流程</h2>
                 <div class="rules-scroll-area custom-scrollbar">
-                    <p><strong>《Avaka：島嶼的維度》</strong> 是一款關於蘭嶼傳統造船與文化選擇的多人合作與競合遊戲。您將扮演雅美／雅美／達悟族的工匠，必須在 12 個月（回合）內完成一艘拼板舟。完工的方式有三種，沒有標準答案，但每一種都有它的結果；未在期限內完工則視為失敗。</p>
-                <p class="rules-group"><strong>👥 建議 3 人一組：</strong>耆老、文化復振青年、中生代各一人。三種角色缺一，就少了一種傳承的方式（遊戲不會自動檢查，請自己確認）。</p>
+                    <p><strong>《Avaka：島嶼的維度》</strong> 是一款關於蘭嶼傳統造船與文化選擇的多人合作與競合遊戲。您將扮演雅美／達悟族的工匠，必須在 12 個月（回合）內完成一艘拼板舟。完工的方式有三種，沒有標準答案，但每一種都有它的結果；未在期限內完工則視為失敗。</p>
+                <p class="rules-group"><strong>👥 建議 3 人一組：</strong>耆老、文化復振青年、中生代各一人。三種角色缺一，就少了一種傳承的方式（遊戲不會自動檢查，請自己確認）。人不夠時，可以在等待畫面補「機器人同學」：它照同樣的規則自己玩、每月自動準備，月份要等真人都準備好才前進。開房的人可以把等待畫面的 QR code 給組員掃，不用打房號；一房最多 6 人。</p>
 
                     <h3>🎯 體力、知識與得分</h3>
                     <ul>
@@ -795,10 +795,10 @@
     <script src="js/prismatic-burst.js?v=20261013_1"></script>
     <script src="js/pixel-card.js?v=20261013_1"></script>
     <script src="js/months.js?v=20261124_1"></script>
-    <script src="js/app.js?v=20261124_1"></script>
+    <script src="js/app.js?v=20261124_4"></script>
     <script src="js/qr.js?v=20261121_1"></script>
     <script src="js/lobby.js?v=20261124_1"></script>
-    <script src="js/game-ui.js?v=20261124_3"></script>
+    <script src="js/game-ui.js?v=20261124_5"></script>
     <script src="js/year-end.js?v=20261124_1"></script>
     <script>
     // ── Avaka BGM Controller ──────────────────────────────────────────────────
