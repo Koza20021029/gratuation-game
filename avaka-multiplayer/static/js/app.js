@@ -2737,110 +2737,135 @@ function renderGame(state) {
     initPlayerCardsTilt();
 }
 
+// ── the KP curves on the year-end page ──
+// KP only rises by learning from someone (asking, being guided, hearing stories, a right answer), and falls only
+// when it is spent on scientific translation, so each line is how knowledge reached that person month by month.
+const KP_START = { elder: 10, middle: 5, youth: 0 };
+const KP_TONE = { elder: '#d2a45c', youth: '#b6e268', middle: '#8cc0dc' };   // the same as the year-end page
+// a player's KP at the end of each month, 0 = the start
+function kpSeries(p) {
+    const h = p.kp_history || [], out = [KP_START[p.role] ?? (h[0] ? h[0].kp : 0)];
+    let cur = out[0];
+    for (let m = 1; m <= 12; m++) { const e = h.find(x => x.month === m); if (e) cur = e.kp; out.push(cur); }
+    return out;
+}
+const kpShown = (name, isEn) => (typeof avakaName === 'function' ? avakaName(name, isEn ? 'en' : 'zh') : name);
+
 function drawKPChart(canvas, players) {
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    const width = 760;
-    const height = 280;
-    canvas.width = width * window.devicePixelRatio;
-    canvas.height = height * window.devicePixelRatio;
-    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-
+    const ctx = canvas.getContext('2d'), dpr = window.devicePixelRatio || 1;
+    const width = 760, height = 320;
+    canvas.width = width * dpr; canvas.height = height * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, width, height);
-
-    const padL = 52, padR = 28, padT = 18, padB = 36;
-    const chartW = width - padL - padR;
-    const chartH = height - padT - padB;
-
-    const maxMonth = 12;
-    const maxKp = 15;
-
     const isEn = currentLang === 'en';
+    const list = Object.values(players).sort((a, b) => (!!a.bot - !!b.bot));
+    const series = list.map(kpSeries);
+    const top = Math.max(15, Math.ceil((Math.max(...series.flat()) + 2) / 5) * 5);
+    const padL = 44, padR = 118, padT = 28, padB = 34, W = width - padL - padR, H = height - padT - padB;
+    const X = m => padL + (m / 12) * W, Y = v => padT + H - (Math.min(v, top) / top) * H;
+    const sans = '"Noto Sans TC", "PingFang TC", sans-serif';
 
-    // Y-axis grid & labels
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = 'rgba(239, 230, 207, 0.1)';
-    ctx.fillStyle = '#8f957f';
-    ctx.font = '11px Newsreader, "Noto Sans TC", sans-serif';
-    ctx.textAlign = 'right';
-    ctx.textBaseline = 'middle';
-
-    const ySteps = [0, 3, 6, 9, 12, 15];
-    ySteps.forEach(val => {
-        const y = padT + chartH - (val / maxKp) * chartH;
-        ctx.beginPath();
-        ctx.moveTo(padL, y);
-        ctx.lineTo(width - padR, y);
-        ctx.stroke();
-        ctx.fillText(`${val} KP`, padL - 8, y);
+    // the two months of waiting: the forest closed (2) and no boat may be finished (10)
+    [[2, isEn ? 'forest closed' : '封山'], [10, isEn ? 'taboo month' : '禁忌月']].forEach(([m, label]) => {
+        ctx.fillStyle = 'rgba(239, 230, 207, 0.05)';
+        ctx.fillRect(X(m - 1), padT, X(m) - X(m - 1), H);
+        ctx.fillStyle = '#8f957f'; ctx.font = `11px ${sans}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+        ctx.fillText(label, (X(m - 1) + X(m)) / 2, padT - 6);
     });
-
-    // X-axis grid & labels
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'top';
-    for (let m = 1; m <= maxMonth; m++) {
-        const x = padL + ((m - 1) / (maxMonth - 1)) * chartW;
-        ctx.beginPath();
-        ctx.moveTo(x, padT);
-        ctx.lineTo(x, height - padB);
-        ctx.strokeStyle = 'rgba(239, 230, 207, 0.05)';
-        ctx.stroke();
-        ctx.fillText(`M${m}`, x, height - padB + 8);
+    // light grid and the KP scale
+    ctx.lineWidth = 1; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.font = `11px Newsreader, ${sans}`;
+    for (let v = 0; v <= top; v += 5) {
+        ctx.strokeStyle = 'rgba(239, 230, 207, 0.07)'; ctx.beginPath(); ctx.moveTo(padL, Y(v)); ctx.lineTo(padL + W, Y(v)); ctx.stroke();
+        ctx.fillStyle = '#8f957f'; ctx.fillText(String(v), padL - 8, Y(v));
     }
-
-    const ROLE_COLORS = { elder: '#d2a45c', youth: '#b6e268', middle: '#8cc0dc' };   // the same as the year-end page
-
-    const playerList = Object.values(players);
-    playerList.forEach((p) => {
-        const color = ROLE_COLORS[p.role] || '#efe6cf';
-        const history = p.kp_history || [{ month: 1, kp: p.kp || 0 }];
-        
-        const points = [];
-        let currentKp = history[0] ? history[0].kp : (p.kp || 0);
-        for (let m = 1; m <= maxMonth; m++) {
-            const entry = history.find(h => h.month === m);
-            if (entry) currentKp = entry.kp;
-            const x = padL + ((m - 1) / (maxMonth - 1)) * chartW;
-            const y = padT + chartH - (Math.min(currentKp, maxKp) / maxKp) * chartH;
-            points.push({ m, kp: currentKp, x, y });
-        }
-
-        // Line
-        ctx.beginPath();
-        ctx.lineWidth = 2.5;
-        ctx.strokeStyle = color;
-        points.forEach((pt, idx) => {
-            if (idx === 0) ctx.moveTo(pt.x, pt.y);
-            else ctx.lineTo(pt.x, pt.y);
-        });
-        ctx.stroke();
-
-        // Dots
-        points.forEach(pt => {
-            ctx.beginPath();
-            ctx.arc(pt.x, pt.y, 3.5, 0, Math.PI * 2);
-            ctx.fillStyle = color;
-            ctx.fill();
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = '#0c1610';
-            ctx.stroke();
-        });
-
-        // Industrial path badge
-        if (p.industrial || p.path_choice === 'industrial') {
-            const lastPt = points[points.length - 1];
-            ctx.font = '700 11px "Noto Sans TC", sans-serif';
-            ctx.fillStyle = '#e59a78';
-            ctx.textAlign = 'center';
-            ctx.fillText(isEn ? 'Deskilled (resin)' : '去技能化（樹脂）', lastPt.x, Math.max(padT + 12, lastPt.y - 14));
-        } else if (p.path_choice === 'hybrid') {
-            const lastPt = points[points.length - 1];
-            ctx.font = '700 11px "Noto Sans TC", sans-serif';
-            ctx.fillStyle = '#d2a45c';
-            ctx.textAlign = 'center';
-            ctx.fillText(isEn ? 'Machine-processed' : '機器加工', lastPt.x, Math.max(padT + 12, lastPt.y - 14));
-        }
+    ctx.save(); ctx.translate(12, padT + H / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.fillText('KP', 0, 0); ctx.restore();
+    // what each amount of knowledge opens: twisting (3), the machine (5), caulking (8)
+    [[3, isEn ? 'twist' : '撚繩'], [5, isEn ? 'machine' : '機器加工'], [8, isEn ? 'caulk' : '填縫']].forEach(([v, label]) => {
+        ctx.setLineDash([4, 5]); ctx.strokeStyle = 'rgba(210, 164, 92, 0.45)';
+        ctx.beginPath(); ctx.moveTo(padL, Y(v)); ctx.lineTo(padL + W, Y(v)); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = '#b8873f'; ctx.textAlign = 'left'; ctx.font = `10px ${sans}`;
+        ctx.fillText(`${v} ${label}`, padL + 4, Y(v) - 7);
     });
+    // months along the bottom
+    ctx.fillStyle = '#8f957f'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.font = `11px Newsreader, ${sans}`;
+    for (let m = 0; m <= 12; m++) ctx.fillText(m === 0 ? (isEn ? 'start' : '開始') : String(m), X(m), padT + H + 8);
+    ctx.textAlign = 'right'; ctx.fillText(isEn ? 'month' : '月', padL + W, padT + H + 22);
+
+    // one line per person: a step up where they learned something, a dot only where it changed
+    const ends = [];
+    list.forEach((p, i) => {
+        const v = series[i], color = KP_TONE[p.role] || '#efe6cf';
+        ctx.lineWidth = p.bot ? 1.8 : 2.8; ctx.strokeStyle = color; ctx.setLineDash(p.bot ? [6, 4] : []);
+        ctx.beginPath(); v.forEach((k, m) => (m ? ctx.lineTo(X(m), Y(k)) : ctx.moveTo(X(m), Y(k)))); ctx.stroke(); ctx.setLineDash([]);
+        v.forEach((k, m) => {
+            if (m && k === v[m - 1]) return;
+            ctx.beginPath(); ctx.arc(X(m), Y(k), 3.4, 0, Math.PI * 2); ctx.fillStyle = color; ctx.fill();
+            ctx.lineWidth = 2; ctx.strokeStyle = '#0c1610'; ctx.stroke();
+        });
+        const path = (p.industrial || p.path_choice === 'industrial') ? (isEn ? ' · resin' : '・樹脂') : p.path_choice === 'hybrid' ? (isEn ? ' · machine' : '・機器') : '';
+        ends.push({ y: Y(v[12]), text: kpShown(p.name, isEn) + path, color, warn: !!path && path.includes(isEn ? 'resin' : '樹脂') });
+    });
+    // names at the ends of the lines, pushed apart so they do not overlap
+    ends.sort((a, b) => a.y - b.y);
+    for (let i = 1; i < ends.length; i++) if (ends[i].y - ends[i - 1].y < 15) ends[i].y = ends[i - 1].y + 15;
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.font = `700 12px ${sans}`;
+    ends.forEach(e => { ctx.fillStyle = e.warn ? '#e59a78' : e.color; ctx.fillText(e.text, padL + W + 10, Math.min(padT + H, e.y)); });
+}
+
+// The same records, read out in plain sentences under the chart: how much each person learned, when they crossed
+// what the next step needs, their biggest month and who it came from, where it stood still; then the group.
+function kpReading(state, isEn) {
+    const list = Object.values(state.players).sort((a, b) => (!!a.bot - !!b.bot));
+    if (!list.length) return '';
+    const ties = state.ties || [];
+    const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+    const nm = n => esc(kpShown(n, isEn));
+    const KIND = isEn ? { ask: 'answered their questions', teach: 'guided them', tell: 'told them stories', give: 'gave them material', help: 'helped them', assist: 'lent them a hand' } : { ask: '請益', teach: '指導', tell: '講述', give: '送材料', help: '幫忙', assist: '搭把手' };
+    const role = r => (isEn ? { elder: 'Elder', youth: 'Youth', middle: 'Middle Gen.' } : { elder: '耆老', youth: '文化復振青年', middle: '中生代' })[r] || '';
+    const rows = list.map(p => {
+        const v = kpSeries(p), gain = v[12] - v[0], says = [];
+        says.push(isEn ? `${v[0]} → ${v[12]} KP (${gain >= 0 ? '+' : ''}${gain} this year).` : `${v[0]} → ${v[12]} KP，這一年${gain >= 0 ? '多了' : '少了'} ${Math.abs(gain)}。`);
+        // crossing what the next steps need
+        if (p.role !== 'elder') {
+            const cross = need => { for (let m = 1; m <= 12; m++) if (v[m] >= need && v[m - 1] < need) return m; return v[0] >= need ? 0 : -1; };
+            if (p.role === 'youth') { const c3 = cross(3); if (c3 > 0) says.push(isEn ? `Reached 3 KP (twisting) in month ${c3}.` : `第 ${c3} 個月跨過 3 KP，可以撚繩。`); }
+            const c8 = cross(8);
+            if (c8 > 0) says.push(isEn ? `Reached 8 KP in month ${c8}: from then on, could caulk.` : `第 ${c8} 個月跨過 8 KP，從那時起能自己填縫。`);
+            else if (c8 < 0) says.push(isEn ? 'Never reached 8 KP, so could not caulk the traditional way.' : '一直沒到 8 KP，沒辦法用傳統方式填縫。');
+        } else {
+            const out = ties.filter(t => t[0] === p.name).length;
+            says.push(isEn ? `An Elder's line stays nearly flat: the knowledge flows out. Passed on ${out} times this year.` : `耆老的線幾乎是平的，因為知識是往外流：這一年傳出去 ${out} 次。`);
+        }
+        // the biggest month, and who it came from
+        let best = 0, bm = 0;
+        for (let m = 1; m <= 12; m++) if (v[m] - v[m - 1] > best) { best = v[m] - v[m - 1]; bm = m; }
+        if (best >= 2) {
+            // who it came from, each person once with what they did
+            const by = new Map();
+            ties.filter(t => t[1] === p.name && t[3] === bm).forEach(t => { const k = isEn ? (KIND[t[2]] || t[2]) : (t[2] === 'ask' ? '回答請益' : KIND[t[2]] || t[2]); if (!by.has(t[0])) by.set(t[0], []); if (!by.get(t[0]).includes(k)) by.get(t[0]).push(k); });
+            const from = [...by].map(([g, ks]) => (isEn ? `${nm(g)} ${ks.join(' and ')}` : `${nm(g)}（${ks.join('、')}）`));
+            says.push(isEn ? `Biggest month: ${bm} (+${best})${from.length ? `, when ${from.join(', ')}` : ''}.` : `最大的一步在第 ${bm} 個月（+${best}）${from.length ? `：${from.join('、')}` : ''}。`);
+        }
+        // the longest stretch with nothing learned (three months or more)
+        let run = 0, longest = 0, end = 0;
+        for (let m = 1; m <= 12; m++) { if (v[m] <= v[m - 1]) { run++; if (run > longest) { longest = run; end = m; } } else run = 0; }
+        if (longest >= 3 && p.role !== 'elder') says.push(isEn ? `Learned nothing from month ${end - longest + 1} to ${end}.` : `第 ${end - longest + 1}～${end} 個月沒有再學到東西。`);
+        if (v.some((k, m) => m && k < v[m - 1])) says.push(isEn ? 'The line dips where KP was spent on scientific translation.' : '線往下掉的地方，是把 KP 用在科學轉譯。');
+        if (p.industrial || p.path_choice === 'industrial') says.push(isEn ? 'Finished with resin: the steps that teach were skipped.' : '用工業樹脂完工：會教人東西的那幾道工序被跳過了。');
+        return `<li style="--tone:${KP_TONE[p.role] || '#efe6cf'}"><b>${nm(p.name)}</b><span class="yr-role">${role(p.role)}</span><p>${says.join(isEn ? ' ' : '')}</p></li>`;
+    }).join('');
+    // the whole group
+    const series = list.map(kpSeries), wait = series.reduce((a, v) => a + Math.max(0, v[2] - v[1]) + Math.max(0, v[10] - v[9]), 0);
+    const giver = {}, learned = list.map((p, i) => [p.name, series[i][12] - series[i][0]]).sort((a, b) => b[1] - a[1])[0];
+    ties.forEach(t => { giver[t[0]] = (giver[t[0]] || 0) + 1; });
+    const top = Object.entries(giver).sort((a, b) => b[1] - a[1])[0];
+    const group = [];
+    group.push(isEn ? `Knowledge or help passed between people ${ties.length} times this year.` : `這一年，知識和幫忙在大家之間傳了 ${ties.length} 次。`);
+    if (top) group.push(isEn ? ` ${nm(top[0])} passed on the most (${top[1]} times);` : `傳出去最多的是 ${nm(top[0])}（${top[1]} 次），`);
+    if (learned && learned[1] > 0) group.push(isEn ? ` ${nm(learned[0])} learned the most (+${learned[1]} KP).` : `學到最多的是 ${nm(learned[0])}（+${learned[1]} KP）。`);
+    group.push(isEn ? ` In the two months of waiting (2 and 10), the group gained ${wait} KP in all.` : `封山的二月和禁忌的十月，全組一共多了 ${wait} KP：等待的時間，有沒有拿來學？`);
+    return `<ul class="yr-kp-read">${rows}</ul><p class="yr-kp-group">${group.join('')}</p>`;
 }
 
 function renderGameOver(state) {
@@ -2926,11 +2951,10 @@ function renderGameOver(state) {
 
                 <section class="yr-sec">
                     <h2 class="yr-h">${(isEn ? 'KP Development Curves & Path Selection' : '各角色 KP 演進與路徑選擇曲線圖')}</h2>
-                    <p class="yr-note">${(isEn ? 'Tracks technical knowledge growth (KP) and deskilling triggers across 12 months.' : '記錄 12 個月間技術點數 (KP) 累積與去技能化點位，作為機制層對話依據。')}</p>
-                    <canvas id="kp-chart-canvas" class="yr-chart"></canvas>
-                    <ul class="yr-legend">
-                        ${playersSorted.map(p => `<li style="--tone:${ROLE_TONE[p.role] || '#efe6cf'}"><b>${esc(p.name)}</b>${esc(getRoleName(p.role))}・${p.kp} KP</li>`).join('')}
-                    </ul>
+                    <p class="yr-note">${(isEn ? 'KP only rises when you learn from someone. A step up is a month you learned something; a flat stretch, a time nobody asked or taught. The dotted lines are what the steps need (3 twist, 5 machine, 8 caulk); the shaded columns are the two months of waiting. Dashed lines are bots.' : 'KP 只有跟人學才會增加。線往上一階，就是那個月學到了東西；平平的一段，是沒有人問、也沒有人教的時候。虛線是工序的門檻（3 撚繩、5 機器加工、8 填縫），灰色直條是兩個等待的月份；機器人的線是虛的。')}</p>
+                    <canvas id="kp-chart-canvas" class="yr-chart" role="img" aria-label="${isEn ? 'KP curves; read out below' : 'KP 曲線，下方有文字說明'}"></canvas>
+                    <h3 class="yr-sub">${isEn ? 'What the curves say' : '這張圖說了什麼'}</h3>
+                    ${kpReading(state, isEn)}
                 </section>
 
                 <section class="yr-sec yr-real">

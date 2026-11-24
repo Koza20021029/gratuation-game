@@ -295,7 +295,16 @@ body.newui .ye-tally li > span:last-child { grid-column: 1 / -1; }
 .yr-dots i { width: 10px; height: 10px; border-radius: 50%; background: #223628; }
 .yr-dots i.on { background: #5f9a45; }
 
-.yr-chart { display: block; width: 100%; height: auto; aspect-ratio: 760 / 280; }
+.yr-chart { display: block; width: 100%; height: auto; aspect-ratio: 760 / 320; }
+/* the curves read out: one short paragraph per person, then the group */
+.yr-sub { margin: 1.8rem 0 0.6rem; font: 500 0.8rem/1.4 'Noto Sans TC', 'PingFang TC', sans-serif; letter-spacing: 0.12em; color: #d2a45c; }
+.yr-kp-read { list-style: none; margin: 0; padding: 0; }
+.yr-kp-read li { display: grid; grid-template-columns: auto 1fr; column-gap: 0.7rem; align-items: baseline; padding: 0.9rem 0; border-top: 1px solid #223628; }
+.yr-kp-read li::before { content: ''; grid-row: 1; width: 1.2rem; height: 3px; border-radius: 2px; background: var(--tone); align-self: center; }
+.yr-kp-read b { grid-column: 2; font: 700 1.02rem/1.4 'Noto Serif TC', 'Songti TC', serif; color: #efe6cf; }
+.yr-kp-read .yr-role { grid-column: 2; font-size: 0.8rem; color: var(--tone); }
+.yr-kp-read p { grid-column: 2; margin: 0.3rem 0 0; font-size: 0.92rem; line-height: 1.8; color: #b9b196; max-width: 44em; }
+.yr-kp-group { margin: 0.6rem 0 0; padding-top: 0.9rem; border-top: 1px solid #2e4737; font: 400 0.98rem/1.85 'Noto Serif TC', 'Songti TC', serif; color: #efe6cf; max-width: 44em; }
 .yr-legend { list-style: none; margin: 1rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem 1.6rem; font-size: 0.85rem; color: #8f957f; }
 .yr-legend li { display: inline-flex; align-items: center; gap: 0.45rem; }
 .yr-legend li::before { content: ''; width: 18px; height: 2.5px; background: var(--tone); border-radius: 2px; }
