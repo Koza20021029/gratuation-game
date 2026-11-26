@@ -296,6 +296,9 @@ body.newui .ye-tally li > span:last-child { grid-column: 1 / -1; }
 .yr-dots i.on { background: #5f9a45; }
 
 .yr-chart { display: block; width: 100%; height: auto; aspect-ratio: 760 / 320; }
+/* on a phone the chart keeps a readable size and scrolls sideways (the reading below says the same in words) */
+.yr-chart-wrap { overflow-x: auto; scrollbar-color: #5f9a45 transparent; }
+@media (max-width: 640px) { .yr-chart { width: 640px; max-width: none; } }
 /* the curves read out: one short paragraph per person, then the group */
 .yr-sub { margin: 1.8rem 0 0.6rem; font: 500 0.8rem/1.4 'Noto Sans TC', 'PingFang TC', sans-serif; letter-spacing: 0.12em; color: #d2a45c; }
 .yr-kp-read { list-style: none; margin: 0; padding: 0; }

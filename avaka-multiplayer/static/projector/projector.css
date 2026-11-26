@@ -22,12 +22,12 @@ body.projector *, body.projector *::before { box-sizing: border-box; }
 .pj-bar a:hover, .pj-bar button:hover { color: var(--fibre); border-color: var(--fibre-dim); }
 .pj-bar a:focus-visible, .pj-bar button:focus-visible { outline: 2px solid var(--leaf); outline-offset: 2px; }
 /* on the projected screen the bar keeps out of the way until a hand is on the mouse */
-.pj-live .pj-bar, .pj-gather .pj-bar { opacity: 0.25; transition: opacity 0.3s var(--ease); }
-.pj-live .pj-bar:hover, .pj-gather .pj-bar:hover, .pj-bar:focus-within { opacity: 1; }
+.pj-on-live .pj-bar, .pj-on-gather .pj-bar { opacity: 0.25; transition: opacity 0.3s var(--ease); }
+.pj-on-live .pj-bar:hover, .pj-on-gather .pj-bar:hover, .pj-bar:focus-within { opacity: 1; }
 .pj-net { position: fixed; z-index: 6; left: 50%; bottom: 1.2rem; transform: translateX(-50%); margin: 0; padding: 0.5rem 1rem; border-radius: 4px; border: 1px solid var(--rope); background: var(--night-2); color: var(--fibre); font-size: 0.9rem; }
 
 /* asking for the room code */
-.pj-ask { display: grid; place-items: center; padding: 4rem 1rem; }
+.pj-on-ask { display: grid; place-items: center; padding: 4rem 1rem; }
 .pj-form { width: min(30rem, 100%); }
 .pj-form h1 { margin: 0 0 0.6rem; font: 900 clamp(1.8rem, 3vw, 2.4rem)/1.25 var(--serif-tc); letter-spacing: 0.05em; }
 .pj-lede { margin: 0 0 1.4rem; color: var(--fibre-dim); }
@@ -86,7 +86,7 @@ body.projector *, body.projector *::before { box-sizing: border-box; }
 .pj-knots i.on { background: var(--leaf); border-color: var(--leaf); }
 .pj-tag { margin-left: 0.4rem; padding: 0 0.45rem; border: 1px solid var(--line); border-radius: 3px; font-size: 0.72rem; line-height: 1.6; color: var(--fibre-dim); }
 .pj-tag.fin { border-color: var(--rope); color: var(--rope); }
-.pj-ties li { padding: 0.35rem 0; font-size: 0.95rem; border-bottom: 1px solid var(--line-2); animation: pj-in 0.6s var(--ease) both; }
+.pj-ties li { padding: 0.35rem 0; font-size: 0.95rem; border-bottom: 1px solid var(--line-2); }   /* redrawn on every update: no entrance animation, or the list would flicker */
 .pj-ties li.none { color: var(--quiet); font-size: 0.85rem; border: 0; }
 .pj-log li { padding: 0.3rem 0; font-size: 0.82rem; line-height: 1.55; color: var(--fibre-dim); }
 
@@ -99,7 +99,7 @@ body.projector *, body.projector *::before { box-sizing: border-box; }
 .pj-scores span { font: 700 1.15rem/1.3 var(--serif-tc); }
 .pj-scores small { color: var(--fibre-dim); font-size: 0.8rem; }
 
-@media (prefers-reduced-motion: reduce) { .pj-names li, .pj-ties li { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .pj-names li { animation: none; } }
 /* a laptop screen or a tablet held upright */
 @media (max-width: 900px) {
   .pj-gather { grid-template-columns: 1fr; justify-items: start; }

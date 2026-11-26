@@ -2952,7 +2952,7 @@ function renderGameOver(state) {
                 <section class="yr-sec">
                     <h2 class="yr-h">${(isEn ? 'KP Development Curves & Path Selection' : '各角色 KP 演進與路徑選擇曲線圖')}</h2>
                     <p class="yr-note">${(isEn ? 'KP only rises when you learn from someone. A step up is a month you learned something; a flat stretch, a time nobody asked or taught. The dotted lines are what the steps need (3 twist, 5 machine, 8 caulk); the shaded columns are the two months of waiting. Dashed lines are bots.' : 'KP 只有跟人學才會增加。線往上一階，就是那個月學到了東西；平平的一段，是沒有人問、也沒有人教的時候。虛線是工序的門檻（3 撚繩、5 機器加工、8 填縫），灰色直條是兩個等待的月份；機器人的線是虛的。')}</p>
-                    <canvas id="kp-chart-canvas" class="yr-chart" role="img" aria-label="${isEn ? 'KP curves; read out below' : 'KP 曲線，下方有文字說明'}"></canvas>
+                    <div class="yr-chart-wrap"><canvas id="kp-chart-canvas" class="yr-chart" role="img" aria-label="${isEn ? 'KP curves; read out below' : 'KP 曲線，下方有文字說明'}"></canvas></div>
                     <h3 class="yr-sub">${isEn ? 'What the curves say' : '這張圖說了什麼'}</h3>
                     ${kpReading(state, isEn)}
                 </section>
@@ -4010,6 +4010,8 @@ function b4Modal(id, innerHtml) {
         document.body.appendChild(modal);
     }
     modal.innerHTML = `<div class="dlg" role="dialog" aria-modal="true">${innerHtml}</div>`;
+    // the keyboard goes where the card asks for it: the hands-on pad (space bar), else the first choice
+    requestAnimationFrame(() => { const f = modal.querySelector('#mg-pad, .dlg-opt, .dlg-go'); if (f) f.focus({ preventScroll: true }); });
     return modal;
 }
 function b4Close(id) {

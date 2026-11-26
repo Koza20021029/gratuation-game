@@ -297,3 +297,5 @@ button.btn:active { transform: translate(var(--tx, 0px), calc(var(--ty, 0px) + 1
 .members li.bot > span:nth-child(2)::after { content: ''; display: inline-block; width: 0.5em; height: 0.5em; margin-left: 0.4em; border: 1px solid var(--fibre-dim); border-radius: 2px; vertical-align: 0.1em; }
 .bot-out { all: unset; cursor: pointer; margin-left: auto; font-size: 0.8rem; color: var(--fibre-dim); text-decoration: underline; text-underline-offset: 0.25em; }
 .bot-out:hover { color: var(--warn, #e59a78); }
+/* phones: the three switches stay at the top of the page and scroll away with it, instead of sitting over the form */
+@media (max-width: 980px) { .tools { position: absolute; } }

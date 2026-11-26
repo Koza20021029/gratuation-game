@@ -158,7 +158,7 @@ const LOBBY_HTML = `
   const host = document.createElement('div');
   host.id = 'lobby2';
   const root = host.attachShadow({ mode: 'open' });
-  root.innerHTML = '<link rel="stylesheet" href="css/lobby.css?v=20261124_1">' + LOBBY_HTML;   // fixed markup defined below, no user input
+  root.innerHTML = '<link rel="stylesheet" href="css/lobby.css?v=20261126_1">' + LOBBY_HTML;   // fixed markup defined below, no user input
   document.body.appendChild(host);
   const old = id => document.getElementById(id);
 

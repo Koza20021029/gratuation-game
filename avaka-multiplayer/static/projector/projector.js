@@ -72,7 +72,7 @@
   // ── no room yet: ask for the code ──
   function askCode(msg) {
     phase = 'ask'; state = null; dropIsle();
-    app.className = 'pj pj-ask'; app.textContent = '';
+    app.className = 'pj pj-on-ask'; app.textContent = '';
     const f = el('form', { class: 'pj-form' });
     const inp = el('input', { type: 'text', maxlength: '4', autocomplete: 'off', placeholder: T().codePh, 'aria-label': T().codePh });
     inp.value = code;
@@ -84,7 +84,7 @@
   }
   function watch() {
     if (!code) return askCode();
-    if (!socket.connected) { app.className = 'pj pj-ask'; app.textContent = ''; app.append(bar(), el('p', { class: 'pj-wait' }, T().waking)); return; }
+    if (!socket.connected) { app.className = 'pj pj-on-ask'; app.textContent = ''; app.append(bar(), el('p', { class: 'pj-wait' }, T().waking)); return; }
     socket.emit('watch_room', { room_code: code });
   }
   socket.on('connect', watch);
@@ -103,7 +103,7 @@
   }
   function build() {
     app.textContent = ''; dropIsle();
-    app.className = 'pj pj-' + phase;
+    app.className = 'pj pj-on-' + phase;   // pj-on-*: the page's moment; .pj-gather / .pj-live are the layouts inside it
     app.append(bar());
     if (phase === 'gather') {
       const g = el('section', { class: 'pj-gather' });

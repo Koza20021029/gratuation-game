@@ -527,7 +527,8 @@
     const openCard = window.showMonthEventModal;
     window.showMonthEventModal = function (month) {
       const self = this, args = arguments, wait = monthSweep(month);
-      if (wait) setTimeout(() => openCard.apply(self, args), wait); else openCard.apply(self, args);
+      // a card held back by the sweep is dropped if the month has moved on meanwhile (or the year is over)
+      if (wait) setTimeout(() => { if (state && state.month === month) openCard.apply(self, args); }, wait); else openCard.apply(self, args);
     };
   }
   function mountIsland() {

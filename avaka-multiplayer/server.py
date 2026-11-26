@@ -51,6 +51,26 @@ def has_waiting_players(room_code):
     return any(rc == room_code and now - entry['disconnect_time'] <= DISCONNECT_GRACE_SECONDS
                for (rc, _), entry in disconnected_players.items())
 
+# ───────── what comes in from a browser is checked here, once, before anything stores or shows it ─────────
+# Names and avatar labels are shown by the older screen through innerHTML, so the characters that make markup
+# are removed outright; an avatar's picture must be a small base64 JPEG/PNG/WebP and nothing else.
+import re as _re
+_MARKUP = _re.compile(r'[<>&"\'`\x00-\x1f\x7f]')
+_DATA_IMAGE = _re.compile(r'^data:image/(jpeg|png|webp);base64,[A-Za-z0-9+/]+={0,2}$')
+PLACES = ('山林', '灘頭工作室', '商店')
+
+def clean_text(value, limit):
+    if not isinstance(value, str): return ''
+    return ' '.join(_MARKUP.sub('', value).split())[:limit]
+
+def clean_avatar(avatar):
+    if not isinstance(avatar, dict): return None
+    image = avatar.get('image')
+    out = {'image': image if isinstance(image, str) and len(image) < 300_000 and _DATA_IMAGE.match(image) else None,
+           'icon': clean_text(avatar.get('icon'), 4) or None,
+           'traits': [t for t in (clean_text(x, 24) for x in (avatar.get('traits') or [])[:6] if isinstance(x, str)) if t]}
+    return out if out['image'] or out['traits'] else None
+
 def humans(state):
     return [p for p in state['players'].values() if not p.get('bot')]
 
@@ -446,7 +466,7 @@ def handle_chat(data):
     room_code = player_rooms.get(request.sid)
     if room_code in rooms and request.sid in rooms[room_code]['players']:
         player_name = rooms[room_code]['players'][request.sid]['name']
-        msg = data.get('msg', '').strip()
+        msg = ' '.join(str((data or {}).get('msg') or '').split())[:200]   # shown as text everywhere; only the length and blank lines are trimmed
         if msg:
             emit('chat_broadcast', {'name': player_name, 'msg': msg}, to=room_code)
 
@@ -490,17 +510,19 @@ def handle_disconnect():
 
 @socketio.on('create_room')
 def handle_create_room(data):
-    name = data.get('name')
+    name = clean_text(data.get('name'), 16)
     role = data.get('role')
     if role not in ROLES: return
-    if not name or not name.strip(): return
+    if not name:
+        emit('error', {'msg': '名字不能是空的（也不能只有符號）'})
+        return
     
     with state_lock:
         purge_stale_rooms()
         room_code = generate_room_code()
         rooms[room_code] = create_initial_state(room_code)
         player_tokens[request.sid] = data.get('token')
-        _join_player_to_room(request.sid, name.strip(), role, room_code, data.get('avatar'))
+        _join_player_to_room(request.sid, name, role, room_code, clean_avatar(data.get('avatar')))
 
 @socketio.on('rejoin_game')
 def handle_rejoin(data):
@@ -560,9 +582,9 @@ def handle_rejoin(data):
 
 @socketio.on('join_game')
 def handle_join(data):
-    name = data.get('name')
+    name = clean_text(data.get('name'), 16)
     role = data.get('role')
-    room_code = data.get('room_code', '').upper()
+    room_code = str(data.get('room_code') or '').upper()
     
     with state_lock:
         if room_code not in rooms:
@@ -577,9 +599,11 @@ def handle_join(data):
             return
             
         if role not in ROLES: return
-        if not name or not name.strip(): return
+        if not name:
+            emit('error', {'msg': '名字不能是空的（也不能只有符號）'})
+            return
         player_tokens[request.sid] = data.get('token')
-        _join_player_to_room(request.sid, name.strip(), role, room_code, data.get('avatar'))
+        _join_player_to_room(request.sid, name, role, room_code, clean_avatar(data.get('avatar')))
 
 def _join_player_to_room(sid, name, role, room_code, avatar=None):
     # join_room must be called outside the lock since it uses socketio internals
@@ -745,6 +769,10 @@ def run_action(sid, data, emit=lambda *a, **k: None):
             return False
 
         if action == 'move':
+            if target not in PLACES: return
+            if target == player['location']:
+                emit('error', {'msg': '你已經在這裡了'})
+                return
             if month == 2 and target == '山林':
                 emit('error', {'msg': '飛魚禁令：部落灘頭已舉行招魚祭，為了尊重魚靈，整個月份禁止進入山林！'})
                 return
