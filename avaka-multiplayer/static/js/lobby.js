@@ -148,9 +148,8 @@ const LOBBY_HTML = `
  *
  * It lives in its own shadow root on top of the original lobby and drives that lobby's own inputs and
  * buttons, so joining, the avatar creator, reconnecting and starting all still run through the code in
- * app.js. Open the page with ?ui=old to get the original screen back. */
+ * app.js. (The original screen itself can no longer be opened on its own: ?ui=old was removed on 2026-11-26.) */
 (function () {
-  if (new URLSearchParams(location.search).get('ui') === 'old') return;
   const oldLobby = document.getElementById('lobby');
   if (!oldLobby || !document.documentElement.attachShadow) return;
   document.body.classList.add('newui');
@@ -635,7 +634,7 @@ const LOBBY_HTML = `
     $('bots-say').textContent = T(full ? 'botsFull' : 'botsSay');
   }
   // a bot's name is made by the server in Chinese; in English it is shown by its role
-  const botName = p => lang === 'en' ? 'Bot ' + T('name_' + p.role) + (/\s(\d+)$/.test(p.name) ? ' ' + p.name.match(/\s(\d+)$/)[1] : '') : p.name;
+  const botName = p => (typeof avakaName === 'function' ? avakaName(p.name, lang) : p.name);
   function showJoin() { $('waiting').hidden = true; $('join').hidden = false; room = null; }
   function syncRoom(state) {
     room = state;

@@ -812,7 +812,7 @@ function translateLog(logText) {
     
     // Replace names of locations (bots first: their names contain a role's name)
     let translated = logText
-        .replace(/機器人耆老/g, 'Bot Elder').replace(/機器人中生代/g, 'Bot Middle').replace(/機器人青年/g, 'Bot Youth')
+        .replace(/機器人（耆老角色）/g, 'Bot (Elder role)').replace(/機器人（中生代角色）/g, 'Bot (Middle role)').replace(/機器人（青年角色）/g, 'Bot (Youth role)')
         .replace(/山林/g, 'Mountain Forest')
         .replace(/灘頭工作室/g, 'Beach Workshop')
         .replace(/商店/g, 'Modernized Store');
@@ -2959,7 +2959,7 @@ function renderGameOver(state) {
 
                 <section class="yr-sec yr-real">
                     <h2 class="yr-h">${isEn ? 'Back to the real Lanyu' : '回到真實的蘭嶼'}</h2>
-                    <p class="yr-note">${isEn ? 'The island in the game is a model. This is Lanyu as it is today, filmed by the researcher at Iraraley (朗島). Watch it before the questions below.' : '遊戲裡的島是模型。這是今天的蘭嶼，研究者在朗島部落拍攝。看完再一起想下面的問題。'}</p>
+                    <p class="yr-note">${isEn ? 'The island in the game is a model. This is Lanyu as it is today, filmed at Iraraley (朗島) by 陳禹翰. Watch it before the questions below.' : '遊戲裡的島是模型。這是今天的蘭嶼，陳禹翰在朗島部落拍攝。看完再一起想下面的問題。'}</p>
                     <div class="yr-films">
                         <figure><video src="assets/lanyu_1_640.mp4" poster="assets/lanyu_1.jpg" controls muted playsinline preload="none"></video><figcaption>${isEn ? 'Iraraley (朗島): the village by the harbour, under the mountains' : '朗島部落（Iraraley）：山腳下、港邊的部落'}</figcaption></figure>
                         <figure><video src="assets/lanyu_2_640.mp4" poster="assets/lanyu_2.jpg" controls muted playsinline preload="none"></video><figcaption>${isEn ? 'Near Iraraley: the round-island road along the cliffs' : '朗島部落一帶：沿著海崖的環島公路'}</figcaption></figure>

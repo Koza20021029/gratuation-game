@@ -16,9 +16,9 @@ const GAME_RULES = [
     {name: "Kaowan", desc_zh: "手工藝月（最終衝刺）：「⑤理線撚繩」消耗 0 AP，而且⑤與⑥不必跨月等待，可以在本月接連完成。", desc_en: "Handicraft Month (final sprint): ⑤ Twining costs 0 AP, and steps ⑤ and ⑥ need no cross-month wait, so they can be done back to back this month."}
 ];
 
-/* A bot's name is made by the server in Chinese (機器人耆老, 機器人青年 2…). On an English screen it is shown by its
+/* A bot's name is made by the server in Chinese (機器人（耆老角色）, 機器人（青年角色） 2…). On an English screen it is shown by its
  * role instead. Only for display: the room's records (ties, snapshots) keep the name as it is. */
 function avakaName(name, lang) {
     if (lang !== 'en' || !/^機器人/.test(name)) return name;
-    return name.replace('機器人耆老', 'Bot Elder').replace('機器人中生代', 'Bot Middle').replace('機器人青年', 'Bot Youth');
+    return name.replace('機器人（耆老角色）', 'Bot (Elder role)').replace('機器人（中生代角色）', 'Bot (Middle role)').replace('機器人（青年角色）', 'Bot (Youth role)');
 }

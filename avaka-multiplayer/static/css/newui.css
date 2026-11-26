@@ -1,5 +1,5 @@
 /* New-look overrides for the parts of the page that sit outside the lobby's shadow root.
-   Everything here is scoped to body.newui, which js/lobby.js sets; with ?ui=old it is never set. */
+   Everything here is scoped to body.newui, which js/lobby.js sets. */
 
 /* While the new lobby is up it replaces these: the original lobby underneath, the page's own
    language and music buttons, and the custom cursor. */
@@ -104,7 +104,7 @@ body.newui #avatar-screen .avatar-ctrl-group[style*="56,189,248"] .avatar-ctrl-l
 #avatar-confirm-btn:disabled { opacity: 0.75; cursor: progress; transform: none; }
 
 /* The page's own language and music buttons. The lobby and the game have their own, so these are only
-   seen on the avatar creator (and with ?ui=old). */
+   seen on the avatar creator. */
 #lang-btn, #music-btn {
     position: fixed; right: 16px; z-index: 9998; display: flex; align-items: center; justify-content: center;
     background: rgba(19, 34, 26, 0.94); border: 1px solid #2e4737; color: #efe6cf;

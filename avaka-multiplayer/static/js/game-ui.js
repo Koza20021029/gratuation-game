@@ -2,13 +2,12 @@
  *
  * Like the lobby, it lives in its own shadow root on top of the original screen. It only re-presents
  * the room state the game already has, and sends every action through the game's own sendAction() and
- * buttons, so rules, prompts, sounds and reconnecting are untouched. Open the page with ?ui=old to get
- * the original screen back.
+ * buttons, so rules, prompts, sounds and reconnecting are untouched. (?ui=old, which showed the original
+ * screen instead, was removed on 2026-11-26.)
  *
  * AvakaGameUI.can(state, myId, action) mirrors the server's own checks so each button can say whether
  * it will work and, if not, why. The server remains the judge; this is only the explanation. */
 (function () {
-  if (new URLSearchParams(location.search).get('ui') === 'old') return;
   if (!document.documentElement.attachShadow || typeof socket === 'undefined') return;
 
   const FOREST = '山林', SHORE = '灘頭工作室', SHOP = '商店';
@@ -150,7 +149,7 @@
       social: '和人有關的事', askElder: '向耆老請益', askElderSub: kp => `得到 ${kp} KP，雙方各 +1 分`, askMiddle: '向中生代請益', askMiddleSub: '得到 2 KP，雙方各 +1 分',
       help: '幫忙長者', helpSub: s => `耆老回復 2 AP，你 +${s} 分`, helpMore: '耆老回復 2 AP；這個月的分數已經拿過', patrol: '巡山', patrolSub: '看過每一區的 Avaka；算作照顧林地，你 +1 分', tribe: '為部落的船出力', tribeSub: (a, b) => `全組一起造的船 ${a}/${b}；年底全員加分`, tribeBoat: '部落的船', tribeNote: '完工的人可以到灘頭出力', tribeDone: '完成了，年底全員 +3 分', tell: '講述', tellSub: kp => `身邊的人各得 ${kp} KP，你 +1 分`, teach: '遠程指導', teachSub: '對方得 1 KP，你 +1 分', translate: '科學轉譯', translateSub: '用掉 2 KP；成功 +4 分、+2 材料', translateDone: '用掉 2 KP；成功得 2 份材料，可以送人（完工後不加分）',
       launchKicker: '你的船下水了', coachH: '第一次玩？這個月照著做這三件事', coach: ['走到山林', '做第一道工序「砍伐剝皮」', '按「準備進入下個月」'], coachMore: '亮著綠點的那一列就是你的下一步。其他的事（請益、幫忙、講述）想做就做。', coachOk: '知道了', nextStep: '下一步', walkTo: p => `走到${p}`, allDone: '六道工序都完成了', log: '部落記事', chat: '聊天', chatEmpty: '還沒有人說話。', chatPh: '跟同組的人說…', send: '送出', film: '蘭嶼影像',
-      island: '島上現在的樣子', islandOpen: '看整座島', toFilm: '看實景影片', toIsle: '回到島上', filmCap: '蘭嶼實景・朗島部落（研究者拍攝）', thereNext: s => `你的下一道工序在這裡：${s}`, thereCan: list => `到了可以做：${list}`, thereNone: '現在到這裡還沒有能做的事',
+      island: '島上現在的樣子', islandOpen: '看整座島', toFilm: '看實景影片', toIsle: '回到島上', filmCap: '蘭嶼實景・朗島部落（陳禹翰拍攝）', thereNext: s => `你的下一道工序在這裡：${s}`, thereCan: list => `到了可以做：${list}`, thereNone: '現在到這裡還沒有能做的事',
       why: {
         ap: n => `體力不夠，要 ${n} AP`, kp: n => `技術還不夠，要 KP ${n}`, mat: n => `材料不夠，要 ${n} 份`, here: '你已經在這裡', closed: '2 月封山，不能上山', goForest: '要先走到山林', goShore: '要先走到灘頭工作室', goShop: '要先走到商店',
         doneStep: '這道已經做完了', earlier: '要先做完前一道', wait: '剛做完一道，要等下個月', taboo: '10 月不能完工', feast: '9 月商店不能完工', three: '要先做完山林的三道工序', once: '這個月做過了',
@@ -173,7 +172,7 @@
       social: 'With other people', askElder: 'Ask the Elder', askElderSub: kp => `+${kp} KP; +1 point each`, askMiddle: 'Ask the Middle Gen.', askMiddleSub: '+2 KP; +1 point each',
       help: 'Help the Elder', helpSub: s => `Elder recovers 2 AP; you +${s}`, helpMore: 'Elder recovers 2 AP; this month\'s point is already yours', patrol: 'Walk the hill', patrolSub: 'Check every Avaka plot; counts as tending, you +1', tribe: 'Work on the community boat', tribeSub: (a, b) => `The boat everyone builds ${a}/${b}; points for all at year end`, tribeBoat: 'Community boat', tribeNote: 'those who have finished can work on it at the Shore', tribeDone: 'finished: +3 for everyone at year end', tell: 'Tell stories', tellSub: kp => `+${kp} KP for those nearby; you +1`, teach: 'Guide from afar', teachSub: 'They gain 1 KP; you +1', translate: 'Scientific translation', translateSub: 'Uses 2 KP; success +4 points, +2 materials', translateDone: 'Uses 2 KP; success gives 2 materials to pass on (no points once finished)',
       launchKicker: 'Your boat goes into the water', coachH: 'First time? This month, do these three things', coach: ['Walk to the Forest', 'Do the first step, Chop', 'Press “Ready for next month”'], coachMore: 'The row with the green dot is always your next step. The rest (asking, helping, telling) is yours to choose.', coachOk: 'Got it', nextStep: 'Next', walkTo: p => `Walk to the ${p}`, allDone: 'All six steps are done', log: 'Record', chat: 'Chat', chatEmpty: 'Nobody has said anything yet.', chatPh: 'Say something to your group…', send: 'Send', film: 'Lanyu on film',
-      island: 'The island right now', islandOpen: 'See the whole island', toFilm: 'Real footage', toIsle: 'Back to the island', filmCap: 'Lanyu on film · Iraraley (filmed by the researcher)', thereNext: s => `Your next step is here: ${s}`, thereCan: list => `There you can: ${list}`, thereNone: 'Nothing you can do there yet',
+      island: 'The island right now', islandOpen: 'See the whole island', toFilm: 'Real footage', toIsle: 'Back to the island', filmCap: 'Lanyu on film · Iraraley (filmed by 陳禹翰)', thereNext: s => `Your next step is here: ${s}`, thereCan: list => `There you can: ${list}`, thereNone: 'Nothing you can do there yet',
       why: {
         ap: n => `Not enough stamina (${n} AP needed)`, kp: n => `Not enough skill (KP ${n} needed)`, mat: n => `Not enough material (${n} needed)`, here: 'You are already here', closed: 'The forest is closed in Month 2', goForest: 'Walk to the Forest first', goShore: 'Walk to the Shore workshop first', goShop: 'Walk to the Store first',
         doneStep: 'Already done', earlier: 'Finish the step before it first', wait: 'A step was just done; wait for next month', taboo: 'No boat may be finished in Month 10', feast: 'The Store cannot finish boats in Month 9', three: 'Do the three forest steps first', once: 'Already done this month',

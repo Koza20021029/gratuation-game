@@ -12,9 +12,9 @@
     <style>html.nu-boot { background: #0c1610; } html.nu-boot body { visibility: hidden; }</style>
     <script>
       // keep the page dark until the new screens are built, so the old ones never flash; never longer than 4 s
-      if (new URLSearchParams(location.search).get('ui') !== 'old') { document.documentElement.classList.add('nu-boot'); setTimeout(function () { document.documentElement.classList.remove('nu-boot'); }, 4000); }
+      document.documentElement.classList.add('nu-boot'); setTimeout(function () { document.documentElement.classList.remove('nu-boot'); }, 4000);
     </script>
-    <link rel="stylesheet" href="css/newui.css?v=20261126_1">
+    <link rel="stylesheet" href="css/newui.css?v=20261126_2">
 </head>
 <body>
     <div id="toast-container" style="position:fixed; top:20px; right:20px; z-index:9999; display:flex; flex-direction:column; gap:10px;"></div>
@@ -107,7 +107,7 @@
     <!-- Global Background Music (Basalt and Salt) -->
     <audio id="bgm" src="assets/Basalt_and_Salt.mp3" loop preload="none" style="display:none;"></audio>
 
-    <!-- Music and language buttons (seen on the avatar creator and with ?ui=old; styled in css/newui.css) -->
+    <!-- Music and language buttons (seen on the avatar creator; styled in css/newui.css) -->
     <button id="music-btn" type="button" title="播放／停止音樂" aria-label="播放或停止音樂">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></svg>
     </button>
@@ -794,11 +794,11 @@
     <script src="js/light-rays.js?v=20261013_1"></script>
     <script src="js/prismatic-burst.js?v=20261013_1"></script>
     <script src="js/pixel-card.js?v=20261013_1"></script>
-    <script src="js/months.js?v=20261124_1"></script>
-    <script src="js/app.js?v=20261126_2"></script>
+    <script src="js/months.js?v=20261126_1"></script>
+    <script src="js/app.js?v=20261126_3"></script>
     <script src="js/qr.js?v=20261121_1"></script>
-    <script src="js/lobby.js?v=20261126_1"></script>
-    <script src="js/game-ui.js?v=20261126_1"></script>
+    <script src="js/lobby.js?v=20261126_2"></script>
+    <script src="js/game-ui.js?v=20261126_2"></script>
     <script src="js/year-end.js?v=20261124_1"></script>
     <script>
     // ── Avaka BGM Controller ──────────────────────────────────────────────────

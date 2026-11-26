@@ -1480,9 +1480,11 @@ def run_ready(sid, want=None):
 # (same record, same rules: every action goes through run_action), marked with 'bot': True. It plays a short
 # while after each month starts, answers its own prompts, then says it is ready. It never moves the year on by
 # itself: the month ends when the people are ready (run_ready).
-BOT_NAMES = {'elder': '機器人耆老', 'youth': '機器人青年', 'middle': '機器人中生代'}
+# named by the role it stands in for, never as if it were an elder or a youth itself
+BOT_NAMES = {'elder': '機器人（耆老角色）', 'youth': '機器人（青年角色）', 'middle': '機器人（中生代角色）'}
 MAX_PLAYERS = 6        # the island draws six figures
 STEP_ORDER = ['chop', 'rub', 'strip', 'dry', 'twine', 'caulk']
+BOT_REST = 0.3         # the share of months in which a bot does not move its own boat on
 FOREST, SHORE = '山林', '灘頭工作室'
 
 @socketio.on('add_bot')
@@ -1548,7 +1550,7 @@ def _bot_view(room_code, bid, month):
 def _bot_mark(p):
     return (p['ap'], p['progress'], p['location'], p['kp'], p['materials'], p['score'], p.get('finished'))
 
-def bot_wishes(st, p, done):
+def bot_wishes(st, p, done, rest=False):
     """What a classmate in this role would try next, best first; the rules decide what works. A bot keeps to
     its own boat first and does the social things a few times a month (done: what it has done this month),
     so it plays alongside the students rather than out-scoring them."""
@@ -1560,7 +1562,7 @@ def bot_wishes(st, p, done):
     out = []
     if not p['finished']:
         i = p['progress']
-        if i < 6 and p.get('last_step_month', 0) != m:
+        if i < 6 and p.get('last_step_month', 0) != m and not rest:
             step, loc = STEP_ORDER[i], (FOREST if i < 3 else SHORE)
             need_kp = 3 if step == 'twine' else 8 if step == 'caulk' else 0
             if p['role'] != 'elder' and p['kp'] < need_kp and done.get('ask', 0) < 2:
@@ -1578,24 +1580,30 @@ def bot_wishes(st, p, done):
             if q['materials'] < 1 and not q['finished'] and p['materials'] > 0: out.append({'type': 'give', 'target_id': q['id']})
         if p['location'] != SHORE: out.append({'type': 'move', 'target': SHORE})
         out.append({'type': 'tribe'})
-    if p['role'] == 'elder':
-        if not done.get('tell') and any(q['role'] != 'elder' for q in near): out.append({'type': 'tell'})
-        learners = sorted((q for q in others if q['role'] != 'elder'), key=lambda q: q['kp'])
-        if learners and not done.get('teach'): out.append({'type': 'teach', 'target_id': learners[0]['id']})
-    else:
-        if not done.get('help'): out.append({'type': 'help'})
-        if p['kp'] < 8 and done.get('ask', 0) < 2: out.append({'type': 'ask', 'target': 'elder'})
+    # one social thing a month (telling, guiding, helping the Elder, or asking beyond what the next step needs)
+    social = sum(done.get(k, 0) for k in ('tell', 'teach', 'help', 'ask'))
+    if social < 1:
+        if p['role'] == 'elder':
+            if random.random() < 0.5 and any(q['role'] != 'elder' for q in near): out.append({'type': 'tell'})
+            learners = sorted((q for q in others if q['role'] != 'elder'), key=lambda q: q['kp'])
+            if learners: out.append({'type': 'teach', 'target_id': learners[0]['id']})
+            if any(q['role'] != 'elder' for q in near): out.append({'type': 'tell'})
+        else:
+            out.append({'type': 'help'})
+            if p['kp'] < 8: out.append({'type': 'ask', 'target': 'elder'})
     if p['location'] == FOREST and m != 2:
         out += [{'type': 'plant'}, {'type': 'patrol'}]
     return out
 
 def bot_turn(room_code, bid, month):
-    done = {}
-    for _ in range(10):
+    # A classmate's pace, not a perfect player's: a few things a month, and now and then a month in which the boat
+    # does not move on (they gather and help instead). Without this the bots finished by month 7 with 35-45 points.
+    done, budget, rest = {}, random.choice([2, 3, 3, 4]), random.random() < BOT_REST
+    for _ in range(budget):
         st, p = _bot_view(room_code, bid, month)
         if not p: return
         before, moved = _bot_mark(p), False
-        for want in bot_wishes(st, p, done):
+        for want in bot_wishes(st, p, done, rest and month < 11):   # no resting at the very end, so the boat can still be finished
             run_action(bid, want)
             if _bot_mark(p) != before:
                 moved = True
